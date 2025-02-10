@@ -1,10 +1,37 @@
 [
     {
-        "Name": "E10N]",
+        "Name": "伊弗利特歼灭战",
+        "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
+        "Version": "0.0.0.1",
+        "Author": "南雲鉄虎",
+        "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/the_Bowl_of_Embers(Hard).cs",
+        "UpdateInfo": ""
+    },
+
+    {
+        "Name": "海德拉讨伐战",
+        "Guid": "d32d7489-a1bb-4117-98dd-ee895390804d",
+        "Version": "0.0.0.1",
+        "Author": "南雲鉄虎",
+        "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/the_Hydra.cs",
+        "UpdateInfo": ""
+    },
+    
+    {
+        "Name": "高贝扎歼灭战",
+        "Guid": "8a526afb-eefd-44ec-a105-7dc8fcd28e47",
+        "Version": "0.0.0.1",
+        "Author": "南雲鉄虎",
+        "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/the_Voidcast_Dais.cs",
+        "UpdateInfo": ""
+    },
+
+    {
+        "Name": "E10N",
         "Guid": "038e00e8-d378-4f43-89ab-e27df5561d5a",
         "Version": "0.0.0.1",
         "Author": "南雲鉄虎",
         "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E10n.cs",
-        "UpdateInfo": "1. 初次绘制。"
+        "UpdateInfo": ""
     }
     ]
