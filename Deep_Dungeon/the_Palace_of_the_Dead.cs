@@ -17,10 +17,10 @@ using ECommons.MathHelpers;
 
 namespace the_Palace_of_the_Dead;
 
-
-[ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
-
+[ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
+    //territorys: uint [Regex:(56[1-5]|59[3-9]|60[0-7])],
+    territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
+    version: "0.0.0.1",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
@@ -229,12 +229,14 @@ public class the_Palace_of_the_Dead
         accessory.Method.RemoveDraw($"熔岩爆弹怪_震撼弹");
     }
     
+   /*
     [ScriptMethod(name: "\ue061\ue069\ue060 爆弹怪教父 特大爆炸提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7103"])]
     public void 爆弹怪教父_特大爆炸提示(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 10, true);
         accessory.Method.TTS("99.9%真伤，注意瞬回");
     }
+    */
     
     [ScriptMethod(name: "特大爆炸打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:7103"], userControl: false)]
     public void 特大爆炸打断销毁(Event @event, ScriptAccessory accessory)
@@ -244,6 +246,7 @@ public class the_Palace_of_the_Dead
          else：取消对应方法触发
          */
     }
+    
     
     // 191~200层 小怪
     [ScriptMethod(name: "—————— \ue061\ue069\ue061 ~ \ue062\ue060\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
