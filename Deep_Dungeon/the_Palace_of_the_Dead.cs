@@ -51,7 +51,7 @@ public class the_Palace_of_the_Dead
         dp.Name = "地宫斯卡尼特_唧唧咋咋";
         dp.Color = new Vector4(1f, 0f, 1f, 1f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(3f); //表格里的范围是20，待证实  还需要加目标圈
+        dp.Scale = new Vector2(20f); //还需要加目标圈
         dp.DestoryAt = 2200;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);

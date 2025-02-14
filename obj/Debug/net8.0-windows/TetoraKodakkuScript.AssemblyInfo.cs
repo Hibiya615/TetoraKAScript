@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("TetoraKodakkuScript")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09ee437fc488e5d1db4bef4fe7aa980f182e873d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+71f2d1b2d82da3589802f31f183dbf4820437ec4")]
 [assembly: System.Reflection.AssemblyProductAttribute("TetoraKodakkuScript")]
 [assembly: System.Reflection.AssemblyTitleAttribute("TetoraKodakkuScript")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
