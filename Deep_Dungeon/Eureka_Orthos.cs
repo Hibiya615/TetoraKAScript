@@ -18,7 +18,6 @@ using ECommons.MathHelpers;
 namespace Eureka_Orthos;
 
 [ScriptType(guid: "5e8a4051-53f7-4eb3-bb32-b18df8b113aa", name: "正统优雷卡", 
-    //territorys: uint [Regex:(1099|110[0-8])], 
     territorys: [1099,1100,1101,1102,1103,1104,1105,1106,1107,1108],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
@@ -36,14 +35,33 @@ public class Eureka_Orthos {
     //对应怪物死亡、眩晕、催眠、石化1511、无法发动技能1113等状态都需要销毁绘图，缓速3493需要额外注意没有omen的技能
     // 71~79层 【正统狼獾 杀人爪】【正统雷兽 尾镰】【正统雷兽 电火花】均未支持缓速
             
-    //99层 石中剑 计数
+
+    //20 攻击命令_火焰吐息 连线计数 , 因为方法抓取的连线，同一时间有多个连线，故加volatile
+    private volatile int timeOrderToFire=0;
+    //99层 石中剑 读条计数
     uint timesCaliburniHasBeenCast=0;
     public void Init(ScriptAccessory accessory) {
+        
+        timeOrderToFire=0;      //20 小龙连线计数
+        timesCaliburniHasBeenCast=0;  //99层 石中剑 读条计数
+        
+    }
 
-        timesCaliburniHasBeenCast=0;
-
+    public bool KnockPenalty = false;
+    
+    [ScriptMethod(name: "天气：击退无效添加", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1096"],userControl: false)]
+    public void 上击退buff(Event @event, ScriptAccessory accessory)
+    {
+    KnockPenalty = true;
     }
     
+    [ScriptMethod(name: "天气：击退无效移除", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:1096"],userControl: false)]
+    public void 下击退buff(Event @event, ScriptAccessory accessory)
+    {
+    KnockPenalty = false;
+    }
+    
+        
     // 通用内容
     [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32798"])]
     public void 拟态怪_怨念(Event @event, ScriptAccessory accessory)
@@ -52,6 +70,13 @@ public class Eureka_Orthos {
         accessory.Method.TTS("打断拟态怪");
     }
     
+    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75[38|51]$"], userControl: false)]
+    public void 打断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"正统系统γ_高压电流{@event.TargetId()}");
+    }
+    
+    #region 精英怪
     //精英怪
     [ScriptMethod(name: "\ue0c0 美拉西迪亚复制体 亚拉戈陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(1[89]|20)$"])]
     public void 美拉西迪亚复制体_亚拉戈陨石(Event @event, ScriptAccessory accessory)
@@ -91,7 +116,9 @@ public class Eureka_Orthos {
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    #endregion
     
+    #region 1~10层 小怪
     // 1~10层 小怪
     [ScriptMethod(name: "—————— \ue061 ~ \ue061\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第1层(Event @event, ScriptAccessory accessory) { }
@@ -137,7 +164,9 @@ public class Eureka_Orthos {
         dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
+    #endregion
     
+    #region 10 BOSS 蜜言妖
     // 10 BOSS 蜜言妖
     [ScriptMethod(name: "\ue061\ue060 蜜言妖 蔓德拉地雷（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31478"])]
     public void 蜜言妖_蔓德拉地雷(Event @event, ScriptAccessory accessory)
@@ -163,7 +192,9 @@ public class Eureka_Orthos {
         dp.DestoryAt = 4000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
-    
+    #endregion
+
+    #region 11~20层 小怪
     // 11~20层 小怪
     [ScriptMethod(name: "—————— \ue061\ue061 ~ \ue062\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第11层(Event @event, ScriptAccessory accessory) { }
@@ -182,20 +213,54 @@ public class Eureka_Orthos {
         dp.DestoryAt = 2200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
+    #endregion
     
-    // 20 BOSS 盾龙复制体
+    #region 20 BOSS 复制系统
+    // 20 BOSS 复制系统
+    [ScriptMethod(name:"Reset_OrderToFire_攻击命令重置",userControl:false,eventType:EventTypeEnum.Chat,
+        eventCondition:["Type:NPCDialogueAnnouncements","Message:regex:^发现入侵者.*","Sender:复制系统"])]
+    public void Reset_OrderToFire_攻击命令重置(Event @event, ScriptAccessory accessory) {
+        // 根据开场台词重置
+        // 注意开头添加了变量和Init函数 Init函数是在每次整个副本reset时调用的
+        timeOrderToFire=0;
+    }
+    
+    
     [ScriptMethod(name: "\ue062\ue060 盾龙复制体_连线预兆", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0016"])]
     public void 盾龙复制体_连线预兆(Event @event, ScriptAccessory accessory)
     {        
+        //开场 第1次连线3根、第2次连线5根 实体在场外，需要作一定偏移，之后正常
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
-
-        dp.Name = "盾龙复制体_连线预兆";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(50);
         dp.Radian = 30f.DegToRad();
-        dp.DestoryAt = 4000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+
+        if (timeOrderToFire <= 7)
+        {
+            dp.Name = "盾龙复制体_开场连线";
+            dp.Offset = new Vector3(0, 0, -22f);
+            dp.DestoryAt = 4000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+            
+            dp.Name = "盾龙复制体_开场连线2";
+            dp.Offset = new Vector3(0, 0, 0f);
+            dp.Delay = 4500;
+            dp.DestoryAt = 2200;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+            //accessory.Method.SendChat($"/e 调试信息 timeOrder={timeOrderToFire}");
+        }
+
+        else
+        {
+            dp.Name = "盾龙复制体_连线预兆";
+            dp.DestoryAt = 4000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+            //accessory.Method.SendChat($"/e 调试信息 timeOrder={timeOrderToFire}");
+        }
+
+        ++timeOrderToFire;
         
         /* 有点BUG 先放着
         // 小龙被连线 0016 时会有一个技能ID为 32552 的 ActionEffect
@@ -219,23 +284,9 @@ public class Eureka_Orthos {
             dp.Name = "盾龙复制体_连续预兆";
             dp.DestoryAt = 4000;
         }
-        
+
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         */
-    }
-    
-    [ScriptMethod(name: "\ue062\ue060 盾龙复制体_开场火焰吐息", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:32554"])]
-    public void 盾龙复制体_开场火焰吐息(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-
-        dp.Name = "盾龙复制体_火焰吐息";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(50);
-        dp.Radian = 30f.DegToRad();
-        dp.DestoryAt = 3200;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
     [ScriptMethod(name: "\ue062\ue060 盾龙复制体_火焰吐息", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32864"])]
@@ -251,41 +302,59 @@ public class Eureka_Orthos {
         dp.DestoryAt = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
+    #endregion
     
+    #region 21~30层 小怪
     // 21~30层 小怪
     [ScriptMethod(name: "—————— \ue062\ue061 ~ \ue063\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第21层(Event @event, ScriptAccessory accessory) { }
-    
+    #endregion
+
+    #region 30 BOSS 提亚马特复制体
     // 30 BOSS 提亚马特复制体
-    
+    #endregion
+
+    #region 31~40层 小怪
     // 31~40层 小怪
     [ScriptMethod(name: "—————— \ue063\ue061 ~ \ue064\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第31层(Event @event, ScriptAccessory accessory) { }
+    #endregion
     
-    
+    #region 40 BOSS 双塔尼亚复制体
     // 40 BOSS 双塔尼亚复制体
-    
+    #endregion
+
+    #region 41~50层 小怪
     // 41~50层 小怪
     [ScriptMethod(name: "—————— \ue064\ue061 ~ \ue065\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第41层(Event @event, ScriptAccessory accessory) { }
-    
-    
+    #endregion
+
+    #region 50 BOSS 自控化奇美拉
     // 50 BOSS 自控化奇美拉
-    
+    #endregion
+
+    #region 51~60层 小怪
     // 51~60层 小怪
     [ScriptMethod(name: "—————— \ue065\ue061 ~ \ue066\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
-    
-    
+    #endregion
+
+    #region 60 BOSS 自控化弥诺陶洛斯
     // 60 BOSS 自控化弥诺陶洛斯
-    
+    #endregion
+
+    #region 61~70层 小怪
     // 61~70层 小怪
     [ScriptMethod(name: "—————— \ue066\ue061 ~ \ue067\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
-    
-    
+    #endregion
+
+    #region 70 BOSS 永恒
     // 70 BOSS 永恒
-    
+    #endregion
+
+    #region 71~80层 小怪
     // 71~80层 小怪
     [ScriptMethod(name: "—————— \ue067\ue061 ~ \ue068\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第71层(Event @event, ScriptAccessory accessory) { }
@@ -467,7 +536,9 @@ public class Eureka_Orthos {
         // 6499 平A攻击 ； 32661 打飞 ； 32662 殴打
         accessory.Method.RemoveDraw($"正统大脚巨猿_捶胸{@event.SourceId()}");
     }
-    
+    #endregion
+
+    #region 80 BOSS 原形卡利亚
     // 80 BOSS 原形卡利亚
     [ScriptMethod(name: "\ue068\ue060 原形卡利亚 共鸣（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31422"])]
     public void 原形卡利亚_共鸣(Event @event, ScriptAccessory accessory)
@@ -580,7 +651,9 @@ public class Eureka_Orthos {
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
-    
+    #endregion
+
+    #region 81~90层 小怪
     // 81~90层 小怪
     [ScriptMethod(name: "—————— \ue068\ue061 ~ \ue069\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
@@ -786,7 +859,9 @@ public class Eureka_Orthos {
         dp.DestoryAt = 3700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
+    #endregion
     
+    #region 90 BOSS 管理者
     // 90 BOSS 管理者
     [ScriptMethod(name: "\ue069\ue060 协作程序 魔科学射线α（蛋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31451"])]
     public void 协作程序_魔科学射线α(Event @event, ScriptAccessory accessory)
@@ -914,7 +989,9 @@ public class Eureka_Orthos {
         accessory.Method.TextInfo("诱导五连AOE", duration: 3000, true);
         accessory.Method.TTS("诱导五连AOE");
     }
+    #endregion
     
+    #region 91~100层 小怪
     // 91~100层 小怪
     [ScriptMethod(name: "—————— \ue069\ue061 ~ \ue061\ue060\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
@@ -931,12 +1008,6 @@ public class Eureka_Orthos {
         dp.DestoryAt = 7200;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-    
-    [ScriptMethod(name: "正统系统γ 高压电流 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75[38|51]$"], userControl: false)]
-    public void 正统系统γ_高压电流打断销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"正统系统γ_高压电流{@event.TargetId()}");
     }
     
     [ScriptMethod(name: "\ue05e 正统系统γ 排斥炮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32877"])]
@@ -1202,8 +1273,9 @@ public class Eureka_Orthos {
         dp.DestoryAt = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
-    
-    
+    #endregion
+
+    #region 99 BOSS 王者之剑
     // 99 BOSS 王者之剑
     [ScriptMethod(name:"Reset_Caliburni_石中剑重置",userControl:false,eventType:EventTypeEnum.Chat,
         eventCondition:["Type:NPCDialogueAnnouncements","Message:regex:^连接良好.*","Sender:斗神 王者之剑"])]
@@ -1406,8 +1478,12 @@ public class Eureka_Orthos {
         dp.Delay = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    #endregion
+
     
 }
+
+
 
 
 public static class EventExtensions

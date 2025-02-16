@@ -33,5 +33,16 @@
         "Author": "南雲鉄虎",
         "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E10n.cs",
         "UpdateInfo": ""
+    },
+
+    {
+        "Name": "死者宫殿",
+        "Guid": "4210c323-eba4-4d67-a7e7-b90799494729",
+        "Version": "0.0.0.1",
+        "Author": "南雲鉄虎",
+        "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/the_Palace_of_the_Dead.cs",
+        "UpdateInfo": ""
+    
     }
+
     ]
