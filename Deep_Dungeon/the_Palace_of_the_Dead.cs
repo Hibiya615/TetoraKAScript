@@ -14,6 +14,7 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading;
 
 namespace the_Palace_of_the_Dead;
 
@@ -57,6 +58,13 @@ public class the_Palace_of_the_Dead
         KnockPenalty = false;
     }
     
+    //190 治疗爆弹怪 计数  注意暂时还没有写重置计数!!
+    private int timesRemedyBomb=0;
+    public void Init(ScriptAccessory accessory) {
+        
+        timesRemedyBomb=0;  //190 治疗爆弹怪 计数
+        
+    }
     
     // 通用内容
     [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6397"])]
@@ -552,8 +560,90 @@ public class the_Palace_of_the_Dead
     public void 治疗爆弹怪_击杀提示(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("击杀治疗爆弹怪", duration: 5, true);
-        accessory.Method.TTS("击杀治疗爆弹怪");
+        accessory.Method.TTS("击杀治疗爆弹怪"); 
+        //Interlocked.Increment(ref timesRemedyBomb);  //防止多线程出问题，锁定一下
+        //++timesRemedyBomb; //记录 治疗爆弹怪出现次数  注意：还没有写重置次数条件
     }
+    
+    
+    /*  有点计数问题，先放着等有缘人修
+    [ScriptMethod(name: "\ue061\ue069\ue060 熔岩爆弹怪 出现位置预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
+    public void 熔岩爆弹怪_震撼弹预测(Event @event, ScriptAccessory accessory)
+    {
+        //在治疗爆弹怪 刷新约54s后 出现熔岩爆弹怪 ，期间BOSS会读条3次 [7169]地面爆破  第3次与第2次间隔较长，应在第3次黄圈读条时准备将BOSS拉去刷新位置
+        //暂未知 治疗爆弹怪死亡时间 与BOSS黄圈技能时间轴是否有关联
+        //在刷新45s时 大约会读条第3次黄圈，故应 Delay = 45000，DestoryAt = 9000
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "熔岩爆弹怪_震撼弹预测";
+        dp.Color = new Vector4(0f, 0f, 1f, 1f);
+        dp.Scale = new Vector2(7.2f);
+        dp.Delay = 45000;
+        dp.DestoryAt = 9000;
+        
+        switch(timesRemedyBomb) {
+
+            case 1: {
+                dp.Position = new Vector3(-288.63f, 0.14f,-300.26f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+
+            case 2:{
+                dp.Position = new Vector3(-297.46f, 0.12f,-297.52f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+
+            case 3:{
+                dp.Position = new Vector3(-288.84f, 0.12f,-305.54f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+            
+            case 4:{
+                dp.Position = new Vector3(-309.13f, 0.05f,-303.74f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+            
+            case 5:{
+                dp.Position = new Vector3(-298.36f, 0.05f,-293.63f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+            
+            case 6:{
+                dp.Position = new Vector3(-301.96f, 0.05f,-314.29f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+            
+            case 7:{
+                dp.Position = new Vector3(-299.12f, 0.05f,-297.56f);
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+
+            default: {
+                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                break;
+            }
+
+        }
+        
+        //accessory.Method.TextInfo("已预测 <熔岩爆弹怪> 刷新位置", duration: 5, false);
+        //accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");   
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "熔岩爆弹怪 震撼弹预测销毁", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"], userControl: false)]
+    public void 熔岩爆弹怪_震撼弹预测销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"熔岩爆弹怪_震撼弹预测");
+    }
+    
+    */
     
     [ScriptMethod(name: "\ue061\ue069\ue060 熔岩爆弹怪 震撼弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"])]
     public void 熔岩爆弹怪_震撼弹(Event @event, ScriptAccessory accessory)
