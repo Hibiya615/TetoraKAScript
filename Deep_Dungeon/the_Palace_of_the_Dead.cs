@@ -576,7 +576,7 @@ public class the_Palace_of_the_Dead
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "熔岩爆弹怪_震撼弹预测";
-        dp.Color = new Vector4(0f, 0f, 1f, 1f);
+        dp.Color = new Vector4(0f, 0f, 1f, 1.5f);
         dp.Scale = new Vector2(7.2f);
         dp.Delay = 45000;
         dp.DestoryAt = 9000;

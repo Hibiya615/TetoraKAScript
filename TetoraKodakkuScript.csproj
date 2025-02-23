@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<?xml version='1.0' encoding='utf-8'?>
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net8.0-windows</TargetFramework>
@@ -10,7 +11,7 @@
 
     <PropertyGroup>
         <DalamudLibPath>$(appdata)\XIVLauncherCN\addon\Hooks\dev\</DalamudLibPath>
-        <KodakkuLibPath>$(appdata)\XIVLauncherCN\installedPlugins\KodakkuAssist\0.1.15.0\</KodakkuLibPath>
+        <KodakkuLibPath>$(appdata)\XIVLauncherCN\installedPlugins\KodakkuAssist\0.1.17.0\</KodakkuLibPath>
     </PropertyGroup>
 
     <ItemGroup>
