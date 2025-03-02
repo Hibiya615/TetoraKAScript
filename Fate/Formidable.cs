@@ -62,6 +62,20 @@ public class Formidable
         accessory.Method.TTS("击杀小怪");
     }
     
+    
+    [ScriptMethod(name: "燃烧弹（地面黄圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:17397"])]
+    public void 燃烧弹(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "燃烧弹";
+        dp.Color = new Vector4(1f, 0.5f, 0f, 1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(7f);
+        dp.DestoryAt = 4700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "格鲁格之火 吸引范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:17395"])]
     public void 格鲁格之火Inhale(Event @event, ScriptAccessory accessory)
     {

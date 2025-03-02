@@ -54,6 +54,110 @@ public class Mica_the_Magical_Mu
         accessory.Method.RemoveDraw("迷失连线");
     }
     
+    [ScriptMethod(name: "卡牌戏法_抽卡安全区", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:39156"])]
+    public void 卡牌戏法Safe(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "卡牌戏法Safe";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultSafeColor; 
+        dp.Scale = new(14f, 20f); 
+        dp.DestoryAt = 1200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+    
+    [ScriptMethod(name: "卡牌戏法_抽卡危险区", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:38679"])]
+    public void 卡牌戏法Danger(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "卡牌戏法Danger";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Scale = new(14f, 20f); 
+        dp.DestoryAt = 1200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+
+    [ScriptMethod(name: "骑滚球（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3899[6-9]$"])]
+    public void 骑滚球(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "骑滚球";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Delay = 1700;
+        dp.DestoryAt = 8500;
+        switch (@event.ActionId())
+        {
+            case 38996:
+                dp.Scale = new(10, 20f);
+                break;
+
+            case 38997: 
+            case 38998: 
+            case 38999: 
+                dp.Scale = new(10, 52f);
+                break;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    [ScriptMethod(name: "喝彩回应-魔术爆发（二段钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:38697"])]
+    public void 魔术爆发(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "魔术爆发";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f);
+        dp.Delay = 4600;
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "盛装致敬-魔术环（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:38700"])]
+    public void 魔术环(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "魔术环";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f);
+        dp.InnerScale = new Vector2(10f);
+        dp.Radian = float.Pi * 2;
+        dp.Delay = 4600;
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "双重魔术雷（二段扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:38694"])]
+    public void 双重魔术雷(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+
+        dp.Name = "双重魔术雷";
+        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40);
+        dp.Radian = 60f.DegToRad();
+        dp.Delay = 4600;
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
+    
+    [ScriptMethod(name: "倾泻的闪烁（魔术环直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:38692"])]
+    public void 倾泻的闪烁(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "倾泻的闪烁";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Scale = new(5f, 42f); 
+        dp.Delay = 800;
+        dp.DestoryAt = 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+
 }
 
 

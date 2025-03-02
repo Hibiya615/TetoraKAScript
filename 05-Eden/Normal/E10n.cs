@@ -233,23 +233,23 @@ public class E10n
         dp.DestoryAt = 6200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
 
-        dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "影之王权描边";
-        dp.Color = new Vector4(1f, 1f, 0f, 8f);
-        dp.Scale = new(16.08f);
-        dp.InnerScale = new(16);
-        dp.Radian = float.Pi * 2;
-        dp.Owner = @event.SourceId();
-        dp.DestoryAt = 6200;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = "影之王权描边";
+        dp1.Color = new Vector4(1f, 1f, 0f, 8f);
+        dp1.Scale = new(16.08f);
+        dp1.InnerScale = new(16);
+        dp1.Radian = float.Pi * 2;
+        dp1.Owner = @event.SourceId();
+        dp1.DestoryAt = 6200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
         
-        dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "影之王权填充";
-        dp.Color = new Vector4(1f, 1f, 0.2f, .8f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(16f);
-        dp.DestoryAt = 6200;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        var dp2 = accessory.Data.GetDefaultDrawProperties();
+        dp2.Name = "影之王权填充";
+        dp2.Color = new Vector4(1f, 1f, 0.2f, .8f);
+        dp2.Owner = @event.SourceId();
+        dp2.Scale = new Vector2(16f);
+        dp2.DestoryAt = 6200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp2);
     }
     
     [ScriptMethod(name: "影之斩击（直线死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:23307"])]

@@ -27,6 +27,7 @@ public class Ttokrrone
         v0.0.0.1:
         LV100 特殊Fate 绘制
         蛇王得酷热涅：荒野的死斗
+        已知问题：回旋沙暴可能会无法销毁、可能存在方向绘制错误
         """;
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
