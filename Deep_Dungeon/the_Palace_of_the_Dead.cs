@@ -15,18 +15,19 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.1",note: noteStr)]
+    version: "0.0.0.2",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         重要：1~80层暂无录像证实，可能会有部分绘制错误，如发现错误请带着ARR联系我
@@ -66,6 +67,8 @@ public class the_Palace_of_the_Dead
         
     }
     
+    private bool isExplosionInterrupted = false;  // 190层 特大爆炸打断状态
+    
     // 通用内容
     [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6397"])]
     public void 拟态怪_怨念(Event @event, ScriptAccessory accessory)
@@ -76,19 +79,19 @@ public class the_Palace_of_the_Dead
     
     #region  1~10层
     // 1~10层
-    [ScriptMethod(name: "—————— \ue061 ~ \ue061\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 1 ~ 10 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第1层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region  11~20层
     // 11~20层
-    [ScriptMethod(name: "—————— \ue061\ue061 ~ \ue062\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 11 ~ 20 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第11层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region 21~30层
     // 21~30层
-    [ScriptMethod(name: "—————— \ue062\ue061 ~ \ue063\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第21层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "地宫斯卡尼特 唧唧咋咋（睡眠钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6365"])]
@@ -105,7 +108,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue063\ue060 宁吉兹济达 恐惧迷雾（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6429"])]
+    [ScriptMethod(name: "30 宁吉兹济达 恐惧迷雾（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6429"])]
     public void 宁吉兹济达_恐惧迷雾(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -122,7 +125,7 @@ public class the_Palace_of_the_Dead
     
     #region  31~40层
     // 31~40层
-    [ScriptMethod(name: "—————— \ue063\ue061 ~ \ue064\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 31 ~ 40 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第31层(Event @event, ScriptAccessory accessory) { }
     
     // 注：此处的噩梦曼提克 撕裂利爪 的技能ID 同 141~149 深宫曼提克 撕裂利爪 ； 均为 5m + 目标圈 ，暂未核实目标圈是否相同
@@ -131,25 +134,25 @@ public class the_Palace_of_the_Dead
     
     #region  41~50层
     // 41~50层
-    [ScriptMethod(name: "—————— \ue064\ue061 ~ \ue065\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 41 ~ 50 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第41层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region  51~60层
     // 51~60层
-    [ScriptMethod(name: "—————— \ue065\ue061 ~ \ue066\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region  61~70层
     // 61~70层
-    [ScriptMethod(name: "—————— \ue066\ue061 ~ \ue067\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 61 ~ 70 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region  71~80层
     // 71~80层
-    [ScriptMethod(name: "—————— \ue067\ue061 ~ \ue068\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 71 ~ 80 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第71层(Event @event, ScriptAccessory accessory) { }
     
     // 地宫独眼巨人 百吨回转（钢铁）同 171~179层的 深宫独眼雪巨人 百吨回转（钢铁），猜测目标圈为 4m 暂未实证。
@@ -170,7 +173,7 @@ public class the_Palace_of_the_Dead
     
     /*  没有龙卷风的 DataID
     // 80 BOSS 古丹纳
-    [ScriptMethod(name: "\ue068\ue060 古丹纳 吸引（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:？？？"])]
+    [ScriptMethod(name: "80 古丹纳 吸引（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:？？？"])]
     public void 古丹纳_吸引(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -187,7 +190,7 @@ public class the_Palace_of_the_Dead
     
     #region  81~90层
     // 81~90层 小怪
-    [ScriptMethod(name: "—————— \ue068\ue061 ~ \ue069\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 81 ~ 90 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "地宫奇美拉 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7078","SourceName:地宫奇美拉"])]
@@ -217,7 +220,7 @@ public class the_Palace_of_the_Dead
     }
     
     // 90层 BOSS 爆弹怪教母
-    [ScriptMethod(name: "\ue069\ue060 熔岩爆弹怪 自爆（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6377"])]
+    [ScriptMethod(name: "90 熔岩爆弹怪 自爆（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6377"])]
     public void 熔岩爆弹怪_自爆(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -229,14 +232,14 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue069\ue060 灰色爆弹怪 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6376"])]
+    [ScriptMethod(name: "90 灰色爆弹怪 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6376"])]
     public void 灰色爆弹怪_击杀提示(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("击杀灰色爆弹怪", duration: 5, true);
         accessory.Method.TTS("击杀灰色爆弹怪");
     }
     
-    [ScriptMethod(name: "\ue069\ue060 眩晕爆弹怪 寒霜弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6378"])]
+    [ScriptMethod(name: "90 眩晕爆弹怪 寒霜弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6378"])]
     public void 眩晕爆弹怪_震撼弹(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("将眩晕爆弹怪推至BOSS脚下", duration: 5, true);
@@ -258,15 +261,21 @@ public class the_Palace_of_the_Dead
     }
     #endregion
     
+    #region 91~100层
+    // 91~100层
+    [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 第91层(Event @event, ScriptAccessory accessory) { }
+    #endregion
+    
     #region 101~110层
     // 101~110层
-    [ScriptMethod(name: "—————— \ue061\ue060\ue061 ~ \ue061\ue061\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 101 ~ 110 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第101层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region 111~120层
     // 111~120层
-    [ScriptMethod(name: "—————— \ue061\ue061\ue061 ~ \ue061\ue062\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 111 ~ 120 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第111层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "深宫蝾螈 粘膜 打断提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7014"])]
@@ -279,7 +288,7 @@ public class the_Palace_of_the_Dead
     
     #region 121~130层
     // 121~130层
-    [ScriptMethod(name: "—————— \ue061\ue062\ue061 ~ \ue061\ue063\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 121 ~ 130 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第121层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "深宫弥诺陶洛斯 百一十吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6364"])]
@@ -295,7 +304,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue061\ue063\ue060 埃尔法德 恐惧迷雾（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7141"])]
+    [ScriptMethod(name: "130 埃尔法德 恐惧迷雾（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7141"])]
     public void 埃尔法德_恐惧迷雾(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -313,7 +322,7 @@ public class the_Palace_of_the_Dead
     
     #region 131~140层
     // 131~140层
-    [ScriptMethod(name: "—————— \ue061\ue063\ue061 ~ \ue061\ue064\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 131 ~ 140 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第131层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "深宫鬼鱼 吸蚀（吸引）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6372"])]
@@ -346,7 +355,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 深宫冥鬼之眼 5级石化 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7031"])]
+    [ScriptMethod(name: "深宫冥鬼之眼 5级石化 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7031"])]
     public void 深宫冥鬼之眼_5级石化(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -363,7 +372,7 @@ public class the_Palace_of_the_Dead
     
     #region 141~150层
     // 141~150层 小怪
-    [ScriptMethod(name: "—————— \ue061\ue064\ue061 ~ \ue061\ue065\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 141 ~ 150 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第141层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "深宫浮灵 强麻痹 打断提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6386"])]
@@ -396,7 +405,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 深宫曼提克 撕裂利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6394"])]
+    [ScriptMethod(name: "深宫曼提克 撕裂利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6394"])]
     public void 深宫曼提克_撕裂利爪(Event @event, ScriptAccessory accessory)
     {
         // 此绘制的技能ID同 31~49层的 噩梦曼提克 撕裂利爪，均为 5m + 目标圈 
@@ -414,7 +423,7 @@ public class the_Palace_of_the_Dead
     
     #region 151~160层
     // 151~160层 小怪
-    [ScriptMethod(name: "—————— \ue061\ue065\ue061 ~ \ue061\ue066\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 151 ~ 160 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第151层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "深宫小恶魔 冰棘屏障 打断提醒", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6943"])]
@@ -427,13 +436,13 @@ public class the_Palace_of_the_Dead
     
     #region 161~170层
     // 161~170层
-    [ScriptMethod(name: "—————— \ue061\ue066\ue061 ~ \ue061\ue067\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 161 ~ 170 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第161层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region 171~180层 小怪
     // 171~180层 小怪
-    [ScriptMethod(name: "—————— \ue061\ue067\ue061 ~ \ue061\ue068\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 171 ~ 180 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第171层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "深宫独眼雪巨人 怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7061"])]
@@ -482,7 +491,7 @@ public class the_Palace_of_the_Dead
 
     #region 180层 BOSS 丹代恩索涅
     //180 BOSS 丹代恩索涅
-    [ScriptMethod(name: "\ue061\ue068\ue060 丹代恩索涅 吸引（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6384"])]
+    [ScriptMethod(name: "180 丹代恩索涅 吸引（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6384"])]
     public void 丹代恩索涅_吸引(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -500,7 +509,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.RemoveDraw($"丹代恩索涅_吸引{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "\ue061\ue068\ue060 丹代恩索涅 黄道陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7166"])]
+    [ScriptMethod(name: "180 丹代恩索涅 黄道陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7166"])]
     public void 丹代恩索涅_黄道陨石(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("80%真伤", duration: 5, true);
@@ -510,10 +519,10 @@ public class the_Palace_of_the_Dead
 
     #region 181~190层 小怪
     // 181~190层 小怪
-    [ScriptMethod(name: "—————— \ue061\ue068\ue061 ~ \ue061\ue069\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 181 ~ 190 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第181层(Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "\ue05e 深宫加姆 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7078","SourceName:深宫加姆"])]
+    [ScriptMethod(name: "深宫加姆 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7078","SourceName:深宫加姆"])]
     public void 深宫加姆_寒冰咆哮(Event @event, ScriptAccessory accessory)
     {
         // 此处的 深宫加姆 与 81~90层的 地宫奇美拉 所释放的 钢铁月环 技能ID相同 ，但其对应的目标圈不同 ，所以需要区分画图
@@ -526,7 +535,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 深宫加姆 雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7079","SourceName:深宫加姆"])]
+    [ScriptMethod(name: "深宫加姆 雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7079","SourceName:深宫加姆"])]
     public void 深宫加姆_雷电咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -543,7 +552,7 @@ public class the_Palace_of_the_Dead
     
     #region 190层 BOSS 爆弹怪教父
     // 190层 BOSS 爆弹怪教父
-    [ScriptMethod(name: "\ue061\ue069\ue060 眩晕爆弹怪 冰碎（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6387"])]
+    [ScriptMethod(name: "190 眩晕爆弹怪 冰碎（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6387"])]
     public void 眩晕爆弹怪_冰碎(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -556,7 +565,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue061\ue069\ue060 治疗爆弹怪 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
+    [ScriptMethod(name: "190 治疗爆弹怪 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
     public void 治疗爆弹怪_击杀提示(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("击杀治疗爆弹怪", duration: 5, true);
@@ -567,7 +576,7 @@ public class the_Palace_of_the_Dead
     
     
     /*  有点计数问题，先放着等有缘人修
-    [ScriptMethod(name: "\ue061\ue069\ue060 熔岩爆弹怪 出现位置预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
+    [ScriptMethod(name: "190 熔岩爆弹怪 出现位置预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
     public void 熔岩爆弹怪_震撼弹预测(Event @event, ScriptAccessory accessory)
     {
         //在治疗爆弹怪 刷新约54s后 出现熔岩爆弹怪 ，期间BOSS会读条3次 [7169]地面爆破  第3次与第2次间隔较长，应在第3次黄圈读条时准备将BOSS拉去刷新位置
@@ -645,7 +654,7 @@ public class the_Palace_of_the_Dead
     
     */
     
-    [ScriptMethod(name: "\ue061\ue069\ue060 熔岩爆弹怪 震撼弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"])]
+    [ScriptMethod(name: "190 熔岩爆弹怪 震撼弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"])]
     public void 熔岩爆弹怪_震撼弹(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("将熔岩爆弹怪推至BOSS脚下", duration: 5, true);
@@ -666,28 +675,35 @@ public class the_Palace_of_the_Dead
         accessory.Method.RemoveDraw($"熔岩爆弹怪_震撼弹");
     }
     
-   /*
-    [ScriptMethod(name: "\ue061\ue069\ue060 爆弹怪教父 特大爆炸提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7103"])]
-    public void 爆弹怪教父_特大爆炸提示(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 10, true);
-        accessory.Method.TTS("99.9%真伤，注意瞬回");
+    
+    [ScriptMethod(name: "190 爆弹怪教父 特大爆炸提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7103"])]
+    public async void 爆弹怪教父_特大爆炸提示(Event @event, ScriptAccessory accessory)
+    { 
+        isExplosionInterrupted = false;
+        
+        await Task.Delay(14800);
+            
+        if (!isExplosionInterrupted)
+        {
+            accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 10, true);
+            accessory.Method.TTS("99.9%真伤，注意瞬回");
+        }
+        else
+        {
+        }
     }
-    */
     
     [ScriptMethod(name: "特大爆炸打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:7103"], userControl: false)]
     public void 特大爆炸打断销毁(Event @event, ScriptAccessory accessory)
     {
-        /* 判断读条时间：
-         if 7103 读条至14.8s时 ：触发方法
-         else：取消对应方法触发
-         */
+        isExplosionInterrupted = true;
     }
+
     #endregion
     
     #region 191~200层 小怪
     // 191~200层 小怪
-    [ScriptMethod(name: "—————— \ue061\ue069\ue061 ~ \ue062\ue060\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 191 ~ 200 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第191层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "奥尼克斯龙 邪视（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7043"])]
@@ -702,7 +718,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 深宫幽鬼之眼 5级即死 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7084"])]
+    [ScriptMethod(name: "深宫幽鬼之眼 5级即死 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7084"])]
     public void 深宫幽鬼之眼_5级即死(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();

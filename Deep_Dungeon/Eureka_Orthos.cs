@@ -14,17 +14,19 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
+
 
 namespace Eureka_Orthos;
 
 [ScriptType(guid: "5e8a4051-53f7-4eb3-bb32-b18df8b113aa", name: "正统优雷卡", 
     territorys: [1099,1100,1101,1102,1103,1104,1105,1106,1107,1108],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Eureka_Orthos {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         正统优雷卡绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         现支持层数：1~20、71~100
@@ -120,7 +122,7 @@ public class Eureka_Orthos {
     
     #region 1~10层 小怪
     // 1~10层 小怪
-    [ScriptMethod(name: "—————— \ue061 ~ \ue061\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 1 ~ 10 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第1层(Event @event, ScriptAccessory accessory) { }
     [ScriptMethod(name: "正统贝希摩斯 黄道陨石（狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33043"])]
     public void 正统贝希摩斯_黄道陨石(Event @event, ScriptAccessory accessory)
@@ -151,7 +153,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统幽鬼之眼 恐怖视线（顺劈背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32386"])]
+    [ScriptMethod(name: "正统幽鬼之眼 恐怖视线（顺劈背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32386"])]
     public void 正统幽鬼之眼_恐怖视线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -168,7 +170,7 @@ public class Eureka_Orthos {
     
     #region 10 BOSS 蜜言妖
     // 10 BOSS 蜜言妖
-    [ScriptMethod(name: "\ue061\ue060 蜜言妖 蔓德拉地雷（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31478"])]
+    [ScriptMethod(name: "10 蜜言妖 蔓德拉地雷（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31478"])]
     public void 蜜言妖_蔓德拉地雷(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -180,7 +182,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue061\ue060 蜜言妖 蔓德拉地雷（麻将）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32700"])]
+    [ScriptMethod(name: "10 蜜言妖 蔓德拉地雷（麻将）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32700"])]
     public void 蜜言妖_蔓德拉地雷II(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -196,7 +198,7 @@ public class Eureka_Orthos {
 
     #region 11~20层 小怪
     // 11~20层 小怪
-    [ScriptMethod(name: "—————— \ue061\ue061 ~ \ue062\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 11 ~ 20 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第11层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "正统锯齿花 均衡打击（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32403"])]
@@ -226,7 +228,7 @@ public class Eureka_Orthos {
     }
     
     
-    [ScriptMethod(name: "\ue062\ue060 盾龙复制体_连线预兆", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0016"])]
+    [ScriptMethod(name: "20 盾龙复制体_连线预兆", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0016"])]
     public void 盾龙复制体_连线预兆(Event @event, ScriptAccessory accessory)
     {        
         //开场 第1次连线3根、第2次连线5根 实体在场外，需要作一定偏移，之后正常
@@ -289,7 +291,7 @@ public class Eureka_Orthos {
         */
     }
     
-    [ScriptMethod(name: "\ue062\ue060 盾龙复制体_火焰吐息", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32864"])]
+    [ScriptMethod(name: "20 盾龙复制体_火焰吐息", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32864"])]
     public void 盾龙复制体_火焰吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -306,7 +308,7 @@ public class Eureka_Orthos {
     
     #region 21~30层 小怪
     // 21~30层 小怪
-    [ScriptMethod(name: "—————— \ue062\ue061 ~ \ue063\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第21层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
@@ -316,7 +318,7 @@ public class Eureka_Orthos {
 
     #region 31~40层 小怪
     // 31~40层 小怪
-    [ScriptMethod(name: "—————— \ue063\ue061 ~ \ue064\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 31 ~ 40 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第31层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
@@ -326,7 +328,7 @@ public class Eureka_Orthos {
 
     #region 41~50层 小怪
     // 41~50层 小怪
-    [ScriptMethod(name: "—————— \ue064\ue061 ~ \ue065\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 41 ~ 50 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第41层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
@@ -336,7 +338,7 @@ public class Eureka_Orthos {
 
     #region 51~60层 小怪
     // 51~60层 小怪
-    [ScriptMethod(name: "—————— \ue065\ue061 ~ \ue066\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
@@ -346,7 +348,7 @@ public class Eureka_Orthos {
 
     #region 61~70层 小怪
     // 61~70层 小怪
-    [ScriptMethod(name: "—————— \ue066\ue061 ~ \ue067\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 61 ~ 70 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
@@ -356,7 +358,7 @@ public class Eureka_Orthos {
 
     #region 71~80层 小怪
     // 71~80层 小怪
-    [ScriptMethod(name: "—————— \ue067\ue061 ~ \ue068\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 71 ~ 80 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第71层(Event @event, ScriptAccessory accessory) { }
     
 
@@ -456,7 +458,7 @@ public class Eureka_Orthos {
     }
     */
     
-    [ScriptMethod(name: "\ue05e 正统长须豹 回旋尾（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32647"])]
+    [ScriptMethod(name: "正统长须豹 回旋尾（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32647"])]
     public void 正统长须豹_回旋尾(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -471,7 +473,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统雷兽 尾镰（趴地钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32656"])]
+    [ScriptMethod(name: "正统雷兽 尾镰（趴地钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32656"])]
     public void 正统雷兽_尾镰(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -484,7 +486,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统雷兽 电火花（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32660"])]
+    [ScriptMethod(name: "正统雷兽 电火花（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32660"])]
     public void 正统雷兽_电火花(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -498,7 +500,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "\ue0bc 正统大脚巨猿 吃香蕉", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33195"])]
+    [ScriptMethod(name: "正统大脚巨猿 吃香蕉", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33195"])]
     public void 正统大脚巨猿_吃香蕉(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -511,12 +513,12 @@ public class Eureka_Orthos {
     }
     
     [ScriptMethod(name: "正统大脚巨猿 吃香蕉销毁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32680"], userControl: false)]
-    public void 深宫大脚巨猿_吃香蕉销毁(Event @event, ScriptAccessory accessory)
+    public void 正统大脚巨猿_吃香蕉销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"正统大脚巨猿_吃香蕉{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "\ue0bc 正统大脚巨猿 捶胸（脱战钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32680"])]
+    [ScriptMethod(name: "正统大脚巨猿 捶胸（脱战钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32680"])]
     public void 正统大脚巨猿_捶胸(Event @event, ScriptAccessory accessory)
     {
         //33195 吃香蕉 1.7s ； 32680 捶胸 1.7s ； 伤害提高 61
@@ -531,7 +533,7 @@ public class Eureka_Orthos {
     }
     
     [ScriptMethod(name: "正统大脚巨猿 捶胸销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(6499|3266[12])$"], userControl: false)]
-    public void 深宫大脚巨猿_捶胸销毁(Event @event, ScriptAccessory accessory)
+    public void 正统大脚巨猿_捶胸销毁(Event @event, ScriptAccessory accessory)
     {
         // 6499 平A攻击 ； 32661 打飞 ； 32662 殴打
         accessory.Method.RemoveDraw($"正统大脚巨猿_捶胸{@event.SourceId()}");
@@ -540,7 +542,7 @@ public class Eureka_Orthos {
 
     #region 80 BOSS 原形卡利亚
     // 80 BOSS 原形卡利亚
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 共鸣（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31422"])]
+    [ScriptMethod(name: "80 原形卡利亚 共鸣（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31422"])]
     public void 原形卡利亚_共鸣(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -555,7 +557,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 气压领域 内圈即死范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(31427|32930)$"])]
+    [ScriptMethod(name: "80 原形卡利亚 气压领域 内圈即死范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(31427|32930)$"])]
     public void 原形卡利亚_气压领域_内(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -567,7 +569,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 气压领域 外圈即死范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31427"])]
+    [ScriptMethod(name: "80 原形卡利亚 气压领域 外圈即死范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31427"])]
     public void 原形卡利亚_气压领域_外(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -581,51 +583,39 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 前方神经毒气喷射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32933"])]
-    public void 原形卡利亚_前方神经毒气喷射(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "80 原形卡利亚 神经毒气喷射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3293[3-5])$"])]
+    public void 原形卡利亚_神经毒气喷射(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "原形卡利亚_前方神经毒气喷射";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(25f);
-        dp.Radian = 120f.DegToRad();
         dp.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
-    
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 左侧神经毒气喷射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32934"])]
-    public void 原形卡利亚_左侧神经毒气喷射(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "原形卡利亚_左侧神经毒气喷射";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(25f);
-        dp.Radian = 180f.DegToRad();
-        dp.Rotation = 135f.DegToRad();
-        dp.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
-    
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 右侧神经毒气喷射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32935"])]
-    public void 原形卡利亚_右侧神经毒气喷射(Event @event, ScriptAccessory accessory)
+    switch (@event.ActionId())
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
+        case 32933: 
+            dp.Name = "前方神经毒气喷射";
+            dp.Radian = 120f.DegToRad();
+        break;
 
-        dp.Name = "原形卡利亚_右侧神经毒气喷射";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(25f);
-        dp.Radian = 180f.DegToRad();
-        dp.Rotation = 225f.DegToRad();
-        dp.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+        case 32934: 
+            dp.Name = "左侧神经毒气喷射";
+            dp.Radian = 180f.DegToRad();
+            dp.Rotation = 135f.DegToRad();
+        break;
+
+        case 32935: 
+            dp.Name = "右侧神经毒气喷射";
+            dp.Radian = 180f.DegToRad();
+            dp.Rotation = 225f.DegToRad();
+        break;
     }
+    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+}
     
-    [ScriptMethod(name: "\ue068\ue060 原形卡利亚 环状神经毒气喷射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32930"])]
+    [ScriptMethod(name: "80 原形卡利亚 环状神经毒气喷射", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32930"])]
     public void 原形卡利亚_环状神经毒气喷射(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -655,7 +645,7 @@ public class Eureka_Orthos {
 
     #region 81~90层 小怪
     // 81~90层 小怪
-    [ScriptMethod(name: "—————— \ue068\ue061 ~ \ue069\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 81 ~ 90 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "正统卡托布莱帕斯 恶魔之瞳（脱战背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32762"])]
@@ -749,7 +739,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统铁面腐尸 追打 TTS", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:32757"])]
+    [ScriptMethod(name: "正统铁面腐尸 追打 TTS", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:32757"])]
     public void 正统铁面腐尸_追打(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TTS("远离正面");
@@ -757,7 +747,7 @@ public class Eureka_Orthos {
     }
     
 
-    [ScriptMethod(name: "\ue05e 正统铁面腐尸 挥舞（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32759"])]
+    [ScriptMethod(name: "正统铁面腐尸 挥舞（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32759"])]
     public void 正统铁面腐尸_挥舞(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -771,9 +761,10 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
 
-    [ScriptMethod(name: "\ue05e 正统贪吃鬼 发霉喷嚏（顺劈）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:32748"])]
+    [ScriptMethod(name: "正统贪吃鬼 发霉喷嚏（顺劈）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:32748"])]
     public void 正统贪吃鬼_发霉喷嚏(Event @event, ScriptAccessory accessory)
     {
+        //此处捕获的为 “吸气” 以更早触发提示 
         accessory.Method.TTS("远离正面");
         var dp = accessory.Data.GetDefaultDrawProperties();
 
@@ -788,7 +779,7 @@ public class Eureka_Orthos {
     }
     
     /*
-    [ScriptMethod(name: "\ue05e 正统贪吃鬼 发霉喷嚏（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32749"])]
+    [ScriptMethod(name: "正统贪吃鬼 发霉喷嚏（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32749"])]
     public void 正统贪吃鬼_发霉喷嚏(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -803,7 +794,7 @@ public class Eureka_Orthos {
     }
     */
     
-    [ScriptMethod(name: "\ue05e 正统妖影 左侧横扫", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32776"])]
+    [ScriptMethod(name: "正统妖影 左侧横扫", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32776"])]
     public void 正统妖影_左侧横扫(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -818,7 +809,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue05e 正统妖影 右侧横扫", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32777"])]
+    [ScriptMethod(name: "正统妖影 右侧横扫", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32777"])]
     public void 正统妖影_右侧横扫(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -833,7 +824,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue05e 正统妖影 圆形爆发（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32774"])]
+    [ScriptMethod(name: "正统妖影 圆形爆发（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32774"])]
     public void 正统妖影_圆形爆发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -846,7 +837,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统妖影 环形爆发（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32775"])]
+    [ScriptMethod(name: "正统妖影 环形爆发（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32775"])]
     public void 正统妖影_环形爆发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -863,7 +854,7 @@ public class Eureka_Orthos {
     
     #region 90 BOSS 管理者
     // 90 BOSS 管理者
-    [ScriptMethod(name: "\ue069\ue060 协作程序 魔科学射线α（蛋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31451"])]
+    [ScriptMethod(name: "90 协作程序 魔科学射线α（蛋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31451"])]
     public void 协作程序_魔科学射线α(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -878,7 +869,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue069\ue060 协作程序 魔科学射线β（方块激光）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31452"])]
+    [ScriptMethod(name: "90 协作程序 魔科学射线β（方块激光）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31452"])]
     public void 协作程序_魔科学射线β(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -891,7 +882,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "\ue069\ue060 协作程序 魔科学射线γ（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31453"])]
+    [ScriptMethod(name: "90 协作程序 魔科学射线γ（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31453"])]
     public void 协作程序_魔科学射线γ(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -906,7 +897,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "\ue069\ue060 协作程序 魔科学射线γ（月环内径）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31453"])]
+    [ScriptMethod(name: "90 协作程序 魔科学射线γ（月环内径）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31453"])]
     public void 协作程序_魔科学射线γ内径(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -921,7 +912,7 @@ public class Eureka_Orthos {
     }
     
     //齐射程序 的直线激光，可以考虑抓 BOSS本体读条 31455 delay（或者不用）来给边缘描个框 以作提前绘制 [?
-    [ScriptMethod(name: "\ue069\ue060 齐射程序 魔科学射线α（蛋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32832"])]
+    [ScriptMethod(name: "90 齐射程序 魔科学射线α（蛋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32832"])]
     public void 齐射程序_魔科学射线α(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -935,7 +926,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue069\ue060 杀戮程序 魔科学射线β（方块激光）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32833"])]
+    [ScriptMethod(name: "90 杀戮程序 魔科学射线β（方块激光）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32833"])]
     public void 杀戮程序_魔科学射线β(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -948,7 +939,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "\ue069\ue060 管理者 环状射线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31447"])]
+    [ScriptMethod(name: "90 管理者 环状射线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31447"])]
     public void 管理者_环状射线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -963,7 +954,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "\ue069\ue060 管理者 十字射线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31448"])]
+    [ScriptMethod(name: "90 管理者 十字射线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31448"])]
     public void 管理者_十字射线(Event @event, ScriptAccessory accessory)
     {
         var currentProperty = accessory.Data.GetDefaultDrawProperties();
@@ -983,7 +974,7 @@ public class Eureka_Orthos {
         
     }
     
-    [ScriptMethod(name: "\ue069\ue060 管理者 执行杀戮程序 诱导黄圈提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31454"])]
+    [ScriptMethod(name: "90 管理者 执行杀戮程序 诱导黄圈提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31454"])]
     public void 管理者_执行杀戮程序(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.TextInfo("诱导五连AOE", duration: 3000, true);
@@ -993,11 +984,11 @@ public class Eureka_Orthos {
     
     #region 91~100层 小怪
     // 91~100层 小怪
-    [ScriptMethod(name: "—————— \ue069\ue061 ~ \ue061\ue060\ue060 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
     
     
-    [ScriptMethod(name: "\ue05e 正统系统γ 高压电流（打断钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32878"])]
+    [ScriptMethod(name: "正统系统γ 高压电流（打断钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32878"])]
     public void 正统系统γ_高压电流(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1010,7 +1001,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统系统γ 排斥炮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32877"])]
+    [ScriptMethod(name: "正统系统γ 排斥炮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32877"])]
     public void 正统系统γ_排斥炮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1023,7 +1014,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统系统γ 环形炮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32876"])]
+    [ScriptMethod(name: "正统系统γ 环形炮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32876"])]
     public void 正统系统γ_环形炮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1179,7 +1170,7 @@ public class Eureka_Orthos {
         accessory.Method.RemoveDraw($"正统整备工_邪圣{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化弥诺陶洛斯 百廿八吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32922"])]
+    [ScriptMethod(name: "正统自控化弥诺陶洛斯 百廿八吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32922"])]
     public void 正统自控化弥诺陶洛斯_百廿八吨回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1192,7 +1183,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化弥诺陶洛斯 卅二吨重击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32921"])]
+    [ScriptMethod(name: "正统自控化弥诺陶洛斯 卅二吨重击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32921"])]
     public void 正统自控化弥诺陶洛斯_卅二吨重击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1205,7 +1196,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化奇美拉 雷鸣吐息（左上顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32907"])]
+    [ScriptMethod(name: "正统自控化奇美拉 雷鸣吐息（左上顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32907"])]
     public void 正统自控化奇美拉_雷鸣吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1219,7 +1210,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化奇美拉 寒冰吐息（右上顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32906"])]
+    [ScriptMethod(name: "正统自控化奇美拉 寒冰吐息（右上顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32906"])]
     public void 正统自控化奇美拉_寒冰吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1233,7 +1224,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化奇美拉 蝎尾毒刺（背后扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32908"])]
+    [ScriptMethod(name: "正统自控化奇美拉 蝎尾毒刺（背后扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32908"])]
     public void 正统自控化奇美拉_蝎尾毒刺(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1247,7 +1238,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化奇美拉 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32909"])]
+    [ScriptMethod(name: "正统自控化奇美拉 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32909"])]
     public void 正统自控化奇美拉_寒冰咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1260,7 +1251,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue05e 正统自控化奇美拉 雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32910"])]
+    [ScriptMethod(name: "正统自控化奇美拉 雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32910"])]
     public void 正统自控化奇美拉_雷电咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1285,7 +1276,7 @@ public class Eureka_Orthos {
         timesCaliburniHasBeenCast=0;
     }
     
-    [ScriptMethod(name: "\ue069\ue069 石中剑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31333"])]
+    [ScriptMethod(name: "99 石中剑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31333"])]
     public void 石中剑_直线(Event @event, ScriptAccessory accessory)
     {
         //本体无意义读条：31333，组合对应的飞剑强袭直线读条：31334
@@ -1359,7 +1350,7 @@ public class Eureka_Orthos {
         
     }
     
-    [ScriptMethod(name: "\ue069\ue069 王者之剑 魂剑之实（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31327"])]
+    [ScriptMethod(name: "99 王者之剑 魂剑之实（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31327"])]
     public void 魂剑之实(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1372,7 +1363,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue069\ue069 王者之剑 魂剑之虚（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31328"])]
+    [ScriptMethod(name: "99 王者之剑 魂剑之虚（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31328"])]
     public void 魂剑之虚(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1386,7 +1377,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "\ue069\ue069 真空斩（四向顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31342"])]
+    [ScriptMethod(name: "99 真空斩（四向顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31342"])]
     public void 真空斩(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1401,7 +1392,7 @@ public class Eureka_Orthos {
     }
 
 
-    [ScriptMethod(name: "\ue069\ue069 次元斩（扇环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(31339|3134[01])$"])]
+    [ScriptMethod(name: "99 次元斩（扇环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(31339|3134[01])$"])]
     public void 次元斩(Event @event, ScriptAccessory accessory)
     {
         if (@event["ActionId"].Equals("31339"))
@@ -1447,7 +1438,7 @@ public class Eureka_Orthos {
     }
 
 
-    [ScriptMethod(name: "\ue069\ue069 极寒冰川 (冰花) ", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31347"])]
+    [ScriptMethod(name: "99 极寒冰川 (冰花) ", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31347"])]
     public void 极寒冰川(Event @event, ScriptAccessory accessory)
     {
         var currentProperty=accessory.Data.GetDefaultDrawProperties();
@@ -1466,7 +1457,7 @@ public class Eureka_Orthos {
         }
     }
     
-    [ScriptMethod(name: "\ue069\ue069 极热炎流（地火）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31344"])]
+    [ScriptMethod(name: "99 极热炎流（地火）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31344"])]
     public void 极热炎流(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
