@@ -1,0 +1,130 @@
+[
+  {
+    "Name": "激斗畏惧装甲之秘密武器",
+    "Guid": "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Formidable.cs",
+    "Note": "v0.0.0.1:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      814
+    ]
+  },
+  {
+    "Name": "灾厄的古塔尼亚之深海讨伐战",
+    "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Archaeotania.cs",
+    "Note": "v0.0.0.1:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      818
+    ]
+  },
+  {
+    "Name": "兽道诸神信仰：伪神降临",
+    "Guid": "da82aeb0-9635-4f13-a1c1-39a0c859f596",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Daivadipa.cs",
+    "Note": "v0.0.0.1:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      957
+    ]
+  },
+  {
+    "Name": "侵略兵器召回指令：破坏侵略兵器希",
+    "Guid": "b73d07ef-aa90-45a9-ab4b-fc3ccce8791b",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Chi.cs",
+    "Note": "v0.0.0.1:\r\nLV90 特殊Fate 绘制\r\n侵略兵器召回指令：破坏侵略兵器希",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      960
+    ]
+  },
+  {
+    "Name": "蛇王得酷热涅：荒野的死斗",
+    "Guid": "ab67129e-880f-48e8-852e-f92b4afa68e5",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Ttokrrone.cs",
+    "Note": "v0.0.0.1:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1190
+    ]
+  },
+  {
+    "Name": "亩鼠米卡：盛装巡游皆大欢喜",
+    "Guid": "22134617-0ca4-463e-a40d-675ef1c20cf2",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Mica_the_MagicalMu.cs",
+    "Note": "v0.0.0.1:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1192
+    ]
+  },
+  {
+    "Name": "正统优雷卡",
+    "Guid": "5e8a4051-53f7-4eb3-bb32-b18df8b113aa",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Deep_Dungeon/Eureka_Orthos.cs",
+    "Note": "v0.0.0.1:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制\r\n怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1099,
+      1100,
+      1101,
+      1102,
+      1103,
+      1104,
+      1105,
+      1106,
+      1107,
+      1108
+    ]
+  },
+  {
+    "Name": "禁地优雷卡 - 巴尔德西昂兵武塔",
+    "Guid": "cb001385-81e0-4c16-8bb3-fb51fd70336a",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Field_Operations/The_Forbidden_Land_Eureka/The_Baldesion_Arsenal.cs",
+    "Note": "v0.0.0.1:\r\n禁地优雷卡 - 巴尔德西昂兵武塔 初版绘制\r\n【施工中】",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      827
+    ]
+  },
+  {
+    "Name": "巴哈姆特大迷宫 - 普通难度",
+    "Guid": "8d41b5f9-0ab6-404a-9572-aabb390023f0",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/02-A-Realm-Reborn/Bahamute_NormalRaid.cs",
+    "Note": "v0.0.0.1:\r\n巴哈姆特大迷宫 普通难度绘制\r\n目前支持：T5\r\n计划中：T9 T13",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      196,
+      245,
+      358
+    ]
+  }
+]
