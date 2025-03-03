@@ -119,6 +119,11 @@ public class Ttokrrone
         dp.Scale = new Vector2(60);
         dp.Radian = 90f.DegToRad();
         dp.Color = accessory.Data.DefaultDangerColor;
+        
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(60);
+        dp1.Radian = 90f.DegToRad();
+        dp1.Color = accessory.Data.DefaultDangerColor;
 
         switch (@event.ActionId())
         {
@@ -133,12 +138,12 @@ public class Ttokrrone
             case 37322:  // 逆时针
                 dp.Name = "后方回旋沙暴B";
                 dp.Rotation = 180f.DegToRad();
-                dp.DestoryAt = 7800;
+                dp.DestoryAt = 7600;
                 
-                dp1.Name = "后方回旋沙暴B2";
+                dp1.Name = "后方回旋沙暴B1";
                 dp1.Rotation = 180f.DegToRad();
                 dp1.Delay = 7800;
-                dp1.DestoryAt = 16900;
+                dp1.DestoryAt = 17100;
                 break;
         }
 
@@ -157,69 +162,63 @@ public class Ttokrrone
         dp.Radian = 90f.DegToRad();
         dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
 
-        switch (@event.ActionId())
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(60);
+        dp1.Radian = 90f.DegToRad();
+        
+        switch (@event.ActionId())  //因可能连续回旋，所以在新的读条应销毁上一次绘制
         {
             case 37317:  // 前方 顺时针
                 dp.Name = "前方回旋沙暴FR";
                 dp.Rotation = 270f.DegToRad();
                 dp.DestoryAt = 22700;
+                accessory.Method.RemoveDraw($"后方回旋沙暴\\w*");
+                accessory.Method.RemoveDraw($"前方回旋沙暴FL");
                 break;
 
             case 37321:  // 前方 逆时针
                 dp.Name = "前方回旋沙暴FL";
                 dp.Rotation = 90f.DegToRad();
                 dp.DestoryAt = 22700;
+                accessory.Method.RemoveDraw($"后方回旋沙暴\\w*");
+                accessory.Method.RemoveDraw($"前方回旋沙暴FR");
                 break;
 
             case 37318:  // 后方 顺时针
                 dp.Name = "后方回旋沙暴BR1";
                 dp.Rotation = 90f.DegToRad();
-                dp.DestoryAt = 7800;
+                dp.DestoryAt = 7600;
                 
                 dp1.Name = "后方回旋沙暴BR2";
                 dp1.Rotation = 270f.DegToRad();
-                dp1.Delay = 7800;
-                dp1.DestoryAt = 14900;
+                dp1.Delay = 7600;
+                dp1.DestoryAt = 15100;
+                accessory.Method.RemoveDraw($"前方回旋沙暴F(L|R)?");
+                accessory.Method.RemoveDraw($"后方回旋沙暴B(L\\d?)?");
                 break;
 
             case 37322:  // 后方 逆时针 
                 dp.Name = "后方回旋沙暴BL1";
                 dp.Rotation = 270f.DegToRad();
-                dp.DestoryAt = 7800;
+                dp.DestoryAt = 7600;
                 
                 dp1.Name = "后方回旋沙暴BL2";
                 dp1.Rotation = 90f.DegToRad();
-                dp1.Delay = 7800;
-                dp1.DestoryAt = 14900;
+                dp1.Delay = 7600;
+                dp1.DestoryAt = 15100;
+                accessory.Method.RemoveDraw($"前方回旋沙暴F(L|R)?");
+                accessory.Method.RemoveDraw($"后方回旋沙暴B(R\\d?)?");
                 break;
         }
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
     }
 
-    [ScriptMethod(name: "回旋沙暴销毁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(37327|3731[78]|3732[12])$"], userControl: false)]
+    [ScriptMethod(name: "回旋沙暴销毁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37327"], userControl: false)]
     public void 回旋沙暴销毁(Event @event, ScriptAccessory accessory)
     {
-        // 因每次旋转的持续时间不固定，所以需要根据技能释放方式提前销毁绘制 ，已知回旋完可能接捕食，也可能接一次反向回旋 （待证实：是方向相反 或 顺逆时针相反）
-        // 需在 37327 捕食 读条时销毁全部绘制 ， 在 37317 37321 读条前方回旋时 销毁后方绘制 ， 在 31318 37322 读条后方回旋时 销毁前方绘制
+        // 因每次旋转的持续时间不固定，所以需要根据技能释放方式提前销毁绘制 ，已知回旋完可能接捕食（37327），也可能接另一次回旋
         accessory.Method.RemoveDraw(".*");
-        
-        switch (@event.ActionId())
-        {
-            case 37327:
-                accessory.Method.RemoveDraw(".*");
-                break;
-            
-            case 37317: // 前方 顺时针
-            case 37321: // 前方 逆时针
-                accessory.Method.RemoveDraw($"后方回旋沙暴\\w*");
-                break;
-            
-            case 37318: // 后方 顺时针
-            case 37322: // 后方 逆时针
-                accessory.Method.RemoveDraw($"前方回旋沙暴\\w*");
-                break;
-        }
     }
 
     
@@ -253,7 +252,7 @@ public class Ttokrrone
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Owner = @event.SourceId();
-        dp.DestoryAt = 7000;
+        dp.DestoryAt = 7800;
 
         switch (@event.ActionId())
         {
