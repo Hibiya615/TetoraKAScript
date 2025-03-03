@@ -15,6 +15,7 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using Lumina.Excel.Sheets;
 
 
@@ -71,7 +72,7 @@ public class Formidable
     [ScriptMethod(name: "护卫自走人偶 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:10868"])]
     public void 护卫自走人偶(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("击杀 <护卫自走人偶>", duration: 5000, true);
+        accessory.Method.TextInfo("击杀 <护卫自走人偶>", duration: 8000, true);
         accessory.Method.TTS("击杀小怪");
     }
     
@@ -81,8 +82,8 @@ public class Formidable
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "燃烧弹";
-        dp.Color = new Vector4(1f, 0.5f, 0f, 1f);
-        dp.Owner = @event.SourceId();
+        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(7f);
         dp.DestoryAt = 4700;
         dp.ScaleMode = ScaleMode.ByTime;
@@ -134,7 +135,43 @@ public class Formidable
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // 矮人式导弹 高亮
+    /*
+    [ScriptMethod(name: "矮人式导弹 高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11221"])]
+    public void 矮人式导弹(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"矮人式导弹{@event.SourceId()}";
+        dp.Owner = @event.SourceId();
+        dp.Color = new Vector4(1f, 0f, 0f, 1.6f);
+        dp.Scale = new(2f, 6f); 
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+    */
+    
+    [ScriptMethod(name: "矮人式导弹 爆炸范围预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11221"])]
+    public void 矮人式导弹(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"矮人式导弹{@event.SourceId()}";
+        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "矮人式导弹 爆炸销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:18003"], userControl: false)]
+    public void 矮人式导弹爆炸销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"矮人式导弹{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "矮人式导弹 移除销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:11221"], userControl: false)]
+    public void 矮人式导弹移除销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"矮人式导弹{@event.SourceId()}");
+    }
     
     [ScriptMethod(name: "矮人雷击弹（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11228"])]
     public void 矮人雷击弹钢铁(Event @event, ScriptAccessory accessory)
@@ -144,7 +181,7 @@ public class Formidable
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8f);
-        dp.DestoryAt = 7700;
+        dp.DestoryAt = 8700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -193,12 +230,13 @@ public class Formidable
     }
     
 
-    [ScriptMethod(name: "运动体探知干扰器 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:17407"])]
+    [ScriptMethod(name: "运动体探知干扰器 提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1269"])]
     public async void 运动体探知干扰器(Event @event, ScriptAccessory accessory)
     {
-        await Task.Delay(6500);
+        if ( @event.TargetId() != accessory.Data.Me) return;
+        await Task.Delay(7500);
 
-        accessory.Method.TextInfo("停止行动", duration: 1500, true);
+        accessory.Method.TextInfo("停止行动", duration: 2000, true);
         accessory.Method.TTS("停止行动");
     }
 
