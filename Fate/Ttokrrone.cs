@@ -54,7 +54,7 @@ public class Ttokrrone
         dp.ScaleMode |= ScaleMode.YByDistance;
         dp.TargetObject = @event.SourceId();
         dp.Scale = new(1);
-        dp.DestoryAt = 900000;
+        dp.DestoryAt = 60000;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
@@ -113,13 +113,12 @@ public class Ttokrrone
     public void 回旋沙暴(Event @event, ScriptAccessory accessory)
     {
         // 【前方回旋沙暴】 37317 顺时针、37321 逆时针 ；【后方回旋沙暴】 37318 顺时针 、37322 逆时针
-        
         var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60);
         dp.Radian = 90f.DegToRad();
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = 24700;
 
         switch (@event.ActionId())
         {
@@ -127,70 +126,84 @@ public class Ttokrrone
             case 37321:  // 逆时针
                 dp.Name = "前方回旋沙暴F";
                 dp.Rotation = 0f.DegToRad(); 
+                dp.DestoryAt = 24700;
                 break;
 
             case 37318:  // 顺时针
             case 37322:  // 逆时针
                 dp.Name = "后方回旋沙暴B";
                 dp.Rotation = 180f.DegToRad();
+                dp.DestoryAt = 7800;
+                
+                dp1.Name = "后方回旋沙暴B2";
+                dp1.Rotation = 180f.DegToRad();
+                dp1.Delay = 7800;
+                dp1.DestoryAt = 16900;
                 break;
         }
 
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-        
-        // 画旋转方向预测
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
+    }
+    
+    [ScriptMethod(name: "回旋沙暴 下一转预测", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3731[78]|3732[12])$"])]
+    public void 回旋沙暴预测(Event @event, ScriptAccessory accessory)
+    {
+        // 【前方回旋沙暴】 37317 顺时针、37321 逆时针 ；【后方回旋沙暴】 37318 顺时针 、37322 逆时针
+        var dp = accessory.Data.GetDefaultDrawProperties();
         var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Owner = @event.SourceId();
-        dp1.Scale = new Vector2(60);
-        dp1.Radian = 90f.DegToRad();
-        dp1.Color = new Vector4(1f, 0f, 0f, 1f);
-        dp1.DestoryAt = 22700;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60);
+        dp.Radian = 90f.DegToRad();
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
 
         switch (@event.ActionId())
         {
             case 37317:  // 前方 顺时针
-                dp1.Name = "前方回旋沙暴FR";
-                dp1.Rotation = 270f.DegToRad();
-                accessory.Method.RemoveDraw($"后方回旋沙暴B(L|R)?{@event.SourceId()}");
-                accessory.Method.RemoveDraw($"前方回旋沙暴FL{@event.SourceId()}");
+                dp.Name = "前方回旋沙暴FR";
+                dp.Rotation = 270f.DegToRad();
+                dp.DestoryAt = 22700;
                 break;
 
             case 37321:  // 前方 逆时针
-                dp1.Name = "前方回旋沙暴FL";
-                dp1.Rotation = 90f.DegToRad();
-                accessory.Method.RemoveDraw($"后方回旋沙暴B(L|R)?{@event.SourceId()}");
-                accessory.Method.RemoveDraw($"前方回旋沙暴FR{@event.SourceId()}");
+                dp.Name = "前方回旋沙暴FL";
+                dp.Rotation = 90f.DegToRad();
+                dp.DestoryAt = 22700;
                 break;
 
             case 37318:  // 后方 顺时针
-                dp1.Name = "后方回旋沙暴BR";
-                dp1.Rotation = 90f.DegToRad();
-                accessory.Method.RemoveDraw($"前方回旋沙暴F(L|R)?{@event.SourceId()}");
-                accessory.Method.RemoveDraw($"后方回旋沙暴BL{@event.SourceId()}");
+                dp.Name = "后方回旋沙暴BR1";
+                dp.Rotation = 90f.DegToRad();
+                dp.DestoryAt = 7800;
+                
+                dp1.Name = "后方回旋沙暴BR2";
+                dp1.Rotation = 270f.DegToRad();
+                dp1.Delay = 7800;
+                dp1.DestoryAt = 14900;
                 break;
 
-            case 37322:  // 后方 逆时针
-                dp1.Name = "后方回旋沙暴BL";
-                dp1.Rotation = 270f.DegToRad();
-                accessory.Method.RemoveDraw($"前方回旋沙暴F(L|R)?{@event.SourceId()}");
-                accessory.Method.RemoveDraw($"后方回旋沙暴BR{@event.SourceId()}");
+            case 37322:  // 后方 逆时针 
+                dp.Name = "后方回旋沙暴BL1";
+                dp.Rotation = 270f.DegToRad();
+                dp.DestoryAt = 7800;
+                
+                dp1.Name = "后方回旋沙暴BL2";
+                dp1.Rotation = 90f.DegToRad();
+                dp1.Delay = 7800;
+                dp1.DestoryAt = 14900;
                 break;
         }
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
-        
     }
-    
 
-    [ScriptMethod(name: "回旋沙暴销毁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:37327"], userControl: false)]
+    [ScriptMethod(name: "回旋沙暴销毁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(37327|3731[78]|3732[12])$"], userControl: false)]
     public void 回旋沙暴销毁(Event @event, ScriptAccessory accessory)
     {
         // 因每次旋转的持续时间不固定，所以需要根据技能释放方式提前销毁绘制 ，已知回旋完可能接捕食，也可能接一次反向回旋 （待证实：是方向相反 或 顺逆时针相反）
         // 需在 37327 捕食 读条时销毁全部绘制 ， 在 37317 37321 读条前方回旋时 销毁后方绘制 ， 在 31318 37322 读条后方回旋时 销毁前方绘制
-
         accessory.Method.RemoveDraw(".*");
         
-        /*
-         //["ActionId:regex:^(37327|3731[78]|3732[12])$"],
         switch (@event.ActionId())
         {
             case 37327:
@@ -199,26 +212,25 @@ public class Ttokrrone
             
             case 37317: // 前方 顺时针
             case 37321: // 前方 逆时针
-                accessory.Method.RemoveDraw($"后方回旋沙暴B(L|R)?{@event.SourceId()}");
+                accessory.Method.RemoveDraw($"后方回旋沙暴\\w*");
                 break;
             
             case 37318: // 后方 顺时针
             case 37322: // 后方 逆时针
-                accessory.Method.RemoveDraw($"前方回旋沙暴F(L|R)?{@event.SourceId()}");
+                accessory.Method.RemoveDraw($"前方回旋沙暴\\w*");
                 break;
         }
-        */
     }
 
     
     [ScriptMethod(name: "回旋沙暴_砂砾（持续钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3731[78]|3732[12])$"])]
     public void 砂砾(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("出目标圈", duration: 24700, true);
+        accessory.Method.TextInfo("出目标圈", duration: 16000, true);
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "砂砾预兆";
-        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
+        dp.Color = new Vector4(1f, 1f, 0f, 1.4f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(13f);
         dp.DestoryAt = 6900;
@@ -226,11 +238,11 @@ public class Ttokrrone
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "砂砾持续";
-        dp1.Color = new Vector4(1f, 0f, 0f, 1.5f);
+        dp1.Color = new Vector4(1f, 0f, 0f, 1.6f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(13f);
         dp1.Delay = 6900;
-        dp1.DestoryAt = 17800;
+        dp1.DestoryAt = 9100;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
     }
     
@@ -240,7 +252,6 @@ public class Ttokrrone
         // 37331 钢铁 ； 37332 月环 ； 37333 左半钢铁 + 右半月环 ； 37334 左半月环 + 右半钢铁
 
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Color = new Vector4(1f, 1f, 0f, 1f);
         dp.Owner = @event.SourceId();
         dp.DestoryAt = 7000;
 
@@ -248,12 +259,14 @@ public class Ttokrrone
         {
             case 37331: // 钢铁
                 dp.Name = "飞沙钢铁";
+                dp.Color = new Vector4(1f, 0f, 0f, 1f);
                 dp.Scale = new Vector2(19f);
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 break;
 
             case 37332: // 月环
                 dp.Name = "飞沙月环";
+                dp.Color = new Vector4(0f, 0.6f, 1f, 1f);
                 dp.Scale = new Vector2(60f);
                 dp.InnerScale = new Vector2(14f);
                 dp.Radian = float.Pi * 2;
@@ -262,6 +275,7 @@ public class Ttokrrone
 
             case 37333: // 左半钢铁 + 右半月环
                 dp.Name = "飞沙左半钢铁";
+                dp.Color = new Vector4(1f, 0f, 0f, 1f);
                 dp.Scale = new Vector2(19);
                 dp.Radian = 180f.DegToRad();
                 dp.Rotation = 90f.DegToRad();
@@ -269,7 +283,7 @@ public class Ttokrrone
 
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
                 dp1.Name = "飞沙右半月环";
-                dp1.Color = accessory.Data.DefaultDangerColor;
+                dp1.Color = new Vector4(0f, 0.6f, 1f, 1f);
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(60);
                 dp1.InnerScale = new Vector2(14);
@@ -281,6 +295,7 @@ public class Ttokrrone
 
             case 37334: // 右半钢铁 + 左半月环
                 dp.Name = "飞沙右半钢铁";
+                dp.Color = new Vector4(1f, 0f, 0f, 1f);
                 dp.Scale = new Vector2(19);
                 dp.Radian = 180f.DegToRad();
                 dp.Rotation = 270f.DegToRad();
@@ -288,7 +303,7 @@ public class Ttokrrone
 
                 var dp2 = accessory.Data.GetDefaultDrawProperties();
                 dp2.Name = "飞沙左半月环";
-                dp2.Color = accessory.Data.DefaultDangerColor;
+                dp2.Color = new Vector4(0f, 0.6f, 1f, 1f);
                 dp2.Owner = @event.SourceId();
                 dp2.Scale = new Vector2(60);
                 dp2.InnerScale = new Vector2(14);
@@ -332,15 +347,19 @@ public class Ttokrrone
         dp.Name = "吞地巨蛇";
         dp.Scale = new (27, 68f);
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 1f, 0f, 0.8f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
         dp.DestoryAt = @event.DurationMilliseconds() + 1400;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "蛇王死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["DataId:16933"], userControl: false)]
+    [ScriptMethod(name: "蛇王死亡销毁", eventType: EventTypeEnum.Death, userControl: false)]
     public void 蛇王死亡销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw(".*");
+        string NpcName = GetBNpcName(12733);
+        if (@event.TargetName() == NpcName)
+        {
+            accessory.Method.RemoveDraw(".*");
+        }
     }
     
 }

@@ -53,7 +53,7 @@ public class Chi
         dp.ScaleMode |= ScaleMode.YByDistance;
         dp.TargetObject = @event.SourceId();
         dp.Scale = new(1);
-        dp.DestoryAt = 900000;
+        dp.DestoryAt = 60000;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
