@@ -86,7 +86,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "直线";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 1f, 0f, 0.6f);
+        dp.Color = new Vector4(1f, 1f, 0f, 0.4f);
         dp.Scale = new(32f, 120f); 
         dp.DestoryAt = @event.ActionId() == 25954 ? 4700 : 7700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
@@ -174,7 +174,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "地下贯通爆弹1";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
         dp.Scale = new(20f, 20f);
         dp.Delay = 7700;
         dp.DestoryAt = 2000;
@@ -187,7 +187,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "地下贯通爆弹2";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
         dp.Scale = new(20f, 20f);
         dp.Delay = 9800;
         dp.DestoryAt = 2000;
