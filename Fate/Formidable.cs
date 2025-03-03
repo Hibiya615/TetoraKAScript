@@ -15,6 +15,7 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using Lumina.Excel.Sheets;
 
 
 namespace A_Finale_Most_Formidable;
@@ -30,6 +31,15 @@ public class Formidable
         LV80 特殊Fate 绘制
         激斗畏惧装甲之秘密武器
         """;
+    
+    public static string GetBNpcName(uint key)
+    {
+        var sheet = Svc.Data.GetExcelSheet<BNpcName>();
+        if (sheet == null) return $"Invalid sheet: ({key})";
+        var row = sheet.GetRow(key);
+
+        return row.Singular.ToString() ?? $"Invalid Rowid: ({key})";
+    }
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
@@ -49,10 +59,13 @@ public class Formidable
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, eventCondition: ["DataId:regex:^758[67]$"], userControl: false)]
+    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, userControl: false)]
     public void 迷失连线销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw("迷失连线");
+        if (@event.TargetName() == GetBNpcName(6737) || @event.TargetName() == GetBNpcName(6738))
+        {
+            accessory.Method.RemoveDraw("迷失连线");
+        }
     }
     
     [ScriptMethod(name: "护卫自走人偶 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:10868"])]

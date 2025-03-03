@@ -14,6 +14,7 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using Lumina.Excel.Sheets;
 
 namespace Omicron_Recall_Killing_Order;
 
@@ -28,6 +29,15 @@ public class Chi
         LV90 特殊Fate 绘制
         侵略兵器召回指令：破坏侵略兵器希
         """;
+    
+    public static string GetBNpcName(uint key)
+    {
+        var sheet = Svc.Data.GetExcelSheet<BNpcName>();
+        if (sheet == null) return $"Invalid sheet: ({key})";
+        var row = sheet.GetRow(key);
+
+        return row.Singular.ToString() ?? $"Invalid Rowid: ({key})";
+    }
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
@@ -47,10 +57,13 @@ public class Chi
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, eventCondition: ["DataId:regex:^758[67]$"], userControl: false)]
+    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, userControl: false)]
     public void 迷失连线销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw("迷失连线");
+        if (@event.TargetName() == GetBNpcName(6737) || @event.TargetName() == GetBNpcName(6738))
+        {
+            accessory.Method.RemoveDraw("迷失连线");
+        }
     }
     
     [ScriptMethod(name: "终端攻击（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(25172|2595[356])$"])]
@@ -73,7 +86,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "直线";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 1f, 0f, 0.8f);
+        dp.Color = new Vector4(1f, 1f, 0f, 0.6f);
         dp.Scale = new(32f, 120f); 
         dp.DestoryAt = @event.ActionId() == 25954 ? 4700 : 7700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
@@ -161,7 +174,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "地下贯通爆弹1";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
         dp.Scale = new(20f, 20f);
         dp.Delay = 7700;
         dp.DestoryAt = 2000;
@@ -174,7 +187,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "地下贯通爆弹2";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
         dp.Scale = new(20f, 20f);
         dp.Delay = 9800;
         dp.DestoryAt = 2000;
@@ -187,7 +200,7 @@ public class Chi
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "地下贯通爆弹3";
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 1f, 0f, 0.2f);
+        dp.Color = new Vector4(1f, 1f, 0f, 0.4f);
         dp.Scale = new(20f, 20f);
         dp.Delay = 8800;
         dp.DestoryAt = 1000;
