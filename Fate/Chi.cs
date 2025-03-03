@@ -14,7 +14,6 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
-using Lumina.Excel.Sheets;
 
 namespace Omicron_Recall_Killing_Order;
 
@@ -29,15 +28,6 @@ public class Chi
         LV90 特殊Fate 绘制
         侵略兵器召回指令：破坏侵略兵器希
         """;
-    
-    public static string GetBNpcName(uint key)
-    {
-        var sheet = Svc.Data.GetExcelSheet<BNpcName>();
-        if (sheet == null) return $"Invalid sheet: ({key})";
-        var row = sheet.GetRow(key);
-
-        return row.Singular.ToString() ?? $"Invalid Rowid: ({key})";
-    }
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
@@ -57,13 +47,10 @@ public class Chi
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, userControl: false)]
+    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^758[67]$"],userControl: false)]
     public void 迷失连线销毁(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetName() == GetBNpcName(6737) || @event.TargetName() == GetBNpcName(6738))
-        {
-            accessory.Method.RemoveDraw("迷失连线");
-        }
+        accessory.Method.RemoveDraw("迷失连线");
     }
     
     [ScriptMethod(name: "终端攻击（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(25172|2595[356])$"])]
@@ -205,6 +192,12 @@ public class Chi
         dp.Delay = 8800;
         dp.DestoryAt = 1000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+    
+    [ScriptMethod(name: "电视死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:13515"],userControl: false)]
+    public void 电视死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw(".*");
     }
 }
 

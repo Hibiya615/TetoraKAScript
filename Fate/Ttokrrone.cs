@@ -14,7 +14,6 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
-using Lumina.Excel.Sheets;
 
 namespace The_Serpentlord_Seethes;
 
@@ -30,15 +29,6 @@ public class Ttokrrone
         蛇王得酷热涅：荒野的死斗
         已知问题：回旋沙暴可能会无法销毁、可能存在方向绘制错误
         """;
-    
-    public static string GetBNpcName(uint key)
-    {
-        var sheet = Svc.Data.GetExcelSheet<BNpcName>();
-        if (sheet == null) return $"Invalid sheet: ({key})";
-        var row = sheet.GetRow(key);
-
-        return row.Singular.ToString() ?? $"Invalid Rowid: ({key})";
-    }
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
@@ -58,13 +48,10 @@ public class Ttokrrone
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, userControl: false)]
+    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^758[67]$"],userControl: false)]
     public void 迷失连线销毁(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetName() == GetBNpcName(6737) || @event.TargetName() == GetBNpcName(6738))
-        {
             accessory.Method.RemoveDraw("迷失连线");
-        }
     }
     
     [ScriptMethod(name: "单侧沙暴", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3731[3-6]$"])]
@@ -351,14 +338,10 @@ public class Ttokrrone
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "蛇王死亡销毁", eventType: EventTypeEnum.Death, userControl: false)]
+    [ScriptMethod(name: "蛇王死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:16863"],userControl: false)]
     public void 蛇王死亡销毁(Event @event, ScriptAccessory accessory)
     {
-        string NpcName = GetBNpcName(12733);
-        if (@event.TargetName() == NpcName)
-        {
-            accessory.Method.RemoveDraw(".*");
-        }
+        accessory.Method.RemoveDraw(".*");
     }
     
 }

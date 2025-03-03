@@ -14,7 +14,6 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
-using Lumina.Excel.Sheets;
 
 namespace DevoutPilgrimsVSDaivadipa;
 
@@ -29,15 +28,6 @@ public class Daivadipa
         LV90 特殊Fate 绘制
         兽道诸神信仰：伪神降临
         """;
-    
-    public static string GetBNpcName(uint key)
-    {
-        var sheet = Svc.Data.GetExcelSheet<BNpcName>();
-        if (sheet == null) return $"Invalid sheet: ({key})";
-        var row = sheet.GetRow(key);
-
-        return row.Singular.ToString() ?? $"Invalid Rowid: ({key})";
-    }
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
@@ -57,13 +47,10 @@ public class Daivadipa
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, userControl: false)]
+    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^758[67]$"],userControl: false)]
     public void 迷失连线销毁(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetName() == GetBNpcName(6737) || @event.TargetName() == GetBNpcName(6738))
-        {
-            accessory.Method.RemoveDraw("迷失连线");
-        }
+        accessory.Method.RemoveDraw("迷失连线");
     }
     
     [ScriptMethod(name: "操焰仪 弹窗提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^2649[89]$"])]
@@ -128,11 +115,16 @@ public class Daivadipa
         // 技能ID 26500 红色 ； 26501 蓝色
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new(10f, 50f);
-        dp.DestoryAt = 2700;
+        dp.DestoryAt = 7700;
         
+        dp1.Color = accessory.Data.DefaultDangerColor;
+        dp1.Scale = new(10f, 50f);
+        dp1.DestoryAt = 2000;
+
         switch (@event.ActionId())
         {
             case 26498:
@@ -145,10 +137,10 @@ public class Daivadipa
                 
                 foreach (var item in IbcHelper.GetByDataId(13680))
                 {
-                    dp.Name = "圣火猛击蓝";
-                    dp.Owner = item.EntityId;
-                    dp.Delay = 3000;
-                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+                    dp1.Name = "圣火猛击蓝";
+                    dp1.Owner = item.EntityId;
+                    dp1.Delay = 7700;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1);
                 }
                 break;
 
@@ -158,6 +150,14 @@ public class Daivadipa
                     dp.Name = "圣火猛击蓝";
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+                }
+                
+                foreach (var item in IbcHelper.GetByDataId(13679))
+                {
+                    dp1.Name = "圣火猛击红";
+                    dp1.Owner = item.EntityId;
+                    dp1.Delay = 7700;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1);
                 }
                 break;
         }
@@ -170,10 +170,15 @@ public class Daivadipa
         // 操焰仪：26498 红色先炸 ； 26499 蓝色先炸
         // 技能ID 26506 红色 ； 26507 蓝色
         var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
 
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 2700;
+        dp.DestoryAt = 7200;
+        
+        dp1.Color = accessory.Data.DefaultDangerColor;
+        dp1.Scale = new Vector2(10f);
+        dp1.DestoryAt = 4000;
         
         switch (@event.ActionId())
         {
@@ -184,6 +189,14 @@ public class Daivadipa
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                foreach (var item in IbcHelper.GetByDataId(13682))
+                {
+                    dp1.Name = "燃烧蓝";
+                    dp1.Owner = item.EntityId;
+                    dp1.Delay = 7200;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                }
                 break;
 
             case 26499:
@@ -193,8 +206,22 @@ public class Daivadipa
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
+                
+                foreach (var item in IbcHelper.GetByDataId(13681))
+                {
+                    dp1.Name = "燃烧红";
+                    dp1.Owner = item.EntityId;
+                    dp1.Delay = 7200;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                }
                 break;
         }
+    }
+    
+    [ScriptMethod(name: "大象死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:13677"],userControl: false)]
+    public void 大象死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw(".*");
     }
     
 }

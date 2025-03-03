@@ -14,7 +14,6 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
-using Lumina.Excel.Sheets;
 
 
 namespace Mascot_Murder;
@@ -30,15 +29,6 @@ public class Mica_the_Magical_Mu
         LV100 特殊Fate 绘制
         亩鼠米卡：盛装巡游皆大欢喜
         """;
-    
-    public static string GetBNpcName(uint key)
-    {
-        var sheet = Svc.Data.GetExcelSheet<BNpcName>();
-        if (sheet == null) return $"Invalid sheet: ({key})";
-        var row = sheet.GetRow(key);
-
-        return row.Singular.ToString() ?? $"Invalid Rowid: ({key})";
-    }
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
@@ -58,13 +48,10 @@ public class Mica_the_Magical_Mu
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, userControl: false)]
+    [ScriptMethod(name: "迷失连线销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^758[67]$"],userControl: false)]
     public void 迷失连线销毁(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetName() == GetBNpcName(6737) || @event.TargetName() == GetBNpcName(6738))
-        {
-            accessory.Method.RemoveDraw("迷失连线");
-        }
+        accessory.Method.RemoveDraw("迷失连线");
     }
     
     [ScriptMethod(name: "卡牌戏法_抽卡安全区", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:39156"])]
@@ -169,6 +156,12 @@ public class Mica_the_Magical_Mu
         dp.Delay = 800;
         dp.DestoryAt = 2000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+    
+    [ScriptMethod(name: "鼠鼠死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:17387"],userControl: false)]
+    public void 鼠鼠死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw(".*");
     }
 
 }
