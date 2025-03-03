@@ -72,7 +72,7 @@ public class Mica_the_Magical_Mu
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "卡牌戏法Danger";
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Color = new Vector4(1f, 0f, 0f, 0.5f);
         dp.Scale = new(14f, 20f); 
         dp.DestoryAt = 1200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
@@ -86,16 +86,17 @@ public class Mica_the_Magical_Mu
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Delay = 1700;
-        dp.DestoryAt = 8500;
         switch (@event.ActionId())
         {
             case 38996:
+                dp.DestoryAt = 10200;
                 dp.Scale = new(10, 20f);
                 break;
 
             case 38997: 
             case 38998: 
             case 38999: 
+                dp.DestoryAt = 8500;
                 dp.Scale = new(10, 52f);
                 break;
         }
@@ -107,7 +108,7 @@ public class Mica_the_Magical_Mu
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "魔术爆发";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = new Vector4(1f, 1f, 0f, 1.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
         dp.Delay = 4600;
@@ -120,7 +121,7 @@ public class Mica_the_Magical_Mu
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "魔术环";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
         dp.InnerScale = new Vector2(10f);
@@ -136,7 +137,7 @@ public class Mica_the_Magical_Mu
         var dp = accessory.Data.GetDefaultDrawProperties();
 
         dp.Name = "双重魔术雷";
-        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40);
         dp.Radian = 60f.DegToRad();
