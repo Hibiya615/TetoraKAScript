@@ -91,6 +91,16 @@ public class Formidable
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = 22800;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = "格鲁格之火InhaleRim";
+        dp1.Color = new Vector4(1f, 0f, 1f, 2f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(10.05f);
+        dp1.InnerScale = new Vector2(10f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 22800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
     /*
@@ -121,7 +131,7 @@ public class Formidable
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    /*
+
     [ScriptMethod(name: "矮人式导弹 高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11221"])]
     public void 矮人式导弹(Event @event, ScriptAccessory accessory)
     {
@@ -133,14 +143,14 @@ public class Formidable
         dp.DestoryAt = 30000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
-    */
+
     
     [ScriptMethod(name: "矮人式导弹 爆炸范围预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11221"])]
-    public void 矮人式导弹(Event @event, ScriptAccessory accessory)
+    public void 矮人式导弹_爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"矮人式导弹{@event.SourceId()}";
-        dp.Color = new Vector4(1f, 0f, 0f, 1f);
+        dp.Name = $"矮人式导弹爆炸{@event.SourceId()}";
+        dp.Color = new Vector4(1f, 0.4f, 0f, 0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 30000;
@@ -151,12 +161,14 @@ public class Formidable
     public void 矮人式导弹爆炸销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"矮人式导弹{@event.SourceId()}");
+        accessory.Method.RemoveDraw($"矮人式导弹爆炸{@event.SourceId()}");
     }
     
     [ScriptMethod(name: "矮人式导弹 移除销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:11221"], userControl: false)]
     public void 矮人式导弹移除销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"矮人式导弹{@event.SourceId()}");
+        accessory.Method.RemoveDraw($"矮人式导弹爆炸{@event.SourceId()}");
     }
     
     [ScriptMethod(name: "矮人雷击弹（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:11228"])]
@@ -179,7 +191,7 @@ public class Formidable
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "矮人雷击弹月环";
-        dp.Color = new Vector4(1f, 0f, 1f, 0.4f);
+        dp.Color = new Vector4(1f, 0f, 1f, 0.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60f);
         dp.InnerScale = new Vector2(8.5f);
@@ -188,14 +200,24 @@ public class Formidable
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = "月环连线";
-        dp1.Owner = accessory.Data.Me;
-        dp1.Color = accessory.Data.DefaultSafeColor;
-        dp1.ScaleMode |= ScaleMode.YByDistance;
-        dp1.TargetObject = @event.SourceId();
-        dp1.Scale = new(1);
+        dp1.Name = "矮人雷击弹月环描边";
+        dp1.Color = new Vector4(1f, 0f, 1f, 2f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(8.55f);
+        dp1.InnerScale = new Vector2(8.5f);
+        dp1.Radian = float.Pi * 2;
         dp1.DestoryAt = 6200;
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp1);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        
+        var dp2 = accessory.Data.GetDefaultDrawProperties();
+        dp2.Name = "月环连线";
+        dp2.Owner = accessory.Data.Me;
+        dp2.Color = accessory.Data.DefaultSafeColor;
+        dp2.ScaleMode |= ScaleMode.YByDistance;
+        dp2.TargetObject = @event.SourceId();
+        dp2.Scale = new(1);
+        dp2.DestoryAt = 6200;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp2);
         
     }
     
@@ -220,9 +242,9 @@ public class Formidable
     public async void 运动体探知干扰器(Event @event, ScriptAccessory accessory)
     {
         if ( @event.TargetId() != accessory.Data.Me) return;
-        await Task.Delay(7500);
+        await Task.Delay(3500);
 
-        accessory.Method.TextInfo("停止行动", duration: 2000, true);
+        accessory.Method.TextInfo("停止行动", duration: 1500, true);
         accessory.Method.TTS("停止行动");
     }
 

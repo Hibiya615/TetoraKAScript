@@ -119,11 +119,11 @@ public class Daivadipa
         
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new(10f, 50f);
-        dp.DestoryAt = 7700;
+        dp.DestoryAt = 6200;
         
         dp1.Color = accessory.Data.DefaultDangerColor;
         dp1.Scale = new(10f, 50f);
-        dp1.DestoryAt = 2000;
+        dp1.DestoryAt = 2200;
 
         switch (@event.ActionId())
         {
@@ -139,7 +139,7 @@ public class Daivadipa
                 {
                     dp1.Name = "圣火猛击蓝";
                     dp1.Owner = item.EntityId;
-                    dp1.Delay = 7700;
+                    dp1.Delay = 6200;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1);
                 }
                 break;
@@ -156,7 +156,7 @@ public class Daivadipa
                 {
                     dp1.Name = "圣火猛击红";
                     dp1.Owner = item.EntityId;
-                    dp1.Delay = 7700;
+                    dp1.Delay = 6200;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1);
                 }
                 break;
