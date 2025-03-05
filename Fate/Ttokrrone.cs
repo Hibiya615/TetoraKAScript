@@ -63,7 +63,7 @@ public class Ttokrrone
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "单侧沙暴";
-        dp.Color = new Vector4(1f, 1f, 0f, 1f);
+        dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60);
         dp.Radian = 90f.DegToRad();
@@ -89,7 +89,7 @@ public class Ttokrrone
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "砂砾钢铁";
-        dp1.Color = new Vector4(1f, 1f, 0f, 1.2f);
+        dp.Color = new Vector4(1f, 0f, 0f, 1.4f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(13f);
         dp1.DestoryAt = 4900;
@@ -105,12 +105,12 @@ public class Ttokrrone
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60);
         dp.Radian = 90f.DegToRad();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
         
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(60);
         dp1.Radian = 90f.DegToRad();
-        dp1.Color = accessory.Data.DefaultDangerColor;
+        dp1.Color = new Vector4(1f, 0f, 0f, 1.2f);
 
         switch (@event.ActionId())
         {
@@ -147,11 +147,12 @@ public class Ttokrrone
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60);
         dp.Radian = 90f.DegToRad();
-        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
+        dp.Color = new Vector4(1f, 1f, 0f, 0.8f);
 
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(60);
         dp1.Radian = 90f.DegToRad();
+        dp1.Color = new Vector4(1f, 1f, 0f, 0.8f);
         
         switch (@event.ActionId())  //因可能连续回旋，所以在新的读条应销毁上一次绘制
         {
@@ -216,7 +217,7 @@ public class Ttokrrone
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "砂砾预兆";
-        dp.Color = new Vector4(1f, 1f, 0f, 1.4f);
+        dp.Color = new Vector4(1f, 0f, 0f, 1.4f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(13f);
         dp.DestoryAt = 6900;
@@ -245,14 +246,14 @@ public class Ttokrrone
         {
             case 37331: // 钢铁
                 dp.Name = "飞沙钢铁";
-                dp.Color = new Vector4(1f, 0f, 0f, 1.5f);
+                dp.Color = new Vector4(1f, 0f, 0f, 1.4f);
                 dp.Scale = new Vector2(19f);
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 break;
 
             case 37332: // 月环
                 dp.Name = "飞沙月环";
-                dp.Color = new Vector4(0f, 0f, 1f, 1.2f);
+                dp.Color = new Vector4(1f, 0f, 1f, 1.2f);
                 dp.Scale = new Vector2(60f);
                 dp.InnerScale = new Vector2(14f);
                 dp.Radian = float.Pi * 2;
@@ -269,7 +270,7 @@ public class Ttokrrone
 
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
                 dp1.Name = "飞沙右半月环";
-                dp.Color = new Vector4(0f, 0f, 1f, 1.4f);
+                dp.Color = new Vector4(1f, 0f, 1f, 1.4f);
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(60);
                 dp1.InnerScale = new Vector2(14);
@@ -289,7 +290,7 @@ public class Ttokrrone
 
                 var dp2 = accessory.Data.GetDefaultDrawProperties();
                 dp2.Name = "飞沙左半月环";
-                dp2.Color = new Vector4(0f, 0f, 1f, 1.4f);
+                dp.Color = new Vector4(1f, 0f, 1f, 1.4f);
                 dp2.Owner = @event.SourceId();
                 dp2.Scale = new Vector2(60);
                 dp2.InnerScale = new Vector2(14);
@@ -333,7 +334,7 @@ public class Ttokrrone
         dp.Name = "吞地巨蛇";
         dp.Scale = new (27, 68f);
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(1f, 0.2f, 0f, 0.6f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
         dp.DestoryAt = @event.DurationMilliseconds() + 1400;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
