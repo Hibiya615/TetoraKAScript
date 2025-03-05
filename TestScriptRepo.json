@@ -5,7 +5,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Formidable.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Formidable.cs",
     "Note": "v0.0.0.1:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -18,7 +18,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Archaeotania.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
     "Note": "v0.0.0.1:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -31,7 +31,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Daivadipa.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Daivadipa.cs",
     "Note": "v0.0.0.1:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -44,7 +44,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Chi.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Chi.cs",
     "Note": "v0.0.0.1:\r\nLV90 特殊Fate 绘制\r\n侵略兵器召回指令：破坏侵略兵器希",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -57,7 +57,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Ttokrrone.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Ttokrrone.cs",
     "Note": "v0.0.0.1:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -70,7 +70,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Fate/Mica_the_MagicalMu.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Mica_the_MagicalMu.cs",
     "Note": "v0.0.0.1:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -83,7 +83,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Deep_Dungeon/Eureka_Orthos.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Eureka_Orthos.cs",
     "Note": "v0.0.0.1:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制\r\n怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -105,7 +105,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/Field_Operations/The_Forbidden_Land_Eureka/The_Baldesion_Arsenal.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Field_Operations/The_Forbidden_Land_Eureka/The_Baldesion_Arsenal.cs",
     "Note": "v0.0.0.1:\r\n禁地优雷卡 - 巴尔德西昂兵武塔 初版绘制\r\n【施工中】",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -118,7 +118,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/02-A-Realm-Reborn/Bahamute_NormalRaid.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Bahamute_NormalRaid.cs",
     "Note": "v0.0.0.1:\r\n巴哈姆特大迷宫 普通难度绘制\r\n目前支持：T5\r\n计划中：T9 T13",
     "UpdateInfo": "",
     "TerritoryIds": [
