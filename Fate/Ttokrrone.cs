@@ -270,7 +270,7 @@ public class Ttokrrone
 
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
                 dp1.Name = "飞沙右半月环";
-                dp.Color = new Vector4(1f, 0f, 1f, 1.4f);
+                dp1.Color = new Vector4(1f, 0f, 1f, 1.4f);
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(60);
                 dp1.InnerScale = new Vector2(14);
@@ -290,7 +290,7 @@ public class Ttokrrone
 
                 var dp2 = accessory.Data.GetDefaultDrawProperties();
                 dp2.Name = "飞沙左半月环";
-                dp.Color = new Vector4(1f, 0f, 1f, 1.4f);
+                dp2.Color = new Vector4(1f, 0f, 1f, 1.4f);
                 dp2.Owner = @event.SourceId();
                 dp2.Scale = new Vector2(60);
                 dp2.InnerScale = new Vector2(14);
