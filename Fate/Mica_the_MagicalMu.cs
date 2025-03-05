@@ -121,7 +121,7 @@ public class Mica_the_Magical_Mu
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "魔术环";
-        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
+        dp.Color = new Vector4(1f, 1f, 0f, 1.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
         dp.InnerScale = new Vector2(10f);
@@ -137,7 +137,7 @@ public class Mica_the_Magical_Mu
         var dp = accessory.Data.GetDefaultDrawProperties();
 
         dp.Name = "双重魔术雷";
-        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
+        dp.Color = new Vector4(1f, 1f, 0f, 1.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40);
         dp.Radian = 60f.DegToRad();
