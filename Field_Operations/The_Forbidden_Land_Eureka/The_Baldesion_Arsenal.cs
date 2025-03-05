@@ -30,6 +30,7 @@ public class The_Baldesion_Arsenal
         【施工中】
         """;
     
+    #region 全局销毁
     //全局
     //7538 插言 ； 7551 伤头 ； 7540 下踢 ； 7863 扫腿 ； 25880 催眠 ； 16560 沉静
     
@@ -53,8 +54,9 @@ public class The_Baldesion_Arsenal
     {
         // accessory.Method.RemoveDraw($"暂时还没有{@event.TargetId()}");
     }
+    #endregion
     
-
+    #region 小怪
     // 入口小怪
     [ScriptMethod(name: "兵武比布鲁斯 尾部碎击", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:15356"])]
     public void 兵武比布鲁斯_尾部碎击(Event @event, ScriptAccessory accessory)
@@ -97,9 +99,8 @@ public class The_Baldesion_Arsenal
         dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
+    #endregion
     
-
-
 
     #region BOSS1 亚特
     // 14632：本体读条 [妖枪振]钢铁 ； 14633：本体读条 [妖枪振]月环 ； 14631：幻枪招来
