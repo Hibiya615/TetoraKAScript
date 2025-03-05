@@ -24,7 +24,7 @@ public class Daivadipa
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.11:
         LV90 特殊Fate 绘制
         兽道诸神信仰：伪神降临
         """;
@@ -119,7 +119,7 @@ public class Daivadipa
         
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new(10f, 50f);
-        dp.DestoryAt = 6200;
+        dp.DestoryAt = 6700;
         
         dp1.Color = accessory.Data.DefaultDangerColor;
         dp1.Scale = new(10f, 50f);
@@ -139,7 +139,7 @@ public class Daivadipa
                 {
                     dp1.Name = "圣火猛击蓝";
                     dp1.Owner = item.EntityId;
-                    dp1.Delay = 6200;
+                    dp1.Delay = 6900;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1);
                 }
                 break;
@@ -156,7 +156,7 @@ public class Daivadipa
                 {
                     dp1.Name = "圣火猛击红";
                     dp1.Owner = item.EntityId;
-                    dp1.Delay = 6200;
+                    dp1.Delay = 6900;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1);
                 }
                 break;
@@ -174,7 +174,7 @@ public class Daivadipa
 
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 7200;
+        dp.DestoryAt = 7000;
         
         dp1.Color = accessory.Data.DefaultDangerColor;
         dp1.Scale = new Vector2(10f);
