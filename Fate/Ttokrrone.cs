@@ -18,7 +18,7 @@ using ECommons.MathHelpers;
 namespace The_Serpentlord_Seethes;
 
 [ScriptType(guid: "ab67129e-880f-48e8-852e-f92b4afa68e5", name: "蛇王得酷热涅：荒野的死斗", territorys: [1190],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.11", author: "Tetora", note: noteStr)]
 
 public class Ttokrrone
 {
@@ -27,7 +27,7 @@ public class Ttokrrone
         v0.0.0.1:
         LV100 特殊Fate 绘制
         蛇王得酷热涅：荒野的死斗
-        已知问题：回旋沙暴可能会无法销毁、可能存在方向绘制错误
+        如果出现问题请在Discord联系
         """;
     
     #region  迷失相关
@@ -105,6 +105,7 @@ public class Ttokrrone
     public void 回旋沙暴(Event @event, ScriptAccessory accessory)
     {
         // 【前方回旋沙暴】 37317 顺时针、37321 逆时针 ；【后方回旋沙暴】 37318 顺时针 、37322 逆时针
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp.Owner = @event.SourceId();
@@ -133,7 +134,6 @@ public class Ttokrrone
                 dp.DestoryAt = 7600;
                 
                 dp1.Name = "后方回旋沙暴Adjust";
-                dp1.Rotation = 180f.DegToRad();
                 dp1.Delay = 7800;
                 dp1.DestoryAt = 17100;
                 break;
@@ -312,7 +312,7 @@ public class Ttokrrone
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "大爆炸";
-        dp.Color = new Vector4(1f, 1f, 0f, 1f);
+        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
         dp.DestoryAt = @event.ActionId() == 39245 ? 7700 : 5700;
