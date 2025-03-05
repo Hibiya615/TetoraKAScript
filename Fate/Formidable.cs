@@ -20,7 +20,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 namespace A_Finale_Most_Formidable;
 
 [ScriptType(guid: "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489", name: "激斗畏惧装甲之秘密武器", territorys: [814],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.11", author: "Tetora", note: noteStr)]
 
 public class Formidable
 {
@@ -96,7 +96,7 @@ public class Formidable
         dp1.Name = "格鲁格之火InhaleRim";
         dp1.Color = new Vector4(1f, 0f, 1f, 2f);
         dp1.Owner = @event.SourceId();
-        dp1.Scale = new Vector2(10.05f);
+        dp1.Scale = new Vector2(10.08f);
         dp1.InnerScale = new Vector2(10f);
         dp1.Radian = float.Pi * 2;
         dp1.DestoryAt = 22800;
@@ -139,7 +139,7 @@ public class Formidable
         dp.Name = $"矮人式导弹{@event.SourceId()}";
         dp.Owner = @event.SourceId();
         dp.Color = new Vector4(1f, 0f, 0f, 1.6f);
-        dp.Scale = new(2f, 6f); 
+        dp.Scale = new(2f, 5f); 
         dp.DestoryAt = 30000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
@@ -203,7 +203,7 @@ public class Formidable
         dp1.Name = "矮人雷击弹月环描边";
         dp1.Color = new Vector4(1f, 0f, 1f, 2f);
         dp1.Owner = @event.SourceId();
-        dp1.Scale = new Vector2(8.55f);
+        dp1.Scale = new Vector2(8.58f);
         dp1.InnerScale = new Vector2(8.5f);
         dp1.Radian = float.Pi * 2;
         dp1.DestoryAt = 6200;
