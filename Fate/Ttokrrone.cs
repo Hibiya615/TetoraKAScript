@@ -94,7 +94,7 @@ public class Ttokrrone
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "砂砾钢铁";
-        dp.Color = new Vector4(1f, 0f, 0f, 1.4f);
+        dp1.Color = new Vector4(1f, 0f, 0f, 1.4f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(13f);
         dp1.DestoryAt = 4900;
