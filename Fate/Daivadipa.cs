@@ -18,7 +18,7 @@ using ECommons.MathHelpers;
 namespace DevoutPilgrimsVSDaivadipa;
 
 [ScriptType(guid: "da82aeb0-9635-4f13-a1c1-39a0c859f596", name: "兽道诸神信仰：伪神降临", territorys: [957],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.11", author: "Tetora", note: noteStr)]
 
 public class Daivadipa
 {
