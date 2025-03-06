@@ -30,6 +30,8 @@ public class Mica_the_Magical_Mu
         亩鼠米卡：盛装巡游皆大欢喜
         """;
     
+    #region 迷失相关
+
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
     {
@@ -53,7 +55,10 @@ public class Mica_the_Magical_Mu
     {
         accessory.Method.RemoveDraw("迷失连线");
     }
+    #endregion
     
+    #region 卡牌机制
+
     [ScriptMethod(name: "卡牌戏法_抽卡安全区", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:39156"])]
     public void 卡牌戏法Safe(Event @event, ScriptAccessory accessory)
     {
@@ -77,7 +82,15 @@ public class Mica_the_Magical_Mu
         dp.DestoryAt = 1200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
+    
+    #endregion
+    
+    #region 卡牌机制 Debug
+    
+    #endregion
 
+    #region 基础机制
+    
     [ScriptMethod(name: "骑滚球（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3899[6-9]$"])]
     public void 骑滚球(Event @event, ScriptAccessory accessory)
     {
@@ -108,7 +121,7 @@ public class Mica_the_Magical_Mu
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "魔术爆发";
-        dp.Color = new Vector4(1f, 1f, 0f, 1.6f);
+        dp.Color = new Vector4(1f, 1f, 0f, 1.8f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
         dp.Delay = 4600;
@@ -158,6 +171,7 @@ public class Mica_the_Magical_Mu
         dp.DestoryAt = 2000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
+    #endregion
     
     [ScriptMethod(name: "鼠鼠死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:17387"],userControl: false)]
     public void 鼠鼠死亡销毁(Event @event, ScriptAccessory accessory)
