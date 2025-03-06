@@ -1,28 +1,26 @@
 # 南雲鉄虎个人KodakkuAssist绘制脚本
 
+**These are scripts for Kodakku**
+
 纯画着玩，更新不保证，质量不保证
 
-**在线库链接：** ```https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/main/OnlineRepo.json```
+## How-to-install
+- Use this link / 在线库链接： 
 
-或者下载您所需要的文件并添加至您的本地仓库
+```https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/main/OnlineRepo.json```
+
+- Or download the Local version in **Releases** / 或者下载您所需要的文件并添加至您的**本地仓库**
 
 感谢 [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) 等人的鼎力相助
 
-## 支持副本
+## Scripts List   支持副本:
 
-**讨伐歼灭战**
+| 迷宫挑战               | 讨伐歼灭战             | 大型Raid |
+|--------------------|-------------------|--------|
+| LV70 <br/>疯狂战舰无限回廊 | LV50 <br/>伊弗利特歼灭战 | T5 |
+|                    | LV50 <br/>海德拉讨伐战  | E10N |
+| | LV90 <br/>高贝扎歼灭战  |
 
-`LV50 伊弗利特歼灭战`
-
-`LV50 海德拉讨伐战`
-
-`LV90 高贝扎歼灭战`
-
-**大型任务 - Raid**
-
-`T5`（测试仓库）
-
-`E10N`
 
 **深层迷宫**
 
@@ -30,17 +28,17 @@
 
 **Fate**
 
-`LV80 激斗畏惧装甲之秘密武器`（测试仓库）
+`LV80 激斗畏惧装甲之秘密武器`
 
-`LV80 灾厄的古塔尼亚之深海讨伐战` （测试仓库）
+`LV80 灾厄的古塔尼亚之深海讨伐战`
 
-`LV90 兽道诸神信仰：伪神降临` （测试仓库）
+`LV90 兽道诸神信仰：伪神降临`
 
-`LV90 侵略兵器召回指令：破坏侵略兵器希`（测试仓库）
+`LV90 侵略兵器召回指令：破坏侵略兵器希`
 
-`LV100 蛇王得酷热涅：荒野的死斗`（测试仓库）
+`LV100 蛇王得酷热涅：荒野的死斗`
 
-`LV100 亩鼠米卡：盛装巡游皆大欢喜` （测试仓库）
+`LV100 亩鼠米卡：盛装巡游皆大欢喜`
 
 **特殊场景探索**
 
