@@ -18,13 +18,13 @@ using ECommons.MathHelpers;
 namespace TheHead_theTail_theWholeDamnedThing;
 
 [ScriptType(guid: "f11c3069-d163-41dd-904e-b016cfcf089c", name: "灾厄的古塔尼亚之深海讨伐战", territorys: [818],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.11", author: "Tetora", note: noteStr)]
 
 public class Archaeotania
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.11:
         LV80 特殊Fate 绘制
         灾厄的古塔尼亚之深海讨伐战
         """;
@@ -85,7 +85,7 @@ public class Archaeotania
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "龙卷_暴风圈", eventType: EventTypeEnum.AddCombatant, eventCondition: ["NPCId:8935"])]
+    [ScriptMethod(name: "龙卷_暴风圈", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:10162"])]
     public void 龙卷(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -97,7 +97,7 @@ public class Archaeotania
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "龙卷销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["NPCId:8935"], userControl: false)]
+    [ScriptMethod(name: "龙卷销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:10162"], userControl: false)]
     public void 龙卷销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw("龙卷");
