@@ -15,11 +15,11 @@
   {
     "Name": "灾厄的古塔尼亚之深海讨伐战",
     "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.11",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
-    "Note": "v0.0.0.1:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
+    "Note": "v0.0.0.11:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
     "UpdateInfo": "",
     "TerritoryIds": [
       818
@@ -54,11 +54,11 @@
   {
     "Name": "蛇王得酷热涅：荒野的死斗",
     "Guid": "ab67129e-880f-48e8-852e-f92b4afa68e5",
-    "Version": "0.0.0.11",
+    "Version": "0.0.0.12",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Ttokrrone.cs",
-    "Note": "v0.0.0.11:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
+    "Note": "v0.0.0.12:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
     "UpdateInfo": "",
     "TerritoryIds": [
       1190
@@ -67,11 +67,11 @@
   {
     "Name": "亩鼠米卡：盛装巡游皆大欢喜",
     "Guid": "22134617-0ca4-463e-a40d-675ef1c20cf2",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.11",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Mica_the_MagicalMu.cs",
-    "Note": "v0.0.0.1:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
+    "Note": "v0.0.0.11:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
     "UpdateInfo": "",
     "TerritoryIds": [
       1192
