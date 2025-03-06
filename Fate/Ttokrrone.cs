@@ -18,13 +18,13 @@ using ECommons.MathHelpers;
 namespace The_Serpentlord_Seethes;
 
 [ScriptType(guid: "ab67129e-880f-48e8-852e-f92b4afa68e5", name: "蛇王得酷热涅：荒野的死斗", territorys: [1190],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.12", author: "Tetora", note: noteStr)]
 
 public class Ttokrrone
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.12:
         LV100 特殊Fate 绘制
         蛇王得酷热涅：荒野的死斗
         如果出现问题请在Discord联系
@@ -271,7 +271,7 @@ public class Ttokrrone
 
             case 37332: // 月环
                 dp1.Name = "飞沙月环";
-                dp1.Color = new Vector4(1f, 0f, 1f, 1.2f);
+                dp1.Color = new Vector4(1f, 0f, 1f, 1.4f);
                 dp1.Scale = new Vector2(60f);
                 dp1.InnerScale = new Vector2(14f);
                 dp1.Radian = float.Pi * 2;
@@ -280,7 +280,7 @@ public class Ttokrrone
 
             case 37333: // 左半钢铁 + 右半月环
                 dp.Name = "飞沙左半钢铁";
-                dp.Color = new Vector4(1f, 0f, 0f, 1.5f);
+                dp.Color = new Vector4(1f, 0f, 0f, 1.6f);
                 dp.Radian = 180f.DegToRad();
                 dp.Rotation = 90f.DegToRad();
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
@@ -293,7 +293,7 @@ public class Ttokrrone
 
             case 37334: // 右半钢铁 + 左半月环
                 dp.Name = "飞沙右半钢铁";
-                dp.Color = new Vector4(1f, 0f, 0f, 1.5f);
+                dp.Color = new Vector4(1f, 0f, 0f, 1.6f);
                 dp.Radian = 180f.DegToRad();
                 dp.Rotation = 270f.DegToRad();
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
@@ -306,6 +306,18 @@ public class Ttokrrone
         }
     }   
     #endregion
+    
+    [ScriptMethod(name: "沙球_出现 高亮", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:38647"])]
+    public void 沙球_出现(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "沙球_出现";
+        dp.Color = new Vector4(1f, 1f, 0f, 1.2f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 6000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
     
     [ScriptMethod(name: "沙球_大爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3924[56]$"])]
     public void 大爆炸(Event @event, ScriptAccessory accessory)
@@ -342,7 +354,7 @@ public class Ttokrrone
         dp.Name = "吞地巨蛇";
         dp.Scale = new (27, 68f);
         dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(0f, 0f, 1f, 0.8f);
+        dp.Color = new Vector4(0f, 0f, 1f, 1f);
         dp.DestoryAt = @event.DurationMilliseconds() + 1400;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
