@@ -18,13 +18,13 @@ using ECommons.MathHelpers;
 namespace TheHead_theTail_theWholeDamnedThing;
 
 [ScriptType(guid: "f11c3069-d163-41dd-904e-b016cfcf089c", name: "灾厄的古塔尼亚之深海讨伐战", territorys: [818],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.12", author: "Tetora", note: noteStr)]
 
 public class Archaeotania
 {
     const string noteStr =
         """
-        v0.0.0.11:
+        v0.0.0.12:
         LV80 特殊Fate 绘制
         灾厄的古塔尼亚之深海讨伐战
         """;
@@ -93,13 +93,20 @@ public class Archaeotania
         dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
-        dp.DestoryAt = 60000;
+        dp.DestoryAt = 42000;  // 第一次上天阶段约为41.6s，之后战斗途中出现约为30s
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
     [ScriptMethod(name: "龙卷销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:10162"], userControl: false)]
     public void 龙卷销毁(Event @event, ScriptAccessory accessory)
     {
+        accessory.Method.RemoveDraw("龙卷");
+    }
+    
+    [ScriptMethod(name: "龙卷销毁备用", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:16442"], userControl: false)]
+    public void 龙卷销毁备用(Event @event, ScriptAccessory accessory)
+    {
+        // 在第一次上天时，当BOSS读条距离衰减 “空降” 时，销毁龙卷
         accessory.Method.RemoveDraw("龙卷");
     }
     
