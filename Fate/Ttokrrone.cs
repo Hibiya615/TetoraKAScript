@@ -18,13 +18,13 @@ using ECommons.MathHelpers;
 namespace The_Serpentlord_Seethes;
 
 [ScriptType(guid: "ab67129e-880f-48e8-852e-f92b4afa68e5", name: "蛇王得酷热涅：荒野的死斗", territorys: [1190],
-    version: "0.0.0.12", author: "Tetora", note: noteStr)]
+    version: "0.0.0.13", author: "Tetora", note: noteStr)]
 
 public class Ttokrrone
 {
     const string noteStr =
         """
-        v0.0.0.12:
+        v0.0.0.13:
         LV100 特殊Fate 绘制
         蛇王得酷热涅：荒野的死斗
         如果出现问题请在Discord联系
@@ -72,7 +72,7 @@ public class Ttokrrone
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60);
         dp.Radian = 90f.DegToRad();
-        dp.DestoryAt = 4900;
+        dp.DestoryAt = 5700;
         
         switch (@event.ActionId())
         {
@@ -97,7 +97,7 @@ public class Ttokrrone
         dp1.Color = new Vector4(1f, 0f, 0f, 1.4f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(13f);
-        dp1.DestoryAt = 4900;
+        dp1.DestoryAt = 5700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
     }
 
@@ -158,7 +158,7 @@ public class Ttokrrone
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(60);
         dp1.Radian = 90f.DegToRad();
-        dp1.Color = new Vector4(1f, 1f, 0f, 0.8f);
+        dp1.Color = new Vector4(1f, 1f, 0f, 0.6f);
         
         switch (@event.ActionId())  //因可能连续回旋，所以在新的读条应销毁上一次绘制
         {
@@ -259,7 +259,7 @@ public class Ttokrrone
         dp1.Scale = new Vector2(60);
         dp1.InnerScale = new Vector2(14);
         dp1.Radian = 180f.DegToRad();
-        dp1.DestoryAt = 7000;
+        dp1.DestoryAt = 7800;
 
         switch (@event.ActionId())
         {
