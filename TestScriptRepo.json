@@ -26,45 +26,6 @@
     ]
   },
   {
-    "Name": "侵略兵器召回指令：破坏侵略兵器希",
-    "Guid": "b73d07ef-aa90-45a9-ab4b-fc3ccce8791b",
-    "Version": "0.0.0.1",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Chi.cs",
-    "Note": "v0.0.0.1:\r\nLV90 特殊Fate 绘制\r\n侵略兵器召回指令：破坏侵略兵器希",
-    "UpdateInfo": "",
-    "TerritoryIds": [
-      960
-    ]
-  },
-  {
-    "Name": "蛇王得酷热涅：荒野的死斗",
-    "Guid": "ab67129e-880f-48e8-852e-f92b4afa68e5",
-    "Version": "0.0.0.12",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Ttokrrone.cs",
-    "Note": "v0.0.0.12:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
-    "UpdateInfo": "",
-    "TerritoryIds": [
-      1190
-    ]
-  },
-  {
-    "Name": "亩鼠米卡：盛装巡游皆大欢喜",
-    "Guid": "22134617-0ca4-463e-a40d-675ef1c20cf2",
-    "Version": "0.0.0.11",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Mica_the_MagicalMu.cs",
-    "Note": "v0.0.0.11:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
-    "UpdateInfo": "",
-    "TerritoryIds": [
-      1192
-    ]
-  },
-  {
     "Name": "正统优雷卡",
     "Guid": "5e8a4051-53f7-4eb3-bb32-b18df8b113aa",
     "Version": "0.0.0.1",
