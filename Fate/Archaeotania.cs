@@ -18,13 +18,13 @@ using ECommons.MathHelpers;
 namespace TheHead_theTail_theWholeDamnedThing;
 
 [ScriptType(guid: "f11c3069-d163-41dd-904e-b016cfcf089c", name: "灾厄的古塔尼亚之深海讨伐战", territorys: [818],
-    version: "0.0.0.12", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Archaeotania
 {
     const string noteStr =
         """
-        v0.0.0.12:
+        v0.0.0.2:
         LV80 特殊Fate 绘制
         灾厄的古塔尼亚之深海讨伐战
         """;
@@ -81,7 +81,7 @@ public class Archaeotania
         dp.ScaleMode |= ScaleMode.YByDistance;
         dp.TargetObject = @event.SourceId();
         dp.Scale = new(1);
-        dp.DestoryAt = 8200;
+        dp.DestoryAt = 7600;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
@@ -97,17 +97,31 @@ public class Archaeotania
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "龙卷_前进方向线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:10162"])]
+    public void 龙卷前进方向线(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"龙卷前进方向线";
+        dp.Color = new Vector4(1f, 1f, 0f, 1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(1f, 5f);
+        dp.DestoryAt = 42000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Arrow, dp);
+    }
+    
     [ScriptMethod(name: "龙卷销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:10162"], userControl: false)]
     public void 龙卷销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw("龙卷");
+        accessory.Method.RemoveDraw("龙卷前进方向线");
     }
     
     [ScriptMethod(name: "龙卷销毁备用", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:16442"], userControl: false)]
     public void 龙卷销毁备用(Event @event, ScriptAccessory accessory)
     {
-        // 在第一次上天时，当BOSS读条距离衰减 “空降” 时，销毁龙卷
+        // 在第一次上天时，当BOSS读条距离衰减 “空降” 时，销毁
         accessory.Method.RemoveDraw("龙卷");
+        accessory.Method.RemoveDraw("龙卷前进方向线");
     }
     
     [ScriptMethod(name: "海呱死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:10157"],userControl: false)]
