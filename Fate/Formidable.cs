@@ -227,14 +227,14 @@ public class Formidable
         accessory.Method.TTS("击退");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"蒸汽喷发";
-        dp.Scale = new(1.5f, 15);
-        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Name = "蒸汽喷发";
+        dp.Scale = new(2f, 15);
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = accessory.Data.Me;
-        dp.TargetPosition = @event.TargetPosition();
+        dp.TargetObject = @event.SourceId();
         dp.Rotation = float.Pi;
         dp.DestoryAt = 2700;
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
 
