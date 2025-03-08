@@ -11,20 +11,7 @@
     "TerritoryIds": [
       814
     ]
-  },
-  {
-    "Name": "灾厄的古塔尼亚之深海讨伐战",
-    "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
-    "Version": "0.0.0.11",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
-    "Note": "v0.0.0.11:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
-    "UpdateInfo": "",
-    "TerritoryIds": [
-      818
-    ]
-  },
+  }, 
   {
     "Name": "兽道诸神信仰：伪神降临",
     "Guid": "da82aeb0-9635-4f13-a1c1-39a0c859f596",
