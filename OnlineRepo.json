@@ -108,5 +108,31 @@
     "TerritoryIds": [
       743
     ]
+  },
+  {
+    "Name": "奥丁歼灭战",
+    "Guid": "1a07440d-a7bd-4b67-b781-90d14087ee60",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
+    "DownloadUrl": "",
+    "Note": "v0.0.0.1:\r\nLV50 奥丁歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      394
+    ]
+  },
+  {
+    "Name": "灾厄的古塔尼亚之深海讨伐战",
+    "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
+    "Version": "0.0.0.2",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
+    "Note": "v0.0.0.2:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      818
+    ]
   }
 ]
