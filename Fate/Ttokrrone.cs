@@ -18,16 +18,15 @@ using ECommons.MathHelpers;
 namespace The_Serpentlord_Seethes;
 
 [ScriptType(guid: "ab67129e-880f-48e8-852e-f92b4afa68e5", name: "蛇王得酷热涅：荒野的死斗", territorys: [1190],
-    version: "0.0.0.13", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Ttokrrone
 {
     const string noteStr =
         """
-        v0.0.0.13:
+        v0.0.0.2:
         LV100 特殊Fate 绘制
         蛇王得酷热涅：荒野的死斗
-        如果出现问题请在Discord联系
         """;
     
     #region  迷失相关
@@ -56,6 +55,34 @@ public class Ttokrrone
             accessory.Method.RemoveDraw("迷失连线");
     }
     #endregion
+    
+    [ScriptMethod(name: "吞地巨蛇（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3757[89]|3758[0-3])$"])]
+    public void 吞地巨蛇(Event @event, ScriptAccessory accessory)
+    {
+        #region  具体技能ID
+        /*
+          37578 预警1，13.8s，宽14m，22m长
+          37579 预警2，14.8s，宽14m，22m长
+          37580 预警3，16.2s，宽14m，22m长
+          37581 预警4，17.6s，宽14m，22m长
+          37582 预警5，19.0s，宽14m，22m长
+          37583 预警6，20.4s，宽14m，22m长
+
+          38642 施放1，14.0s，宽38m，27m长
+          38645 施放2，无读条，宽50m，27m长
+          38644 施放3，无读条，宽68m，27m长
+          38646 施放4，无读条，宽63m，27m长
+         */
+        #endregion
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "吞地巨蛇";
+        dp.Scale = new (27, 68f);
+        dp.Owner = @event.SourceId();
+        dp.Color = new Vector4(0f, 0f, 1f, 1f);
+        dp.DestoryAt = @event.DurationMilliseconds() + 1400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
     
     #region 沙暴类机制
     
@@ -329,34 +356,6 @@ public class Ttokrrone
         dp.Scale = new Vector2(12f);
         dp.DestoryAt = @event.ActionId() == 39245 ? 7700 : 5700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-    
-    [ScriptMethod(name: "吞地巨蛇（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3757[89]|3758[0-3])$"])]
-    public void 吞地巨蛇(Event @event, ScriptAccessory accessory)
-    {
-        #region  具体技能ID
-        /*
-          37578 预警1，13.8s，宽14m，22m长
-          37579 预警2，14.8s，宽14m，22m长
-          37580 预警3，16.2s，宽14m，22m长
-          37581 预警4，17.6s，宽14m，22m长
-          37582 预警5，19.0s，宽14m，22m长
-          37583 预警6，20.4s，宽14m，22m长
-
-          38642 施放1，14.0s，宽38m，27m长
-          38645 施放2，无读条，宽50m，27m长
-          38644 施放3，无读条，宽68m，27m长
-          38646 施放4，无读条，宽63m，27m长
-         */
-        #endregion
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "吞地巨蛇";
-        dp.Scale = new (27, 68f);
-        dp.Owner = @event.SourceId();
-        dp.Color = new Vector4(0f, 0f, 1f, 1f);
-        dp.DestoryAt = @event.DurationMilliseconds() + 1400;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
     [ScriptMethod(name: "蛇王死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:16863"],userControl: false)]
