@@ -14,6 +14,7 @@ using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace DevoutPilgrimsVSDaivadipa;
 
@@ -218,6 +219,48 @@ public class Daivadipa
         }
     }
     
+    [ScriptMethod(name: "移动命令 位置预测", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^19(5[89]|6[01])$"])]
+    public async void 移动命令(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return;
+        await Task.Delay(8000);
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "移动命令";
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(1f, 5f);
+        dp.DestoryAt = 3000;
+        
+        switch (@event["StatusID"])
+        {
+            case "1958":
+                dp.Rotation = 0f.DegToRad();
+                accessory.Method.TextInfo("强制移动：前", duration: 3000, true);
+                break;
+            case "1959":
+                dp.Rotation = 180f.DegToRad();
+                accessory.Method.TextInfo("强制移动：后", duration: 3000, true);
+                break;
+            case "1960":
+                dp.Rotation = 90f.DegToRad();
+                accessory.Method.TextInfo("强制移动：左", duration: 3000, true);
+                break;
+            case "1961":
+                dp.Rotation = 270f.DegToRad();
+                accessory.Method.TextInfo("强制移动：右", duration: 3000, true);
+                break;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Arrow, dp);
+    }
+    
+    [ScriptMethod(name: "移动命令销毁备用", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1257"],userControl: false)]
+    public void 移动命令销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 开始移动时，强制移动buff Id 为 1257 ，销毁移动预测
+        accessory.Method.RemoveDraw("移动命令");
+    }
+    
     [ScriptMethod(name: "大象死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:13677"],userControl: false)]
     public void 大象死亡销毁(Event @event, ScriptAccessory accessory)
     {
@@ -339,21 +382,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
