@@ -24,9 +24,10 @@ public class E10n
     const string noteStr =
         """
         v0.0.0.1:
-        伊甸希望乐园 再生之章2（影之王）初版绘制
+        LV80 伊甸希望乐园 再生之章2（影之王）初版绘制
         """;
     
+    #region 向心聚爆 & 十亿斩击
     public enum ImplosionType {
         FRONT,          // 22196
         BACK,           // 22199
@@ -184,7 +185,7 @@ public class E10n
             }
 
             default: {
-                accessory.Method.SendChat("/e 画图范围确定失败了！");
+                accessory.Method.SendChat("/e 画图范围确定失败！");
                 break;
             }
 
@@ -193,6 +194,7 @@ public class E10n
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         }
     }
+    #endregion
     
     [ScriptMethod(name: "痛苦钩刺(连线狗狗半场)", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:22233"])]
     public void 痛苦钩刺(Event @event, ScriptAccessory accessory)
