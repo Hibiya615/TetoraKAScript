@@ -19,13 +19,13 @@ using ECommons.MathHelpers;
 namespace Mascot_Murder;
 
 [ScriptType(guid: "22134617-0ca4-463e-a40d-675ef1c20cf2", name: "亩鼠米卡：盛装巡游皆大欢喜", territorys: [1192],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.12", author: "Tetora", note: noteStr)]
 
 public class Mica_the_Magical_Mu
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.12:
         LV100 特殊Fate 绘制
         亩鼠米卡：盛装巡游皆大欢喜
         """;
