@@ -52,6 +52,19 @@
     ]
   },
   {
+    "Name": "P10N",
+    "Guid": "f28cc2f2-6ce2-4526-a303-56fe1c02dea8",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-Pand%C3%A6monium/Normal/P10n.cs",
+    "Note": "v0.0.0.1:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1149
+    ]
+  },
+  {
     "Name": "死者宫殿",
     "Guid": "4210c323-eba4-4d67-a7e7-b90799494729",
     "Version": "0.0.0.2",
@@ -120,6 +133,19 @@
     "UpdateInfo": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Urth's_Fount.cs",
     "TerritoryIds": [
       394
+    ]
+  },
+  {
+    "Name": "激斗畏惧装甲之秘密武器",
+    "Guid": "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489",
+    "Version": "0.0.0.2",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Formidable.cs",
+    "Note": "v0.0.0.2:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      814
     ]
   },
   {
