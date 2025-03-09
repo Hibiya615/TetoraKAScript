@@ -20,13 +20,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 namespace A_Finale_Most_Formidable;
 
 [ScriptType(guid: "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489", name: "激斗畏惧装甲之秘密武器", territorys: [814],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Formidable
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV80 特殊Fate 绘制
         激斗畏惧装甲之秘密武器
         """;
@@ -224,6 +224,7 @@ public class Formidable
     [ScriptMethod(name: "蒸汽喷发 击退", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:17394"])]
     public void 蒸汽喷发(Event @event, ScriptAccessory accessory)
     {
+        accessory.Method.TextInfo("击退", duration: 3000, true);
         accessory.Method.TTS("击退");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -233,7 +234,7 @@ public class Formidable
         dp.Owner = accessory.Data.Me;
         dp.TargetObject = @event.SourceId();
         dp.Rotation = float.Pi;
-        dp.DestoryAt = 2700;
+        dp.DestoryAt = 3000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
@@ -244,7 +245,7 @@ public class Formidable
         if ( @event.TargetId() != accessory.Data.Me) return;
         await Task.Delay(3500);
 
-        accessory.Method.TextInfo("停止行动", duration: 1500, true);
+        accessory.Method.TextInfo("停止行动", duration: 1200, true);
         accessory.Method.TTS("停止行动");
     }
 
