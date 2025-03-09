@@ -22,7 +22,7 @@ namespace Thornmarch_Extreme;
 [ScriptType(guid: "fc6a6125-4a1d-4669-be4c-9b375dc70ae0", name: "莫古力贤王歼殛战", territorys: [364],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class Thornmarch_Extreme
+public class ThornmarchExtreme
 {
     const string noteStr =
         """
@@ -32,6 +32,19 @@ public class Thornmarch_Extreme
     
     // Todo: 判断 莫古联合 的add目标以提前判断组合攻击类型 ， 可以靠 NpcYell 判断
     // 缺少机制：千库啵横扫 、 莫古助威歌
+    
+    public static class IbcHelper
+    {
+        public static IBattleChara? GetById(uint id)
+        {
+            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
+        }
+        
+        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
+        {
+            return Svc.Objects.Where(x => x.DataId == dataId);
+        }
+    }
     
     #region 副本提示
     // BOSS复活技能 位高任重 计数
@@ -225,18 +238,31 @@ public class Thornmarch_Extreme
     public void 放马过来库啵(Event @event, ScriptAccessory accessory)
     {
         if ( @event.SourceId() != accessory.Data.Me) return;
-        accessory.Method.TextInfo("尽量远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
+        accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
         accessory.Method.TTS("远离连线目标");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "蓬蓬之障连线";
+        dp.Name = "绒绒之壁连线";
         dp.Color = new Vector4(1f, 0f, 0f, 1f);
-        dp.Owner = accessory.Data.Me;
+        dp.Owner = @event.TargetId();
+        dp.TargetObject = accessory.Data.Me;
         dp.ScaleMode |= ScaleMode.YByDistance;
-        dp.TargetObject = @event.TargetId();
         dp.Scale = new(1);
         dp.DestoryAt = 4200;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        
+        foreach (var item in IbcHelper.GetByDataId(229))
+        {
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = "蓬蓬之障连线";
+            dp1.Color = new Vector4(1f, 0f, 0f, 1f);
+            dp1.Owner = item.EntityId;
+            dp1.TargetObject = accessory.Data.Me;
+            dp1.ScaleMode |= ScaleMode.YByDistance;
+            dp1.Scale = new(1);
+            dp1.DestoryAt = 4200;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp1);
+        }
     }
     
     [ScriptMethod(name: "怒发冲冠 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:402"])]
@@ -252,7 +278,7 @@ public class Thornmarch_Extreme
         dp.Scale = new(1f);
         dp.DestoryAt = 3000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        accessory.Method.RemoveDraw("蓬蓬之障连线");
+        accessory.Method.RemoveDraw("（绒绒之壁|蓬蓬之障)连线");
     }
     
     [ScriptMethod(name: "怒发冲冠 驱散销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:402"],userControl: false)]
