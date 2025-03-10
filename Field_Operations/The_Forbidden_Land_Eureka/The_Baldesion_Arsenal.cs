@@ -103,7 +103,7 @@ public class The_Baldesion_Arsenal
     
 
     #region BOSS1 亚特
-    // 14632：本体读条 [妖枪振]钢铁 ； 14633：本体读条 [妖枪振]月环 ； 14631：幻枪招来
+    // 14632：本体读条 [妖枪振]钢铁 ； 14633：本体读条 [妖枪旋]月环 ； 14631：幻枪招来
     //幻枪招来后，BOSS（DataID：9818）会连线4根 烈焰金枪（DataID：9819），并读条随机[妖枪振]钢铁月环，随后烈焰金枪将瞬发BOSS的钢铁月环 [幻枪振] 14634 / 14635
     /*
     [ScriptMethod(name: "BOSS1_亚特 妖枪振（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:14632"])]
@@ -122,7 +122,6 @@ public class The_Baldesion_Arsenal
     [ScriptMethod(name: "BOSS1_亚特 妖枪旋（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:14633"])]
     public void 妖枪旋(Event @event, ScriptAccessory accessory)
     {
-        //注：14633技能名也叫妖枪振，但他确实是月环
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "妖枪旋";
         dp.Color = accessory.Data.DefaultDangerColor;
