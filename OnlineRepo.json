@@ -39,6 +39,19 @@
     ]
   },
   {
+    "Name": "莫古力贤王歼殛战",
+    "Guid": "fc6a6125-4a1d-4669-be4c-9b375dc70ae0",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Thornmarch-Extreme.cs",
+    "Note": "v0.0.0.1:\r\nLV50 莫古力贤王歼殛战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      364
+    ]
+  },
+  {
     "Name": "E10N",
     "Guid": "038e00e8-d378-4f43-89ab-e27df5561d5a",
     "Version": "0.0.0.1",
