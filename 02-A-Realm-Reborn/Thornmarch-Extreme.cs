@@ -30,8 +30,7 @@ public class ThornmarchExtreme
         LV50 莫古力贤王歼殛战 初版绘制
         """;
     
-    // Todo: 判断 莫古联合 的add目标以提前判断组合攻击类型 ， 可以靠 NpcYell 判断
-    // 缺少机制：千库啵横扫 、 莫古助威歌
+    // 缺少机制：莫古助威歌 
     
     public static class IbcHelper
     {
@@ -147,6 +146,25 @@ public class ThornmarchExtreme
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "绒绒核爆（大钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2055"])]
+    public void 绒绒核爆(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "绒绒核爆";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(20.9f);
+        dp.DestoryAt = 7700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "绒绒核爆销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:2055"],userControl: false)]
+    public void 绒绒核爆销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("绒绒核爆");
+    }
+    
     [ScriptMethod(name: "莫古神准箭 点名提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:1635"])]
     public void 莫古神准箭(Event @event, ScriptAccessory accessory)
     {
@@ -154,20 +172,21 @@ public class ThornmarchExtreme
 
         if (@event.TargetId() == accessory.Data.Me)
         {
-            accessory.Method.TextInfo("四连突刺点名", duration: 3700, true);
+            //accessory.Method.TextInfo("四连突刺点名", duration: 3700, true);
             accessory.Method.TTS("四连突刺点名");
-            accessory.Method.SendChat("四连突刺点名");
+            accessory.Method.SendChat("/e 四连突刺点名");
         } else
         {
-            accessory.Method.TextInfo($"四连攻击点 <{tname}>", duration: 3700, false);
+            //accessory.Method.TextInfo($"四连攻击点 <{tname}>", duration: 3700, false);
             accessory.Method.TTS($"四连攻击点{tname}");
-            accessory.Method.SendChat($"/e 四连攻击点<{@event.TargetName()}>");
+            accessory.Method.SendChat($"/e 四连攻击点 <{@event.TargetName()}>");
         }
     }
     #endregion
     
     #region 组合技阶段
     //【组合技：柔柔之力 + 茸茸之愈】
+    //【台词】茸茸之愈 库普洛·奇普 2111 把你们都打下来库啵！ ； 柔柔之力 普库啦·普奇 2117 打下来，打下来库啵！
     [ScriptMethod(name: "绒绒陨石（圆形AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2056"])]
     public void 绒绒陨石(Event @event, ScriptAccessory accessory)
     {
@@ -181,9 +200,19 @@ public class ThornmarchExtreme
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    //【组合技：软软之弓 + 绵绵之音 + 蓬蓬之障】
+    //【台词】软软之弓 库普括·叩吉 2114 三角攻击库啵！ ； 绵绵之音 普库嘻·皮叩 2119 三角关系库啵！ ； 蓬蓬之障 普库呐·帕叩 2121 好、好的库啵！
+    [ScriptMethod(name: "莫古三角攻击", eventType: EventTypeEnum.NpcYell, eventCondition: ["Id:2114"])]
+    public void 莫古三角攻击(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.TextInfo("远离中间，靠场边躲避大三角", duration: 5000, true);
+        accessory.Method.TTS("远离中间");
+    }
+    
     //【组合技：柔柔之力 + 茸茸之愈 + 毛毛之斧】
     //莫古的诅咒：柔柔之力 对自身周围角色附加60s莫古乱乱乱，使受到 全屏AOE [莫古飞天乱] 的攻击伤害大幅提高。
     //绒绒神圣：茸茸之愈 开始咏唱，咏唱完毕时对全场范围造成高伤害无属性魔法伤害。茸茸之愈 受到一定量伤害后停止咏唱。
+    //【台词】毛毛之斧 库普塔·咔帕 2110 转啊转啊库啵！ ； 茸茸之愈 库普洛·奇普 2112 莫古也一起攻击库啵！ ； 柔柔之力 普库啦·普奇 2118 削弱敌人库啵！
     [ScriptMethod(name: "莫古乱乱乱 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:473"])]
     public void 莫古乱乱乱(Event @event, ScriptAccessory accessory)
     {
@@ -233,9 +262,28 @@ public class ThornmarchExtreme
     //绒绒沼泽：蓬蓬之障 在场上召唤绿色毒圈，角色进入会赋予 猛毒。
     //放马过来库啵！：绒绒之壁 对自身周围最近的3名角色连线，同时接近蓬蓬之障。稍后为角色附加18s怒发冲冠，[怒发冲冠]debuff中的玩家会被挑衅，在毒池里持续受到伤害。
     //莫古死亡雨：软软之弓 随机指定任意3名角色为目标，为其附加3把小弓箭组成的褐色圆形 “莫古力剑雨目标” 标记，随后对角色所在位置造成圆形范围无属性突刺伤害。
+    //【台词】绒绒之壁 库普迪·库普 2108 好机会库啵！ ； 软软之弓 库普括·叩吉 2115 莫古来支援库啵！ ； 蓬蓬之障 普库呐·帕叩 2122 和、和练习时一样库啵！
     
-    [ScriptMethod(name: "放马过来库啵 远离提示", eventType: EventTypeEnum.Tether, eventCondition: ["Id:000D"])]
+    [ScriptMethod(name: "放马过来库啵 远离提示", eventType: EventTypeEnum.NpcYell, eventCondition: ["Id:2108"])]
     public void 放马过来库啵(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
+        accessory.Method.TTS("远离连线目标");
+        
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "绒绒之壁连线";
+            dp.Color = new Vector4(1f, 0f, 0f, 1f);
+            dp.Owner = @event.SourceId();
+            dp.TargetObject = accessory.Data.Me;
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.Scale = new(1);
+            dp.DestoryAt = 6700;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    /*
+    [ScriptMethod(name: "放马过来库啵 连线提示", eventType: EventTypeEnum.Tether, eventCondition: ["Id:000D"])]
+    public void 放马过来库啵Thther(Event @event, ScriptAccessory accessory)
     {
         if ( @event.SourceId() != accessory.Data.Me) return;
         accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
@@ -244,26 +292,14 @@ public class ThornmarchExtreme
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "绒绒之壁连线";
         dp.Color = new Vector4(1f, 0f, 0f, 1f);
-        dp.Owner = @event.TargetId();
-        dp.TargetObject = accessory.Data.Me;
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.TargetId();
         dp.ScaleMode |= ScaleMode.YByDistance;
         dp.Scale = new(1);
         dp.DestoryAt = 4200;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-        
-        foreach (var item in IbcHelper.GetByDataId(229))
-        {
-            var dp1 = accessory.Data.GetDefaultDrawProperties();
-            dp1.Name = "蓬蓬之障连线";
-            dp1.Color = new Vector4(1f, 0f, 0f, 1f);
-            dp1.Owner = item.EntityId;
-            dp1.TargetObject = accessory.Data.Me;
-            dp1.ScaleMode |= ScaleMode.YByDistance;
-            dp1.Scale = new(1);
-            dp1.DestoryAt = 4200;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp1);
-        }
     }
+    */
     
     [ScriptMethod(name: "怒发冲冠 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:402"])]
     public void 怒发冲冠(Event @event, ScriptAccessory accessory)
@@ -457,5 +493,176 @@ public static class Extensions
         {
             accessory.Method.TTS(text);
         }
+    }
+}
+
+public static class DirectionCalc
+{
+    // 以北为0建立list
+    // Game         List    Logic
+    // 0            - 4     pi
+    // 0.25 pi      - 3     0.75pi
+    // 0.5 pi       - 2     0.5pi
+    // 0.75 pi      - 1     0.25pi
+    // pi           - 0     0
+    // 1.25 pi      - 7     1.75pi
+    // 1.5 pi       - 6     1.5pi
+    // 1.75 pi      - 5     1.25pi
+    // Logic = Pi - Game (+ 2pi)
+
+    /// <summary>
+    /// 将游戏基角度（以南为0，逆时针增加）转为逻辑基角度（以北为0，顺时针增加）
+    /// 算法与Logic2Game完全相同，但为了代码可读性，便于区分。
+    /// </summary>
+    /// <param name="radian">游戏基角度</param>
+    /// <returns>逻辑基角度</returns>
+    public static float Game2Logic(this float radian)
+    {
+        // if (r < 0) r = (float)(r + 2 * Math.PI);
+        // if (r > 2 * Math.PI) r = (float)(r - 2 * Math.PI);
+
+        var r = float.Pi - radian;
+        r = (r + float.Pi * 2) % (float.Pi * 2);
+        return r;
+    }
+
+    /// <summary>
+    /// 将逻辑基角度（以北为0，顺时针增加）转为游戏基角度（以南为0，逆时针增加）
+    /// 算法与Game2Logic完全相同，但为了代码可读性，便于区分。
+    /// </summary>
+    /// <param name="radian">逻辑基角度</param>
+    /// <returns>游戏基角度</returns>
+    public static float Logic2Game(this float radian)
+    {
+        // var r = (float)Math.PI - radian;
+        // if (r < Math.PI) r = (float)(r + 2 * Math.PI);
+        // if (r > Math.PI) r = (float)(r - 2 * Math.PI);
+
+        return radian.Game2Logic();
+    }
+
+    /// <summary>
+    /// 输入逻辑基角度，获取逻辑方位（斜分割以正上为0，正分割以右上为0，顺时针增加）
+    /// </summary>
+    /// <param name="radian">逻辑基角度</param>
+    /// <param name="dirs">方位总数</param>
+    /// <param name="diagDivision">斜分割，默认true</param>
+    /// <returns>逻辑基角度对应的逻辑方位</returns>
+    public static int Rad2Dirs(this float radian, int dirs, bool diagDivision = true)
+    {
+        var r = diagDivision
+            ? Math.Round(radian / (2f * float.Pi / dirs))
+            : Math.Floor(radian / (2f * float.Pi / dirs));
+        r = (r + dirs) % dirs;
+        return (int)r;
+    }
+
+    /// <summary>
+    /// 输入坐标，获取逻辑方位（斜分割以正上为0，正分割以右上为0，顺时针增加）
+    /// </summary>
+    /// <param name="point">坐标点</param>
+    /// <param name="center">中心点</param>
+    /// <param name="dirs">方位总数</param>
+    /// <param name="diagDivision">斜分割，默认true</param>
+    /// <returns>该坐标点对应的逻辑方位</returns>
+    public static int Position2Dirs(this Vector3 point, Vector3 center, int dirs, bool diagDivision = true)
+    {
+        double dirsDouble = dirs;
+        var r = diagDivision
+            ? Math.Round(dirsDouble / 2 - dirsDouble / 2 * Math.Atan2(point.X - center.X, point.Z - center.Z) / Math.PI) % dirsDouble
+            : Math.Floor(dirsDouble / 2 - dirsDouble / 2 * Math.Atan2(point.X - center.X, point.Z - center.Z) / Math.PI) % dirsDouble;
+        return (int)r;
+    }
+
+    /// <summary>
+    /// 以逻辑基弧度旋转某点
+    /// </summary>
+    /// <param name="point">待旋转点坐标</param>
+    /// <param name="center">中心</param>
+    /// <param name="radian">旋转弧度</param>
+    /// <returns>旋转后坐标点</returns>
+    public static Vector3 RotatePoint(this Vector3 point, Vector3 center, float radian)
+    {
+        // 围绕某点顺时针旋转某弧度
+        Vector2 v2 = new(point.X - center.X, point.Z - center.Z);
+        var rot = MathF.PI - MathF.Atan2(v2.X, v2.Y) + radian;
+        var length = v2.Length();
+        return new Vector3(center.X + MathF.Sin(rot) * length, center.Y, center.Z - MathF.Cos(rot) * length);
+    }
+
+    /// <summary>
+    /// 以逻辑基角度从某中心点向外延伸
+    /// </summary>
+    /// <param name="center">待延伸中心点</param>
+    /// <param name="radian">旋转弧度</param>
+    /// <param name="length">延伸长度</param>
+    /// <returns>延伸后坐标点</returns>
+    public static Vector3 ExtendPoint(this Vector3 center, float radian, float length)
+    {
+        // 令某点以某弧度延伸一定长度
+        return new Vector3(center.X + MathF.Sin(radian) * length, center.Y, center.Z - MathF.Cos(radian) * length);
+    }
+
+    /// <summary>
+    /// 寻找外侧某点到中心的逻辑基弧度
+    /// </summary>
+    /// <param name="center">中心</param>
+    /// <param name="newPoint">外侧点</param>
+    /// <returns>外侧点到中心的逻辑基弧度</returns>
+    public static float FindRadian(this Vector3 newPoint, Vector3 center)
+    {
+        var radian = MathF.PI - MathF.Atan2(newPoint.X - center.X, newPoint.Z - center.Z);
+        if (radian < 0)
+            radian += 2 * MathF.PI;
+        return radian;
+    }
+
+    /// <summary>
+    /// 将输入点左右折叠
+    /// </summary>
+    /// <param name="point">待折叠点</param>
+    /// <param name="centerX">中心折线坐标点</param>
+    /// <returns></returns>
+    public static Vector3 FoldPointHorizon(this Vector3 point, float centerX)
+    {
+        return point with { X = 2 * centerX - point.X };
+    }
+
+    /// <summary>
+    /// 将输入点上下折叠
+    /// </summary>
+    /// <param name="point">待折叠点</param>
+    /// <param name="centerZ">中心折线坐标点</param>
+    /// <returns></returns>
+    public static Vector3 FoldPointVertical(this Vector3 point, float centerZ)
+    {
+        return point with { Z = 2 * centerZ - point.Z };
+    }
+    
+    /// <summary>
+    /// 将输入点朝某中心点往内/外同角度延伸，默认向内
+    /// </summary>
+    /// <param name="point">待延伸点</param>
+    /// <param name="center">中心点</param>
+    /// <param name="length">延伸长度</param>
+    /// <param name="isOutside">是否向外延伸</param>>
+    /// <returns></returns>
+    public static Vector3 PointInOutside(this Vector3 point, Vector3 center, float length, bool isOutside = false)
+    {
+        Vector2 v2 = new(point.X - center.X, point.Z - center.Z);
+        var targetPos = (point - center) / v2.Length() * length * (isOutside ? 1 : -1) + point;
+        return targetPos;
+    }
+
+    /// <summary>
+    /// 获得两点之间距离
+    /// </summary>
+    /// <param name="point"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    public static float DistanceTo(this Vector3 point, Vector3 target)
+    {
+        Vector2 v2 = new(point.X - target.X, point.Z - target.Z);
+        return v2.Length();
     }
 }
