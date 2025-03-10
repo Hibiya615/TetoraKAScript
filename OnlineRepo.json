@@ -212,5 +212,18 @@
     "TerritoryIds": [
       1192
     ]
+  },
+  {
+    "Name": "吉祥天女歼灭战",
+    "Guid": "214f8fbd-ad04-430f-8bba-fd7319581780",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "",
+    "DownloadUrl": "",
+    "Note": "v0.0.0.1:\r\nLV70 吉祥天女歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      719
+    ]
   }
 ]
