@@ -17,15 +17,38 @@ using ECommons.MathHelpers;
 namespace Emanation;
 
 [ScriptType(guid: "214f8fbd-ad04-430f-8bba-fd7319581780", name: "吉祥天女歼灭战", territorys: [719],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Emanation
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV70 吉祥天女歼灭战 初版绘制
         """;
+    
+    public static class IbcHelper
+    {
+        public static IBattleChara? GetById(uint id)
+        {
+            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
+        }
+    
+        public static IBattleChara? GetMe()
+        {
+            return Svc.ClientState.LocalPlayer;
+        }
+    
+        public static IGameObject? GetFirstByDataId(uint dataId)
+        {
+            return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
+        }
+    
+        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
+        {
+            return Svc.Objects.Where(x => x.DataId == dataId);
+        }
+    }
     
     [ScriptMethod(name: "元气刷新提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^93(47|74)$"])]
     public void 元气刷新(Event @event, ScriptAccessory accessory)
@@ -59,14 +82,22 @@ public class Emanation
     public void 光之波动(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "光之波动";
-        dp.Owner = @event.SourceId();
-        dp.TargetObject = @event.TargetId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Scale = new Vector2(40);
-        dp.Radian = 125f.DegToRad();
-        dp.DestoryAt = 5400;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+        
+        var Lakshmis = Svc.Objects.Where(x => x.DataId == 7712);
+        foreach (var Lakshmi in Lakshmis)
+        {
+            if (Lakshmi.IsTargetable)
+            {
+                dp.Owner = Lakshmi.EntityId;
+            }
+        }
+                dp.Name = "光之波动";
+                dp.TargetObject = @event.TargetId();
+                dp.Color = accessory.Data.DefaultDangerColor;
+                dp.Scale = new Vector2(40);
+                dp.Radian = 125f.DegToRad();
+                dp.DestoryAt = 5400;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
     [ScriptMethod(name: "光之瀑布（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:9361"])]
