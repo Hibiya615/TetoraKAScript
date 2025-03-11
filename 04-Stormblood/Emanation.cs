@@ -82,23 +82,20 @@ public class Emanation
     public void 光之波动(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
+
+        var boss = IbcHelper.GetFirstByDataId(7712);
+        if (boss == null) return;
+        dp.Owner = boss.GameObjectId;
         
-        var Lakshmis = Svc.Objects.Where(x => x.DataId == 7712);
-        foreach (var Lakshmi in Lakshmis)
-        {
-            if (Lakshmi.IsTargetable)
-            {
-                dp.Owner = Lakshmi.EntityId;
-            }
-        }
-                dp.Name = "光之波动";
-                dp.TargetObject = @event.TargetId();
-                dp.Color = accessory.Data.DefaultDangerColor;
-                dp.Scale = new Vector2(40);
-                dp.Radian = 125f.DegToRad();
-                dp.DestoryAt = 5400;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+        dp.Name = "光之波动";
+        dp.TargetObject = @event.TargetId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new Vector2(40);
+        dp.Radian = 125f.DegToRad();
+        dp.DestoryAt = 5400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
+    
     
     [ScriptMethod(name: "光之瀑布（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:9361"])]
     public void 光之瀑布(Event @event, ScriptAccessory accessory)
