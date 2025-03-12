@@ -26,6 +26,8 @@ public class theRoyalMenagerie
         """
         v0.0.0.1:
         LV70 神龙歼灭战 初版绘制
+        缺少部分机制：如闪电分散、钻石星尘等
+        若有遇见可通过DC将ARR录像文件私发给我补充
         """;
     
     
