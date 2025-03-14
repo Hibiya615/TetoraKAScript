@@ -54,8 +54,8 @@ public class BattleOnTheBigBridge
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "恩奇都";
             dp.Owner = item.EntityId;
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Scale = new Vector2(2.5f);
+            dp.Color = new Vector4(1f, 0f, 0f, 2f);
+            dp.Scale = new Vector2(1.5f);
             dp.DestoryAt = 20000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp); 
         }
@@ -76,9 +76,9 @@ public class BattleOnTheBigBridge
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"混乱{@event.SourceId()}";
             dp.Owner = @event.TargetId();
-            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Color = new Vector4(1f, 0f, 1f, 1f);
             dp.Scale = new Vector2(1.5f);
-            dp.DestoryAt = 20000;
+            dp.DestoryAt = 30000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp); 
     }
     
