@@ -26,6 +26,19 @@
     ]
   },
   {
+    "Name": "奥丁歼灭战",
+    "Guid": "1a07440d-a7bd-4b67-b781-90d14087ee60",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Urth's_Fount.cs",
+    "Note": "v0.0.0.1:\r\nLV50 奥丁歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      394
+    ]
+  },
+  {
     "Name": "大桥上的决斗",
     "Guid": "3e4102cb-9410-44fd-85e8-d43a3bc25737",
     "Version": "0.0.0.1",
@@ -172,19 +185,6 @@
     "UpdateInfo": "",
     "TerritoryIds": [
       743
-    ]
-  },
-  {
-    "Name": "奥丁歼灭战",
-    "Guid": "1a07440d-a7bd-4b67-b781-90d14087ee60",
-    "Version": "0.0.0.1",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "",
-    "Note": "v0.0.0.1:\r\nLV50 奥丁歼灭战 初版绘制",
-    "UpdateInfo": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Urth's_Fount.cs",
-    "TerritoryIds": [
-      394
     ]
   },
   {
