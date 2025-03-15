@@ -80,7 +80,7 @@ public class Eureka_Orthos {
     
     #region 精英怪
     //精英怪
-    [ScriptMethod(name: "\ue0c0 美拉西迪亚复制体 亚拉戈陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(1[89]|20)$"])]
+    [ScriptMethod(name: "★ 美拉西迪亚复制体 亚拉戈陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(1[89]|20)$"])]
     public void 美拉西迪亚复制体_亚拉戈陨石(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -93,7 +93,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue0c0 亚灵智慧之灵 起源（狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(0[89]|10)$"])]
+    [ScriptMethod(name: "★ 亚灵智慧之灵 起源（狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(0[89]|10)$"])]
     public void 亚灵智慧之灵_起源(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -106,7 +106,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "\ue0c0 拉米亚女王 回旋斩（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3272[789]$"])]
+    [ScriptMethod(name: "★ 拉米亚女王 回旋斩（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3272[789]$"])]
     public void 拉米亚女王_回旋斩(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
