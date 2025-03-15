@@ -16,7 +16,7 @@ using ECommons.MathHelpers;
 
 namespace Emanation;
 
-[ScriptType(guid: "214f8fbd-ad04-430f-8bba-fd7319581780", name: "吉祥天女歼灭战", territorys: [719],
+[ScriptType(guid: "a7bacd3e-834f-41ba-a210-c66e2c12d208", name: "吉祥天女歼灭战", territorys: [719],
     version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Emanation
