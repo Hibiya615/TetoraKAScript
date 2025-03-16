@@ -24,7 +24,7 @@ public class E1n
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.11:
         LV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制
         """;
     
@@ -82,6 +82,8 @@ public class E1n
     public void 虚荣之恶(Event @event, ScriptAccessory accessory)
     {
         // 也有 TargetIcon 可以用 ， Id:00AC
+        accessory.Method.TTS("坦克直线死刑");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         
         var boss = IbcHelper.GetFirstByDataId(9369);
