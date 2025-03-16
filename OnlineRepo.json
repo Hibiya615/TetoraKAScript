@@ -119,11 +119,11 @@
   {
     "Name": "E1N",
     "Guid": "35c751e5-2958-4f55-b783-405b4acfde1b",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.11",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E1n.cs",
-    "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制",
+    "Note": "v0.0.0.11:\r\nLV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
       849
