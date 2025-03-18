@@ -19,19 +19,19 @@ namespace Midsummer_Night_s_Explosion;
 
 
 [ScriptType(guid: "7703f1a9-5698-4896-8908-bb8e415c1321", name: "天青斗场18 - 爆破死斗", territorys: [796],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Midsummer_Night_s_Explosion {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         天青斗场第18层 爆破死斗绘制
         """;
 
     [ScriptMethod(name: "狂野冲锋（直线击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:15055"])]
     public void 狂野冲锋(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TTS("冲锋击退");
+        accessory.Method.EdgeTTS("冲锋击退");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "狂野冲锋";
