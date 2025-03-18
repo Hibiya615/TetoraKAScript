@@ -20,13 +20,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.Character;
 namespace A_Finale_Most_Formidable;
 
 [ScriptType(guid: "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489", name: "激斗畏惧装甲之秘密武器", territorys: [814],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.21", author: "Tetora", note: noteStr)]
 
 public class Formidable
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.21:
         LV80 特殊Fate 绘制
         激斗畏惧装甲之秘密武器
         """;
@@ -238,6 +238,12 @@ public class Formidable
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
+    [ScriptMethod(name: "防击退销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(7548|7559)$"],userControl: false)]
+    public void 防击退销毁(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw("蒸汽喷发");
+    }
 
     [ScriptMethod(name: "运动体探知干扰器 提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1269"])]
     public async void 运动体探知干扰器(Event @event, ScriptAccessory accessory)
