@@ -130,6 +130,19 @@
     ]
   },
   {
+    "Name": "E8N",
+    "Guid": "c4d533c8-8798-441d-b849-fc3cd5cf63d9",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E8n.cs",
+    "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      905
+    ]
+  },
+  {
     "Name": "E10N",
     "Guid": "038e00e8-d378-4f43-89ab-e27df5561d5a",
     "Version": "0.0.0.1",
@@ -216,12 +229,12 @@
   {
     "Name": "激斗畏惧装甲之秘密武器",
     "Guid": "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.21",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Formidable.cs",
-    "Note": "v0.0.0.2:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.21:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
+    "UpdateInfo": "v0.0.0.21: 在蒸汽喷发开启防击退时将销毁击退预测",
     "TerritoryIds": [
       814
     ]
