@@ -13,6 +13,19 @@
     ]
   },
   {
+    "Name": "拉姆歼灭战",
+    "Guid": "de6d6f10-775d-4c45-91ec-2bd4ed6762c7",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/theStrikingTree(Hard).cs",
+    "Note": "v0.0.0.1:\r\nLV50 拉姆歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      374
+    ]
+  },
+  {
     "Name": "海德拉讨伐战",
     "Guid": "d32d7489-a1bb-4117-98dd-ee895390804d",
     "Version": "0.0.0.1",
