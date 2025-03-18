@@ -175,11 +175,11 @@ public class Daivadipa
 
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 7000;
+        dp.DestoryAt = 6700;
         
         dp1.Color = accessory.Data.DefaultDangerColor;
         dp1.Scale = new Vector2(10f);
-        dp1.DestoryAt = 4000;
+        dp1.DestoryAt = 3700;
         
         switch (@event.ActionId())
         {
@@ -228,7 +228,7 @@ public class Daivadipa
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "移动命令";
         dp.Color = accessory.Data.DefaultSafeColor;
-        dp.Owner = @event.SourceId();
+        dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(1f, 5f);
         dp.DestoryAt = 3000;
         
@@ -236,18 +236,22 @@ public class Daivadipa
         {
             case "1958":
                 dp.Rotation = 0f.DegToRad();
+                accessory.Method.EdgeTTS("向前移动到安全区");
                 accessory.Method.TextInfo("强制移动：前", duration: 3000, true);
                 break;
             case "1959":
                 dp.Rotation = 180f.DegToRad();
+                accessory.Method.EdgeTTS("向后移动到安全区");
                 accessory.Method.TextInfo("强制移动：后", duration: 3000, true);
                 break;
             case "1960":
                 dp.Rotation = 90f.DegToRad();
+                accessory.Method.EdgeTTS("向左移动到安全区");
                 accessory.Method.TextInfo("强制移动：左", duration: 3000, true);
                 break;
             case "1961":
                 dp.Rotation = 270f.DegToRad();
+                accessory.Method.EdgeTTS("向右移动到安全区");
                 accessory.Method.TextInfo("强制移动：右", duration: 3000, true);
                 break;
         }
