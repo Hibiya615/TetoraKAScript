@@ -83,7 +83,7 @@ public class E1n
     public void 虚荣之恶(Event @event, ScriptAccessory accessory)
     {
         // 也有 TargetIcon 可以用 ， Id:00AC
-        accessory.Method.TTS("坦克直线死刑");
+        accessory.Method.EdgeTTS("坦克直线死刑");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         
