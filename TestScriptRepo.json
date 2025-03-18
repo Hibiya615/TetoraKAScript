@@ -1,18 +1,5 @@
 [
   {
-    "Name": "兽道诸神信仰：伪神降临",
-    "Guid": "da82aeb0-9635-4f13-a1c1-39a0c859f596",
-    "Version": "0.0.0.1",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Daivadipa.cs",
-    "Note": "v0.0.0.11:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
-    "UpdateInfo": "",
-    "TerritoryIds": [
-      957
-    ]
-  },
-  {
     "Name": "正统优雷卡",
     "Guid": "5e8a4051-53f7-4eb3-bb32-b18df8b113aa",
     "Version": "0.0.0.1",
