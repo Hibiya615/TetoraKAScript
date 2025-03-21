@@ -169,6 +169,19 @@
     ]
   },
   {
+    "Name": "E12N",
+    "Guid": "3f88ad9c-e7a7-4e00-b19e-546609b319ba",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E12n.cs",
+    "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 再生之章4（伊甸之约）初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      945
+    ]
+  },
+  {
     "Name": "P10N",
     "Guid": "f28cc2f2-6ce2-4526-a303-56fe1c02dea8",
     "Version": "0.0.0.1",
