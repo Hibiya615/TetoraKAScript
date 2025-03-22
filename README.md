@@ -4,25 +4,26 @@
 
 纯画着玩，更新不保证，质量不保证
 
-## How-to-install
+## How-to-install  /  使用指南
 - Use this link / 在线库链接： 
 
 ```https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/main/OnlineRepo.json```
 
 - Or download the Local version in **Releases** / 或者下载您所需要的文件并添加至您的**本地仓库**
 
+
 感谢 [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) 等人的鼎力相助
 
-## Scripts List   支持副本:
+## Scripts List   /  支持副本:
 
 | 迷宫挑战                 | 讨伐歼灭战             | 讨伐歼殛战    | 大型Raid |
 |-------------------------|-------------------|-------------------|--------|
 | LV70 <br/>疯狂战舰无限回廊 | LV50 <br/>伊弗利特歼灭战 | LV50 <br/>莫古力贤王歼殛战 | T5     |
-|                         | LV50 <br/>拉姆歼灭战   |                   | E1N    |
-|                         | LV50 <br/>海德拉讨伐战  |                   | E8N    |
-|                         | LV50 <br/>大桥上的决斗  |                   | E10N   |
-|                         | LV50 <br/>奥丁歼灭战   |                   | E12N   |
-|                         | LV60 <br/>祖尔宛歼灭战  |                   |        |
+|                         | LV50 <br/>拉姆歼灭战   |                   | O11N   |
+|                         | LV50 <br/>海德拉讨伐战  |                   | E1N    |
+|                         | LV50 <br/>大桥上的决斗  |                   | E8N    |
+|                         | LV50 <br/>奥丁歼灭战   |                   | E10N   |
+|                         | LV60 <br/>祖尔宛歼灭战  |                   | E12N   |
 |                         | LV70 <br/>吉祥天女歼灭战 |                   |        |
 |                         | LV70 <br/>神龙歼灭战   |                   |        |
 |                         | LV90 <br/>高贝扎歼灭战  |                   |        |
@@ -55,7 +56,7 @@
 
 ### 【施工中】
 
-**请注意：**测试仓库内的脚本均为**未实际验证** 或者**有未修复的BUG** 请慎用
+**请注意：** 测试仓库内的脚本均为**未实际验证** 或者**有未修复的BUG** 请慎用
 
 **测试仓库链接**
 

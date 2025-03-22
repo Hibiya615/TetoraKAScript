@@ -29,9 +29,104 @@ public class O11n
         LV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制
         """;
     
+    [ScriptMethod(name: "芥末爆弹（死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12935"])]
+    public void 芥末爆弹死刑(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "芥末爆弹死刑";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
     
-    // 19231 19232 左刀  4700ms / 2700ms
-    // 12929 12930 右刀  4700ms / 2700ms
+    [ScriptMethod(name: "左/右舷齐射·波动炮", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(12929|1293[012])$"])]
+    public void 齐射波动炮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "齐射波动炮";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60);
+        dp.Radian = 210f.DegToRad();
+        
+        switch (@event.ActionId())
+        {
+            case 12929:
+                dp.Rotation = 270f.DegToRad();
+                dp.DestoryAt = 4700;
+                break;
+            case 12930:
+                dp.Rotation = 270f.DegToRad();
+                dp.DestoryAt = 2700;
+                break;
+            case 12931:
+                dp.Rotation = 90f.DegToRad();
+                dp.DestoryAt = 4700;
+                break;
+            case 12932:
+                dp.Rotation = 90f.DegToRad();
+                dp.DestoryAt = 2700;
+                break;
+        }
+        
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
+    
+    [ScriptMethod(name: "生成外设-火箭飞拳（直线）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:9622"])]
+    public void 突进(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "突进";
+        dp.Scale = new (15f, 49f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 12500;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "突进销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:13724"],userControl: false)]
+    public void 突进销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("突进");
+    }
+    
+    /*
+    [ScriptMethod(name: "雷力投射点 开始", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^从欧米茄那里感知到了强烈的能量反应.*"])]
+    public void 雷力投射点Start(Event @event, ScriptAccessory accessory)
+    {
+    }
+    
+    [ScriptMethod(name: "雷力投射点 结束", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^确认到防御力场生成完成.*"])]
+    public void 雷力投射点End(Event @event, ScriptAccessory accessory)
+    {
+    }
+    */
+    
+
+    [ScriptMethod(name: "芥末爆弹（连线）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0054"])]
+    public async void 冲击波(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("冲击波");
+            
+        await Task.Delay(200);
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "冲击波";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 8400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "冲击波销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:12928"],userControl: false)]
+    public void 冲击波销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("冲击波");
+    }
+
     
 }
 

@@ -130,6 +130,19 @@
     ]
   },
   {
+    "Name": "O11N",
+    "Guid": "2232ae84-c1e7-4382-88b4-d691887f27cf",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Omega_Quests/Normal/O11n.cs",
+    "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      800
+    ]
+  },
+  {
     "Name": "E1N",
     "Guid": "35c751e5-2958-4f55-b783-405b4acfde1b",
     "Version": "0.0.0.11",
