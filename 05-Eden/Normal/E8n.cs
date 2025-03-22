@@ -20,13 +20,13 @@ using System.Threading.Tasks;
 namespace E8n;
 
 [ScriptType(guid: "c4d533c8-8798-441d-b849-fc3cd5cf63d9", name: "E8N", territorys: [905],
-    version: "0.0.0.1" , author: "Tetora", note: noteStr)]
+    version: "0.0.0.2" , author: "Tetora", note: noteStr)]
 
 public class E8n
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制
         """;
     
@@ -181,7 +181,7 @@ public class E8n
         dp.Name = "连锁反射_冰霜斩";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(40);
+        dp.Scale = new Vector2(30);
         dp.Radian = 270f.DegToRad();
         dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
