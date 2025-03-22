@@ -15,18 +15,17 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
-using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
 namespace Thornmarch_Extreme;
 
 [ScriptType(guid: "fc6a6125-4a1d-4669-be4c-9b375dc70ae0", name: "莫古力贤王歼殛战", territorys: [364],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.11", author: "Tetora", note: noteStr)]
 
 public class ThornmarchExtreme
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.11:
         LV50 莫古力贤王歼殛战 初版绘制
         不看攻略基本能打，没有做职能限制，不需要的提示自行关闭
         """;
@@ -53,9 +52,10 @@ public class ThornmarchExtreme
         timeMooglesseOblige=0;
     }
     
-    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:236"])]
-    public void 开场提示(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
+    public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
+        await Task.Delay(3000); 
         accessory.Method.TextInfo("难度：☆\n重点机制：修小怪血，并一起击杀 ", duration: 5000, true);
         accessory.Method.TTS("出啥躲啥，注意修血");
         accessory.Method.SendChat("/e T：MT拉斧 & 贤王，ST拉壁，注意顺劈面向\nD：注意修血，前两次需要同时击杀\nH：组合技时注意驱散[莫古乱乱乱]与[怒发冲冠]、注意AOE");
