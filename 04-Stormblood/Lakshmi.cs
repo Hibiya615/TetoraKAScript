@@ -19,7 +19,7 @@ namespace Emanation;
 [ScriptType(guid: "a7bacd3e-834f-41ba-a210-c66e2c12d208", name: "吉祥天女歼灭战", territorys: [719],
     version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
-public class Emanation
+public class Lakshmi
 {
     const string noteStr =
         """

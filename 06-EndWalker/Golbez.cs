@@ -19,12 +19,12 @@ namespace the_Voidcast_Dais;
 [ScriptType(guid: "8a526afb-eefd-44ec-a105-7dc8fcd28e47", name: "高贝扎歼灭战", territorys: [1140],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class the_Voidcast_Dais
+public class Golbez
 {
     const string noteStr =
         """
         v0.0.0.1:
-        LV90 高贝扎（真神）初版绘制
+        LV90 高贝扎歼灭战 初版绘制
         """;
 
     [ScriptMethod(name: "虚空陨石（死刑）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0158"])]

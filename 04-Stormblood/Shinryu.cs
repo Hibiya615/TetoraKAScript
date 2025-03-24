@@ -20,7 +20,7 @@ namespace theRoyalMenagerie;
 [ScriptType(guid: "da23fd13-2d1f-41d3-b2c9-91fd8d948a98", name: "神龙歼灭战", territorys: [679],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class theRoyalMenagerie
+public class Shinryu
 {
     const string noteStr =
         """
