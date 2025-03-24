@@ -26,6 +26,19 @@
     ]
   },
   {
+    "Name": "莫古力贤王歼灭战(?)",
+    "Guid": "cd81e178-12e6-4e53-9b81-63002cc51ecb",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Thornmarch(Hard).cs",
+    "Note": "v0.0.0.1:\r\nLV50 莫古力贤王歼灭战\r\n纯整活无意义，不喜欢可以不用\r\n台词暂时适用于CN版，暂未适配其他语言端",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1067
+    ]
+  },
+  {
     "Name": "海德拉讨伐战",
     "Guid": "d32d7489-a1bb-4117-98dd-ee895390804d",
     "Version": "0.0.0.1",

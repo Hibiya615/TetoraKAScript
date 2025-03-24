@@ -276,7 +276,6 @@ public class Thornmarch_Hard
     [ScriptMethod(name: "碾碎你们库啵！", userControl: false,eventType: EventTypeEnum.NpcYell, eventCondition: ["Id:13784"])]
     public void 碾碎你们库啵(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("碾碎你们库啵！ ", duration: 4000, true);
         if (isTTS)accessory.Method.EdgeTTS("碾碎你们库啵！");
         if (isSendMessage)accessory.Method.SendChat("/e 贤王莫古尔·莫古十二世：碾碎你们库啵！");
     }
@@ -488,7 +487,7 @@ public class Thornmarch_Hard
     [ScriptMethod(name: "莫古彗星（引导黄圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:29198"])]
     public void 莫古彗星提示(Event @event, ScriptAccessory accessory)
     {
-        if (isText2)accessory.Method.TextInfo("引导三连黄圈", duration: 5000, true);
+        if (isText2)accessory.Method.TextInfo("引导三连黄圈", duration: 7700, true);
         accessory.Method.EdgeTTS("引导三连黄圈");
     }
     
