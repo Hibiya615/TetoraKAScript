@@ -45,13 +45,13 @@ public class ThornmarchExtreme
         }
     }
     
-    #region 副本提示
     // BOSS复活技能 位高任重 计数
     private volatile int timeMooglesseOblige=0;
     public void Init(ScriptAccessory accessory) {
         timeMooglesseOblige=0;
     }
     
+    #region 副本提示
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
