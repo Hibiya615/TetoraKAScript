@@ -52,6 +52,19 @@
     ]
   },
   {
+    "Name": "那布里亚勒斯讨伐战",
+    "Guid": "64206b9e-cd0a-47ec-960d-15f39a888f9e",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Nabriales.cs",
+    "Note": "v0.0.0.1:\r\nLV50 那布里亚勒斯讨伐战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      426
+    ]
+  },
+  {
     "Name": "海德拉讨伐战",
     "Guid": "d32d7489-a1bb-4117-98dd-ee895390804d",
     "Version": "0.0.0.1",
