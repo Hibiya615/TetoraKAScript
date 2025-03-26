@@ -15,51 +15,22 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 
-namespace Ravana;
+namespace Nabriales;
 
-[ScriptType(guid: "336990c6-8686-4691-8b7a-3ec8ffedfc19", name: "罗波那歼殛战", territorys: [446],
+[ScriptType(guid: "64206b9e-cd0a-47ec-960d-15f39a888f9e", name: "那布里亚勒斯讨伐战", territorys: [426],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class Ravana
+public class Nabriales
 {
     const string noteStr =
         """
         v0.0.0.1:
-        LV60 罗波那歼殛战 初版绘制
+        LV50 那布里亚勒斯讨伐战 初版绘制
         """;
     
     
-    
-    [ScriptMethod(name: "光焰【序】（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:3772"])]
-    public void 光焰序(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "光焰序";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(15f);
-        dp.DestoryAt = 15700;
-        dp.ScaleMode = ScaleMode.ByTime;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-    
-    [ScriptMethod(name: "光焰【破】（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:3776"])]
-    public void 光焰破(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "光焰破";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(40f);
-        dp.Radian = 330f.DegToRad();
-        dp.DestoryAt = 15700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
-    }
-    
 }
 
-
-#region 
 public static class EventExtensions
 {
     private static bool ParseHexId(string? idStr, out uint id)
@@ -189,4 +160,3 @@ public static class Extensions
         }
     }
 }
-#endregion

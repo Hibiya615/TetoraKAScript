@@ -40,7 +40,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Bahamute_NormalRaid.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Raid-Bahamute/T03_T09_T13_for_BLU.cs",
     "Note": "v0.0.0.1:\r\n巴哈姆特大迷宫 普通难度绘制\r\n目前支持：T5\r\n计划中：T9 T13",
     "UpdateInfo": "",
     "TerritoryIds": [

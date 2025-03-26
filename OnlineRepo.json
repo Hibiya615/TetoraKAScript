@@ -1,11 +1,24 @@
 [
   {
+    "Name": "疯狂战舰无限回廊",
+    "Guid": "c76136e1-1b5b-4cfb-a677-4cc0917fa050",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/theFractalContinuum-Hard.cs",
+    "Note": "v0.0.0.1:\r\n疯狂战舰无限回廊 副本绘制\r\n注意：BOSS2三斗神与尾王光柱地火未经实战测试，若有误请带ARR反馈",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      743
+    ]
+  },
+  {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/the_Bowl_of_Embers(Hard).cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ifrit(Hard).cs",
     "Note": "",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -18,7 +31,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/theStrikingTree(Hard).cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ramuh(Hard).cs",
     "Note": "v0.0.0.1:\r\nLV50 拉姆歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -31,7 +44,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Thornmarch(Hard).cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Good_King_Moggle-Hard.cs",
     "Note": "v0.0.0.1:\r\nLV50 莫古力贤王歼灭战\r\n纯整活无意义，不喜欢可以不用\r\n台词暂时适用于CN版，暂未适配其他语言端",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -44,7 +57,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/the_Hydra.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Hydra.cs",
     "Note": "",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -57,7 +70,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Urth's_Fount.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Odin.cs",
     "Note": "v0.0.0.1:\r\nLV50 奥丁歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -70,7 +83,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/BattleOnTheBigBridge.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleOnTheBigBridge.cs",
     "Note": "v0.0.0.1:\r\nLV50 大桥上的决斗 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -83,7 +96,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Zurvan.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Zurvan.cs",
     "Note": "v0.0.0.1:\r\nLV60 祖尔宛歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -96,7 +109,7 @@
     "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Emanation.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Lakshmi.cs",
     "Note": "v0.0.0.2:\r\nLV70 吉祥天女歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -109,7 +122,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/theRoyalMenagerie.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Shinryu.cs",
     "Note": "v0.0.0.1:\r\nLV70 神龙歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -122,7 +135,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/the_Voidcast_Dais.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Golbez.cs",
     "Note": "",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -135,7 +148,7 @@
     "Version": "0.0.0.11",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Thornmarch-Extreme.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Good_King_Moggle(Extreme).cs",
     "Note": "v0.0.0.11:\r\nLV50 莫古力贤王歼殛战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -148,7 +161,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Omega_Quests/Normal/O11n.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O11n.cs",
     "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -161,7 +174,7 @@
     "Version": "0.0.0.11",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E1n.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E1n.cs",
     "Note": "v0.0.0.11:\r\nLV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -174,7 +187,7 @@
     "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E8n.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E8n.cs",
     "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制",
     "UpdateInfo": "修正镜子范围错误",
     "TerritoryIds": [
@@ -187,7 +200,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E10n.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E10n.cs",
     "Note": "",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -200,7 +213,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Eden/Normal/E12n.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E12n.cs",
     "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 再生之章4（伊甸之约）初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -213,7 +226,7 @@
     "Version": "0.0.0.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-Pand%C3%A6monium/Normal/P10n.cs",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P10n.cs",
     "Note": "v0.0.0.1:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
@@ -263,19 +276,6 @@
     "UpdateInfo": "",
     "TerritoryIds": [
       796
-    ]
-  },
-  {
-    "Name": "疯狂战舰无限回廊",
-    "Guid": "c76136e1-1b5b-4cfb-a677-4cc0917fa050",
-    "Version": "0.0.0.1",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/theFractalContinuum-Hard.cs",
-    "Note": "v0.0.0.1:\r\n疯狂战舰无限回廊 副本绘制\r\n注意：BOSS2三斗神与尾王光柱地火未经实战测试，若有误请带ARR反馈",
-    "UpdateInfo": "",
-    "TerritoryIds": [
-      743
     ]
   },
   {
