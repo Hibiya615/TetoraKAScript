@@ -13,6 +13,19 @@
     ]
   },
   {
+    "Name": "污染庭园圣茉夏娜植物园",
+    "Guid": "7e87b5d1-ae21-4115-9483-d8dc0f1d1652",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/SaintMocianne'sArboretum%20(Hard).cs",
+    "Note": "v0.0.0.1:\r\nLV70 污染庭园圣茉夏娜植物园 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      788
+    ]
+  },
+  {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
     "Version": "0.0.0.1",
