@@ -3,35 +3,36 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.2",note: noteStr)]
+    version: "0.0.0.3",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         重要：1~80层暂无录像证实，可能会有部分绘制错误，如发现错误请带着ARR联系我
-        严重错误：暂未支持【形态变化】【眩晕】【催眠】等限制
+        严重错误：暂未支持【形态变化】【眩晕】【催眠】等限制，有需可以考虑使用Splatoon
         """;
     
     //眩晕、催眠、无法发动技能1113等状态都需要销毁绘图

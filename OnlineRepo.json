@@ -2,12 +2,12 @@
   {
     "Name": "疯狂战舰无限回廊",
     "Guid": "c76136e1-1b5b-4cfb-a677-4cc0917fa050",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/theFractalContinuum-Hard.cs",
-    "Note": "v0.0.0.1:\r\n疯狂战舰无限回廊 副本绘制\r\n注意：BOSS2三斗神与尾王光柱地火未经实战测试，若有误请带ARR反馈",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\n疯狂战舰无限回廊 副本绘制\r\n注意：BOSS2三斗神与尾王光柱地火未经实战测试，若有误请带ARR反馈",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       743
     ]
@@ -15,12 +15,12 @@
   {
     "Name": "污染庭园圣茉夏娜植物园",
     "Guid": "7e87b5d1-ae21-4115-9483-d8dc0f1d1652",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/SaintMocianne'sArboretum%20(Hard).cs",
-    "Note": "v0.0.0.1:\r\nLV70 污染庭园圣茉夏娜植物园 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV70 污染庭园圣茉夏娜植物园 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       788
     ]
@@ -28,12 +28,12 @@
   {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ifrit(Hard).cs",
-    "Note": "",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.1:\r\nLV50 伊弗利特歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       292
     ]
@@ -41,12 +41,12 @@
   {
     "Name": "拉姆歼灭战",
     "Guid": "de6d6f10-775d-4c45-91ec-2bd4ed6762c7",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ramuh(Hard).cs",
-    "Note": "v0.0.0.1:\r\nLV50 拉姆歼灭战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 拉姆歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       374
     ]
@@ -54,12 +54,12 @@
   {
     "Name": "莫古力贤王歼灭战(?)",
     "Guid": "cd81e178-12e6-4e53-9b81-63002cc51ecb",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Good_King_Moggle-Hard.cs",
-    "Note": "v0.0.0.1:\r\nLV50 莫古力贤王歼灭战\r\n纯整活无意义，不喜欢可以不用\r\n台词暂时适用于CN版，暂未适配其他语言端",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 莫古力贤王歼灭战\r\n纯整活无意义，不喜欢可以不用\r\n台词暂时适用于CN版，暂未适配其他语言端",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       1067
     ]
@@ -67,12 +67,12 @@
   {
     "Name": "那布里亚勒斯讨伐战",
     "Guid": "64206b9e-cd0a-47ec-960d-15f39a888f9e",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Nabriales.cs",
-    "Note": "v0.0.0.1:\r\nLV50 那布里亚勒斯讨伐战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 那布里亚勒斯讨伐战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       426
     ]
@@ -80,12 +80,12 @@
   {
     "Name": "海德拉讨伐战",
     "Guid": "d32d7489-a1bb-4117-98dd-ee895390804d",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Hydra.cs",
-    "Note": "",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\nLV50 海德拉讨伐战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       369
     ]
@@ -93,12 +93,12 @@
   {
     "Name": "奥丁歼灭战",
     "Guid": "1a07440d-a7bd-4b67-b781-90d14087ee60",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Odin.cs",
-    "Note": "v0.0.0.1:\r\nLV50 奥丁歼灭战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 奥丁歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       394
     ]
@@ -106,12 +106,12 @@
   {
     "Name": "大桥上的决斗",
     "Guid": "3e4102cb-9410-44fd-85e8-d43a3bc25737",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleOnTheBigBridge.cs",
-    "Note": "v0.0.0.1:\r\nLV50 大桥上的决斗 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 大桥上的决斗 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       366
     ]
@@ -119,12 +119,12 @@
   {
     "Name": "祖尔宛歼灭战",
     "Guid": "214f8fbd-ad04-430f-8bba-fd7319581780",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Zurvan.cs",
-    "Note": "v0.0.0.1:\r\nLV60 祖尔宛歼灭战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV60 祖尔宛歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       637
     ]
@@ -132,12 +132,12 @@
   {
     "Name": "吉祥天女歼灭战",
     "Guid": "a7bacd3e-834f-41ba-a210-c66e2c12d208",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Lakshmi.cs",
-    "Note": "v0.0.0.2:\r\nLV70 吉祥天女歼灭战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.3:\r\nLV70 吉祥天女歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       719
     ]
@@ -145,12 +145,12 @@
   {
     "Name": "神龙歼灭战",
     "Guid": "da23fd13-2d1f-41d3-b2c9-91fd8d948a98",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Shinryu.cs",
-    "Note": "v0.0.0.1:\r\nLV70 神龙歼灭战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV70 神龙歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       679
     ]
@@ -158,12 +158,12 @@
   {
     "Name": "高贝扎歼灭战",
     "Guid": "8a526afb-eefd-44ec-a105-7dc8fcd28e47",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Golbez.cs",
-    "Note": "",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\nLV90 高贝扎歼灭战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       1140
     ]
@@ -171,12 +171,12 @@
   {
     "Name": "莫古力贤王歼殛战",
     "Guid": "fc6a6125-4a1d-4669-be4c-9b375dc70ae0",
-    "Version": "0.0.0.11",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Good_King_Moggle(Extreme).cs",
-    "Note": "v0.0.0.11:\r\nLV50 莫古力贤王歼殛战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 莫古力贤王歼殛战 初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       364
     ]
@@ -184,12 +184,12 @@
   {
     "Name": "O11N",
     "Guid": "2232ae84-c1e7-4382-88b4-d691887f27cf",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O11n.cs",
-    "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       800
     ]
@@ -197,12 +197,12 @@
   {
     "Name": "E1N",
     "Guid": "35c751e5-2958-4f55-b783-405b4acfde1b",
-    "Version": "0.0.0.11",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E1n.cs",
-    "Note": "v0.0.0.11:\r\nLV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       849
     ]
@@ -210,12 +210,12 @@
   {
     "Name": "E8N",
     "Guid": "c4d533c8-8798-441d-b849-fc3cd5cf63d9",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E8n.cs",
-    "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制",
-    "UpdateInfo": "修正镜子范围错误",
+    "Note": "v0.0.0.3:\r\nLV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       905
     ]
@@ -223,12 +223,12 @@
   {
     "Name": "E10N",
     "Guid": "038e00e8-d378-4f43-89ab-e27df5561d5a",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E10n.cs",
-    "Note": "",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 再生之章2（影之王）初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       943
     ]
@@ -236,12 +236,12 @@
   {
     "Name": "E12N",
     "Guid": "3f88ad9c-e7a7-4e00-b19e-546609b319ba",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E12n.cs",
-    "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 再生之章4（伊甸之约）初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 再生之章4（伊甸之约）初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       945
     ]
@@ -249,12 +249,12 @@
   {
     "Name": "P10N",
     "Guid": "f28cc2f2-6ce2-4526-a303-56fe1c02dea8",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P10n.cs",
-    "Note": "v0.0.0.1:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       1149
     ]
@@ -262,12 +262,12 @@
   {
     "Name": "死者宫殿",
     "Guid": "4210c323-eba4-4d67-a7e7-b90799494729",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/the_Palace_of_the_Dead.cs",
-    "Note": "",
-    "UpdateInfo": "v0.0.0.2  将特殊符号的字符改为正常数字，伤心鸭",
+    "Note": "v0.0.0.3:\n死者宫殿 初版绘制",
+    "UpdateInfo": "v0.0.0.3  API12",
     "TerritoryIds": [
       561,
       562,
@@ -294,12 +294,12 @@
   {
     "Name": "天青斗场18 - 爆破死斗",
     "Guid": "7703f1a9-5698-4896-8908-bb8e415c1321",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/18-Midsummer_Night's_Explosion.cs",
     "Note": "",
-    "UpdateInfo": "",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       796
     ]
@@ -307,12 +307,12 @@
   {
     "Name": "激斗畏惧装甲之秘密武器",
     "Guid": "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489",
-    "Version": "0.0.0.21",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Formidable.cs",
-    "Note": "v0.0.0.21:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
-    "UpdateInfo": "v0.0.0.21: 在蒸汽喷发开启防击退时将销毁击退预测",
+    "Note": "v0.0.0.3:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
+    "UpdateInfo": "v0.0.0.3 API12",
     "TerritoryIds": [
       814
     ]
@@ -320,12 +320,12 @@
   {
     "Name": "灾厄的古塔尼亚之深海讨伐战",
     "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
-    "Note": "v0.0.0.2:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.3:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       818
     ]
@@ -333,12 +333,12 @@
   {
     "Name": "兽道诸神信仰：伪神降临",
     "Guid": "da82aeb0-9635-4f13-a1c1-39a0c859f596",
-    "Version": "0.0.0.11",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Daivadipa.cs",
-    "Note": "v0.0.0.11:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       957
     ]
@@ -346,12 +346,12 @@
   {
     "Name": "侵略兵器召回指令：破坏侵略兵器希",
     "Guid": "b73d07ef-aa90-45a9-ab4b-fc3ccce8791b",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Chi.cs",
-    "Note": "v0.0.0.1:\r\nLV90 特殊Fate 绘制\r\n侵略兵器召回指令：破坏侵略兵器希",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV90 特殊Fate 绘制\r\n侵略兵器召回指令：破坏侵略兵器希",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       960
     ]
@@ -359,12 +359,12 @@
   {
     "Name": "蛇王得酷热涅：荒野的死斗",
     "Guid": "ab67129e-880f-48e8-852e-f92b4afa68e5",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Ttokrrone.cs",
-    "Note": "v0.0.0.2:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.3:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       1190
     ]
@@ -372,12 +372,12 @@
   {
     "Name": "亩鼠米卡：盛装巡游皆大欢喜",
     "Guid": "22134617-0ca4-463e-a40d-675ef1c20cf2",
-    "Version": "0.0.0.11",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Mica_the_MagicalMu.cs",
-    "Note": "v0.0.0.12:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       1192
     ]

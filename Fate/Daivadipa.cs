@@ -3,13 +3,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -19,13 +21,13 @@ using System.Threading.Tasks;
 namespace DevoutPilgrimsVSDaivadipa;
 
 [ScriptType(guid: "da82aeb0-9635-4f13-a1c1-39a0c859f596", name: "兽道诸神信仰：伪神降临", territorys: [957],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Daivadipa
 {
     const string noteStr =
         """
-        v0.0.0.11:
+        v0.0.0.2:
         LV90 特殊Fate 绘制
         兽道诸神信仰：伪神降临
         """;
@@ -94,19 +96,7 @@ public class Daivadipa
         }
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-        
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
+
     
     [ScriptMethod(name: "圣火猛击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^2649[89]$"])]
     public void 圣火猛击(Event @event, ScriptAccessory accessory)
@@ -129,14 +119,14 @@ public class Daivadipa
         switch (@event.ActionId())
         {
             case 26498:
-                foreach (var item in IbcHelper.GetByDataId(13679))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13679))
                 {
                     dp.Name = "圣火猛击红";
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
                 }
                 
-                foreach (var item in IbcHelper.GetByDataId(13680))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13680))
                 {
                     dp1.Name = "圣火猛击蓝";
                     dp1.Owner = item.EntityId;
@@ -146,14 +136,14 @@ public class Daivadipa
                 break;
 
             case 26499:
-                foreach (var item in IbcHelper.GetByDataId(13680))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13680))
                 {
                     dp.Name = "圣火猛击蓝";
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
                 }
                 
-                foreach (var item in IbcHelper.GetByDataId(13679))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13679))
                 {
                     dp1.Name = "圣火猛击红";
                     dp1.Owner = item.EntityId;
@@ -184,14 +174,14 @@ public class Daivadipa
         switch (@event.ActionId())
         {
             case 26498:
-                foreach (var item in IbcHelper.GetByDataId(13681))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13681))
                 {
                     dp.Name = "燃烧红";
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
                 
-                foreach (var item in IbcHelper.GetByDataId(13682))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13682))
                 {
                     dp1.Name = "燃烧蓝";
                     dp1.Owner = item.EntityId;
@@ -201,14 +191,14 @@ public class Daivadipa
                 break;
 
             case 26499:
-                foreach (var item in IbcHelper.GetByDataId(13682))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13682))
                 {
                     dp.Name = "燃烧蓝";
                     dp.Owner = item.EntityId;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 }
                 
-                foreach (var item in IbcHelper.GetByDataId(13681))
+                foreach (var item in accessory.Data.Objects.GetByDataId(13681))
                 {
                     dp1.Name = "燃烧红";
                     dp1.Owner = item.EntityId;

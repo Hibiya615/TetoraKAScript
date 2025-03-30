@@ -3,53 +3,33 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace SaintMociannesArboretum_Hard;
 
 [ScriptType(guid: "7e87b5d1-ae21-4115-9483-d8dc0f1d1652", name: "污染庭园圣茉夏娜植物园", territorys: [788],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class SaintMociannesArboretum_Hard
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV70 污染庭园圣茉夏娜植物园 初版绘制
         """;
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-    
-        public static IBattleChara? GetMe()
-        {
-            return Svc.ClientState.LocalPlayer;
-        }
-    
-        public static IGameObject? GetFirstByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
-        }
-    
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     #region BOSS1_泥口花
     [ScriptMethod(name: "BOSS1_泥口花 泥浆炸弹（点名毒圈）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0001"])]
@@ -85,7 +65,7 @@ public class SaintMociannesArboretum_Hard
         accessory.Method.TextInfo("躲在小花后", duration: 8000, true);
         accessory.Method.EdgeTTS("躲在小花后");
         
-        foreach (var item in IbcHelper.GetByDataId(9264))
+        foreach (var item in accessory.Data.Objects.GetByDataId(9264))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "恶意毒境";
@@ -146,7 +126,7 @@ public class SaintMociannesArboretum_Hard
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         
-        var boss = IbcHelper.GetFirstByDataId(9257);
+        var boss = accessory.Data.Objects.GetByDataId(9257).FirstOrDefault();
         if (boss == null) return;
         dp.Owner = boss.GameObjectId;
         dp.TargetObject = @event.TargetId();

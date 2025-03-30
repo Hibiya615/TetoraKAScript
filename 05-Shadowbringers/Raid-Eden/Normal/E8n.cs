@@ -3,56 +3,34 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
-
 namespace E8n;
 
 [ScriptType(guid: "c4d533c8-8798-441d-b849-fc3cd5cf63d9", name: "E8N", territorys: [905],
-    version: "0.0.0.2" , author: "Tetora", note: noteStr)]
+    version: "0.0.0.3" , author: "Tetora", note: noteStr)]
 
 public class E8n
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制
         """;
     
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-    
-        public static IBattleChara? GetMe()
-        {
-            return Svc.ClientState.LocalPlayer;
-        }
-    
-        public static IGameObject? GetFirstByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
-        }
-    
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     #region P1
     
@@ -262,7 +240,7 @@ public class E8n
     public void 光之海啸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        var boss = IbcHelper.GetFirstByDataId(11635);
+        var boss = accessory.Data.Objects.GetByDataId(11635).FirstOrDefault();
         if (boss == null) return;
         dp.Owner = boss.GameObjectId;
         

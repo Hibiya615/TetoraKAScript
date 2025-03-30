@@ -3,29 +3,31 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 
 namespace the_Fractal_Continuum_Hard;
 
 [ScriptType(guid: "c76136e1-1b5b-4cfb-a677-4cc0917fa050", name: "疯狂战舰无限回廊", territorys: [743],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class the_Fractal_Continuum_Hard
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         疯狂战舰无限回廊 副本绘制
         注意：BOSS2三斗神与尾王光柱地火未经实战测试，若有误请带ARR反馈
         """;

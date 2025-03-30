@@ -3,28 +3,31 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace Midsummer_Night_s_Explosion;
 
 
 [ScriptType(guid: "7703f1a9-5698-4896-8908-bb8e415c1321", name: "天青斗场18 - 爆破死斗", territorys: [796],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Midsummer_Night_s_Explosion {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         天青斗场第18层 爆破死斗绘制
         """;
 

@@ -3,28 +3,31 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace Omicron_Recall_Killing_Order;
 
 [ScriptType(guid: "b73d07ef-aa90-45a9-ab4b-fc3ccce8791b", name: "侵略兵器召回指令：破坏侵略兵器希", territorys: [960],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Chi
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV90 特殊Fate 绘制
         侵略兵器召回指令：破坏侵略兵器希
         """;

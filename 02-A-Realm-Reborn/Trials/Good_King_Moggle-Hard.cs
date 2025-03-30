@@ -3,13 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -19,13 +20,13 @@ using System.Threading.Tasks;
 namespace Thornmarch_Hard;
 
 [ScriptType(guid: "cd81e178-12e6-4e53-9b81-63002cc51ecb", name: "莫古力贤王歼灭战(?)", territorys: [1067],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Thornmarch_Hard
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV50 莫古力贤王歼灭战
         纯整活无意义，不喜欢可以不用
         台词暂时适用于CN版，暂未适配其他语言端

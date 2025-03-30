@@ -3,28 +3,31 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace The_Serpentlord_Seethes;
 
 [ScriptType(guid: "ab67129e-880f-48e8-852e-f92b4afa68e5", name: "蛇王得酷热涅：荒野的死斗", territorys: [1190],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Ttokrrone
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV100 特殊Fate 绘制
         蛇王得酷热涅：荒野的死斗
         """;

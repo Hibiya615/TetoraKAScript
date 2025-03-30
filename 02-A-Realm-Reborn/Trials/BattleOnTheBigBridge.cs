@@ -3,43 +3,34 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace BattleOnTheBigBridgen;
 
 [ScriptType(guid: "3e4102cb-9410-44fd-85e8-d43a3bc25737", name: "大桥上的决斗", territorys: [366],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class BattleOnTheBigBridge
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV50 大桥上的决斗 初版绘制
         """;
     
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-        
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     [ScriptMethod(name: "蛙变之歌", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:439"])]
     public void 蛙变之歌(Event @event, ScriptAccessory accessory)
@@ -48,8 +39,8 @@ public class BattleOnTheBigBridge
 
         accessory.Method.TextInfo("躲避绿鸡", duration: 5000, true);
         accessory.Method.EdgeTTS("躲避绿鸡");
-        
-        foreach (var item in IbcHelper.GetByDataId(2824))
+
+        foreach (var item in accessory.Data.Objects.GetByDataId(2824))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "恩奇都";
@@ -57,7 +48,7 @@ public class BattleOnTheBigBridge
             dp.Color = new Vector4(1f, 0f, 0f, 2f);
             dp.Scale = new Vector2(1.5f);
             dp.DestoryAt = 20000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp); 
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
     }
     

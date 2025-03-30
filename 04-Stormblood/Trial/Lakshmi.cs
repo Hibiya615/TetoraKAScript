@@ -3,52 +3,33 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace Emanation;
 
 [ScriptType(guid: "a7bacd3e-834f-41ba-a210-c66e2c12d208", name: "吉祥天女歼灭战", territorys: [719],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Lakshmi
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV70 吉祥天女歼灭战 初版绘制
         """;
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-    
-        public static IBattleChara? GetMe()
-        {
-            return Svc.ClientState.LocalPlayer;
-        }
-    
-        public static IGameObject? GetFirstByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
-        }
-    
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     [ScriptMethod(name: "元气刷新提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^93(47|74)$"])]
     public void 元气刷新(Event @event, ScriptAccessory accessory)
@@ -83,7 +64,7 @@ public class Lakshmi
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        var boss = IbcHelper.GetFirstByDataId(7712);
+        var boss = accessory.Data.Objects.GetByDataId(7712).FirstOrDefault();
         if (boss == null) return;
         dp.Owner = boss.GameObjectId;
         

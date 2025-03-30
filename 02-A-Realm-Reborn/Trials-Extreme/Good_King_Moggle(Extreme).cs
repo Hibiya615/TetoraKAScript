@@ -3,13 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -19,31 +20,18 @@ using System.Threading.Tasks;
 namespace Thornmarch_Extreme;
 
 [ScriptType(guid: "fc6a6125-4a1d-4669-be4c-9b375dc70ae0", name: "莫古力贤王歼殛战", territorys: [364],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class ThornmarchExtreme
 {
     const string noteStr =
         """
-        v0.0.0.11:
+        v0.0.0.2:
         LV50 莫古力贤王歼殛战 初版绘制
         不看攻略基本能打，没有做职能限制，不需要的提示自行关闭
         """;
     
     // 缺少机制：莫古助威歌 
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-        
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     // BOSS复活技能 位高任重 计数
     private volatile int timeMooglesseOblige=0;

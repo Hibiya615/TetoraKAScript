@@ -3,13 +3,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -19,28 +21,15 @@ using System.Threading.Tasks;
 namespace Pandæmonium.Normal;
 
 [ScriptType(guid: "f28cc2f2-6ce2-4526-a303-56fe1c02dea8", name: "P10N", territorys: [1149],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class P10n
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV90 万魔殿 荒天之狱2（万魔殿）初版绘制
         """;
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-        
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     [ScriptMethod(name: "喷吐丝网 分散提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33369"])]
     public void 喷吐丝网(Event @event, ScriptAccessory accessory)
@@ -56,7 +45,7 @@ public class P10n
         if ( @event.TargetId() != accessory.Data.Me) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         
-        foreach (var item in IbcHelper.GetByDataId(16156))
+        foreach (var item in accessory.Data.Objects.GetByDataId(16156))
         {
             dp.Name = "柱子危险区";
             dp.Color = new Vector4(1f, 0f, 0f, 2f);
@@ -74,7 +63,7 @@ public class P10n
         if ( @event.TargetId() != accessory.Data.Me) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         
-        foreach (var item in IbcHelper.GetByDataId(16156))
+        foreach (var item in accessory.Data.Objects.GetByDataId(16156))
         {
             dp.Name = "柱子危险区";
             dp.Color = new Vector4(1f, 1f, 1f, 0.4f);

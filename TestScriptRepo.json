@@ -2,12 +2,12 @@
   {
     "Name": "正统优雷卡",
     "Guid": "5e8a4051-53f7-4eb3-bb32-b18df8b113aa",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Eureka_Orthos.cs",
-    "Note": "v0.0.0.1:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制\r\n怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.3:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制\r\n怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       1099,
       1100,
@@ -24,12 +24,12 @@
   {
     "Name": "禁地优雷卡 - 巴尔德西昂兵武塔",
     "Guid": "cb001385-81e0-4c16-8bb3-fb51fd70336a",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Field_Operations/The_Forbidden_Land_Eureka/The_Baldesion_Arsenal.cs",
-    "Note": "v0.0.0.1:\r\n禁地优雷卡 - 巴尔德西昂兵武塔 初版绘制\r\n【施工中】",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\n禁地优雷卡 - 巴尔德西昂兵武塔 初版绘制\r\n【施工中】",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       827
     ]
@@ -37,12 +37,12 @@
   {
     "Name": "巴哈姆特大迷宫 - 普通难度",
     "Guid": "8d41b5f9-0ab6-404a-9572-aabb390023f0",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Raid-Bahamute/T03_T09_T13_for_BLU.cs",
-    "Note": "v0.0.0.1:\r\n巴哈姆特大迷宫 普通难度绘制\r\n目前支持：T5\r\n计划中：T9 T13",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\n巴哈姆特大迷宫 普通难度绘制\r\n目前支持：T5\r\n计划中：T9 T13",
+    "UpdateInfo": "API12",
     "TerritoryIds": [
       196,
       245,

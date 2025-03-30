@@ -3,13 +3,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -19,13 +20,13 @@ using System.Threading.Tasks;
 namespace The_Navel___EX._04_Omega_Quests.Normal;
 
 [ScriptType(guid: "2232ae84-c1e7-4382-88b4-d691887f27cf", name: "O11N", territorys: [800],
-    version: "0.0.0.1" , author: "Tetora", note: noteStr)]
+    version: "0.0.0.2" , author: "Tetora", note: noteStr)]
 
 public class O11n
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制
         """;
     

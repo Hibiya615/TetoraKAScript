@@ -3,56 +3,36 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace theRoyalMenagerie;
 
 [ScriptType(guid: "da23fd13-2d1f-41d3-b2c9-91fd8d948a98", name: "神龙歼灭战", territorys: [679],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Shinryu
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV70 神龙歼灭战 初版绘制
         缺少部分机制：如闪电分散、钻石星尘等
         若有遇见可通过DC将ARR录像文件私发给我补充
         """;
     
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-    
-        public static IBattleChara? GetMe()
-        {
-            return Svc.ClientState.LocalPlayer;
-        }
-    
-        public static IGameObject? GetFirstByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
-        }
-    
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     [ScriptMethod(name: "巨浪 击退连线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:8075"])]
     public void 巨浪连线(Event @event, ScriptAccessory accessory)
@@ -93,7 +73,7 @@ public class Shinryu
     {
         accessory.Method.TextInfo("AOE，离开水圈", duration: 9700, false);
         
-        foreach (var item in IbcHelper.GetByDataId(2004237))
+        foreach (var item in accessory.Data.Objects.GetByDataId(2004237))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Color = new Vector4(1f, 0f, 0f, 4f);

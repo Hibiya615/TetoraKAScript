@@ -3,53 +3,33 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Extensions;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace E1n;
 
 [ScriptType(guid: "35c751e5-2958-4f55-b783-405b4acfde1b", name: "E1N", territorys: [849],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class E1n
 {
     const string noteStr =
         """
-        v0.0.0.11:
+        v0.0.0.2:
         LV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制
         """;
-    
-    public static class IbcHelper
-    {
-        public static IBattleChara? GetById(uint id)
-        {
-            return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-        }
-    
-        public static IBattleChara? GetMe()
-        {
-            return Svc.ClientState.LocalPlayer;
-        }
-    
-        public static IGameObject? GetFirstByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
-        }
-    
-        public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
-        {
-            return Svc.Objects.Where(x => x.DataId == dataId);
-        }
-    }
     
     [ScriptMethod(name: "伊甸重力（百分比AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:15764"])]
     public void 伊甸重力(Event @event, ScriptAccessory accessory)
@@ -86,7 +66,7 @@ public class E1n
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         
-        var boss = IbcHelper.GetFirstByDataId(9369);
+        var boss = accessory.Data.Objects.GetByDataId(9369).FirstOrDefault();
         if (boss == null) return;
         dp.Owner = boss.GameObjectId;
         

@@ -3,29 +3,32 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 
 namespace Mascot_Murder;
 
 [ScriptType(guid: "22134617-0ca4-463e-a40d-675ef1c20cf2", name: "亩鼠米卡：盛装巡游皆大欢喜", territorys: [1192],
-    version: "0.0.0.12", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Mica_the_Magical_Mu
 {
     const string noteStr =
         """
-        v0.0.0.12:
+        v0.0.0.2:
         LV100 特殊Fate 绘制
         亩鼠米卡：盛装巡游皆大欢喜
         """;

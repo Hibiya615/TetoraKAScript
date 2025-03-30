@@ -3,28 +3,31 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
+using System.Threading.Tasks;
 
 namespace theBowlofEmbers_Hard;
 
 [ScriptType(guid: "d3d532f1-0707-427f-ac04-871a22022c11", name: "伊弗利特歼灭战", territorys: [292],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class theBowlofEmbers_Hard
 {
     const string noteStr =
         """
-        v0.0.0.1:
-        LV50 真火神 初版绘制
+        v0.0.0.2:
+        LV50 伊弗利特歼灭战 初版绘制
         """;
     
     [UserSetting("顺劈死刑预测")]

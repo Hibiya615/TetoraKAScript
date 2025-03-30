@@ -3,13 +3,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -19,13 +21,13 @@ using System.Threading.Tasks;
 namespace E12n;
 
 [ScriptType(guid: "3f88ad9c-e7a7-4e00-b19e-546609b319ba", name: "E12N", territorys: [945],
-    version: "0.0.0.1" , author: "Tetora", note: noteStr)]
+    version: "0.0.0.2" , author: "Tetora", note: noteStr)]
 
 public class E12n
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV80 伊甸希望乐园 再生之章4（伊甸之约）初版绘制
         """;
     

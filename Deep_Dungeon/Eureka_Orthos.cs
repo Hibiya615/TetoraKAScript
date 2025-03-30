@@ -3,13 +3,15 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using Dalamud.Game.ClientState.Objects.Types;
+// using Dalamud.Game.ClientState.Objects.Subkinds;
+// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using ECommons;
 using ECommons.DalamudServices;
 using ECommons.GameFunctions;
@@ -21,12 +23,12 @@ namespace Eureka_Orthos;
 
 [ScriptType(guid: "5e8a4051-53f7-4eb3-bb32-b18df8b113aa", name: "正统优雷卡", 
     territorys: [1099,1100,1101,1102,1103,1104,1105,1106,1107,1108],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Eureka_Orthos {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         正统优雷卡绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         现支持层数：1~20、71~100
