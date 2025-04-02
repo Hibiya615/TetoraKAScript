@@ -2,12 +2,12 @@
   {
     "Name": "正统优雷卡",
     "Guid": "5e8a4051-53f7-4eb3-bb32-b18df8b113aa",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.31",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Eureka_Orthos.cs",
-    "Note": "v0.0.0.3:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制\r\n怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]",
-    "UpdateInfo": "API12",
+    "Note": "v0.0.0.31:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制\r\n怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]",
+    "UpdateInfo": "v0.0.0.31 修复打断不销毁的问题",
     "TerritoryIds": [
       1099,
       1100,

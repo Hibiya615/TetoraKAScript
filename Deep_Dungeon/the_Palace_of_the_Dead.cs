@@ -22,13 +22,13 @@ namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.3",note: noteStr)]
+    version: "0.0.0.31",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.31:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         重要：1~80层暂无录像证实，可能会有部分绘制错误，如发现错误请带着ARR联系我
@@ -38,7 +38,7 @@ public class the_Palace_of_the_Dead
     //眩晕、催眠、无法发动技能1113等状态都需要销毁绘图
     
     
-    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75[38|51]$"], userControl: false)]
+    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
     public void 打断销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"深宫假面_强麻痹{@event.SourceId()}");

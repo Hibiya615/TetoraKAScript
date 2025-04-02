@@ -23,12 +23,12 @@ namespace Eureka_Orthos;
 
 [ScriptType(guid: "5e8a4051-53f7-4eb3-bb32-b18df8b113aa", name: "正统优雷卡", 
     territorys: [1099,1100,1101,1102,1103,1104,1105,1106,1107,1108],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.31", author: "Tetora", note: noteStr)]
 
 public class Eureka_Orthos {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.31:
         正统优雷卡绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         现支持层数：1~20、71~100
@@ -74,7 +74,7 @@ public class Eureka_Orthos {
         accessory.Method.TTS("打断拟态怪");
     }
     
-    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75[38|51]$"], userControl: false)]
+    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
     public void 打断销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"正统系统γ_高压电流{@event.TargetId()}");
