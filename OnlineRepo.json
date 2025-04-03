@@ -130,6 +130,19 @@
     ]
   },
   {
+    "Name": "萨菲洛特歼灭战",
+    "Guid": "6d0824b3-6d67-4450-8b4e-46857257579e",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Sephirot.cs",
+    "Note": "v0.0.0.1:\r\nLV60 萨菲洛特歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      517
+    ]
+  },
+  {
     "Name": "祖尔宛歼灭战",
     "Guid": "214f8fbd-ad04-430f-8bba-fd7319581780",
     "Version": "0.0.0.2",
