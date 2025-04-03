@@ -104,7 +104,7 @@ public class O5n
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "魔界前照灯";
-        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.5f);;
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.5f);
         dp.Scale = new (6f, 65.8f);
         dp.Owner = @event.SourceId();
         dp.TargetObject = @event.TargetId();
