@@ -195,6 +195,19 @@
     ]
   },
   {
+    "Name": "O5N",
+    "Guid": "af11ce46-2c6a-46ba-b2bc-c542e5f5b7b5",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O11n.cs",
+    "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 西格玛幻境1（魔列车）初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      748
+    ]
+  },
+  {
     "Name": "O11N",
     "Guid": "2232ae84-c1e7-4382-88b4-d691887f27cf",
     "Version": "0.0.0.2",
