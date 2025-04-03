@@ -221,6 +221,19 @@
     ]
   },
   {
+    "Name": "E2N",
+    "Guid": "b59c7db9-1fba-4476-8701-1e3043cb7dc8",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E2n.cs",
+    "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 觉醒之章2（虚无行者） 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      850
+    ]
+  },
+  {
     "Name": "E8N",
     "Guid": "c4d533c8-8798-441d-b849-fc3cd5cf63d9",
     "Version": "0.0.0.3",
