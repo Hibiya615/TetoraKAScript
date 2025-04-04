@@ -173,8 +173,8 @@ public class the_Whorleater_Extreme
     [ScriptMethod(name: "巨浪泡沫 提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:2810"])]
     public void 巨浪泡沫(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("ST接走蓝泡泡，避开人群溜溜球，转场完开减伤远离人群炸球", duration: 34500, false);
-        accessory.Method.EdgeTTS("ST拉蓝球，约半分钟后爆炸");
+        if(isText)accessory.Method.TextInfo("ST接走蓝泡泡，避开人群溜溜球，转场完开减伤远离人群炸球", duration: 34500, false);
+        if(isTTS)accessory.Method.EdgeTTS("ST拉蓝球，约半分钟后爆炸");
     }
     
     #region 绘制销毁
