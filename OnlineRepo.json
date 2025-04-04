@@ -208,6 +208,19 @@
     ]
   },
   {
+    "Name": "O4N",
+    "Guid": "f24f9cef-717e-4a2a-9616-d470443d6d8a",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O4n.cs",
+    "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 德尔塔幻境4（艾克斯迪司）绘制\r\n基于贾XX的绘制上更改与补充",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      694
+    ]
+  },
+  {
     "Name": "O5N",
     "Guid": "af11ce46-2c6a-46ba-b2bc-c542e5f5b7b5",
     "Version": "0.0.0.1",
