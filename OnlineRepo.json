@@ -182,6 +182,19 @@
     ]
   },
   {
+    "Name": "月读歼灭战",
+    "Guid": "97415dc8-cd16-4c9b-87be-026a297c3451",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Tsukuyomi.cs",
+    "Note": "v0.0.0.1:\r\nLV70 月读歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      778
+    ]
+  },
+  {
     "Name": "高贝扎歼灭战",
     "Guid": "8a526afb-eefd-44ec-a105-7dc8fcd28e47",
     "Version": "0.0.0.2",
