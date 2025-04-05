@@ -16,19 +16,18 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
-using KodakkuAssist.Extensions;
 
-namespace Tsukuyomi;
+namespace A6N;
 
-[ScriptType(guid: "97415dc8-cd16-4c9b-87be-026a297c3451", name: "月读歼灭战", territorys: [778],
+[ScriptType(guid: "288f4f47-b94d-400a-bc07-ae244c2a432c", name: "A6N", territorys: [521],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class Tsukuyomi
+public class A6N
 {
     const string noteStr =
         """
         v0.0.0.1:
-        LV70 月读歼灭战 初版绘制
+        LV60 亚历山大机神城 律动之章2（正义四傻） 初版绘制
         """;
     
     [UserSetting("TTS开关")]
@@ -37,94 +36,8 @@ public class Tsukuyomi
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    uint Maiogi=0;
-    
-    public void Init(ScriptAccessory accessory) {
-        Maiogi=0; 
-    }
-    
-    [ScriptMethod(name: "折磨（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11235"])]
-    public void 折磨(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "折磨";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        var boss = accessory.Data.Objects.GetByDataId(8720).FirstOrDefault();
-        if (boss == null) return;
-        dp.Owner = boss.GameObjectId;
-        dp.Scale = new Vector2(18.2f);
-        dp.Radian = 90f.DegToRad();
-        dp.DestoryAt = 4000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
-    }
-    
-    [ScriptMethod(name: "宴会游乐（九连环预备）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:8769"])]
-    public void 宴会游乐(Event @event, ScriptAccessory accessory)
-    {
-        Maiogi++;  // 出现间隔约400ms
-        
-        if(Maiogi <=7){        
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "宴会游乐";
-            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
-            dp.Owner = @event.SourceId();
-            dp.Scale = new Vector2(10f);
-            dp.DestoryAt = 5000 - 400*Maiogi;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "月下舞扇（九连环进行）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(11206|11245)$"])]
-    public void 月下舞扇(Event @event, ScriptAccessory accessory)
-    {
-        Maiogi = 0;
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "月下舞扇";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 4700;
-        dp.ScaleMode = ScaleMode.ByTime;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-    
-    [ScriptMethod(name: "黄泉之弹（直线分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11238"])]
-    public void 黄泉之弹(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "黄泉之弹";
-        dp.Scale = new (8, 43.2f);
-        dp.Owner = @event.SourceId();
-        dp.TargetObject = @event.TargetId();
-        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
-        dp.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
-    }
-    
-    [ScriptMethod(name: "月读（鸳鸯锅）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^153[89]$", "StackCount:regex:^[34]$"])]
-    public void 月读(Event @event, ScriptAccessory accessory)
-    {
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        var color = @event.StatusId == 1538 ? "黑色" : "白色";
-            if (isText) accessory.Method.TextInfo($"吃{color}", duration: 2000, true);
-            if (isTTS) accessory.Method.EdgeTTS($"吃{color}");
-    }
-    
-    [ScriptMethod(name: "月下缭乱（连续分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11259"])]
-    public void 月下缭乱(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "月下缭乱";
-        dp.Color = accessory.Data.DefaultSafeColor;
-        dp.Owner = @event.TargetId();
-        dp.Scale = new Vector2(6f);
-        dp.DestoryAt = 8200;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
     
 }
-
 
 public static class EventExtensions
 {
