@@ -20,15 +20,75 @@ using System.Threading.Tasks;
 namespace The_Navel___EX._04_Omega_Quests.Normal;
 
 [ScriptType(guid: "2232ae84-c1e7-4382-88b4-d691887f27cf", name: "O11N", territorys: [800],
-    version: "0.0.0.2" , author: "Tetora", note: noteStr)]
+    version: "0.0.0.3" , author: "Tetora", note: noteStr)]
 
 public class O11n
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制
+        支持DR 自动在雷力投射点上使用任务指令
+        （默认为打开状态，使用前请确保你已正确安装1.4.9.0及以上版本`DailyRoutines`插件）
         """;
+    
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    [UserSetting("DR 自动雷力投射点蓄力")]
+    public bool isDRHelper { get; set; } = true;
+    
+    [ScriptMethod(name: "雷力投射点 自动使用任务指令", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:9638"])]
+    public void 雷力投射点Start(Event @event, ScriptAccessory accessory)
+    {
+        if (isDRHelper) accessory.Method.SendChat("/pdr load Alphascape3Helper");
+    }
+    #region 自动在雷力投射点使用任务指令：DR模块源码
+    /*
+    public unsafe class Alphascape3Helper : DailyModuleBase
+    {
+        public override void Init()
+        {
+            DService.ClientState.TerritoryChanged += OnZoneChanged;
+            OnZoneChanged(DService.ClientState.TerritoryType);
+        }
+
+        private void OnZoneChanged(ushort zoneID)
+        {
+            FrameworkManager.Unregister(OnUpdate);
+            if (zoneID != 800) return;
+
+            FrameworkManager.Register(false, OnUpdate);
+        }
+
+        private static void OnUpdate(IFramework framework)
+        {
+            if (!Throttler.Throttle("Alphascape3Helper-OnUpdate", 1_500)) return;
+            if (DService.ClientState.TerritoryType != 800)
+            {
+                FrameworkManager.Unregister(OnUpdate);
+                return;
+            }
+
+            if (Control.GetLocalPlayer() == null) return;
+
+            var obj = DService.ObjectTable.FirstOrDefault(x => x.DataId == 9638 && x.ObjectKind == ObjectKind.BattleNpc);
+            if (obj == null || !obj.IsTargetable) return;
+
+            new UseActionPacket(ActionType.Action, 12911, obj.EntityId, Control.GetLocalPlayer()->Rotation).Send();
+        }
+
+        public override void Uninit()
+        {
+            DService.ClientState.TerritoryChanged -= OnZoneChanged;
+            FrameworkManager.Unregister(OnUpdate);
+        }
+    }
+    */
+    #endregion
     
     [ScriptMethod(name: "芥末爆弹（死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12935"])]
     public void 芥末爆弹死刑(Event @event, ScriptAccessory accessory)
@@ -92,19 +152,6 @@ public class O11n
     {
         accessory.Method.RemoveDraw("突进");
     }
-    
-    /*
-    [ScriptMethod(name: "雷力投射点 开始", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^从欧米茄那里感知到了强烈的能量反应.*"])]
-    public void 雷力投射点Start(Event @event, ScriptAccessory accessory)
-    {
-    }
-    
-    [ScriptMethod(name: "雷力投射点 结束", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^确认到防御力场生成完成.*"])]
-    public void 雷力投射点End(Event @event, ScriptAccessory accessory)
-    {
-    }
-    */
-    
 
     [ScriptMethod(name: "芥末爆弹（连线）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0054"])]
     public async void 冲击波(Event @event, ScriptAccessory accessory)
