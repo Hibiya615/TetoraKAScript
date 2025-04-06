@@ -17,7 +17,7 @@ using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
-namespace The_Navel___EX._04_Omega_Quests.Normal;
+namespace O11n;
 
 [ScriptType(guid: "2232ae84-c1e7-4382-88b4-d691887f27cf", name: "O11N", territorys: [800],
     version: "0.0.0.3" , author: "Tetora", note: noteStr)]
