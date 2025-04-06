@@ -17,7 +17,7 @@ using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
-namespace The_Navel___EX._04_Stormblood.Raid_Omega_Quests.Normal;
+namespace O4n;
 
 [ScriptType(guid: "f24f9cef-717e-4a2a-9616-d470443d6d8a", name: "O4N", territorys: [694],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
