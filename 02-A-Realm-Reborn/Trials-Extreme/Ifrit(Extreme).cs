@@ -208,6 +208,18 @@ public class Ifrit_Extreme
         accessory.Method.RemoveDraw("火狱之锁.*");
     }
     
+    [ScriptMethod(name: "深红旋风（火神冲直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:1532"])]
+    public void 深红旋风(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "深红旋风";
+        dp.Scale = new (18, 49f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
     [ScriptMethod(name: "团灭销毁", eventType: EventTypeEnum.CombatChanged, eventCondition: ["Type:ResetCombat","InCombat:False"],userControl: false)]
     public void 团灭销毁(Event @event, ScriptAccessory accessory)
     {
