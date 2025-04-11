@@ -221,6 +221,19 @@
     ]
   },
   {
+    "Name": "泽罗姆斯歼灭战",
+    "Guid": "1d6d7238-e986-408c-9c25-b24955542ee0",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Zeromus.cs",
+    "Note": "v0.0.0.1:\r\nLV90 泽罗姆斯歼灭战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1168
+    ]
+  },
+  {
     "Name": "伊弗利特歼殛战",
     "Guid": "dbb7983a-d2c4-4621-9734-76772e3f206a",
     "Version": "0.0.0.2",
