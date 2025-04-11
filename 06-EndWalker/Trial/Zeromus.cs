@@ -53,6 +53,32 @@ public class Zeromus
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
+    [ScriptMethod(name: "漆黑射线（直线分摊）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:35567"])]
+    public void 漆黑射线(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "漆黑射线";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
+        dp.Scale = new (12,60f);
+        dp.Owner = @event.SourceId();
+        dp.TargetObject = @event.TargetId();
+        dp.DestoryAt = 11700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "暗物质（圆形死刑）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:016C"])]
+    public void 暗物质(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "暗物质";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(8f);
+        dp.Delay = 4000;
+        dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "日珥焰棘（火球直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35606"])]
     public void 日珥焰棘(Event @event, ScriptAccessory accessory)
     {
@@ -63,6 +89,26 @@ public class Zeromus
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "虚空毒菌_有毒气泡", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:16556"])]
+    public void 有毒气泡(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"有毒气泡{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(2.25f);
+        dp.InnerScale = new Vector2(2.2f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 20000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "有毒气泡销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:35608"],userControl: false)]
+    public void 飞散(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"有毒气泡{@event.SourceId()}");
     }
     
     [ScriptMethod(name: "加速度炸弹", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2657"])]
@@ -79,6 +125,18 @@ public class Zeromus
         if (isEdgeTTS) accessory.Method.EdgeTTS("停止行动");
     }
     
+    [ScriptMethod(name: "黑暗侵蚀：重击（分摊）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0064"])]
+    public void 黑暗侵蚀重击(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "黑暗侵蚀重击";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 8000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "深渊激流_次元涌动（场边直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35637"])]
     public void 次元涌动(Event @event, ScriptAccessory accessory)
     {
@@ -86,9 +144,21 @@ public class Zeromus
         dp.Name = "次元涌动";
         dp.Scale = new (14, 60f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
         dp.DestoryAt = 8700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "天光轮回预备", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0017"])]
+    public void 天光轮回预备(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "天光轮回预备";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
     [ScriptMethod(name: "天光轮回", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35619"])]
@@ -113,7 +183,8 @@ public class Zeromus
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60);
         dp.Radian = 40f.DegToRad();
-        dp.DestoryAt = @event.DurationMilliseconds() - 900;
+        dp.Delay = @event.ActionId() == 35628 ? @event.DurationMilliseconds() - 1700 : @event.DurationMilliseconds() - 900;
+        dp.DestoryAt = @event.ActionId() == 35628 ? 1700 : 600 ;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
