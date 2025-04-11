@@ -21,21 +21,38 @@ using KodakkuAssist.Extensions;
 namespace the_Whorleater_Extreme;
 
 [ScriptType(guid: "07f20e0e-9463-4a10-9dd1-956fde6a9c46", name: "利维亚桑歼殛战", territorys: [359],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class the_Whorleater_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV50 利维亚桑歼殛战 初版绘制
         """;
     
     [UserSetting("TTS开关")]
-    public bool isTTS { get; set; } = true;
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
+    
+    [UserSetting("【开发用】Debug模式")]
+    public bool isDebug { get; set; } = false;
+    
+    public static bool isTank { get; set; }
+    public static bool isDps { get; set; }
+    public static bool isHealer { get; set; }
+    public void 职能检查(ScriptAccessory accessory)
+    {
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
+        isDps = player?.IsDps() ?? false;
+        isHealer = player?.IsHealer() ?? false;
+    }
     
     #region 记录 & 阶段转换
     uint Dive = 0;
@@ -81,12 +98,17 @@ public class the_Whorleater_Extreme
     #endregion
     
     
-    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
+    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
-        await Task.Delay(3000); 
-        if (isText)accessory.Method.TextInfo("难度：★★，TH不会建议退，小抄已发至聊天框 \nT：MT拉头，ST拉尾、小怪ST拉，晕波齿鱼人（60%血以下免晕）\nD：出黄球打黄球，小怪优先波齿鱼人，注意避开T的平A \nH：ST交给小仙女和再生奶，群抬错开ST，尽量避免水镜debuff"
-            , duration: 10000, true);
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
+        isDps = player?.IsDps() ?? false;
+        isHealer = player?.IsHealer() ?? false;
+
+        if (isTank && isText)accessory.Method.TextInfo("难度：★☆，不会建议退\nT：MT拉头，ST拉尾、小怪ST拉，晕波齿鱼人（60%血以下免晕） ", duration: 10000, true);
+        if (isDps && isText)accessory.Method.TextInfo("难度：☆\nD：出黄球打黄球，蓝球不管，小怪优先波齿鱼人，注意避开T的平A", duration: 10000, true);
+        if (isHealer && isText)accessory.Method.TextInfo("难度：★★，不会建议退\nH：ST交给小仙女和再生奶，群抬错开ST，尽量避免水镜debuff", duration: 10000, true);
         accessory.Method.SendChat("/e ————小抄————\nT：MT拉头，ST拉尾、小怪ST拉，晕波齿鱼人（60%血以下免晕）\n蓝球ST拉着溜，等一次拍击后拉离人群开大减炸掉 \nD：出黄球打黄球，小怪优先波齿鱼人，注意避开T的平A \nH：ST交给小仙女和再生奶，群抬错开ST，尽量避免水镜debuff");
     }
     
@@ -94,7 +116,7 @@ public class the_Whorleater_Extreme
     [ScriptMethod(name: "水神的面纱 提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:2165"])]
     public void 水神的面纱(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("法系打头部，物理打尾巴\n龙骑舞者赤魔DK额外注意自己的技能！\n尾巴有身位！", duration: 5000, true);
+        if (isText)accessory.Method.TextInfo("法系打头部，物理打尾巴\n龙舞赤DK额外注意自己的技能！\n尾巴有身位！", duration: 5000, true);
     }
     
     [ScriptMethod(name: "波齿鱼人 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:2807"])]
@@ -106,7 +128,8 @@ public class the_Whorleater_Extreme
     [ScriptMethod(name: "波齿鱼人_恐慌风暴", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:1865"])]
     public void 恐慌风暴(Event @event, ScriptAccessory accessory)
     {
-        if (isTTS)accessory.Method.EdgeTTS("不要踩进恐慌圈");
+        if (isTTS)accessory.Method.TTS("不要踩进恐慌圈");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("不要踩进恐慌圈");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "恐慌风暴";
@@ -173,8 +196,11 @@ public class the_Whorleater_Extreme
     [ScriptMethod(name: "巨浪泡沫 提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:2810"])]
     public void 巨浪泡沫(Event @event, ScriptAccessory accessory)
     {
-        if(isText)accessory.Method.TextInfo("ST接走蓝泡泡，避开人群溜溜球，转场完开减伤远离人群炸球", duration: 34500, false);
-        if(isTTS)accessory.Method.EdgeTTS("ST拉蓝球，约半分钟后爆炸");
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
+        if(isTank && isText)accessory.Method.TextInfo("ST接走蓝泡泡，避开人群溜溜球，转场完开减伤远离人群炸球", duration: 34500, false);
+        if(isTTS)accessory.Method.TTS("ST拉蓝球，约半分钟后爆炸，人群远离");
+        if(isEdgeTTS)accessory.Method.EdgeTTS("ST拉蓝球，约半分钟后爆炸，人群远离");
     }
     
     #region 绘制销毁
@@ -312,19 +338,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
