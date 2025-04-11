@@ -16,6 +16,7 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace Ifrit_Extreme;
 
@@ -39,24 +40,46 @@ public class Ifrit_Extreme
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
+    
+    [UserSetting("【开发用】Debug模式")]
+    public bool isDebug { get; set; } = false;
 
+    public static bool isTank { get; set; }
+    public static bool isDps { get; set; }
+    public static bool isHealer { get; set; }
+    public void Init(ScriptAccessory accessory)
+    {
+         var player = accessory.Data.MyObject;
+         isTank = player?.IsTank() ?? false;
+         isDps = player?.IsDps() ?? false;
+         isHealer = player?.IsHealer() ?? false;
+
+    }
     
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
         await Task.Delay(3000); 
-        if (isText)accessory.Method.TextInfo("难度：★\nT：3层debuff换T，炸柱子时注意减伤\nD：优先转火柱子、锁链靠近 \nH：热风远离人群"
-            , duration: 8000, true);
+        if (isTank && isText)accessory.Method.TextInfo("难度：★\nT：3层debuff换T，炸柱子时注意减伤", duration: 5000, true);
+        if (isDebug && isTank && isText)accessory.Method.SendChat("/e [DEBUG]: 检测到自身职能为：T");
+        if (isDps && isText)accessory.Method.TextInfo("难度：★\nD：优先转火柱子，锁链靠近，远离热风奶", duration: 5000, true);
+        if (isDebug && isDps && isText)accessory.Method.SendChat("/e [DEBUG]: 检测到自身职能为：D");
+        if (isHealer && isText)accessory.Method.TextInfo("难度：★\nH：热风远离人群", duration: 5000, true);
+        if (isDebug && isHealer && isText)accessory.Method.SendChat("/e [DEBUG]: 检测到自身职能为：H");
+
+        // if (isText)accessory.Method.TextInfo("难度：★\nT：3层debuff换T，炸柱子时注意减伤\nD：优先转火柱子、锁链靠近 \nH：热风远离人群" , duration: 8000, true);
         accessory.Method.SendChat("/e ————小抄————\nT：3层debuff换T，炸柱子时注意减伤\nD：优先转火柱子、锁链靠近 \nH：热风远离人群 \n出柱子一定先打柱子，否则上天直接狂暴");
     }
 
     [ScriptMethod(name: "灼伤 换T提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:375","StackCount:regex:^[345]$"])]
     public void 灼伤(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        if (isText) accessory.Method.TextInfo("换T！", duration: 3000, true);
-        if (isTTS) accessory.Method.TTS("换T！");
-        if (isEdgeTTS) accessory.Method.EdgeTTS("换T！");
+        // var player = accessory.Data.MyObject;
+        // var isTank = player?.IsTank() ?? false;
+        if (isTank && @event.TargetId() != accessory.Data.Me && isText) accessory.Method.TextInfo("挑衅", duration: 3000, true);
+        if (isTank && @event.TargetId() == accessory.Data.Me && isText) accessory.Method.TextInfo("退避", duration: 3000, true); 
+        if (isTank && isTTS) accessory.Method.TTS("换T！"); 
+        if (isTank && isEdgeTTS) accessory.Method.EdgeTTS("换T！");
     }
     
     /*
@@ -175,14 +198,16 @@ public class Ifrit_Extreme
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "火狱之锁 连线提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:377","StackCount:2"])]
+    [ScriptMethod(name: "火狱之锁 连线提示", eventType: EventTypeEnum.Tether, eventCondition: ["Id:0009"])]
+    //  EventTypeEnum.StatusAdd, eventCondition: ["StatusID:377"],suppress:25000
     public void 火狱之锁(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetId() != accessory.Data.Me) return; 
+        if (@event.TargetId() != accessory.Data.Me || @event.SourceId() != accessory.Data.Me ) return; 
         if (isText) accessory.Method.TextInfo("锁链靠近", duration: 3000, true);
         if (isTTS) accessory.Method.TTS("锁链靠近");
         if (isEdgeTTS) accessory.Method.EdgeTTS("锁链靠近");
         
+        /*  懒得拿时间了 不画了x
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "火狱之锁";
         dp.Owner = @event.TargetId();
@@ -190,16 +215,7 @@ public class Ifrit_Extreme
         dp.Scale = new(0.5f);
         dp.DestoryAt = @event.DurationMilliseconds();
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        
-        var dp2 = accessory.Data.GetDefaultDrawProperties();
-        dp2.Name = "火狱之锁描边";
-        dp2.Color = accessory.Data.DefaultSafeColor.WithW(8f);
-        dp2.Owner = @event.TargetId();
-        dp2.Scale = new Vector2(0.56f);
-        dp2.InnerScale = new Vector2(0.5f);
-        dp2.Radian = float.Pi * 2;
-        dp2.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
+        */
     }
     
     [ScriptMethod(name: "火狱之锁销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:377"],userControl: false)]
