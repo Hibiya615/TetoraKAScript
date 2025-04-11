@@ -73,8 +73,8 @@ public class Ifrit_Extreme
     [ScriptMethod(name: "灼伤 换T提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:375","StackCount:regex:^[345]$"])]
     public void 灼伤(Event @event, ScriptAccessory accessory)
     {
-        // var player = accessory.Data.MyObject;
-        // var isTank = player?.IsTank() ?? false;
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
         if (isTank && @event.TargetId() != accessory.Data.Me && isText) accessory.Method.TextInfo("挑衅", duration: 3000, true);
         if (isTank && @event.TargetId() == accessory.Data.Me && isText) accessory.Method.TextInfo("退避", duration: 3000, true); 
         if (isTank && isTTS) accessory.Method.TTS("换T！"); 
