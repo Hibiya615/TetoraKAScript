@@ -104,6 +104,26 @@ public class Garuda_Hard_
         if (isTank && isEdgeTTS)accessory.Method.EdgeTTS("将BOSS拉至场地南侧");
         if (!isTank && isTTS)accessory.Method.TTS("BOSS稍后将飞至南侧");
         if (!isTank && isEdgeTTS)accessory.Method.EdgeTTS("BOSS稍后将飞至南侧");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "大龙卷风";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.2f);
+        dp.Position = new Vector3(0f, -2f, 21f);
+        dp.Scale = new Vector2(3f);
+        dp.DestoryAt = 43000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        if (isTank){
+        var dp2 = accessory.Data.GetDefaultDrawProperties();
+        dp2.Name = "拉怪引导";
+        dp2.Owner = accessory.Data.Me;
+        dp2.Color = accessory.Data.DefaultSafeColor.WithW(0.2f);
+        dp2.ScaleMode |= ScaleMode.YByDistance;
+        dp2.TargetPosition = new Vector3(0f, -2f, 21f);
+        dp2.Scale = new(1);
+        dp2.DestoryAt = 15000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp2);
+        }
     }
     
 }
