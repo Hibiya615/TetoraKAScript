@@ -16,44 +16,83 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace Thornmarch_Extreme;
 
 [ScriptType(guid: "fc6a6125-4a1d-4669-be4c-9b375dc70ae0", name: "莫古力贤王歼殛战", territorys: [364],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class ThornmarchExtreme
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV50 莫古力贤王歼殛战 初版绘制
         不看攻略基本能打，没有做职能限制，不需要的提示自行关闭
         """;
     
     // 缺少机制：莫古助威歌 
     
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    [UserSetting("【开发用】Debug模式")]
+    public bool isDebug { get; set; } = false;
+    
+    public static bool isTank { get; set; }
+    public static bool isDps { get; set; }
+    public static bool isHealer { get; set; }
+    public void 职能检查(ScriptAccessory accessory)
+    {
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
+        isDps = player?.IsDps() ?? false;
+        isHealer = player?.IsHealer() ?? false;
+    }
+    
     // BOSS复活技能 位高任重 计数
     private volatile int timeMooglesseOblige=0;
-    public void Init(ScriptAccessory accessory) {
+    public void 位高任重(ScriptAccessory accessory) {
         timeMooglesseOblige=0;
     }
     
     #region 副本提示
-    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
+    
+    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
-        await Task.Delay(3000); 
-        accessory.Method.TextInfo("难度：☆\n重点机制：修小怪血，并一起击杀 ", duration: 5000, true);
-        accessory.Method.TTS("出啥躲啥，注意修血");
-        accessory.Method.SendChat("/e T：MT拉斧 & 贤王，ST拉壁，注意顺劈面向\nD：注意修血，前两次需要同时击杀\nH：组合技时注意驱散[莫古乱乱乱]与[怒发冲冠]、注意AOE");
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
+        isDps = player?.IsDps() ?? false;
+        isHealer = player?.IsHealer() ?? false;
+
+        if (isTank && isText)accessory.Method.TextInfo("难度：☆，重点：修小怪血，并一起击杀\nT：贤王吸蓝，不推荐DK拉，注意面向 ", duration: 5000, true);
+        if (isDps && isText)accessory.Method.TextInfo("难度：☆，重点：修小怪血，并一起击杀\nD：注意修血，前两次需要同时击杀 ", duration: 5000, true);
+        if (isHealer && isText)accessory.Method.TextInfo("难度：☆，重点：修小怪血，并一起击杀\nH：组合技时注意驱散[莫古乱乱乱]与[怒发冲冠]、注意AOE ", duration: 5000, true);
+        // if (isText)accessory.Method.TextInfo("难度：☆\n重点机制：修小怪血，并一起击杀 ", duration: 5000, true);
+        
+        if (isTTS)accessory.Method.TTS("出啥躲啥，注意修血");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("出啥躲啥，注意修血");
+        accessory.Method.SendChat("/e ————小抄————\nT：MT拉斧 & 贤王，ST拉壁，注意顺劈面向（贤王会吸蓝，不推荐DK拉）\nD：注意修血，前两次需要同时击杀\nH：组合技时注意驱散[莫古乱乱乱]与[怒发冲冠]、注意AOE");
+        
     }
     
     [ScriptMethod(name: "小怪出现提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:2070"])]
     public void 小怪出现提示(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.TextInfo("MT拉 < 斧 > & < 贤王 > 、ST拉 < 壁 >，都有顺劈\n全部小怪需要同时击杀两次", duration: 5000, true);
-        accessory.Method.TTS("注意面向，注意修血");
+    {        
+        var player = accessory.Data.MyObject;
+        isTank = player?.IsTank() ?? false;
+        if (!isTank) return; 
+        if (isText)accessory.Method.TextInfo("MT拉 < 斧 > & < 贤王 > 、ST拉 < 壁 >，都有顺劈\n全部小怪需要同时击杀两次", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS("注意面向，注意修血");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("注意面向，注意修血");
         accessory.Method.SendChat("/e 拉怪提示：MT拉斧&贤王，ST拉壁，都有顺劈\n全部小怪需要同时击杀两次，随后AOE并狂暴");
     }
     
@@ -71,15 +110,17 @@ public class ThornmarchExtreme
         {
             case 1:
             {
-                accessory.Method.TextInfo($"第{timeMooglesseOblige}次复活", duration: 2700, false);
-                accessory.Method.TTS($"第{timeMooglesseOblige}次复活");
+                if (isText)accessory.Method.TextInfo($"第{timeMooglesseOblige}次复活", duration: 2700, false);
+                if (isTTS)accessory.Method.TTS($"第{timeMooglesseOblige}次复活");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"第{timeMooglesseOblige}次复活");
                 accessory.Method.SendChat($"/e 已复活次数：{timeMooglesseOblige}");
             }
                 break;
             case 2:
             {
-                accessory.Method.TextInfo($"第{timeMooglesseOblige}次复活,即将超大AOE\n然后打死一只小怪后读条狂暴", duration: 2700, false);
-                accessory.Method.TTS($"第{timeMooglesseOblige}次复活，即将超大AOE");
+                if (isText)accessory.Method.TextInfo($"第{timeMooglesseOblige}次复活,即将超大AOE\n然后打死一只小怪后读条狂暴", duration: 2700, false);
+                if (isTTS)accessory.Method.TTS($"第{timeMooglesseOblige}次复活，即将超大AOE");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"第{timeMooglesseOblige}次复活，即将超大AOE");
                 accessory.Method.SendChat($"/e 已复活次数：{timeMooglesseOblige}");
             }
                 break;
@@ -124,8 +165,9 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "绵绵之音_莫古力进行曲（增益圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:1623"])]
     public void 莫古力进行曲(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("将其它莫古拉出增益圈", duration: 5200, false);
-        accessory.Method.TTS("将其它莫古拉出增益圈");
+        if (isText)accessory.Method.TextInfo("将其它莫古拉出增益圈", duration: 5200, false);
+        if (isTTS)accessory.Method.TTS("将其它莫古拉出增益圈");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("将其它莫古拉出增益圈");
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "莫古力进行曲";
         dp.Color = new Vector4(0f, 1f, 1f, 0.6f);
@@ -161,13 +203,15 @@ public class ThornmarchExtreme
 
         if (@event.TargetId() == accessory.Data.Me)
         {
-            //accessory.Method.TextInfo("四连突刺点名", duration: 3700, true);
-            accessory.Method.TTS("四连突刺点名");
+            // if (isText)accessory.Method.TextInfo("四连突刺点名", duration: 3700, true);
+            if (isTTS)accessory.Method.TTS("四连突刺点名");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("四连突刺点名");
             accessory.Method.SendChat("/e 四连突刺点名");
         } else
         {
-            //accessory.Method.TextInfo($"四连攻击点 <{tname}>", duration: 3700, false);
-            accessory.Method.TTS($"四连攻击点{tname}");
+            // if (isText)accessory.Method.TextInfo($"四连攻击点 <{tname}>", duration: 3700, false);
+            if (isTTS)accessory.Method.TTS($"四连攻击点{tname}");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"四连攻击点{tname}");
             accessory.Method.SendChat($"/e 四连攻击点 <{@event.TargetName()}>");
         }
     }
@@ -194,8 +238,9 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "莫古三角攻击", eventType: EventTypeEnum.NpcYell, eventCondition: ["Id:2114"])]
     public void 莫古三角攻击(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("远离中间，靠场边躲避大三角", duration: 5000, true);
-        accessory.Method.TTS("远离中间");
+        if (isText) accessory.Method.TextInfo("远离中间，靠场边躲避大三角", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS("远离中间");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("远离中间");
     }
     
     //【组合技：柔柔之力 + 茸茸之愈 + 毛毛之斧】
@@ -205,8 +250,12 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "莫古乱乱乱 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:473"])]
     public void 莫古乱乱乱(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("驱散 <莫古乱乱乱> ", duration: 5000, true);
-        accessory.Method.TTS("驱散《莫古乱乱乱》");
+        var player = accessory.Data.MyObject;
+        isHealer = player?.IsHealer() ?? false;
+        if (!isHealer) return; 
+        if (isText) accessory.Method.TextInfo("驱散 <莫古乱乱乱> ", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS("驱散《莫古乱乱乱》");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("驱散《莫古乱乱乱》");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"莫古乱乱乱{@event.TargetId()}";
@@ -226,8 +275,9 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "茸茸之愈_绒绒神圣 打断提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2059"])]
     public void 绒绒神圣(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("攻击 < 茸茸之愈 > 以打断 < 绒绒神圣 > ", duration: 3000, true);
-        accessory.Method.TTS("攻击《茸茸之愈》打断读条");
+        if (isText) accessory.Method.TextInfo("攻击 < 茸茸之愈 > 以打断 < 绒绒神圣 > ", duration: 3000, true);
+        if (isTTS) accessory.Method.TTS("攻击《茸茸之愈》打断读条");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("攻击《茸茸之愈》打断读条");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "绒绒神圣";
@@ -256,8 +306,9 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "放马过来库啵 远离提示", eventType: EventTypeEnum.NpcYell, eventCondition: ["Id:2108"])]
     public void 放马过来库啵(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
-        accessory.Method.TTS("远离连线目标");
+        if (isText) accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS("远离连线目标");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("远离连线目标");
         
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "绒绒之壁连线";
@@ -274,9 +325,9 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "放马过来库啵 连线提示", eventType: EventTypeEnum.Tether, eventCondition: ["Id:000D"])]
     public void 放马过来库啵Thther(Event @event, ScriptAccessory accessory)
     {
-        if ( @event.SourceId() != accessory.Data.Me) return;
-        accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
-        accessory.Method.TTS("远离连线目标");
+        if (isText) accessory.Method.TextInfo("远离 <蓬蓬之障> 与 <绒绒之壁>", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS("远离连线目标");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("远离连线目标");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "绒绒之壁连线";
@@ -293,9 +344,13 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "怒发冲冠 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:402"])]
     public void 怒发冲冠(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("驱散 <怒发冲冠> ", duration: 5000, true);
-        accessory.Method.TTS("驱散《怒发冲灌》");
-
+        var player = accessory.Data.MyObject;
+        isHealer = player?.IsHealer() ?? false;
+        if (!isHealer) return; 
+        if (isText) accessory.Method.TextInfo("驱散 <怒发冲冠> ", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS("驱散《怒发冲灌》");
+        if (isEdgeTTS)  accessory.Method.EdgeTTS("驱散《怒发冲灌》");
+            
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"怒发冲冠{@event.TargetId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -329,15 +384,17 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "莫古陨石（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2072","SourceDataId:236"])]
     public void 莫古陨石(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("大AOE伤害 ", duration: 4700, true);
-        accessory.Method.TTS("大AOE伤害");
+        if(isText) accessory.Method.TextInfo("大AOE伤害 ", duration: 4700, true);
+        if(isTTS) accessory.Method.TTS("大AOE伤害");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("大AOE伤害");
     }
     
     [ScriptMethod(name: "死亡莫古警告 狂暴提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2121"])]
     public void 死亡莫古警告(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("攻击贤王，狂暴", duration: 5000, true);
-        accessory.Method.TTS("集中攻击贤王");
+        if(isText) accessory.Method.TextInfo("攻击贤王，狂暴", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("集中攻击贤王");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("集中攻击贤王");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "死亡莫古警告";
@@ -466,22 +523,6 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
 
