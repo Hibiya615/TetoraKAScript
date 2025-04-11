@@ -325,6 +325,19 @@
     ]
   },
   {
+    "Name": "E9N",
+    "Guid": "e4b80c15-7885-46b7-8e3d-201a6a248c89",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E9n.cs",
+    "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 再生之章1（构想暗黑之云）初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      942
+    ]
+  },
+  {
     "Name": "E10N",
     "Guid": "038e00e8-d378-4f43-89ab-e27df5561d5a",
     "Version": "0.0.0.2",

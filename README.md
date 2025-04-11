@@ -47,7 +47,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
   `O4N` `O5N` `O11N`
 - LV80：伊甸希望乐园 / Eden
 
-  `E1N` `E2N` `E8N` `E10N` `E12N`
+  `E1N` `E2N` `E8N` `E9N` `E10N` `E12N`
 
 - LV90：万魔殿 / Pandæmonium
 
