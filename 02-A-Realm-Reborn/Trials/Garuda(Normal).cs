@@ -17,17 +17,17 @@ using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
-namespace Garuda;
+namespace Garuda_Normal;
 
-[ScriptType(guid: "0887dadc-e415-48c9-bab1-cb51554457a2", name: "迦楼罗歼灭战", territorys: [294],
+[ScriptType(guid: "0887dadc-e415-48c9-bab1-cb51554457a2", name: "迦楼罗讨伐战", territorys: [1047],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class Garuda
+public class Garuda_Normal
 {
     const string noteStr =
         """
         v0.0.0.1:
-        LV50 迦楼罗歼灭战 初版绘制
+        LV44 迦楼罗讨伐战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
     

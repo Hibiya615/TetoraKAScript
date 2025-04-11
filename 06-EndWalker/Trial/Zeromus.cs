@@ -40,6 +40,82 @@ public class Zeromus
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
+
+    [ScriptMethod(name: "深渊回声（地板黑洞钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35578"])]
+    public void 深渊回声(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "深渊回声";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 15700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+
+    [ScriptMethod(name: "日珥焰棘（火球直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35606"])]
+    public void 日珥焰棘(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "日珥焰棘";
+        dp.Scale = new (10, 60f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "加速度炸弹", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2657"])]
+    public async void 加速度炸弹(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        
+        uint AccelerationBomb = @event.DurationMilliseconds();
+        TimeSpan delay = TimeSpan.FromMilliseconds(Math.Max(0, AccelerationBomb - 2000));
+        await Task.Delay(delay);
+        
+        if (isText) accessory.Method.TextInfo("停止行动", duration: 1500, true);
+        if (isTTS) accessory.Method.TTS("停止行动");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("停止行动");
+    }
+    
+    [ScriptMethod(name: "深渊激流_次元涌动（场边直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35637"])]
+    public void 次元涌动(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "次元涌动";
+        dp.Scale = new (14, 60f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "天光轮回", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35619"])]
+    public void 天光轮回(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "天光轮回";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.Delay = 2400;
+        dp.DestoryAt = 5600;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "深渊连爪", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(3562[89]|3563[012])$"])]
+    public void 深渊连爪(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "深渊连爪";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60);
+        dp.Radian = 40f.DegToRad();
+        dp.DestoryAt = @event.DurationMilliseconds() - 900;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
     
 }
 
