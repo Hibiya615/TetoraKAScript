@@ -53,7 +53,6 @@ public class Ifrit_Extreme
          isTank = player?.IsTank() ?? false;
          isDps = player?.IsDps() ?? false;
          isHealer = player?.IsHealer() ?? false;
-
     }
     
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
