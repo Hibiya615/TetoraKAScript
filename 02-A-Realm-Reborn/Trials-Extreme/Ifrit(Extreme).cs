@@ -21,13 +21,13 @@ using KodakkuAssist.Extensions;
 namespace Ifrit_Extreme;
 
 [ScriptType(guid: "dbb7983a-d2c4-4621-9734-76772e3f206a", name: "伊弗利特歼殛战", territorys: [295],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Ifrit_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV50 伊弗利特歼殛战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
@@ -55,7 +55,7 @@ public class Ifrit_Extreme
          isHealer = player?.IsHealer() ?? false;
     }
     
-    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Stop","SourceId:E0000000"])]
+    [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
         await Task.Delay(3000); 
