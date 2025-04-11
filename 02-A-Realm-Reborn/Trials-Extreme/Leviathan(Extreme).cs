@@ -31,7 +31,7 @@ public class the_Whorleater_Extreme
         LV50 利维亚桑歼殛战 初版绘制
         """;
     
-    [UserSetting("TTS开关")]
+    [UserSetting("TTS开关（TTS请二选一开启）")]
     public bool isTTS { get; set; } = false;
     
     [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
