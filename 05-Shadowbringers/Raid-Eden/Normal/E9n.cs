@@ -40,6 +40,69 @@ public class E9n
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
+    [ScriptMethod(name: "暗之战技（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^2102[78]$"])]
+    public void 暗之战技(Event @event, ScriptAccessory accessory)
+    {
+        var aid = JsonConvert.DeserializeObject<uint>(@event["ActionId"]);
+        var isR = aid == 21027;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "暗之战技";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60);
+        dp.Radian = float.Pi / 180 * 180;
+        dp.Rotation = float.Pi / 180 * 90 * (isR ? -1 : 1);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
+    
+    [ScriptMethod(name: "零式波动炮（直线死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:21995"])]
+    public void 零式波动炮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "零式波动炮";
+        dp.Scale = new (8,60f);
+        dp.Owner = @event.SourceId();
+        dp.TargetObject = @event.TargetId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 4200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "广角式跳跃波动炮（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:21985"])]
+    public void 广角式跳跃波动炮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "广角式跳跃波动炮";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(45);
+        dp.Radian = 130f.DegToRad();
+        dp.DestoryAt = 7300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+
+    [ScriptMethod(name: "活性弹_强震动（连线钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:21990"])]
+    public void 强震动(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "强震动";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(22);
+        dp.Radian = 180f.DegToRad();
+        dp.DestoryAt = 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "波动云 击杀提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:21294"])]
+    public void 波动云(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("击杀小怪", duration: 3000, true);
+        // if (isTTS)accessory.Method.TTS("击杀小怪");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("击杀小怪");
+    }
     
 }
 
