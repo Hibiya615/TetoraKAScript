@@ -236,12 +236,12 @@
   {
     "Name": "利维亚桑歼殛战",
     "Guid": "07f20e0e-9463-4a10-9dd1-956fde6a9c46",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Leviathan(Extreme).cs",
-    "Note": "v0.0.0.2:\r\nLV50 利维亚桑歼殛战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.3:\r\nLV50 利维亚桑歼殛战 初版绘制",
+    "UpdateInfo": "新增EdgeTTS开关，增加职能检测",
     "TerritoryIds": [
       359
     ]
