@@ -28,7 +28,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 - `LV50 伊弗利特歼灭战` `LV50 迦楼罗歼灭战` `LV50 拉姆歼灭战` `LV50 莫古力贤王歼灭战` `LV50 那布里亚勒斯讨伐战` `LV50 海德拉讨伐战` `LV50 死化奇美拉讨伐战` `LV50 奥丁歼灭战` `LV50 大桥上的决斗`
 - `LV60 萨菲洛特歼灭战` `LV60 祖尔宛歼灭战`
-- `LV70 吉祥天女歼灭战` `LV70 神龙歼灭战` `LV70 月读歼灭战`
+- `LV70 吉祥天女歼灭战` `LV70 神龙歼灭战` `LV70 月读歼灭战` `LV70 保镖歼灭战`
 - `LV90 高贝扎歼灭战` `LV90 泽罗姆斯歼灭战`
 
 **讨伐歼殛战 / Trials-Extreme**

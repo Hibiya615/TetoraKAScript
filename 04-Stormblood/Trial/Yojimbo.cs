@@ -19,7 +19,7 @@ using System.Threading.Tasks;
 
 namespace Kugane_Ohashi;
 
-[ScriptType(guid: "fc6a6125-4a1d-4669-be4c-9b375dc70ae0", name: "保镖歼灭战", territorys: [806],
+[ScriptType(guid: "944c8879-0d4e-4182-87ea-c38769990f2d", name: "保镖歼灭战", territorys: [806],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 public class Yojimbo
 {
