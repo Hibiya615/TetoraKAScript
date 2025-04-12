@@ -20,18 +20,21 @@ using System.Threading.Tasks;
 namespace DhormeChimera;
 
 [ScriptType(guid: "e24bb311-704f-4f4c-8188-87eaa8da8b29", name: "死化奇美拉讨伐战", territorys: [368],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class DhormeChimera
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV50 死化奇美拉讨伐战 初版绘制
         """;
     
-    [UserSetting("TTS开关")]
-    public bool isTTS { get; set; } = true;
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -105,7 +108,8 @@ public class DhormeChimera
     {
         if ( @event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("避开人群溜雷球", duration: 3500, true);
-        if (isTTS)accessory.Method.EdgeTTS("雷球点名");
+        if (isTTS)accessory.Method.TTS("雷球点名");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("雷球点名");
     }
     
     [ScriptMethod(name: "嘈杂的噪音（雷球）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:2222"])]
@@ -143,7 +147,8 @@ public class DhormeChimera
     public void 强化寒冰咆哮(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("打断或眩晕BOSS", duration: 2000, true);
-        if (isTTS)accessory.Method.EdgeTTS("打断或眩晕BOSS");
+        if (isTTS)accessory.Method.TTS("打断或眩晕BOSS");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("打断或眩晕BOSS");
     }
     
     [ScriptMethod(name: "雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(1338|1442)$"])]
