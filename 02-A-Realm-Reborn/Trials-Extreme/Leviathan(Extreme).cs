@@ -43,16 +43,6 @@ public class the_Whorleater_Extreme
     [UserSetting("【开发用】Debug模式")]
     public bool isDebug { get; set; } = false;
     
-    public static bool isTank { get; set; }
-    public static bool isDps { get; set; }
-    public static bool isHealer { get; set; }
-    public void 职能检查(ScriptAccessory accessory)
-    {
-        var player = accessory.Data.MyObject;
-        isTank = player?.IsTank() ?? false;
-        isDps = player?.IsDps() ?? false;
-        isHealer = player?.IsHealer() ?? false;
-    }
     
     #region 记录 & 阶段转换
     uint Dive = 0;
@@ -101,10 +91,9 @@ public class the_Whorleater_Extreme
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
-        var player = accessory.Data.MyObject;
-        isTank = player?.IsTank() ?? false;
-        isDps = player?.IsDps() ?? false;
-        isHealer = player?.IsHealer() ?? false;
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        var isDps = accessory.Data.MyObject?.IsDps() ?? false;
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
 
         if (isTank && isText)accessory.Method.TextInfo("难度：★☆，不会建议退\nT：MT拉头，ST拉尾、小怪ST拉，晕波齿鱼人（60%血以下免晕） ", duration: 10000, true);
         if (isDps && isText)accessory.Method.TextInfo("难度：☆\nD：出黄球打黄球，蓝球不管，小怪优先波齿鱼人，注意避开T的平A", duration: 10000, true);
@@ -196,8 +185,7 @@ public class the_Whorleater_Extreme
     [ScriptMethod(name: "巨浪泡沫 提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:2810"])]
     public void 巨浪泡沫(Event @event, ScriptAccessory accessory)
     {
-        var player = accessory.Data.MyObject;
-        isTank = player?.IsTank() ?? false;
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
         if(isTank && isText)accessory.Method.TextInfo("ST接走蓝泡泡，避开人群溜溜球，转场完开减伤远离人群炸球", duration: 34500, false);
         if(isTTS)accessory.Method.TTS("ST拉蓝球，约半分钟后爆炸，人群远离");
         if(isEdgeTTS)accessory.Method.EdgeTTS("ST拉蓝球，约半分钟后爆炸，人群远离");

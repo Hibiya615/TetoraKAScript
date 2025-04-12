@@ -45,11 +45,12 @@ public class ThornmarchExtreme
     
     [UserSetting("【开发用】Debug模式")]
     public bool isDebug { get; set; } = false;
-    
-    public static bool isTank { get; set; }
-    public static bool isDps { get; set; }
-    public static bool isHealer { get; set; }
-    public void 职能检查(ScriptAccessory accessory)
+
+    public static bool isTank;
+    public static bool isDps;
+    public static bool isHealer;
+   
+    public void Init(ScriptAccessory accessory)
     {
         var player = accessory.Data.MyObject;
         isTank = player?.IsTank() ?? false;
@@ -68,10 +69,9 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
-        var player = accessory.Data.MyObject;
-        isTank = player?.IsTank() ?? false;
-        isDps = player?.IsDps() ?? false;
-        isHealer = player?.IsHealer() ?? false;
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        var isDps = accessory.Data.MyObject?.IsDps() ?? false;
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
 
         if (isTank && isText)accessory.Method.TextInfo("难度：☆，重点：修小怪血，并一起击杀\nT：贤王吸蓝，不推荐DK拉，注意面向 ", duration: 5000, true);
         if (isDps && isText)accessory.Method.TextInfo("难度：☆，重点：修小怪血，并一起击杀\nD：注意修血，前两次需要同时击杀 ", duration: 5000, true);
@@ -87,8 +87,7 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "小怪出现提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:2070"])]
     public void 小怪出现提示(Event @event, ScriptAccessory accessory)
     {        
-        var player = accessory.Data.MyObject;
-        isTank = player?.IsTank() ?? false;
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
         if (!isTank) return; 
         if (isText)accessory.Method.TextInfo("MT拉 < 斧 > & < 贤王 > 、ST拉 < 壁 >，都有顺劈\n全部小怪需要同时击杀两次", duration: 5000, true);
         if (isTTS)accessory.Method.TTS("注意面向，注意修血");
@@ -250,8 +249,7 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "莫古乱乱乱 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:473"])]
     public void 莫古乱乱乱(Event @event, ScriptAccessory accessory)
     {
-        var player = accessory.Data.MyObject;
-        isHealer = player?.IsHealer() ?? false;
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
         if (!isHealer) return; 
         if (isText) accessory.Method.TextInfo("驱散 <莫古乱乱乱> ", duration: 5000, true);
         if (isTTS) accessory.Method.TTS("驱散《莫古乱乱乱》");
@@ -344,8 +342,7 @@ public class ThornmarchExtreme
     [ScriptMethod(name: "怒发冲冠 驱散提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:402"])]
     public void 怒发冲冠(Event @event, ScriptAccessory accessory)
     {
-        var player = accessory.Data.MyObject;
-        isHealer = player?.IsHealer() ?? false;
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
         if (!isHealer) return; 
         if (isText) accessory.Method.TextInfo("驱散 <怒发冲冠> ", duration: 5000, true);
         if (isTTS) accessory.Method.TTS("驱散《怒发冲灌》");

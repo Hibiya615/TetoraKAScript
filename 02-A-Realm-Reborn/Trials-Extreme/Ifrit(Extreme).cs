@@ -21,13 +21,13 @@ using KodakkuAssist.Extensions;
 namespace Ifrit_Extreme;
 
 [ScriptType(guid: "dbb7983a-d2c4-4621-9734-76772e3f206a", name: "伊弗利特歼殛战", territorys: [295],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Ifrit_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV50 伊弗利特歼殛战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
@@ -43,28 +43,18 @@ public class Ifrit_Extreme
     
     [UserSetting("【开发用】Debug模式")]
     public bool isDebug { get; set; } = false;
-
-    public static bool isTank { get; set; }
-    public static bool isDps { get; set; }
-    public static bool isHealer { get; set; }
-    public void Init(ScriptAccessory accessory)
-    {
-         var player = accessory.Data.MyObject;
-         isTank = player?.IsTank() ?? false;
-         isDps = player?.IsDps() ?? false;
-         isHealer = player?.IsHealer() ?? false;
-    }
+    
     
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
-        await Task.Delay(3000); 
-        if (isTank && isText)accessory.Method.TextInfo("难度：★\nT：3层debuff换T，炸柱子时注意减伤", duration: 5000, true);
-        if (isDebug && isTank && isText)accessory.Method.SendChat("/e [DEBUG]: 检测到自身职能为：T");
-        if (isDps && isText)accessory.Method.TextInfo("难度：★\nD：优先转火柱子，锁链靠近，远离热风奶", duration: 5000, true);
-        if (isDebug && isDps && isText)accessory.Method.SendChat("/e [DEBUG]: 检测到自身职能为：D");
-        if (isHealer && isText)accessory.Method.TextInfo("难度：★\nH：热风远离人群", duration: 5000, true);
-        if (isDebug && isHealer && isText)accessory.Method.SendChat("/e [DEBUG]: 检测到自身职能为：H");
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        var isDps = accessory.Data.MyObject?.IsDps() ?? false;
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
+        
+        if (isTank && isText)accessory.Method.TextInfo("难度：☆\nT：3层debuff换T，炸柱子时注意减伤", duration: 5000, true);
+        if (isDps && isText)accessory.Method.TextInfo("难度：☆\nD：优先转火柱子，锁链靠近，远离热风奶", duration: 5000, true);
+        if (isHealer && isText)accessory.Method.TextInfo("难度：☆\nH：热风远离人群", duration: 5000, true);
 
         // if (isText)accessory.Method.TextInfo("难度：★\nT：3层debuff换T，炸柱子时注意减伤\nD：优先转火柱子、锁链靠近 \nH：热风远离人群" , duration: 8000, true);
         accessory.Method.SendChat("/e ————小抄————\nT：3层debuff换T，炸柱子时注意减伤\nD：优先转火柱子、锁链靠近 \nH：热风远离人群 \n出柱子一定先打柱子，否则上天直接狂暴");
@@ -73,8 +63,7 @@ public class Ifrit_Extreme
     [ScriptMethod(name: "灼伤 换T提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:375","StackCount:regex:^[345]$"])]
     public void 灼伤(Event @event, ScriptAccessory accessory)
     {
-        var player = accessory.Data.MyObject;
-        isTank = player?.IsTank() ?? false;
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
         if (isTank && @event.TargetId() != accessory.Data.Me && isText) accessory.Method.TextInfo("挑衅", duration: 3000, true);
         if (isTank && @event.TargetId() == accessory.Data.Me && isText) accessory.Method.TextInfo("退避", duration: 3000, true); 
         if (isTank && isTTS) accessory.Method.TTS("换T！"); 
