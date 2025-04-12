@@ -17,12 +17,12 @@ using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
-namespace Ravana;
+namespace Ravana_Extreme;
 
 [ScriptType(guid: "336990c6-8686-4691-8b7a-3ec8ffedfc19", name: "罗波那歼殛战", territorys: [446],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class Ravana
+public class Ravana_Extreme
 {
     const string noteStr =
         """
@@ -30,7 +30,14 @@ public class Ravana
         LV60 罗波那歼殛战 初版绘制
         """;
     
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
     
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
     
     [ScriptMethod(name: "光焰【序】（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:3772"])]
     public void 光焰序(Event @event, ScriptAccessory accessory)
@@ -60,8 +67,6 @@ public class Ravana
     
 }
 
-
-#region 
 public static class EventExtensions
 {
     private static bool ParseHexId(string? idStr, out uint id)
@@ -175,20 +180,3 @@ public static class EventExtensions
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
 }
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
-    }
-}
-#endregion
