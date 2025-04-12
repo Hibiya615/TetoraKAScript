@@ -20,12 +20,12 @@ using System.Threading.Tasks;
 namespace Kugane_Ohashi;
 
 [ScriptType(guid: "944c8879-0d4e-4182-87ea-c38769990f2d", name: "保镖歼灭战", territorys: [806],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 public class Yojimbo
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV70 保镖歼灭战 初版绘制
         """;
     
@@ -137,6 +137,7 @@ public class Yojimbo
     [ScriptMethod(name: "捕获 锁链点名", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0005"])]
     public void 捕获(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("锁链点名，远离扯线", duration: 4000, true);
         // if (isTTS)accessory.Method.TTS("锁链点名");
         // if (isEdgeTTS)accessory.Method.EdgeTTS("锁链点名");

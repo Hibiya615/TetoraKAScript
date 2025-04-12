@@ -210,11 +210,11 @@
   {
     "Name": "保镖歼灭战",
     "Guid": "944c8879-0d4e-4182-87ea-c38769990f2d",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Yojimbo.cs",
-    "Note": "v0.0.0.1:\r\nLV70 保镖歼灭战 初版绘制",
+    "Note": "v0.0.0.2:\r\nLV70 保镖歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
       806
