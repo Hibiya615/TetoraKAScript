@@ -51,7 +51,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 - LV90：万魔殿 / Pandæmonium
 
-  `P10N`
+  `P10N` `P11N`
 
 **深层迷宫 / Deep Dungeons / ディープダンジョン**
 

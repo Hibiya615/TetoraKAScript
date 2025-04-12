@@ -403,6 +403,19 @@
     ]
   },
   {
+    "Name": "P11N",
+    "Guid": "07be068a-65ea-4fd9-a324-9ec5326bb04b",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P11n.cs",
+    "Note": "v0.0.0.1:\r\nLV90 万魔殿 荒天之狱1（特弥斯） 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1151
+    ]
+  },
+  {
     "Name": "死者宫殿",
     "Guid": "4210c323-eba4-4d67-a7e7-b90799494729",
     "Version": "0.0.0.31",
