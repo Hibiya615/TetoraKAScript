@@ -20,13 +20,13 @@ using System.Threading.Tasks;
 namespace Zeromus;
 
 [ScriptType(guid: "1d6d7238-e986-408c-9c25-b24955542ee0", name: "泽罗姆斯歼灭战", territorys: [1168],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Zeromus
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV90 泽罗姆斯歼灭战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
@@ -79,6 +79,34 @@ public class Zeromus
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "旋骨利爪", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^3558[0134]$"])]
+    public void 旋骨利爪(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "旋骨利爪";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.DestoryAt = 8500;
+        switch (@event.ActionId())
+        {
+            case 35580:  // 左上 短
+                dp.Scale = new (28, 29f);
+                break;
+            case 35581:  // 右上 长
+                dp.Scale = new (28, 60f);
+                dp.Offset = new Vector3(-14, 0, 0);
+                break;
+            case 35583:  // 右上 短
+                dp.Scale = new (28, 29f);
+                break;
+            case 35584:  // 左上 长
+                dp.Scale = new (28, 60f);
+                dp.Offset = new Vector3(14, 0, 0);
+                break;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
     [ScriptMethod(name: "日珥焰棘（火球直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:35606"])]
     public void 日珥焰棘(Event @event, ScriptAccessory accessory)
     {
@@ -111,6 +139,30 @@ public class Zeromus
         accessory.Method.RemoveDraw($"有毒气泡{@event.SourceId()}");
     }
     
+    [ScriptMethod(name: "宇宙大爆炸 & 宇宙大挤压（地板黄圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(35589|36144)$"])]
+    public void 宇宙大黄圈(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "宇宙大黄圈";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "黑暗侵蚀：重击（分摊）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0064"])]
+    public void 黑暗侵蚀重击(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "黑暗侵蚀重击";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 8000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "加速度炸弹", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2657"])]
     public async void 加速度炸弹(Event @event, ScriptAccessory accessory)
     {
@@ -125,15 +177,52 @@ public class Zeromus
         if (isEdgeTTS) accessory.Method.EdgeTTS("停止行动");
     }
     
-    [ScriptMethod(name: "黑暗侵蚀：重击（分摊）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0064"])]
-    public void 黑暗侵蚀重击(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "黑龙闪 起始位置指路", eventType: EventTypeEnum.StartCasting, eventCondition:["ActionId:36134"])]
+    public void 黑龙闪Start(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "黑暗侵蚀重击";
-        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
-        dp.Owner = @event.TargetId();
-        dp.Scale = new Vector2(6f);
-        dp.DestoryAt = 8000;
+        dp.Name = "黑龙闪Start";
+        dp.Scale = new(1);
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = accessory.Data.Me; 
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        
+        if (@event.TargetPosition().X < 91)
+        {
+            dp.TargetPosition = new Vector3 (85, 0, 85);
+        }
+        else
+        {
+            dp.TargetPosition = new Vector3 (115, 0, 85);
+        }
+        
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "黑洞 最大范围", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:36134"])]
+    public void 黑洞(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "黑洞";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(35f);
+        dp.Delay = 18800;
+        dp.DestoryAt = 2800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "陨石冲击 彗星危险范围", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:35601"])]
+    public void 彗星(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "彗星";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 12800;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
