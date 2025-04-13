@@ -40,8 +40,18 @@ public class Bismarck_Extreme
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    // P2蓝绿小怪刷新后，蓝buff打绿怪，绿buff打蓝怪
-    // P3 雷雨注意分散 不打水球；小雨分散 打水球，暴雨场中集合
+
+    uint MagitekFieldGenerator = 1;
+    
+    public void Init(ScriptAccessory accessory) {
+        MagitekFieldGenerator = 1; 
+    }
+    
+    [ScriptMethod(name: "魔导结界 记录", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4778"])]
+    public void 魔导结界(Event @event, ScriptAccessory accessory)
+    {
+        MagitekFieldGenerator = 0; 
+    }
     
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
     public async void 开场提示(Event @event, ScriptAccessory accessory)
@@ -54,6 +64,43 @@ public class Bismarck_Extreme
         
     }
     
+    [ScriptMethod(name: "拉怪提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:3827"])]
+    public void 拉怪提示(Event @event, ScriptAccessory accessory)
+    {
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        if (!isTank) return; 
+        if (isText)accessory.Method.TextInfo("将其他小怪拉至远程怪 <温杜乌麻义> 处", duration: 5000, false);
+        if (isTTS)accessory.Method.TTS("将其他小怪拉到远程怪");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("将其他小怪拉到远程怪");
+        
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "温杜乌麻义";
+            dp.Color = accessory.Data.DefaultSafeColor;
+            dp.Scale = new Vector2(1f);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetObject = @event.SourceId();
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.DestoryAt = 5700;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+
+    }
+    
+    [ScriptMethod(name: "白鲸之怒 首次提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4010"])]
+    public void 白鲸之怒(Event @event, ScriptAccessory accessory)
+    {
+        if (MagitekFieldGenerator == 0) return;
+        if (isText)accessory.Method.TextInfo("使用 <魔导结界发生器>", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS("使用魔导结界发生器");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("使用魔导结界发生器");
+    }
+    
+    [ScriptMethod(name: "上背提示", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:4355", "SourceDataId:3820"])]
+    public void 上背提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS("上背");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("上背");
+    }
+    
     [ScriptMethod(name: "鲸须爆弹（诱导水圈提示）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4021"])]
     public void 鲸须爆弹(Event @event, ScriptAccessory accessory)
     {
@@ -62,15 +109,63 @@ public class Bismarck_Extreme
         if (isEdgeTTS)accessory.Method.EdgeTTS("诱导三连水圈");
     }
     
+    [ScriptMethod(name: "漏斗云（龙卷风）高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:3830"])]
+    public void 漏斗云(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "漏斗云";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(4.5f);
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp2 = accessory.Data.GetDefaultDrawProperties();
+        dp2.Name = "漏斗云描边";
+        dp2.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp2.Owner = @event.SourceId();
+        dp2.Scale = new Vector2(4.6f);
+        dp2.InnerScale = new Vector2(4.5f);
+        dp2.Radian = float.Pi * 2;
+        dp2.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
+    }
+    
+    [ScriptMethod(name: "漏斗云销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:3830"],userControl: false)]
+    public void 漏斗云销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("漏斗云.*");
+    }
+    
+    [ScriptMethod(name: "死水/死风 读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4032"])]
+    public void 死风水(Event @event, ScriptAccessory accessory)
+    {
+        // ActionId:4032 死风; 4034 死水
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        if (isTank)
+        {
+            if (isText)accessory.Method.TextInfo("赋予buff，稍后挑衅反色目标", duration: 2000, false);
+            if (isTTS)accessory.Method.TTS("赋予buff，稍后挑衅反色目标");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("赋予buff，稍后挑衅反色目标");
+        }
+        else
+        {
+            if (isText)accessory.Method.TextInfo("赋予buff，稍后攻击反色目标", duration: 2000, false);
+            if (isTTS)accessory.Method.TTS("赋予buff，稍后攻击反色目标");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("赋予buff，稍后攻击反色目标");
+        }
+
+    }
+    
     [ScriptMethod(name: "支配于风/水 buff提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^71[78]$"])]
     public void 支配于风水(Event @event, ScriptAccessory accessory)
     {
         // StatusID: 717 支配于风 ；718 支配于水
         if (@event.TargetId() != accessory.Data.Me) return; 
-        var elemental = @event.StatusId == 717 ? "水" : "风";
-        if (isText)accessory.Method.TextInfo($"攻击{elemental}蛇", duration: 4000, true);
-        if (isTTS)accessory.Method.TTS($"攻击{elemental}蛇");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"攻击{elemental}蛇");
+        var elemental = @event.StatusId == 717 ? "蓝色水蛇" : "绿色风蛇";
+        if (isText)accessory.Method.TextInfo($"攻击{elemental}", duration: 4000, true);
+        if (isTTS)accessory.Method.TTS($"攻击{elemental}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"攻击{elemental}");
     }
     
     [ScriptMethod(name: "呼风唤雨 提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4021"])]
@@ -79,6 +174,7 @@ public class Bismarck_Extreme
         if (isText)accessory.Method.TextInfo("雷雨：不打水泡+分散\n暴雨：打水泡，中间击退接月环\n小雨：打水泡，远离中间", duration: 10000, true);
         if (isTTS)accessory.Method.TTS("注意天气变化");
         if (isEdgeTTS)accessory.Method.EdgeTTS("注意天气变化");
+        accessory.Method.SendChat("/e ————呼风唤雨————\n雷雨：分散，不打水炮\n小雨：中间钢铁，打水炮\n暴雨：中间击退接月环，打水泡");
     }
     
     [ScriptMethod(name: "雷雨_落雷&雷暴云砧 分散提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4021"])]
