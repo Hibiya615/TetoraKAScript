@@ -106,7 +106,7 @@ public class Garuda_Hard_
         if (!isTank && isEdgeTTS)accessory.Method.EdgeTTS("BOSS稍后将飞至南侧");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "大龙卷风";
+        dp.Name = "BOSS落点";
         dp.Color = accessory.Data.DefaultSafeColor.WithW(0.2f);
         dp.Position = new Vector3(0f, -2f, 21f);
         dp.Scale = new Vector2(3f);
@@ -115,7 +115,7 @@ public class Garuda_Hard_
         
         if (isTank){
         var dp2 = accessory.Data.GetDefaultDrawProperties();
-        dp2.Name = "拉怪引导";
+        dp2.Name = "拉怪引导线";
         dp2.Owner = accessory.Data.Me;
         dp2.Color = accessory.Data.DefaultSafeColor.WithW(0.2f);
         dp2.ScaleMode |= ScaleMode.YByDistance;
