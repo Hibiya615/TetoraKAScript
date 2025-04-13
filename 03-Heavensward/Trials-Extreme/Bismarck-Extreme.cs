@@ -100,7 +100,7 @@ public class Bismarck_Extreme
     [ScriptMethod(name: "鲸须爆弹（诱导水圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4021"])]
     public void 鲸须爆弹(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("诱导三连水圈", duration: 3000, false);
+        if (isText)accessory.Method.TextInfo("诱导三连水圈", duration: 2000, false);
         if (isTTS)accessory.Method.TTS("诱导三连水圈");
         if (isEdgeTTS)accessory.Method.EdgeTTS("诱导三连水圈");
     }
