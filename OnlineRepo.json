@@ -169,6 +169,19 @@
     ]
   },
   {
+    "Name": "须佐之男歼灭战",
+    "Guid": "2c4b6205-6a77-4c89-b641-2c2359a43f25",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Susano.cs",
+    "Note": "v0.0.0.1:\r\nLV63 须佐之男歼灭战 初版绘制\r\n支持DR 自动QTE",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      674
+    ]
+  },
+  {
     "Name": "吉祥天女歼灭战",
     "Guid": "a7bacd3e-834f-41ba-a210-c66e2c12d208",
     "Version": "0.0.0.3",
