@@ -47,7 +47,7 @@ public class Bismarck_Extreme
         MagitekFieldGenerator = 1; 
     }
     
-    [ScriptMethod(name: "魔导结界 记录", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4778"])]
+    [ScriptMethod(name: "魔导结界 记录", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4778"],userControl: false)]
     public void 魔导结界(Event @event, ScriptAccessory accessory)
     {
         MagitekFieldGenerator = 0; 
@@ -57,11 +57,7 @@ public class Bismarck_Extreme
     public async void 开场提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("难度：☆\n小怪打异色蛇，转场注意天气", duration: 5000, true);
-
-        // if (isText)accessory.Method.TextInfo("难度：☆\n小怪打异色蛇，转场注意天气", duration: 5000, true);
-
         accessory.Method.SendChat("/e ————小抄————\n蛇刷新后：蓝buff打绿怪，绿buff打蓝怪\n雷雨：分散，不打水炮\n小雨：中间钢铁，打水炮\n暴雨：中间击退接月环，打水泡");
-        
     }
     
     [ScriptMethod(name: "拉怪提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:3827"])]
@@ -82,7 +78,6 @@ public class Bismarck_Extreme
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.DestoryAt = 5700;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-
     }
     
     [ScriptMethod(name: "白鲸之怒 首次提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4010"])]
@@ -94,14 +89,15 @@ public class Bismarck_Extreme
         if (isEdgeTTS)accessory.Method.EdgeTTS("使用魔导结界发生器");
     }
     
-    [ScriptMethod(name: "上背提示", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:4355", "SourceDataId:3820"])]
+    [ScriptMethod(name: "上背提示", eventType: EventTypeEnum.Targetable, eventCondition: ["Targetable:True", "SourceName:regex:^(角质甲壳|chitin carapace|強硬外殻)$"])]
     public void 上背提示(Event @event, ScriptAccessory accessory)
     {
+        // if (isText)accessory.Method.TextInfo("在下面对他无法造成伤害", duration: 3000, true);
         if (isTTS)accessory.Method.TTS("上背");
         if (isEdgeTTS)accessory.Method.EdgeTTS("上背");
     }
     
-    [ScriptMethod(name: "鲸须爆弹（诱导水圈提示）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4021"])]
+    [ScriptMethod(name: "鲸须爆弹（诱导水圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4021"])]
     public void 鲸须爆弹(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("诱导三连水圈", duration: 3000, false);
@@ -168,6 +164,8 @@ public class Bismarck_Extreme
         if (isEdgeTTS)accessory.Method.EdgeTTS($"攻击{elemental}");
     }
     
+    #region P3 天气机制
+
     [ScriptMethod(name: "呼风唤雨 提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4021"])]
     public void 呼风唤雨(Event @event, ScriptAccessory accessory)
     {
@@ -177,12 +175,25 @@ public class Bismarck_Extreme
         accessory.Method.SendChat("/e ————呼风唤雨————\n雷雨：分散，不打水炮\n小雨：中间钢铁，打水炮\n暴雨：中间击退接月环，打水泡");
     }
     
-    [ScriptMethod(name: "雷雨_落雷&雷暴云砧 分散提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4021"])]
+    [ScriptMethod(name: "雷雨_分散提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4016"])]
     public void 雷雨(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("分散，不打水泡", duration: 3000, true);
+        if (isText)accessory.Method.TextInfo("分散，不打水泡", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("分散，不打水泡");
         if (isEdgeTTS)accessory.Method.EdgeTTS("分散，不打水泡");
+    }
+    
+    [ScriptMethod(name: "雷雨_落雷 & 雷暴云砧 分散", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^407[01]$"])]
+    public void 落雷(Event @event, ScriptAccessory accessory)
+    {
+        // ActionId: 4070 雷暴云砧 ; 4071 落雷
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "落雷";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2 ( @event.ActionId == 4071 ? 4 : 5 );
+        dp.DestoryAt = @event.ActionId == 4071 ? 3700 : 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
     [ScriptMethod(name: "小雨_荒蛮之泪（中间钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4014"])]
@@ -194,7 +205,7 @@ public class Bismarck_Extreme
         dp.Owner = @event.SourceId();
         dp.Offset = new Vector3 (-15, 0, 0);
         dp.Scale = new Vector2(8);
-        dp.DestoryAt = 6100;
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -221,7 +232,7 @@ public class Bismarck_Extreme
     public void 防击退销毁(Event @event, ScriptAccessory accessory)
     {
         if ( @event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.RemoveDraw("锋利之风");
+        accessory.Method.RemoveDraw("击退连线");
     }
     
     [ScriptMethod(name: "暴雨_暴风骤雨（中间月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4012"])]
@@ -238,6 +249,8 @@ public class Bismarck_Extreme
         dp.DestoryAt = 6100;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
+    
+    #endregion
 }
 
 public static class EventExtensions

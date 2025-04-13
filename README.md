@@ -33,7 +33,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 **讨伐歼殛战 / Trials-Extreme**
 
-- `LV50 伊弗利特歼殛战` `LV50 莫古力贤王歼殛战` `LV50 利维亚桑歼殛战`
+- `LV50 伊弗利特歼殛战` `LV50 莫古力贤王歼殛战` `LV50 利维亚桑歼殛战` `LV60 俾斯麦歼殛战`
 
 **大型任务 / Raids / レイド**
 

@@ -286,6 +286,19 @@
     ]
   },
   {
+    "Name": "俾斯麦歼殛战",
+    "Guid": "56751be8-113f-4496-8b46-982ff96d90c3",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials-Extreme/Bismarck-Extreme.cs",
+    "Note": "v0.0.0.1:\r\nLV60 俾斯麦歼殛战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      447
+    ]
+  },
+  {
     "Name": "O4N",
     "Guid": "f24f9cef-717e-4a2a-9616-d470443d6d8a",
     "Version": "0.0.0.1",
