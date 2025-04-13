@@ -20,13 +20,13 @@ using System.Threading.Tasks;
 namespace Nabriales;
 
 [ScriptType(guid: "64206b9e-cd0a-47ec-960d-15f39a888f9e", name: "那布里亚勒斯讨伐战", territorys: [426],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Nabriales
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV50 那布里亚勒斯讨伐战 初版绘制
         """;
     
@@ -192,12 +192,12 @@ public class Nabriales
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "吸引";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.2f);
         dp.Scale = new(1, 6);
         dp.Owner = accessory.Data.Me;
         dp.TargetPosition = @event.SourcePosition();
         dp.DestoryAt = 15800;
-        accessory.Method.SendDraw(0, DrawTypeEnum.Rect, dp);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
     [ScriptMethod(name: "延时之门销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:3655"],userControl: false)]

@@ -80,11 +80,11 @@
   {
     "Name": "那布里亚勒斯讨伐战",
     "Guid": "64206b9e-cd0a-47ec-960d-15f39a888f9e",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Nabriales.cs",
-    "Note": "v0.0.0.2:\r\nLV50 那布里亚勒斯讨伐战 初版绘制",
+    "Note": "v0.0.0.3:\r\nLV50 那布里亚勒斯讨伐战 初版绘制",
     "UpdateInfo": "API12",
     "TerritoryIds": [
       426
