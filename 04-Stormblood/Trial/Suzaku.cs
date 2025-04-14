@@ -28,6 +28,7 @@ public class Suzaku
         """
         v0.0.0.1:
         LV70 朱雀镇魂战 初版绘制
+        跳楼机问就是不会，希望有人帮我画了
         """;
     
     [UserSetting("TTS开关（TTS请二选一开启）")]
@@ -84,31 +85,57 @@ public class Suzaku
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "拒绝旋律（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12848"])]
-    public void 拒绝旋律(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "拒绝旋律";
-        dp.Scale = new(1.2f, 8);
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
-        dp.Owner = accessory.Data.Me;
-        dp.TargetObject = @event.SourceId();
-        dp.Rotation = float.Pi;
-        dp.DestoryAt = 4000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
-    }
-    
     [ScriptMethod(name: "引诱旋律（吸引）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12847"])]
     public void 引诱旋律(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "引诱旋律";
-        dp.Scale = new(1.2f, 11);
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
-        dp.Owner = accessory.Data.Me;
-        dp.TargetPosition = @event.SourcePosition();
-        dp.Rotation = float.Pi;
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
         dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "拒绝旋律（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12848"])]
+    public void 拒绝旋律(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "拒绝旋律";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(9.3f);
+        dp.InnerScale = new Vector2(4.3f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "拒绝旋律（击退预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^1284[78]$"])]
+    public void 预测(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.DestoryAt = 4000;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+        dp.Rotation = float.Pi;
+        
+        if (@event.ActionId == 12848)
+        {
+            dp.Name = "击退预测";
+            dp.Scale = new(1.2f, 8);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetObject = @event.SourceId();
+        }
+        else
+        {
+            /*  不知道为什么总是画成击退 作废！
+            dp.Name = "吸引预测";
+            dp.Scale = new(1.2f, 11);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetPosition = @event.SourcePosition;
+            */
+        }
+        
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
@@ -116,7 +143,7 @@ public class Suzaku
     public void 防击退销毁(Event @event, ScriptAccessory accessory)
     {
         if ( @event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.RemoveDraw(".*旋律");
+        accessory.Method.RemoveDraw(".*(旋律|预测)");
     }
     
     [ScriptMethod(name: "鬼宿脚（半场顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12851"])]
