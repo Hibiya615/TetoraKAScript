@@ -16,6 +16,7 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace Hades;
 
@@ -159,17 +160,41 @@ public class Hades
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(100);
         dp.Radian = 180f.DegToRad();
+        dp.Offset = new Vector3 (0,0,12);
+        dp.Rotation = @event.ActionId == 16739 ? 75f.DegToRad() : 285f.DegToRad();
         dp.DestoryAt = 6700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [ScriptMethod(name: "DR - 自动QTE", eventType: EventTypeEnum.StartCasting, eventCondition: ["StatusID:1271"])]
+    [ScriptMethod(name: "地狱之声（大地摇动）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0028"])]
+    public void 地狱之声(Event @event, ScriptAccessory accessory)
+    {
+        if (isText && @event.TargetId() == accessory.Data.Me) accessory.Method.TextInfo("诱导大地摇动", duration: 4000, false);
+        // if (isTTS && @event.TargetId() == accessory.Data.Me)accessory.Method.TTS("诱导大地摇动");
+        // if (isEdgeTTS && @event.TargetId() == accessory.Data.Me)accessory.Method.EdgeTTS("诱导大地摇动");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        var boss = accessory.Data.Objects.GetByDataId(10570).FirstOrDefault();
+        if (boss == null) return;
+        dp.Owner = boss.GameObjectId;
+        dp.TargetObject = @event.TargetId();
+        
+        dp.Name = "地狱之声";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+        dp.Scale = new Vector2(100);
+        dp.Radian = 60f.DegToRad();
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
+    
+    [ScriptMethod(name: "DR - 自动QTE", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:16758"])]
     public void 自动QTE(Event @event, ScriptAccessory accessory)
     {
         if (isDRHelper) accessory.Method.SendChat("/pdr load AutoQTE");
     }
 
-    [ScriptMethod(name: "DR - 自动关闭免疫输入禁用", eventType: EventTypeEnum.StartCasting, eventCondition: ["StatusID:1271"])]
+    [ScriptMethod(name: "DR - 自动关闭免疫输入禁用", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:16758"])]
     public void 自动关闭Hack(Event @event, ScriptAccessory accessory)
     {
         if (isDRHackOff) accessory.Method.SendChat("/pdr unload AutoImmunizeInputDisable");
@@ -178,9 +203,9 @@ public class Hades
     [ScriptMethod(name: "死亡宣告 踩光圈提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:210"])]
     public void 死亡宣告(Event @event, ScriptAccessory accessory)
     {
-        if (isText && @event.TargetId() == accessory.Data.Me) accessory.Method.TextInfo("踩光圈", duration: 3000, true);
-        // if (isTTS && @event.TargetId() == accessory.Data.Me)accessory.Method.TTS("踩光圈");
-        // if (isEdgeTTS && @event.TargetId() == accessory.Data.Me)accessory.Method.EdgeTTS("踩光圈");
+        if (isText && @event.TargetId() == accessory.Data.Me) accessory.Method.TextInfo("踩满全部光圈", duration: 3000, true);
+        // if (isTTS && @event.TargetId() == accessory.Data.Me)accessory.Method.TTS("踩满光圈");
+        // if (isEdgeTTS && @event.TargetId() == accessory.Data.Me)accessory.Method.EdgeTTS("踩满光圈");
     }
     
 }
