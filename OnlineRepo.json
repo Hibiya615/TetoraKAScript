@@ -208,6 +208,19 @@
     ]
   },
   {
+    "Name": "朱雀镇魂战",
+    "Guid": "fc907987-bad9-4c70-97f6-b91e2e70544b",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Suzaku.cs",
+    "Note": "v0.0.0.1:\r\nLV70 朱雀镇魂战 初版绘制\r\n跳楼机问就是不会，希望有人帮我画了",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      810
+    ]
+  },
+  {
     "Name": "月读歼灭战",
     "Guid": "97415dc8-cd16-4c9b-87be-026a297c3451",
     "Version": "0.0.0.1",

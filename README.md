@@ -20,6 +20,8 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 ## Scripts List   /  支持副本:
 
+( CN / EN / JP ) [Text Translator](https://strings.wakingsands.com/) 
+
 **迷宫挑战 / Dungeons / ダンジョン**
 
 - `LV70 疯狂战舰无限回廊` `LV70 污染庭园圣茉夏娜植物园`
@@ -28,7 +30,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 - `LV50 伊弗利特歼灭战` `LV50 迦楼罗歼灭战` `LV50 拉姆歼灭战` `LV50 莫古力贤王歼灭战` `LV50 那布里亚勒斯讨伐战` `LV50 海德拉讨伐战` `LV50 死化奇美拉讨伐战` `LV50 奥丁歼灭战` `LV50 大桥上的决斗`
 - `LV60 萨菲洛特歼灭战` `LV60 祖尔宛歼灭战`
-- `LV63 须佐之男歼灭战` `LV67 吉祥天女歼灭战` `LV70 神龙歼灭战` `LV70 月读歼灭战` `LV70 保镖歼灭战`
+- `LV63 须佐之男歼灭战` `LV67 吉祥天女歼灭战` `LV70 神龙歼灭战` `LV70 月读歼灭战` `LV70 朱雀镇魂战` `LV70 保镖歼灭战`
 - `LV90 高贝扎歼灭战` `LV90 泽罗姆斯歼灭战`
 
 **讨伐歼殛战 / Trials-Extreme**
