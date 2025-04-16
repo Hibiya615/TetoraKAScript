@@ -62,9 +62,29 @@ public class A5N
     [ScriptMethod(name: "全力重拳 减伤提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:996"])]
     public void 全力重拳DH(Event @event, ScriptAccessory accessory)
     {
+        var boss = accessory.Data.Objects.GetByDataId(5353).FirstOrDefault();
+        if (boss == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "全力重拳";
+        dp.Scale = new (4, 45.2f);
+        dp.Owner = boss.GameObjectId;
+        dp.TargetObject = @event.TargetId();
+        dp.TargetResolvePattern = PositionResolvePatternEnum.OwnerEnmityOrder;
+        dp.TargetOrderIndex = 1;
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 6500;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+        
         var isTank = accessory.Data.MyObject?.IsTank() ?? false;
         if (!isTank && isTTS) accessory.Method.TTS("坦克直线死刑，给减伤"); 
         if (!isTank && isEdgeTTS) accessory.Method.EdgeTTS("坦克直线死刑，给减伤");
+    }
+    
+    [ScriptMethod(name: "全力重拳销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:5526"],userControl:false)]
+    public void 全力重拳销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("全力重拳");
     }
     
     [ScriptMethod(name: "强酸剧毒药 毒池点名", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0017"])]
@@ -76,7 +96,7 @@ public class A5N
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "强酸剧毒药";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
+        dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(8f);
         dp.DestoryAt = 5000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -85,29 +105,50 @@ public class A5N
     [ScriptMethod(name: "投放炸弹（红毒提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:5520"])]
     public void 投放炸弹(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("吃红毒，变成猩猩推炸弹至对角", duration: 5000, true);
-        if (isTTS)accessory.Method.TTS("吃红毒，变成猩猩推炸弹至对角");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("吃红毒，变成猩猩推炸弹至对角");
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        if (isTank)
+        {
+            if(isText)accessory.Method.TextInfo("将BOSS拉至角落，躲避炸弹", duration: 19000, true);
+            if (isTTS)accessory.Method.TTS("将BOSS拉至角落");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("将BOSS拉至角落");
+        }
+        else
+        {
+            if (isText)accessory.Method.TextInfo("激活装置，吃红毒，变成猩猩推炸弹至对角", duration: 19000, true);
+            if (isTTS)accessory.Method.TTS("激活装置吃红毒，变成猩猩推炸弹至对角");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("激活装置吃红毒，变成猩猩推炸弹至对角");
+            
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "红毒连线";
+            dp.Color = accessory.Data.DefaultSafeColor;
+            dp.Position = new Vector3(0f, -10f, -190f);
+            dp.TargetPosition = new Vector3(16f, -10f, -190f);
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.Scale = new(1);
+            dp.DestoryAt = 5000;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        }
     }
+    
     [ScriptMethod(name: "超高性能炸弹_大爆炸", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:5354"])]
     public void 大爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "大爆炸";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new(35);
-        dp.DestoryAt = 15000;
+        dp.DestoryAt = 16000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         
         var dp2 = accessory.Data.GetDefaultDrawProperties();
         dp2.Name = "大爆炸描边";
-        dp2.Color = accessory.Data.DefaultDangerColor.WithW(8f);
+        dp2.Color = accessory.Data.DefaultDangerColor.WithW(10f);
         dp2.Owner = @event.SourceId();
-        dp2.Scale = new Vector2(35.08f);
+        dp2.Scale = new Vector2(35.06f);
         dp2.InnerScale = new Vector2(35f);
         dp2.Radian = float.Pi * 2;
-        dp2.DestoryAt = 15000;
+        dp2.DestoryAt = 16000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
     }
 
@@ -120,7 +161,7 @@ public class A5N
     [ScriptMethod(name: "蓄力（紫毒提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:5522"])]
     public void 蓄力(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo("吃紫毒躲避4次AOE", duration: 15400, true);
+        if (isText) accessory.Method.TextInfo("激活装置，吃紫毒躲避4次AOE", duration: 15400, true);
         if (isTTS) accessory.Method.TTS("吃紫毒躲避4次AOE");
         if (isEdgeTTS) accessory.Method.EdgeTTS("吃紫毒躲避4次AOE");
         
@@ -141,7 +182,7 @@ public class A5N
         vulture = 0; 
     }
     
-    [ScriptMethod(name: "紫毒连线销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["StatusID:999"],userControl:false)]
+    [ScriptMethod(name: "紫毒连线销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:999"],userControl:false)]
     public void 紫毒连线销毁(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() == accessory.Data.Me) accessory.Method.RemoveDraw("紫毒连线");
