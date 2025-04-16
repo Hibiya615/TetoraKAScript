@@ -44,7 +44,12 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 - LV50：巴哈姆特大迷宫 / Bahamute
 
-  `T5`
+  `T5N`
+
+- LV60：亚历山大机神城 / Alexander
+
+  `A5N`
+
 - LV70：欧米茄时空狭缝 / Omega Quests
 
   `O4N` `O5N` `O11N`

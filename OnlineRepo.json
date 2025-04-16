@@ -338,6 +338,19 @@
     ]
   },
   {
+    "Name": "A5N",
+    "Guid": "1462516c-2bc2-4560-8244-387845cc098d",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A5N.cs",
+    "Note": "v0.0.0.1:\r\nLV60 亚历山大机神城 律动之章1（奇才 拉特芬克斯） 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      520
+    ]
+  },
+  {
     "Name": "O4N",
     "Guid": "f24f9cef-717e-4a2a-9616-d470443d6d8a",
     "Version": "0.0.0.1",
