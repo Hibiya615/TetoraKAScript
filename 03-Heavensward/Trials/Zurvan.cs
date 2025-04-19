@@ -20,15 +20,24 @@ using System.Threading.Tasks;
 namespace Zurvan;
 
 [ScriptType(guid: "214f8fbd-ad04-430f-8bba-fd7319581780", name: "祖尔宛歼灭战", territorys: [637],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Zurvan
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV60 祖尔宛歼灭战 初版绘制
         """;
+        
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
     
     [ScriptMethod(name: "波动炮", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7741"])]
     public void 波动炮(Event @event, ScriptAccessory accessory)
@@ -70,8 +79,9 @@ public class Zurvan
         eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^(我的叹息将化为寒冰.*|By sorrow's chill doth all become ice.*|我が嘆きは、氷となって凍て付き.*)$"])]
     public void 冰与火(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("别站中间", duration: 4000, true);
-        accessory.Method.TTS("别站中间");
+        if(isText) accessory.Method.TextInfo("别站中间", duration: 4000, true);
+        if(isTTS) accessory.Method.TTS("别站中间");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("别站中间");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冰与火";
@@ -85,8 +95,9 @@ public class Zurvan
     [ScriptMethod(name: "智慧信徒攻击提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6554"])]
     public void 智慧信徒(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("攻击智慧信徒", duration: 5000, true);
-        accessory.Method.TTS("攻击智慧信徒");
+        if(isText) accessory.Method.TextInfo("攻击智慧信徒", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("攻击智慧信徒");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("攻击智慧信徒");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "智慧信徒连线";
@@ -133,12 +144,17 @@ public class Zurvan
     {
         if (MyFire == 1)
         {
-            accessory.Method.TextInfo("踩火塔", duration: 14000, true);
+            if(isText) accessory.Method.TextInfo("踩火塔", duration: 14000, true);
+            if(isTTS) accessory.Method.TTS("踩火塔");
+            if(isEdgeTTS) accessory.Method.EdgeTTS("踩火塔");
+            
         }
 
         if (MyIce == 1)
         {
-            accessory.Method.TextInfo("踩冰塔", duration: 14000, false);
+            if(isText) accessory.Method.TextInfo("踩冰塔", duration: 14000, false);
+            if(isTTS) accessory.Method.TTS("踩冰塔");
+            if(isEdgeTTS) accessory.Method.EdgeTTS("踩冰塔");
         }
         
     }
@@ -271,21 +287,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
