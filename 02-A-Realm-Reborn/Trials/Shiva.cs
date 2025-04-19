@@ -40,6 +40,29 @@ public class Shiva
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
 
+    
+    uint FrostStaff = 0; // 冰霜之杖
+    uint FrostBlade = 0; // 冰霜之剑
+    uint Melt = 0; // 武器融化
+    
+    public void Init(ScriptAccessory accessory) {
+        FrostStaff = 0; 
+        FrostBlade = 0;
+        Melt = 0;
+    }
+    
+    [ScriptMethod(name: "冰霜之杖 变身提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:2453"])]
+    public void 冰霜之杖(Event @event, ScriptAccessory accessory)
+    {
+        FrostStaff = 1; 
+        FrostBlade = 0;
+        Melt = 0;
+        
+        if (isText)accessory.Method.TextInfo("分散", duration: 2000, false);
+        if (isTTS)accessory.Method.TTS("分散");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("分散");
+    }
+    
     [ScriptMethod(name: "冰雹（分散）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:001D"])]
     public void 冰雹(Event @event, ScriptAccessory accessory)
     {
@@ -69,13 +92,67 @@ public class Shiva
     [ScriptMethod(name: "冰印剑（顺劈死刑）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:2451"])]
     public void 冰印剑(Event @event, ScriptAccessory accessory)
     {
+        FrostBlade = 1;
+        FrostStaff = 0; 
+        Melt = 0;
+        
+        var boss = accessory.Data.Objects.GetByDataId(3100).FirstOrDefault();
+        if (boss == null) return;
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冰印剑";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
+        dp.Owner = boss.GameObjectId;
+        dp.TargetObject = @event.TargetId();
+        dp.TargetResolvePattern = PositionResolvePatternEnum.OwnerEnmityOrder;
+        dp.TargetOrderIndex = 1;
         dp.Scale = new Vector2(14);
         dp.Radian = 120f.DegToRad();
         dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
+    
+    /*
+    [ScriptMethod(name: "天降一击（小击退）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:2454"])]
+    public void 天降一击(Event @event, ScriptAccessory accessory)
+    {
+        // 注：在 “冰河怒击（顺劈）” 后平A几次也会发生，且在P3时 时间轴不一定固定（基本都压了）
+        if (FrostBlade == 1)
+        {
+            if (isText)accessory.Method.TextInfo("小击退", duration: 5600, false);
+            if (isTTS)accessory.Method.TTS("小击退");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("小击退");
+            
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = "天降一击";
+            dp.Scale = new(1f, 5);
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetObject = @event.SourceId();
+            dp.Rotation = float.Pi;
+            dp.DestoryAt = 6300;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+        }
+    }
+    */
+    
+    [ScriptMethod(name: "防击退销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(7548|7559)$"],userControl: false)]
+    public void 防击退销毁(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw("天降一击");
+    }
+    
+    [ScriptMethod(name: "冰河怒击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2465"])]
+    public void 冰河怒击(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "冰河怒击";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10);
+        dp.Radian = 120f.DegToRad();
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
@@ -85,6 +162,14 @@ public class Shiva
         if (isText)accessory.Method.TextInfo("AOE", duration: 8700, false);
         if (isTTS)accessory.Method.TTS("AOE");
         if (isEdgeTTS)accessory.Method.EdgeTTS("AOE");
+    }
+    
+    [ScriptMethod(name: "永久冻土 结冰提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:2457"])]
+    public void 强化寒冰咆哮(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("地面结冰", duration: 1200, true);
+        if (isTTS)accessory.Method.TTS("停止移动");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("停止移动");
     }
 }
 
