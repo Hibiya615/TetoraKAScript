@@ -16,10 +16,11 @@ using ECommons.DalamudServices;
 using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
+using KodakkuAssist.Extensions;
 
 namespace Thornmarch_Hard;
 
-[ScriptType(guid: "cd81e178-12e6-4e53-9b81-63002cc51ecb", name: "莫古力贤王歼灭战(?)", territorys: [1067],
+[ScriptType(guid: "cd81e178-12e6-4e53-9b81-63002cc51ecb", name: "莫古力贤王歼灭战(整活版)", territorys: [1067],
     version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Thornmarch_Hard
@@ -685,21 +686,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
