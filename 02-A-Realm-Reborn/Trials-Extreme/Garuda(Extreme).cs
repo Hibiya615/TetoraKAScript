@@ -29,9 +29,10 @@ public class Garuda_Extreme
         """
         v0.0.0.1:
         LV50 迦楼罗歼殛战 初版绘制
+        TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
     
-    [UserSetting("TTS开关")]
+    [UserSetting("TTS开关（TTS请二选一开启）")]
     public bool isTTS { get; set; } = false;
     
     [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
