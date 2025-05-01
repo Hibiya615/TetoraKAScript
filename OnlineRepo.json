@@ -377,6 +377,19 @@
     ]
   },
   {
+    "Name": "A3N",
+    "Guid": "69712d1f-26c4-441f-97f0-e63f8baf98a6",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A3N.cs",
+    "Note": "v0.0.0.1:\r\nLV60 亚历山大机神城 启动之章3（有生命活水） 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      444
+    ]
+  },
+  {
     "Name": "A5N",
     "Guid": "1462516c-2bc2-4560-8244-387845cc098d",
     "Version": "0.0.0.1",
