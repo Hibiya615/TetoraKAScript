@@ -145,12 +145,12 @@
   {
     "Name": "大桥上的决斗",
     "Guid": "3e4102cb-9410-44fd-85e8-d43a3bc25737",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleOnTheBigBridge.cs",
-    "Note": "v0.0.0.2:\r\nLV50 大桥上的决斗 初版绘制",
-    "UpdateInfo": "API12",
+    "Note": "v0.0.0.3:\r\nLV50 大桥上的决斗 初版绘制",
+    "UpdateInfo": "增加部分机制职能限制",
     "TerritoryIds": [
       366
     ]

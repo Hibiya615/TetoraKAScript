@@ -21,15 +21,26 @@ using KodakkuAssist.Extensions;
 namespace BattleOnTheBigBridgen;
 
 [ScriptType(guid: "3e4102cb-9410-44fd-85e8-d43a3bc25737", name: "大桥上的决斗", territorys: [366],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class BattleOnTheBigBridge
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV50 大桥上的决斗 初版绘制
+        TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
+    
+    
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
     
     
     [ScriptMethod(name: "蛙变之歌", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:439"])]
@@ -37,8 +48,9 @@ public class BattleOnTheBigBridge
     {
         if ( @event.TargetId() != accessory.Data.Me) return;
 
-        accessory.Method.TextInfo("躲避绿鸡", duration: 5000, true);
-        accessory.Method.EdgeTTS("躲避绿鸡");
+        if (isText) accessory.Method.TextInfo("躲避绿鸡", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS("躲避绿鸡");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("躲避绿鸡");
 
         foreach (var item in accessory.Data.Objects.GetByDataId(2824))
         {
@@ -58,11 +70,14 @@ public class BattleOnTheBigBridge
         accessory.Method.RemoveDraw("恩奇都");
     }
     
-    [ScriptMethod(name: "混乱 奶满提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:11"])]
+    [ScriptMethod(name: "混乱 奶满提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:11"],suppress:(5000))]
     public void 混乱(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("奶满混乱队友", duration: 5000, false);
-        accessory.Method.EdgeTTS("奶满混乱队友");
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
+        
+        if (isHealer && isText)accessory.Method.TextInfo("奶满混乱队友", duration: 5000, false);
+        if (isHealer && isTTS)accessory.Method.TTS("奶满混乱队友");
+        if (isHealer && isEdgeTTS)accessory.Method.EdgeTTS("奶满混乱队友");
         
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"混乱{@event.SourceId()}";
@@ -192,21 +207,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
