@@ -10,6 +10,7 @@ using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
+using KodakkuAssist.Extensions;
 using KodakkuAssist.Data;
 using ECommons;
 using ECommons.DalamudServices;
@@ -20,13 +21,13 @@ using System.Threading.Tasks;
 namespace Zurvan;
 
 [ScriptType(guid: "214f8fbd-ad04-430f-8bba-fd7319581780", name: "祖尔宛歼灭战", territorys: [637],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class Zurvan
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         LV60 祖尔宛歼灭战 初版绘制
         """;
         
@@ -92,10 +93,40 @@ public class Zurvan
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "小怪刷新位置", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:7726"])]
+    public void 小怪刷新位置(Event @event, ScriptAccessory accessory)
+    {
+        var player = accessory.Data.MyObject;
+        if (isText)accessory.Method.TextInfo("小怪即将刷新在正北", duration: 3700, false);
+        if (isTTS)accessory.Method.TTS("小怪即将刷新在正北");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("小怪即将刷新在正北");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "小怪刷新位置";
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Position = new Vector3(0f, 0f, -11f);
+        dp.Scale = new Vector2(2.1f);
+        dp.DestoryAt = 4400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp2 = accessory.Data.GetDefaultDrawProperties();
+        dp2.Name = "拉怪引导线";
+        dp2.Owner = accessory.Data.Me;
+        dp2.Color = accessory.Data.DefaultSafeColor;
+        dp2.ScaleMode |= ScaleMode.YByDistance;
+        dp2.TargetPosition = new Vector3(0f, 0f, -11f);
+        dp2.Scale = new(1);
+        dp2.DestoryAt = 4400;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp2);
+
+    }
+    
     [ScriptMethod(name: "智慧信徒攻击提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6554"])]
     public void 智慧信徒(Event @event, ScriptAccessory accessory)
     {
-        if(isText) accessory.Method.TextInfo("攻击智慧信徒", duration: 5000, true);
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        if (isTank) return; 
+        if(isText)accessory.Method.TextInfo("攻击智慧信徒", duration: 5000, true);
         if(isTTS) accessory.Method.TTS("攻击智慧信徒");
         if(isEdgeTTS) accessory.Method.EdgeTTS("攻击智慧信徒");
 

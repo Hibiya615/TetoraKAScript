@@ -184,12 +184,12 @@
   {
     "Name": "祖尔宛歼灭战",
     "Guid": "214f8fbd-ad04-430f-8bba-fd7319581780",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Zurvan.cs",
-    "Note": "v0.0.0.2:\r\nLV60 祖尔宛歼灭战 初版绘制",
-    "UpdateInfo": "增加TTS与弹窗开关",
+    "Note": "v0.0.0.4:\r\nLV60 祖尔宛歼灭战 初版绘制",
+    "UpdateInfo": "增加小怪出现位置预测，自身为T时不再提示攻击智慧信徒",
     "TerritoryIds": [
       637
     ]
