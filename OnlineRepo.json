@@ -156,6 +156,19 @@
     ]
   },
   {
+    "Name": "尼德霍格征龙战",
+    "Guid": "dcfdb19e-0357-4214-b64e-205100f55822",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Nidhogg.cs",
+    "Note": "v0.0.0.1:\r\nLV60 尼德霍格征龙战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      559
+    ]
+  },
+  {
     "Name": "萨菲洛特歼灭战",
     "Guid": "6d0824b3-6d67-4450-8b4e-46857257579e",
     "Version": "0.0.0.1",
