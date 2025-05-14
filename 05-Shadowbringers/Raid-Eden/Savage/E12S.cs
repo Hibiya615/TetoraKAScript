@@ -18,17 +18,17 @@ using ECommons.GameFunctions;
 using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
-namespace O7n;
+namespace E12S;
 
-[ScriptType(guid: "70419862-28f5-4ebb-b1b3-220419cd502f", name: "O7N", territorys: [750],
+[ScriptType(guid: "f2ebc170-00af-415d-8dfe-30bc27f7fc06", name: "E12S", territorys: [949],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-public class O7n
+public class E12S
 {
     const string noteStr =
         """
         v0.0.0.1:
-        LV70 欧米茄时空狭缝 西格玛幻境3（守护者） 初版绘制
+        LV80 伊甸零式希望乐园 再生之章4（伊甸之约） 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
     
