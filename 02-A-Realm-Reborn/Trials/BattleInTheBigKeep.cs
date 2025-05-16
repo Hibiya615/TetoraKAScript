@@ -22,13 +22,13 @@ using KodakkuAssist.Extensions;
 namespace Battle_in_the_Big_Keep;
 
 [ScriptType(guid: "90783a42-7947-4392-9c3e-f3162d52c248", name: "无限城的死斗", territorys: [396],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Battle_in_the_Big_Keep
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV50 无限城的死斗 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
@@ -178,9 +178,9 @@ public class Battle_in_the_Big_Keep
     [ScriptMethod(name: "攻击龙头提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:3626"])]
     public void 攻击龙头提示(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("踩风圈", duration: 2500, false);
-        if (isTTS)accessory.Method.TTS("踩风圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("踩风圈");
+        if (isText)accessory.Method.TextInfo("攻击龙头", duration: 2500, false);
+        if (isTTS)accessory.Method.TTS("攻击龙头");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("攻击龙头");
     }
     
     [ScriptMethod(name: "电击_放电（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:3650"])]

@@ -158,11 +158,11 @@
   {
     "Name": "无限城的死斗",
     "Guid": "90783a42-7947-4392-9c3e-f3162d52c248",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleInTheBigKeep.cs",
-    "Note": "v0.0.0.1:\r\nLV50 无限城的死斗 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
+    "Note": "v0.0.0.2:\r\nLV50 无限城的死斗 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
     "TerritoryIds": [
       396
