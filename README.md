@@ -24,6 +24,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 **迷宫挑战 / Dungeons / ダンジョン**
 - `LV50 神兵要塞帝国南方堡` `LV50 最终决战天幕魔导城`
+- `LV55 邪龙王座龙巢神殿`
 - `LV70 疯狂战舰无限回廊` `LV70 污染庭园圣茉夏娜植物园`
 
 **讨伐歼灭战 / Trials / 討伐・討滅戦**
