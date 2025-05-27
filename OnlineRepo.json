@@ -645,14 +645,14 @@
     ]
   },
   {
-    "Name": "天青斗场18 - 爆破死斗",
+    "Name": "天青斗场",
     "Guid": "7703f1a9-5698-4896-8908-bb8e415c1321",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/18-Midsummer_Night's_Explosion.cs",
-    "Note": "",
-    "UpdateInfo": "API12",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/Celestium.cs",
+    "Note": "天青斗场绘制，随缘更新中",
+    "UpdateInfo": "v0.0.0.4：重命名脚本并增加部分选项， 若无法更新请删除后刷新重新下载",
     "TerritoryIds": [
       796
     ]
