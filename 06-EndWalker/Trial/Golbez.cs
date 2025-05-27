@@ -21,13 +21,13 @@ using System.Threading.Tasks;
 namespace the_Voidcast_Dais;
 
 [ScriptType(guid: "8a526afb-eefd-44ec-a105-7dc8fcd28e47", name: "高贝扎歼灭战", territorys: [1140],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Golbez
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV90 高贝扎歼灭战 初版绘制
         """;
 
@@ -35,13 +35,19 @@ public class Golbez
     public void 虚空陨石(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "虚空陨石";
+        dp.Name = $"虚空陨石{@event.TargetId()}";
         dp.Color = new Vector4(1f, 0f, 0f, 1f);
         dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 5000;
         dp.Delay = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "虚空陨石销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:0"],userControl: false)]
+    public void 虚空陨石销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"虚空陨石{@event.TargetId()}");
     }
     
     [ScriptMethod(name: "迟缓地暴（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33893"])]
