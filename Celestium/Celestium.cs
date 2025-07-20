@@ -22,13 +22,13 @@ namespace Celestium;
 
 
 [ScriptType(guid: "7703f1a9-5698-4896-8908-bb8e415c1321", name: "天青斗场", territorys: [796],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Celestium {
     const string noteStr =
         """
-        v0.0.0.4:
-        天青斗场绘制，随缘更新中
+        v0.0.0.5:
+        天青斗场绘制及机制提醒，随缘更新中
         若无法更新请删除后刷新重新下载
         目前支持层数：18 [爆破死斗]
         """;
@@ -46,6 +46,36 @@ public class Celestium {
     
     #endregion
 
+    #region 03：最初的岩壁——希帕克纳
+    
+    [ScriptMethod(name: "—————— 03：最初的岩壁——希帕克纳 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 第3层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "破魔震（打断）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:14365"])]
+    public void 破魔震(Event @event, ScriptAccessory accessory)
+    {
+        if(isText)accessory.Method.TextInfo("打断BOSS", duration: 3000, true);
+        if(isTTS) accessory.Method.TTS("打断BOSS");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("打断BOSS");
+    }
+    
+    #endregion
+    
+    #region 08：青之牙、红之牙
+    
+    [ScriptMethod(name: "—————— 08：青之牙、红之牙 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 第8层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "大爆炸（打断）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:14680"])]
+    public void 大爆炸(Event @event, ScriptAccessory accessory)
+    {
+        if(isText)accessory.Method.TextInfo("打断BOSS", duration: 3000, true);
+        if(isTTS) accessory.Method.TTS("打断BOSS");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("打断BOSS");
+    }
+    
+    #endregion
+    
     #region 18：爆破死斗
 
     [ScriptMethod(name: "—————— 18：爆破死斗 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]

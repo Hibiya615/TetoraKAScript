@@ -13,7 +13,6 @@
         "packagesPath": "C:\\Users\\19036\\.nuget\\packages\\",
         "outputPath": "E:\\Rider Programs\\TetoraKodakkuScript\\TetoraKodakkuScript\\obj\\",
         "projectStyle": "PackageReference",
-        "UsingMicrosoftNETSdk": false,
         "configFilePaths": [
           "C:\\Users\\19036\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
@@ -59,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Users\\19036\\.dotnet\\sdk\\8.0.404/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Users\\19036\\.dotnet\\sdk\\8.0.410/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
