@@ -58,6 +58,7 @@ public class SinusArdorum
     
     uint MushroomMoldbeds = 0; // 有害菌床驱除指令
     uint CorruptedCrystals = 0; // 巨型偏属性水晶破坏指令
+    
     public void Init(ScriptAccessory accessory) {
         Spore = 0;
         AstromagneticStorm = 0;
@@ -101,6 +102,19 @@ public class SinusArdorum
         MushroomMoldbeds = 0;
         CorruptedCrystals = 0;
     }
+    #endregion
+    
+    #region 各种提醒
+    
+    [ScriptMethod(name: "探索任务目标完成提醒", eventType: EventTypeEnum.Chat,
+        eventCondition: ["Type:SystemMessage", "Message:完成了探索任务的目标.*"])]
+    public void 探索任务目标完成提醒(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("任务目标完成", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("任务目标完成");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("任务目标完成");
+    }
+    
     #endregion
     
     #region 紧急事件判断
