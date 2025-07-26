@@ -21,13 +21,13 @@ using System.Threading.Tasks;
 namespace theTwinning;
 
 [ScriptType(guid: "bfb00cd3-ccec-4b21-b3d7-e290f49e6a75", name: "异界遗构希尔科斯孪晶塔", territorys: [840],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class theTwinning
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV80 异界遗构希尔科斯孪晶塔 初版绘制
         """;
     
@@ -41,7 +41,6 @@ public class theTwinning
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
-    #endregion
     
     [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
     public void 打断销毁(Event @event, ScriptAccessory accessory)
@@ -60,6 +59,9 @@ public class theTwinning
     {
         accessory.Method.RemoveDraw($"小怪.*{@event.SourceId()}");
     }
+
+    
+    #endregion
     
     #region 小怪部分
     
@@ -133,24 +135,23 @@ public class theTwinning
         dp.Scale = new (6, 50f);
         dp.TargetObject = @event.TargetId();
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
-        dp.DestoryAt = 7800;
-        /*
-        switch (@event.TargetIconId())
+        
+        switch (@event["Id"])
         {
-            case 0032:
+            case "0032":
                 dp.DestoryAt = 7200;
                 break;
-            case 0033:
+            case "0033":
                 dp.DestoryAt = 7400;
                 break;
-            case 0034:
+            case "0034":
                 dp.DestoryAt = 7600;
                 break;
-            case 0035:
+            case "0035":
                 dp.DestoryAt = 7800;
                 break;
         }
-        */
+        
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     

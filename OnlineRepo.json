@@ -69,11 +69,11 @@
   {
     "Name": "异界遗构希尔科斯孪晶塔",
     "Guid": "bfb00cd3-ccec-4b21-b3d7-e290f49e6a75",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Dungeon/theTwinning.cs",
-    "Note": "v0.0.0.1:\r\nLV80 异界遗构希尔科斯孪晶塔 初版绘制",
+    "Note": "v0.0.0.2:\r\nLV80 异界遗构希尔科斯孪晶塔 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
       840
