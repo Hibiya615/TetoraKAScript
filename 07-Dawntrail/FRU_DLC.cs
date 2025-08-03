@@ -29,7 +29,7 @@ public class FRU_DLC
         """
         v0.0.0.1:
         光暗未来绝境战 额外补充部分
-        可以与灵视的与连桑的Patch同时使用，并无冲突部分
+        可以与灵视的绘制与连桑的Patch补丁同时使用，并无冲突部分
         """;
     
     #region 基础控制
@@ -191,6 +191,48 @@ public class FRU_DLC
         if (isEdgeTTS)accessory.Method.EdgeTTS("盖娅即将出现");
     }
     
+    [ScriptMethod(name: "P4 未来的碎片 目标圈绘制", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17841"])]
+    public async void FragmentOfFate(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "未来的碎片";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(3.5f);
+        dp.DestoryAt = 180000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "P4 未来的碎片 绘制销毁", userControl:false, eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:17841"])]
+    public async void RemoveFragmentOfFate(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"未来的碎片");
+    }
+    
+    [ScriptMethod(name: "P4 忘却的此岸 AOE提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40174"])]
+    public void EdgeOfOblivion(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("水晶AOE", duration: 4300, false);
+        if (isTTS)accessory.Method.TTS("水晶AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("水晶AOE");
+    }
+    
+    [ScriptMethod(name: "P4 二运Y字击退提醒（与自动防击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40229"])]
+    public async void P4YAutoAntiKnockback(Event @event, ScriptAccessory accessory)
+    {
+        await Task.Delay(2500);
+        if (isText)accessory.Method.TextInfo("防击退", duration: 1500, true);
+        if (isTTS)accessory.Method.TTS("防击退");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("防击退");
+        if (isAutoAntiKnockback)
+        {
+            accessory.Method.SendChat($"/ac 亲疏自行");
+            accessory.Method.SendChat($"/ac 沉稳咏唱");
+            accessory.Method.SendChat($"/e [虎のDebug]：已尝试自动使用防击退");
+        }
+
+    }
+    
     #region 龙骑妙妙小工具
     
     [ScriptMethod(name: "————龙骑妙妙小工具（此选项并无实际意义）————", eventType: EventTypeEnum.StartCasting, eventCondition: ["DataId:1"])]
@@ -234,7 +276,7 @@ public class FRU_DLC
         if (isTTS)accessory.Method.TTS("提前猛枪");
         if (isEdgeTTS)accessory.Method.EdgeTTS("提前猛枪");
         if (isAutoLanceCharge) accessory.Method.SendChat($"/ac 猛枪");
-        if (isAutoLanceCharge) accessory.Method.SendChat($"/e [DEBUG] 龙骑小工具：已尝试自动使用猛枪");
+        if (isAutoLanceCharge) accessory.Method.SendChat($"/e [虎のDebug] 龙骑小工具：已尝试自动使用猛枪");
     }
     
     [ScriptMethod(name: "P2.5 龙骑时间轴小抄", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17829"])]
