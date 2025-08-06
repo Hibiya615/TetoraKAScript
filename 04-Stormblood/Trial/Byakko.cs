@@ -21,13 +21,13 @@ using System.Threading.Tasks;
 namespace Byakko;
 
 [ScriptType(guid: "6a9e30e9-c58e-4f39-9f1e-ad26e5d49dc3", name: "白虎镇魂战", territorys: [746],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.11", author: "Tetora", note: noteStr)]
 
 public class Byakko
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.11:
         LV70 白虎镇魂战 初版绘制
         """;
     
@@ -64,18 +64,16 @@ public class Byakko
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "荒弹（红球）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:8441"])]
+    [ScriptMethod(name: "荒弹（红球）Imgui高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:8441"])]
     public void 荒弹红球(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"荒弹红球{@event.SourceId()}";
         dp.Color = new Vector4(1.0f, 0.0f, 0.0f, 1f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(1.51f);
-        dp.InnerScale = new Vector2(1.5f);
+        dp.Scale = new Vector2(0.7f);
         dp.DestoryAt = 10000;
-        dp.Radian = 2 * float.Pi;
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Donut, dp);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Circle, dp);
     }
     
     [ScriptMethod(name: "荒弹红球销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:10824"],userControl: false)]
