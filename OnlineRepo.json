@@ -760,5 +760,18 @@
     "TerritoryIds": [
       1192
     ]
+  },
+  {
+    "Name": "FRU_DLC [光暗未来绝境战_额外补充]",
+    "Guid": "981e39b5-ea99-4b85-a4b1-0e698d4c4036",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/FRU_DLC.cs",
+    "Note": "v0.0.0.1:\r\n光暗未来绝境战 额外补充部分\r\n可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分\r\n可能会有部分横幅提醒冲突，横幅只会显示最早出现的一个，可以自行参考时间轴关闭不需要的提醒\r\n如【P4 盖娅出现横幅倒计时】与【P4 忘却的此岸 AOE提示】和灵视的【P4 天光轮回躲避提示】横幅冲突，请三选一启用",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1238
+    ]
   }
 ]
