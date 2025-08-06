@@ -316,12 +316,12 @@
   {
     "Name": "白虎镇魂战",
     "Guid": "6a9e30e9-c58e-4f39-9f1e-ad26e5d49dc3",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.11",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main  ",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Byakko.cs",
-    "Note": "v0.0.0.1:\r\nLV70 白虎镇魂战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.11:\r\nLV70 白虎镇魂战 初版绘制",
+    "UpdateInfo": "v0.0.0.11: 修改无间地狱时荒弹绘制范围",
     "TerritoryIds": [
       746
     ]
