@@ -29,7 +29,9 @@ public class FRU_DLC
         """
         v0.0.0.1:
         光暗未来绝境战 额外补充部分
-        可以与灵视的绘制与连桑的Patch补丁同时使用，并无冲突部分
+        可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分
+        可能会有部分横幅提醒冲突，横幅只会显示最早出现的一个，可以自行参考时间轴关闭不需要的提醒
+        如【P4 盖娅出现横幅倒计时】与【P4 忘却的此岸 AOE提示】和灵视的【P4 天光轮回躲避提示】横幅冲突，请三选一启用
         """;
     
     #region 基础控制
@@ -42,6 +44,45 @@ public class FRU_DLC
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
+    
+    private static List<string> _BottleGemdraught = ["刚力宝药3级", "巧力宝药3级", "智力宝药3级", "意力宝药3级","刚力宝药2级", "巧力宝药2级", "智力宝药2级", "意力宝药2级"];
+    
+    public enum BottleGemdraughtEnum
+    {
+        None = -1,
+        刚力宝药3级 = 0,
+        巧力宝药3级 = 1,
+        智力宝药3级 = 2,
+        意力宝药3级 = 3,
+        刚力宝药2级 = 4,
+        巧力宝药2级 = 5,
+        智力宝药2级 = 6,
+        意力宝药2级 = 7,
+    }
+    
+    /*
+    
+    [UserSetting(note: "请选择爆发药（仅HQ）")]
+    public BottleGemdraughtEnum BottleGemdraught { get; set; } = BottleGemdraughtEnum.None;
+    
+    [UserSetting("P2.5 击退前自动爆发药")]
+    public bool isAutoBottleGemdraught { get; set; } = false;
+    
+    */
+    
+    
+    private static List<string> _AkhMorn = ["盖娅", "琳"];
+    
+    public enum AkhMornEnum
+    {
+        None = -1,
+        盖娅 = 0,
+        琳 = 1,
+    }
+    
+    [UserSetting(note: "P4 死亡轮回分摊位置")]
+    public AkhMornEnum AkhMorn { get; set; } = AkhMornEnum.None;
+    
     
     [UserSetting("P4二运自动防击退 [Y字击退打法]")]
     public bool isAutoAntiKnockback { get; set; } = false;
@@ -162,7 +203,62 @@ public class FRU_DLC
         if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4二运[时间结晶]");
     }
     
+
+    [ScriptMethod(name: "P5 阶段转换", userControl: false, eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17839"])]
+    public void P5开场转换(Event @event, ScriptAccessory accessory)
+    {
+        phase = phase switch
+        {
+            FRU_Phase.CrystallizeTime => FRU_Phase.Pandora,
+        };
+        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P5");
+    }
+
+    
     #endregion
+    
+    #region 通用主体部分
+    
+    /*
+    [ScriptMethod(name: "P2.5 击退前自动吃爆发药", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:啊——！" , "Sender:琳"])]
+    public async void AutoBottleGemdraught(Event @event, ScriptAccessory accessory)
+    {
+        if (!isAutoBottleGemdraught) return;
+        
+        /*
+        switch (@event.ItemId())
+        {
+            case 45995:  // 3级刚力之宝药
+                accessory.Method.
+                break;
+            case 45996:  // 3级巧力之宝药
+                accessory.Method.
+                break;
+            case 45998:  // 3级智力之宝药
+                accessory.Method.
+                break;
+            case 45999:  // 3级意力之宝药
+                accessory.Method.
+                break;
+                
+            case 44162:  // 2级刚力之宝药
+                accessory.Method.
+                break;
+            case 44163:  // 2级巧力之宝药
+                accessory.Method.
+                break;
+            case 44165:  // 2级智力之宝药
+                accessory.Method.
+                break;
+            case 44166:  // 2级意力之宝药
+                accessory.Method.
+                break;
+        }
+        
+        
+    }
+
+    */
     
     [ScriptMethod(name: "P2.5 严冬风暴（大圈）判定时间绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40256"])]
     public void 严冬风暴(Event @event, ScriptAccessory accessory)
@@ -187,6 +283,7 @@ public class FRU_DLC
     public async void P4AddGaia(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("盖娅即将出现，注意团辅时机", duration: 5300, true);
+        await Task.Delay(3800);
         if (isTTS)accessory.Method.TTS("盖娅即将出现");
         if (isEdgeTTS)accessory.Method.EdgeTTS("盖娅即将出现");
     }
@@ -217,21 +314,65 @@ public class FRU_DLC
         if (isEdgeTTS)accessory.Method.EdgeTTS("水晶AOE");
     }
     
+    [ScriptMethod(name: "P4 死亡轮回 盖娅连线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40302"])]
+    public void P4连线盖娅(Event @event, ScriptAccessory accessory)
+    {
+        if (AkhMorn == AkhMornEnum.盖娅) {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "连线盖娅";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.SourceId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "P4 死亡轮回 琳连线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40247"])]
+    public void P4连线琳(Event @event, ScriptAccessory accessory)
+    {
+        if (AkhMorn == AkhMornEnum.琳) {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "连线琳";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.SourceId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        }
+    }
+    
     [ScriptMethod(name: "P4 二运Y字击退提醒（与自动防击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40229"])]
     public async void P4YAutoAntiKnockback(Event @event, ScriptAccessory accessory)
     {
         await Task.Delay(2500);
-        if (isText)accessory.Method.TextInfo("防击退", duration: 1500, true);
-        if (isTTS)accessory.Method.TTS("防击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("防击退");
+        
         if (isAutoAntiKnockback)
         {
             accessory.Method.SendChat($"/ac 亲疏自行");
             accessory.Method.SendChat($"/ac 沉稳咏唱");
             accessory.Method.SendChat($"/e [虎のDebug]：已尝试自动使用防击退");
         }
-
+        
+        if (isText)accessory.Method.TextInfo("防击退", duration: 1500, true);
+        if (isTTS)accessory.Method.TTS("防击退");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("防击退");
     }
+    
+    [ScriptMethod(name: "P4 最后延后120提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40247"])]
+    public void P4Finale(Event @event, ScriptAccessory accessory)
+    {
+        if (phase != FRU_Phase.CrystallizeTime) return;
+        if (isText)accessory.Method.TextInfo("延后120爆发至P5", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS("延后爆发");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("延后爆发");
+    }
+    
+    #endregion
     
     #region 龙骑妙妙小工具
     
@@ -258,7 +399,7 @@ public class FRU_DLC
         if (isEdgeTTS)accessory.Method.EdgeTTS("提前后跳，标枪收尾");
     }
     
-    [ScriptMethod(name: "P1 雾龙落地提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40167"])]
+    [ScriptMethod(name: "P1 雾龙落地提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40167"] ,suppress:1000)]
     public void FatebreakerTargetable(Event @event, ScriptAccessory accessory)
     {
         if (!isDRG) return; 
@@ -272,11 +413,11 @@ public class FRU_DLC
     {
         if (!isDRG) return; 
         if (phase != FRU_Phase.LightRampant) return;
+        if (isAutoLanceCharge) accessory.Method.SendChat($"/ac 猛枪");
+        if (isAutoLanceCharge) accessory.Method.SendChat($"/e [虎のDebug] 龙骑小工具：已尝试自动使用猛枪");
         if (isText)accessory.Method.TextInfo("提前猛枪", duration: 5000, true);
         if (isTTS)accessory.Method.TTS("提前猛枪");
         if (isEdgeTTS)accessory.Method.EdgeTTS("提前猛枪");
-        if (isAutoLanceCharge) accessory.Method.SendChat($"/ac 猛枪");
-        if (isAutoLanceCharge) accessory.Method.SendChat($"/e [虎のDebug] 龙骑小工具：已尝试自动使用猛枪");
     }
     
     [ScriptMethod(name: "P2.5 龙骑时间轴小抄", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17829"])]
