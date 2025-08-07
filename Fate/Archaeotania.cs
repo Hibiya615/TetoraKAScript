@@ -21,26 +21,37 @@ using System.Threading.Tasks;
 namespace TheHead_theTail_theWholeDamnedThing;
 
 [ScriptType(guid: "f11c3069-d163-41dd-904e-b016cfcf089c", name: "灾厄的古塔尼亚之深海讨伐战", territorys: [818],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class Archaeotania
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         LV80 特殊Fate 绘制
         灾厄的古塔尼亚之深海讨伐战
         """;
-
-    // Todo.
-    // 龙卷前进方向线
+    
+    #region 基础控制
+    
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    #endregion
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
     {
         // Data ID 7586: 迷失少女 ；7587：迷失者
-        accessory.Method.TextInfo("迷失出现", duration: 5000, true);
-        accessory.Method.TTS("迷失出现");
+        if(isText) accessory.Method.TextInfo("迷失出现", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("迷失出现");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("迷失出现");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "迷失连线";
@@ -74,8 +85,9 @@ public class Archaeotania
     [ScriptMethod(name: "巨浪 击退连线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:16452"])]
     public void 巨浪连线(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("靠近水柱击退（百分比真伤）", duration: 8200, true);
-        accessory.Method.TTS("靠近水柱击退");
+        if(isText) accessory.Method.TextInfo("靠近水柱击退（百分比真伤）", duration: 8200, true);
+        if(isTTS) accessory.Method.TTS("靠近水柱击退");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("靠近水柱击退");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "巨浪连线";
@@ -248,21 +260,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }
