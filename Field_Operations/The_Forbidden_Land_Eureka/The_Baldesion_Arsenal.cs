@@ -443,7 +443,10 @@ public class The_Baldesion_Arsenal
     
     [ScriptMethod(name: "BOSS3_绝对的美德 极性波动（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^1422[0-3]$"])]
     public void 极性波动(Event @event, ScriptAccessory accessory)
-    {
+    { 
+        /// var Balls = accessory.Data.Objects.Where(x => x.DataId == 还没找到DataId && x 
+        ///             is IBattleChara chara && chara.HasStatus(new uint[] { 1710, 1711 })).ToList();
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "极性波动";
         dp.Owner = @event.SourceId();
@@ -762,5 +765,18 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
+    }
+}
+
+public static class IbcHelper
+{
+    public static bool HasStatus(this IBattleChara chara, uint statusId)
+    {
+        return chara.StatusList.Any(x => x.StatusId == statusId);
+    }
+
+    public static bool HasStatus(this IBattleChara chara, uint[] statusIds)
+    {
+        return chara.StatusList.Any(x => statusIds.Contains(x.StatusId));
     }
 }
