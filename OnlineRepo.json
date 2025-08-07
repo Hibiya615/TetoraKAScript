@@ -699,12 +699,12 @@
   {
     "Name": "灾厄的古塔尼亚之深海讨伐战",
     "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
-    "Note": "v0.0.0.3:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
-    "UpdateInfo": "API12",
+    "Note": "v0.0.0.4:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
+    "UpdateInfo": "0.0.0.4：增加控制项",
     "TerritoryIds": [
       818
     ]
