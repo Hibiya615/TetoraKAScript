@@ -21,15 +21,16 @@ using System.Threading.Tasks;
 namespace FRU_DLC;
 
 [ScriptType(guid: "981e39b5-ea99-4b85-a4b1-0e698d4c4036", name: "FRU_DLC [光暗未来绝境战_额外补充]", territorys: [1238],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class FRU_DLC
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         光暗未来绝境战 额外补充部分
         可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分
+        建议先在方法设置里全部关闭，再按自己需求开启
         可能会有部分横幅提醒冲突，横幅只会显示最早出现的一个，可以自行参考时间轴关闭不需要的提醒
         如【P4 盖娅出现横幅倒计时】与【P4 忘却的此岸 AOE提示】和灵视的【P4 天光轮回躲避提示】横幅冲突，请三选一启用
         """;
@@ -259,6 +260,13 @@ public class FRU_DLC
     }
 
     */
+    [ScriptMethod(name: "P1 雷火线排队提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40167"] ,suppress:1000)]
+    public void FallOfFaith(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("雷火线排队", duration: 6000, true);
+        if (isTTS)accessory.Method.TTS("雷火线排队");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("雷火线排队");
+    }
     
     [ScriptMethod(name: "P2.5 严冬风暴（大圈）判定时间绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40256"])]
     public void 严冬风暴(Event @event, ScriptAccessory accessory)
