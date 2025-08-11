@@ -40,8 +40,50 @@ public class Eureka_Orthos {
     // 71~79层 【正统狼獾 杀人爪】【正统雷兽 尾镰】【正统雷兽 电火花】均未支持缓速
             
 
+    #region 各种记录
+    
+    /*  StatusID
+     *  变身 565
+     *  诅咒 1087 （拟态怪 - 怨念）
+     *  失明 1088
+     *  最大体力减少 1089
+     *  伤害降低 1090
+     *  加速 1091
+     *  能力封印 1092
+     *  最大体力魔力提升 1093
+     *  禁止使用道具  1094
+     *  禁止冲刺 1095
+     *  击退无效 1096
+     *  禁止体力自然恢复 1097
+     *  无法发动技能 1113 （形态变化）
+     */
+    
+    #endregion
+    
+    #region 基础控制
+    
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    [UserSetting("启用底裤（需要对应插件与权限）")]
+    public bool isHack { get; set; } = false;
+    
+    [UserSetting("开发者模式")]
+    public bool isDeveloper { get; set; } = false;
+    
+    #endregion
+    
+    #region 全局变量控制
+    
     //20 攻击命令_火焰吐息 连线计数 , 因为方法抓取的连线，同一时间有多个连线，故加volatile
     private volatile int timeOrderToFire=0;
+    
     //99层 石中剑 读条计数
     uint timesCaliburniHasBeenCast=0;
     public void Init(ScriptAccessory accessory) {
@@ -49,6 +91,13 @@ public class Eureka_Orthos {
         timeOrderToFire=0;      //20 小龙连线计数
         timesCaliburniHasBeenCast=0;  //99层 石中剑 读条计数
         
+    }
+    
+    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
+    public void 打断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"正统系统γ_高压电流{@event.TargetId()}");
+        accessory.Method.RemoveDraw($"正统自控化奇美拉_(寒冰|雷电)咆哮{@event.TargetId()}");
     }
 
     public bool KnockPenalty = false;
@@ -65,19 +114,15 @@ public class Eureka_Orthos {
     KnockPenalty = false;
     }
     
-        
+    #endregion
+    
     // 通用内容
     [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32798"])]
     public void 拟态怪_怨念(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("打断拟态怪", duration: 2700, true);
-        accessory.Method.TTS("打断拟态怪");
-    }
-    
-    [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
-    public void 打断销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"正统系统γ_高压电流{@event.TargetId()}");
+        if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2300, true);
+        if (isTTS) accessory.Method.TTS("打断拟态怪");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
     
     #region 精英怪
@@ -129,11 +174,12 @@ public class Eureka_Orthos {
     [ScriptMethod(name: "正统贝希摩斯 黄道陨石（狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33043"])]
     public void 正统贝希摩斯_黄道陨石(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("狂暴，躲在墙壁后", duration: 2700, true);
-        accessory.Method.TTS("躲在墙壁后");
+        if (isText) accessory.Method.TextInfo("狂暴，躲在墙壁后", duration: 2700, true);
+        if (isTTS) accessory.Method.TTS("躲在墙壁后");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("躲在墙壁后");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统贝希摩斯_黄道陨石";
+        dp.Name = $"正统贝希摩斯_黄道陨石{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 0f, 0.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(50f);
@@ -142,11 +188,17 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "正统贝希摩斯 黄道陨石销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:33043"], userControl: false)]
+    public void 正统贝希摩斯_黄道陨石销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw( $"正统贝希摩斯_黄道陨石{@event.SourceId()}");
+    }
+    
     [ScriptMethod(name: "正统榴弹怪 大爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32381"])]
     public void 正统榴弹怪_大爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统榴弹怪_大爆炸";
+        dp.Name = $"正统榴弹怪_大爆炸{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
@@ -160,7 +212,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统幽鬼之眼_恐怖视线";
+        dp.Name = $"正统幽鬼之眼_恐怖视线{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 1f, 1f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8f);
@@ -208,7 +260,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统锯齿花_均衡打击";
+        dp.Name = $"正统锯齿花_均衡打击{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10);
@@ -369,7 +421,7 @@ public class Eureka_Orthos {
     {
         //33191 猛进 释放完2s后 读条 33192怒踏 1.2s
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统曙象_怒踏";
+        dp.Name = $"正统曙象_怒踏{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
@@ -383,7 +435,7 @@ public class Eureka_Orthos {
     public void 正统曙象_怒踏(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统曙象_怒踏";
+        dp.Name = $"正统曙象_怒踏{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
@@ -397,7 +449,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统巨嘴鸟_减速咒";
+        dp.Name = $"正统巨嘴鸟_减速咒{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
@@ -411,7 +463,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统狼獾_杀人爪";
+        dp.Name = $"正统狼獾_杀人爪{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
@@ -424,7 +476,7 @@ public class Eureka_Orthos {
     public void 正统焰兽_怒吼(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统焰兽_怒吼";
+        dp.Name = $"正统焰兽_怒吼{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 0f, 1f);
         dp.Scale = new (20, 40f);
         dp.Owner = @event.SourceId();
@@ -436,7 +488,7 @@ public class Eureka_Orthos {
     public void 正统斯卡尼特_唧唧咋咋(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统斯卡尼特_唧唧咋咋";
+        dp.Name = $"正统斯卡尼特_唧唧咋咋{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 1f, 1f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(3f);
@@ -450,7 +502,7 @@ public class Eureka_Orthos {
     public void 正统卡尔加斯_凛冬之风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统卡尔加斯_凛冬之风";
+        dp.Name = $"正统卡尔加斯_凛冬之风{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40f);
@@ -465,7 +517,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统长须豹_回旋尾";
+        dp.Name = $"正统长须豹_回旋尾{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(25f);
@@ -479,7 +531,7 @@ public class Eureka_Orthos {
     public void 正统雷兽_尾镰(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统雷兽_尾镰";
+        dp.Name = $"正统雷兽_尾镰{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
@@ -492,7 +544,7 @@ public class Eureka_Orthos {
     public void 正统雷兽_电火花(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统雷兽_电火花";
+        dp.Name = $"正统雷兽_电火花{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
@@ -692,7 +744,7 @@ public class Eureka_Orthos {
     public void 正统百目妖_凶眼(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统百目妖_凶眼";
+        dp.Name = $"正统百目妖_凶眼{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 1f, 1f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
@@ -706,7 +758,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统地生人_三重强击";
+        dp.Name = $"正统地生人_三重强击{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(14);
@@ -719,7 +771,7 @@ public class Eureka_Orthos {
     public void 正统幽灵_尖啸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统百目妖_凶眼";
+        dp.Name = $"正统百目妖_凶眼{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(20f);
@@ -732,7 +784,7 @@ public class Eureka_Orthos {
     public void 正统黑天马_天马嘶啸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统黑天马_天马嘶啸";
+        dp.Name = $"正统黑天马_天马嘶啸{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
@@ -744,7 +796,8 @@ public class Eureka_Orthos {
     [ScriptMethod(name: "正统铁面腐尸 追打 TTS", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:32757"])]
     public void 正统铁面腐尸_追打(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TTS("远离正面");
+        if(isTTS) accessory.Method.TTS("远离正面");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("远离正面");
         // 如果在此技能就开始画图会过早显示，延迟的话也就显示个半秒反而不好看，故只留TTS作提醒
     }
     
@@ -754,7 +807,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统铁面腐尸_挥舞";
+        dp.Name = $"正统铁面腐尸_挥舞{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6);
@@ -767,10 +820,11 @@ public class Eureka_Orthos {
     public void 正统贪吃鬼_发霉喷嚏(Event @event, ScriptAccessory accessory)
     {
         //此处捕获的为 “吸气” 以更早触发提示 
-        accessory.Method.TTS("远离正面");
+        if(isTTS) accessory.Method.TTS("远离正面");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("远离正面");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
-
-        dp.Name = "正统贪吃鬼_发霉喷嚏";
+        dp.Name = $"正统贪吃鬼_发霉喷嚏{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6);
@@ -786,7 +840,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统贪吃鬼_发霉喷嚏";
+        dp.Name = $"正统贪吃鬼_发霉喷嚏{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6);
@@ -801,7 +855,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统妖影_左侧横扫";
+        dp.Name = $"正统妖影_左侧横扫{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30);
@@ -816,7 +870,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统妖影_右侧横扫";
+        dp.Name = $"正统妖影_右侧横扫{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30);
@@ -830,7 +884,7 @@ public class Eureka_Orthos {
     public void 正统妖影_圆形爆发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统妖影_圆形爆发";
+        dp.Name = $"正统妖影_圆形爆发{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(15f);
@@ -843,7 +897,7 @@ public class Eureka_Orthos {
     public void 正统妖影_环形爆发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统妖影_环形爆发";
+        dp.Name = $"正统妖影_环形爆发{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
@@ -1007,7 +1061,7 @@ public class Eureka_Orthos {
     public void 正统系统γ_排斥炮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统系统γ_排斥炮";
+        dp.Name = $"正统系统γ_排斥炮{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
@@ -1020,7 +1074,7 @@ public class Eureka_Orthos {
     public void 正统系统γ_环形炮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统系统γ_环形炮";
+        dp.Name = $"正统系统γ_环形炮{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40f);
@@ -1035,7 +1089,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统系统α_魔科学射线α";
+        dp.Name = $"正统系统α_魔科学射线α{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(50);
@@ -1049,7 +1103,7 @@ public class Eureka_Orthos {
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
 
-        dp.Name = "正统采掘无人机_魔科学炮";
+        dp.Name = $"正统采掘无人机_魔科学炮{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40);
@@ -1062,7 +1116,7 @@ public class Eureka_Orthos {
     public void 正统无人机_雾散爆发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统无人机_雾散爆发";
+        dp.Name = $"正统无人机_雾散爆发{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
@@ -1075,7 +1129,7 @@ public class Eureka_Orthos {
     public void 正统斯芬克斯_重击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统斯芬克斯_重击";
+        dp.Name = $"正统斯芬克斯_重击{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40);
@@ -1088,7 +1142,7 @@ public class Eureka_Orthos {
     public void 正统恐慌装甲_猛扫(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统恐慌装甲_猛扫";
+        dp.Name = $"正统恐慌装甲_猛扫{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8);
@@ -1101,7 +1155,7 @@ public class Eureka_Orthos {
     public void 正统米特里达梯_激光剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统米特里达梯_激光剑";
+        dp.Name = $"正统米特里达梯_激光剑{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(20);
@@ -1114,7 +1168,7 @@ public class Eureka_Orthos {
     public void 正统浮游炮主板_攻城炮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统浮游炮主板_攻城炮";
+        dp.Name = $"正统浮游炮主板_攻城炮{@event.SourceId()}";
         dp.Scale = new (4, 40f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -1145,7 +1199,7 @@ public class Eureka_Orthos {
     public void 正统扎戈斧龙_XXX突袭(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统扎戈斧龙_XXX突袭";
+        dp.Name = $"正统扎戈斧龙_XXX突袭{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0.4f, 0f, 1f);
         dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(10f);
@@ -1176,7 +1230,7 @@ public class Eureka_Orthos {
     public void 正统自控化弥诺陶洛斯_百廿八吨回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化弥诺陶洛斯_百廿八吨回转";
+        dp.Name = $"正统自控化弥诺陶洛斯_百廿八吨回转{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
@@ -1189,7 +1243,7 @@ public class Eureka_Orthos {
     public void 正统自控化弥诺陶洛斯_卅二吨重击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化弥诺陶洛斯_卅二吨重击";
+        dp.Name = $"正统自控化弥诺陶洛斯_卅二吨重击{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(35);
@@ -1202,7 +1256,7 @@ public class Eureka_Orthos {
     public void 正统自控化奇美拉_雷鸣吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化奇美拉_雷鸣吐息";
+        dp.Name = $"正统自控化奇美拉_雷鸣吐息{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30);
@@ -1216,7 +1270,7 @@ public class Eureka_Orthos {
     public void 正统自控化奇美拉_寒冰吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化奇美拉_寒冰吐息";
+        dp.Name = $"正统自控化奇美拉_寒冰吐息{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30);
@@ -1230,7 +1284,7 @@ public class Eureka_Orthos {
     public void 正统自控化奇美拉_蝎尾毒刺(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化奇美拉_蝎尾毒刺";
+        dp.Name = $"正统自控化奇美拉_蝎尾毒刺{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(7);
@@ -1244,7 +1298,7 @@ public class Eureka_Orthos {
     public void 正统自控化奇美拉_寒冰咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化奇美拉_寒冰咆哮";
+        dp.Name = $"正统自控化奇美拉_寒冰咆哮{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(9f);
@@ -1257,7 +1311,7 @@ public class Eureka_Orthos {
     public void 正统自控化奇美拉_雷电咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "正统自控化奇美拉_雷电咆哮";
+        dp.Name = $"正统自控化奇美拉_雷电咆哮{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
@@ -1266,6 +1320,7 @@ public class Eureka_Orthos {
         dp.DestoryAt = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
+    
     #endregion
 
     #region 99 BOSS 王者之剑
@@ -1473,10 +1528,36 @@ public class Eureka_Orthos {
     }
     #endregion
 
+    #region 底裤部分
+    
+    [ScriptMethod(name: "—————— 底裤部分（需要对应插件与权限） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 底裤部分(Event @event, ScriptAccessory accessory) { }
+
+    [ScriptMethod(name: "[DR] 变身恐慌装甲时，移速改为1.5倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565"])]
+    public void AddProtonaught(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed 1.5");
+        accessory.Method.SendChat($"/e 可达鸭：移速已更改：1.5x");
+        if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
+    }
+    
+    [ScriptMethod(name: "[DR] 恐慌装甲取消时，移速复原至1倍", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565"])]
+    public void RemoveProtonaught(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed 1");
+        accessory.Method.SendChat($"/e 可达鸭：移速已更改：1");
+        if (isTTS)accessory.Method.TTS("移速已复原至1倍");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至1倍");
+    }
+    
+    #endregion
     
 }
-
-
 
 
 public static class EventExtensions
@@ -1590,21 +1671,5 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
-    }
-}
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
     }
 }

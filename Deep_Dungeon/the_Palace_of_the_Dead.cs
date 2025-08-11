@@ -87,8 +87,8 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
     public void 打断销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"深宫假面_强麻痹{@event.SourceId()}");
-        accessory.Method.RemoveDraw($"深宫浮灵_强麻痹{@event.SourceId()}");
+        accessory.Method.RemoveDraw($"深宫假面_强麻痹{@event.TargetId()}");
+        accessory.Method.RemoveDraw($"深宫浮灵_强麻痹{@event.TargetId()}");
     }
     
     [ScriptMethod(name: "防击退销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(7548|7559)$"],userControl: false)]
