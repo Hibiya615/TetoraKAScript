@@ -126,7 +126,6 @@ public class Eureka_Orthos {
     }
     
     #region 精英怪
-    //精英怪
     [ScriptMethod(name: "★ 美拉西迪亚复制体 亚拉戈陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(1[89]|20)$"])]
     public void 美拉西迪亚复制体_亚拉戈陨石(Event @event, ScriptAccessory accessory)
     {
@@ -168,7 +167,6 @@ public class Eureka_Orthos {
     #endregion
     
     #region 1~10层 小怪
-    // 1~10层 小怪
     [ScriptMethod(name: "—————— 1 ~ 10 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第1层(Event @event, ScriptAccessory accessory) { }
     [ScriptMethod(name: "正统贝希摩斯 黄道陨石（狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33043"])]
@@ -223,7 +221,6 @@ public class Eureka_Orthos {
     #endregion
     
     #region 10 BOSS 蜜言妖
-    // 10 BOSS 蜜言妖
     [ScriptMethod(name: "10 蜜言妖 蔓德拉地雷（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31478"])]
     public void 蜜言妖_蔓德拉地雷(Event @event, ScriptAccessory accessory)
     {
@@ -251,7 +248,6 @@ public class Eureka_Orthos {
     #endregion
 
     #region 11~20层 小怪
-    // 11~20层 小怪
     [ScriptMethod(name: "—————— 11 ~ 20 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第11层(Event @event, ScriptAccessory accessory) { }
     
@@ -272,7 +268,6 @@ public class Eureka_Orthos {
     #endregion
     
     #region 20 BOSS 复制系统
-    // 20 BOSS 复制系统
     [ScriptMethod(name:"Reset_OrderToFire_攻击命令重置",userControl:false,eventType:EventTypeEnum.Chat,
         eventCondition:["Type:NPCDialogueAnnouncements","Message:regex:^发现入侵者.*","Sender:复制系统"])]
     public void Reset_OrderToFire_攻击命令重置(Event @event, ScriptAccessory accessory) {
@@ -361,57 +356,46 @@ public class Eureka_Orthos {
     #endregion
     
     #region 21~30层 小怪
-    // 21~30层 小怪
     [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第21层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
     #region 30 BOSS 提亚马特复制体
-    // 30 BOSS 提亚马特复制体
     #endregion
 
     #region 31~40层 小怪
-    // 31~40层 小怪
     [ScriptMethod(name: "—————— 31 ~ 40 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第31层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
     #region 40 BOSS 双塔尼亚复制体
-    // 40 BOSS 双塔尼亚复制体
     #endregion
 
     #region 41~50层 小怪
-    // 41~50层 小怪
     [ScriptMethod(name: "—————— 41 ~ 50 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第41层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
     #region 50 BOSS 自控化奇美拉
-    // 50 BOSS 自控化奇美拉
     #endregion
 
     #region 51~60层 小怪
-    // 51~60层 小怪
     [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
     #region 60 BOSS 自控化弥诺陶洛斯
-    // 60 BOSS 自控化弥诺陶洛斯
     #endregion
 
     #region 61~70层 小怪
-    // 61~70层 小怪
     [ScriptMethod(name: "—————— 61 ~ 70 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
     #endregion
 
     #region 70 BOSS 永恒
-    // 70 BOSS 永恒
     #endregion
 
     #region 71~80层 小怪
-    // 71~80层 小怪
     [ScriptMethod(name: "—————— 71 ~ 80 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第71层(Event @event, ScriptAccessory accessory) { }
     
@@ -595,7 +579,6 @@ public class Eureka_Orthos {
     #endregion
 
     #region 80 BOSS 原形卡利亚
-    // 80 BOSS 原形卡利亚
     [ScriptMethod(name: "80 原形卡利亚 共鸣（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31422"])]
     public void 原形卡利亚_共鸣(Event @event, ScriptAccessory accessory)
     {
@@ -698,7 +681,6 @@ public class Eureka_Orthos {
     #endregion
 
     #region 81~90层 小怪
-    // 81~90层 小怪
     [ScriptMethod(name: "—————— 81 ~ 90 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
     
@@ -909,7 +891,6 @@ public class Eureka_Orthos {
     #endregion
     
     #region 90 BOSS 管理者
-    // 90 BOSS 管理者
     [ScriptMethod(name: "90 协作程序 魔科学射线α（蛋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31451"])]
     public void 协作程序_魔科学射线α(Event @event, ScriptAccessory accessory)
     {
@@ -1039,7 +1020,6 @@ public class Eureka_Orthos {
     #endregion
     
     #region 91~100层 小怪
-    // 91~100层 小怪
     [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
     
@@ -1324,7 +1304,6 @@ public class Eureka_Orthos {
     #endregion
 
     #region 99 BOSS 王者之剑
-    // 99 BOSS 王者之剑
     [ScriptMethod(name:"Reset_Caliburni_石中剑重置",userControl:false,eventType:EventTypeEnum.Chat,
         eventCondition:["Type:NPCDialogueAnnouncements","Message:regex:^连接良好.*","Sender:斗神 王者之剑"])]
     public void Reset_Caliburni_石中剑重置(Event @event, ScriptAccessory accessory) {

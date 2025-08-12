@@ -645,8 +645,8 @@
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/the_Palace_of_the_Dead.cs",
-    "Note": "v0.0.0.31:\n死者宫殿 初版绘制",
-    "UpdateInfo": "v0.0.0.31 修复打断不销毁的问题",
+    "Note": "v0.0.0.4:\n死者宫殿 初版绘制",
+    "UpdateInfo": "v0.0.0.4 部分层数进行二次更新",
     "TerritoryIds": [
       561,
       562,
