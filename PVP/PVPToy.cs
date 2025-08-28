@@ -49,7 +49,8 @@ public class PVPToy
         AddPoint1 = 1,
         AddPoint2 = 2,
         AddPoint3 = 3,
-        AddPointMax = 4,
+        AddPoint4 = 4,
+        AddPoint5 = 5,
     }
     
     [UserSetting(note: "请选择复原时的移速")]
@@ -87,10 +88,15 @@ public class PVPToy
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.3");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.3");
         }
-        else if (SkySpeed == SkySpeedEnum.AddPointMax)
+        else if (SkySpeed == SkySpeedEnum.AddPoint4)
         {
-            if(isHack) accessory.Method.SendChat($"/pdrspeed 1.35");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.35");
+            if(isHack) accessory.Method.SendChat($"/pdrspeed 1.4");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.4");
+        }
+        else if (SkySpeed == SkySpeedEnum.AddPoint5)
+        {
+            if(isHack) accessory.Method.SendChat($"/pdrspeed 1.5");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.5");
         }
     }
     
