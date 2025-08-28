@@ -34,6 +34,12 @@ public class PVPToy
     
     #region 基础控制
     
+    [UserSetting("启用目标标记播报")]
+    public bool isTargetTTS { get; set; } = false;
+    
+    [UserSetting("启用自动选中目标标记")]
+    public bool isAutoTarget { get; set; } = false;
+    
     [UserSetting("请确认你已经有相关插件与对应权限")]
     public bool isHack { get; set; } = false;
     
@@ -63,6 +69,89 @@ public class PVPToy
     }
     
     #endregion
+    
+    [ScriptMethod(name: "被狙自动开盾", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29415"],suppress:5000)]
+    public void MarksmansTarget(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pvpac 防御");
+        accessory.Method.SendChat($"/e 侦测到被狙！鸭鸭试着帮你开了盾！<se.1> <se.1>");
+    }
+    
+    #region 目标标记播报
+    
+    //  方块 11 ； 圆圈 12 ； 十字 13 ； 三角 14 ； 止步1 06 ； 止步2 07 ； 止步3 08 ； 禁止1 09 ； 禁止2 10
+    //  攻击1 01 ； 攻击2 02 ； 攻击3 03 ； 攻击4 04 ； 攻击5 05 ； 攻击6 15； 攻击7 16； 攻击8 17
+    
+    [ScriptMethod(name: "三角标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
+    public void TriangleMark(Event @event, ScriptAccessory accessory)
+    {
+        if(isTargetTTS) accessory.Method.EdgeTTS("三角已标记");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 三角已标记《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "十字标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
+    public void CrossMark(Event @event, ScriptAccessory accessory)
+    {
+        if(isTargetTTS) accessory.Method.EdgeTTS("十字已标记");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 十字已标记《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "方块标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
+    public void SquareMark(Event @event, ScriptAccessory accessory)
+    {
+        if(isTargetTTS) accessory.Method.EdgeTTS("方块已标记");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 方块已标记《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "攻击1标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
+    public void Attack1Mark(Event @event, ScriptAccessory accessory)
+    {
+        if(isTargetTTS) accessory.Method.EdgeTTS("攻击1已标记");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 攻击1已标记《<targetclass>》 > 《<t>》");
+    }
+    
+    #endregion
+    
+    #region 自动选中目标标记
+    
+    [ScriptMethod(name: "自动焦点大饼", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:12"])]
+    public void CircleTarget(Event @event, ScriptAccessory accessory)
+    {
+        // if(isAutoTarget) accessory.Method.SendChat($"/target <circle>");
+        if(isAutoTarget) accessory.Method.SendChat($"/focustarget <circle>");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 已自动焦点大饼 《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "自动选中三角", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
+    public void TriangleTarget(Event @event, ScriptAccessory accessory)
+    {
+        if(isAutoTarget) accessory.Method.SendChat($"/target <triangle>");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 三角已选中《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "自动选中十字", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
+    public void CrossTarget(Event @event, ScriptAccessory accessory)
+    {
+        if(isAutoTarget) accessory.Method.SendChat($"/target <cross>");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 十字已选中《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "自动选中方块", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
+    public void SquareTarget(Event @event, ScriptAccessory accessory)
+    {
+        if(isAutoTarget) accessory.Method.SendChat($"/target <square>");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 方块已选中《<targetclass>》 > 《<t>》");
+    }
+    
+    [ScriptMethod(name: "自动选中攻击1", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
+    public void Attack1Target(Event @event, ScriptAccessory accessory)
+    {
+        if(isAutoTarget) accessory.Method.SendChat($"/target <attack1>");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 攻击1已选中《<targetclass>》 > 《<t>》");
+    }
+    #endregion
+    
     
     [ScriptMethod(name: "[DR] 冲天时更改移速（不与敏捷共存）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void 冲天Add(Event @event, ScriptAccessory accessory)
