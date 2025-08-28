@@ -21,21 +21,38 @@ using KodakkuAssist.Extensions;
 namespace SaintMociannesArboretum_Hard;
 
 [ScriptType(guid: "7e87b5d1-ae21-4115-9483-d8dc0f1d1652", name: "污染庭园圣茉夏娜植物园", territorys: [788],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class SaintMociannesArboretum_Hard
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV70 污染庭园圣茉夏娜植物园 初版绘制
         """;
     
+    #region 基础控制
+    
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    [UserSetting("开发者模式")]
+    public bool isDeveloper { get; set; } = false;
+    
+    #endregion
+    
     #region BOSS1_泥口花
-    [ScriptMethod(name: "BOSS1_泥口花 泥浆炸弹（点名毒圈）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0001"])]
+    [ScriptMethod(name: "BOSS1_泥口花 泥浆炸弹（点名毒圈预测）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0001"])]
     public void 泥浆炸弹(Event @event, ScriptAccessory accessory)
     {
-        if ( @event.TargetId() == accessory.Data.Me) accessory.Method.EdgeTTS("毒圈放置点名");
+        if ( @event.TargetId() == accessory.Data.Me && isTTS) accessory.Method.TTS("毒圈放置点名");
+        if ( @event.TargetId() == accessory.Data.Me && isEdgeTTS) accessory.Method.EdgeTTS("毒圈放置点名");
             
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "泥浆炸弹";
@@ -43,6 +60,19 @@ public class SaintMociannesArboretum_Hard
         dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 3600;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1_泥口花 泥浆炸弹（毒圈提前显示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11854"])]
+    public void 泥浆炸弹毒圈(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "泥浆炸弹毒圈";
+        dp.Color = new Vector4(1f, 0f, 1f, 1f);
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(6f);
+        dp.Delay = 2700;
+        dp.DestoryAt = 2800;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
@@ -62,8 +92,9 @@ public class SaintMociannesArboretum_Hard
     [ScriptMethod(name: "BOSS1_泥口花 捕食_恶意毒境", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11855"])]
     public void 恶意毒境(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("躲在小花后", duration: 8000, true);
-        accessory.Method.EdgeTTS("躲在小花后");
+        if(isText) accessory.Method.TextInfo("躲在小花后", duration: 8000, true);
+        if(isTTS) accessory.Method.TTS("躲在小花后");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("躲在小花后");
         
         foreach (var item in accessory.Data.Objects.GetByDataId(9264))
         {
@@ -71,9 +102,9 @@ public class SaintMociannesArboretum_Hard
             dp.Name = "恶意毒境";
             dp.Color = accessory.Data.DefaultDangerColor;
             dp.Owner = item.EntityId;
+            dp.TargetPosition = new Vector3(0, 3, -82);
             dp.Scale = new Vector2(40);
             dp.Radian = 180f.DegToRad();
-            dp.Rotation = 180f.DegToRad();
             dp.DestoryAt = 5000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
         }
@@ -116,7 +147,7 @@ public class SaintMociannesArboretum_Hard
         dp.Name = "岩石崩溃";
         dp.Scale = new (10, 45f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.6f);
         dp.DestoryAt = 12000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
@@ -132,7 +163,7 @@ public class SaintMociannesArboretum_Hard
         dp.TargetObject = @event.TargetId();
         
         dp.Name = "大地摇动";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
         dp.Scale = new Vector2(77);
         dp.Radian = 30f.DegToRad();
         dp.DestoryAt = 4200;
@@ -145,8 +176,9 @@ public class SaintMociannesArboretum_Hard
         "SourcePosition:{\"X\":287.36,\"Y\":-353.81,\"Z\":-230.91}"])]
     public void 放水栓(Event @event, ScriptAccessory accessory)
     {
-        // accessory.Method.TextInfo("打开放水栓", duration: 3000, false);
-        // accessory.Method.EdgeTTS("打开放水栓");
+        // if(isText) accessory.Method.TextInfo("打开放水栓", duration: 3000, false);
+        // if(isTTS) accessory.Method.TTS("打开放水栓");
+        // if(isEdgeTTS) accessory.Method.EdgeTTS("打开放水栓");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "放水栓";
@@ -183,19 +215,29 @@ public class SaintMociannesArboretum_Hard
     [ScriptMethod(name: "BOSS3_枯腐泥妖 污泥喷出", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id2:2", "Id1:1"])]
     public void 污泥喷出(Event @event, ScriptAccessory accessory)
     {
-        if ( Tokkapchi == 1) accessory.Method.TextInfo("站台子上", duration: 7500, false);
+        if (Tokkapchi == 1)
+        {
+            if(isText) accessory.Method.TextInfo("站台子上", duration: 7500, false);
+            if(isTTS) accessory.Method.TTS("站台子上");
+            if(isEdgeTTS) accessory.Method.EdgeTTS("站台子上");
+        }
+        
     }
     
     [ScriptMethod(name: "BOSS3_枯腐泥妖 污泥", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12600"])]
     public void 污泥(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("分散，离开台子", duration: 4500, true);
+        if(isText) accessory.Method.TextInfo("分散，离开台子", duration: 4500, true);
+        if(isTTS) accessory.Method.TTS("分散，离开台子");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("分散，离开台子");
     }
     
     [ScriptMethod(name: "BOSS3_污泥粘液怪 提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:9262"])]
     public void 污泥粘液怪(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("将小怪推到台子上，并远离任何伤害", duration: 5000, true);
+        if(isText) accessory.Method.TextInfo("将粘液怪推到台子上，并远离任何伤害", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("将小怪推到台子上，并远离任何伤害");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("将小怪推到台子上，并远离任何伤害");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "污泥粘液怪";
@@ -226,20 +268,37 @@ public class SaintMociannesArboretum_Hard
                 break;
             
             case 13197:
-                accessory.Method.TextInfo("大AOE伤害，注意减伤&盾", duration: 2500, false);
-                accessory.Method.EdgeTTS("大AOE伤害，注意减伤与盾");
+                if(isText) accessory.Method.TextInfo("大AOE伤害，注意减伤&盾", duration: 2500, false);
+                if(isTTS) accessory.Method.TTS("大AOE伤害，注意减伤与盾");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("大AOE伤害，注意减伤与盾");
                 break;
             
             case 13216:
-                accessory.Method.TextInfo("超大AOE伤害，给出全部场地减&盾", duration: 2500, true);
-                accessory.Method.EdgeTTS("超大AOE伤害，给出全部减伤盾");
+                if(isText) accessory.Method.TextInfo("超大AOE伤害，给出全部场地减&盾", duration: 2500, true);
+                if(isTTS) accessory.Method.TTS("超大AOE伤害，给出全部减伤盾");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("超大AOE伤害，给出全部减伤盾");
+                
+                var dp2 = accessory.Data.GetDefaultDrawProperties();
+                dp2.Name = "腐爆";
+                dp2.Color = new Vector4(1f, 0f, 0f, 1f);
+                dp2.Owner = @event.SourceId();
+                dp2.Scale = new Vector2(60f);
+                dp2.DestoryAt = 2700;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp2);
                 break;
         }
+    }
+    
+    [ScriptMethod(name: "BOSS3_枯腐泥妖 污泥泼洒", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12604"])]
+    public void 污泥泼洒(Event @event, ScriptAccessory accessory)
+    {
+        if(isText) accessory.Method.TextInfo("将粘液怪推至安全区", duration: 7000, true);
+        if(isTTS) accessory.Method.TTS("将小怪推至安全区");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("将小怪推至安全区");
     }
     #endregion
 }
 
-#region 
 public static class EventExtensions
 {
     private static bool ParseHexId(string? idStr, out uint id)
@@ -353,20 +412,3 @@ public static class EventExtensions
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
 }
-
-
-public static class Extensions
-{
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
-    {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
-    }
-}
-#endregion
