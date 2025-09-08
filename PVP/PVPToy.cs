@@ -40,6 +40,9 @@ public class PVPToy
     [UserSetting("启用自动选中目标标记")]
     public bool isAutoTarget { get; set; } = false;
     
+    [UserSetting("启用自动净化")]
+    public bool isAutoPurify { get; set; } = false;
+    
     [UserSetting("请确认你已经有相关插件与对应权限")]
     public bool isHack { get; set; } = false;
     
@@ -78,6 +81,44 @@ public class PVPToy
         accessory.Method.SendChat($"/e 侦测到被狙！鸭鸭试着帮你开了盾！<se.1> <se.1>");
     }
     
+    [ScriptMethod(name: "被蛮荒崩裂播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"])]
+    public void PrimalRendTargetTTS(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.EdgeTTS("被晕了");
+    }
+    
+    [ScriptMethod(name: "被蛮荒崩裂自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"],suppress:25000)]
+    public void PrimalRendAutoPurify(Event @event, ScriptAccessory accessory)
+    {
+        // 蛮荒崩裂 技能ID 29084 ； 附加眩晕 StatusID 1343 ； 生效间隔 约1s
+        if (isAutoPurify)
+        {
+            if (@event.TargetId() != accessory.Data.Me) return; 
+            accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
+            accessory.Method.SendChat($"/e 侦测到成为蛮荒崩裂目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
+        }
+    }
+    
+    [ScriptMethod(name: "被涤罪之心播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"])]
+    public void AfflatusPurgationTargetTTS(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.EdgeTTS("被晕了");
+    }
+    
+    [ScriptMethod(name: "被涤罪之心自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"],suppress:25000)]
+    public void AfflatusPurgationAutoPurify(Event @event, ScriptAccessory accessory)
+    {
+        // 涤罪之心 技能ID 29230 ； 附加眩晕 StatusID 1343 ； 生效间隔 约0.8s
+        if (isAutoPurify)
+        {
+            if (@event.TargetId() != accessory.Data.Me) return;
+            accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
+            accessory.Method.SendChat($"/e 侦测到成为涤罪之心目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
+        }
+    }
+    
     #region 目标标记播报
     
     //  方块 11 ； 圆圈 12 ； 十字 13 ； 三角 14 ； 止步1 06 ； 止步2 07 ； 止步3 08 ； 禁止1 09 ； 禁止2 10
@@ -87,28 +128,28 @@ public class PVPToy
     public void TriangleMark(Event @event, ScriptAccessory accessory)
     {
         if(isTargetTTS) accessory.Method.EdgeTTS("三角已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 三角已标记《<targetclass>》 > 《<t>》");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 三角已标记<<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "十字标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
     public void CrossMark(Event @event, ScriptAccessory accessory)
     {
         if(isTargetTTS) accessory.Method.EdgeTTS("十字已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 十字已标记《<targetclass>》 > 《<t>》");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 十字已标记<<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "方块标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
     public void SquareMark(Event @event, ScriptAccessory accessory)
     {
         if(isTargetTTS) accessory.Method.EdgeTTS("方块已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 方块已标记《<targetclass>》 > 《<t>》");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 方块已标记<<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "攻击1标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
     public void Attack1Mark(Event @event, ScriptAccessory accessory)
     {
         if(isTargetTTS) accessory.Method.EdgeTTS("攻击1已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 攻击1已标记《<targetclass>》 > 《<t>》");
+        if(isTargetTTS) accessory.Method.SendChat($"/e 攻击1已标记<<targetclass>> 》 <<t>>");
     }
     
     #endregion
@@ -120,35 +161,35 @@ public class PVPToy
     {
         // if(isAutoTarget) accessory.Method.SendChat($"/target <circle>");
         if(isAutoTarget) accessory.Method.SendChat($"/focustarget <circle>");
-        if(isAutoTarget) accessory.Method.SendChat($"/e 已自动焦点大饼 《<targetclass>》 > 《<t>》");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 已自动焦点大饼 <<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "自动选中三角", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
     public void TriangleTarget(Event @event, ScriptAccessory accessory)
     {
         if(isAutoTarget) accessory.Method.SendChat($"/target <triangle>");
-        if(isAutoTarget) accessory.Method.SendChat($"/e 三角已选中《<targetclass>》 > 《<t>》");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 三角已选中<<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "自动选中十字", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
     public void CrossTarget(Event @event, ScriptAccessory accessory)
     {
         if(isAutoTarget) accessory.Method.SendChat($"/target <cross>");
-        if(isAutoTarget) accessory.Method.SendChat($"/e 十字已选中《<targetclass>》 > 《<t>》");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 十字已选中<<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "自动选中方块", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
     public void SquareTarget(Event @event, ScriptAccessory accessory)
     {
         if(isAutoTarget) accessory.Method.SendChat($"/target <square>");
-        if(isAutoTarget) accessory.Method.SendChat($"/e 方块已选中《<targetclass>》 > 《<t>》");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 方块已选中<<targetclass>> 》 <<t>>");
     }
     
     [ScriptMethod(name: "自动选中攻击1", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
     public void Attack1Target(Event @event, ScriptAccessory accessory)
     {
         if(isAutoTarget) accessory.Method.SendChat($"/target <attack1>");
-        if(isAutoTarget) accessory.Method.SendChat($"/e 攻击1已选中《<targetclass>》 > 《<t>》");
+        if(isAutoTarget) accessory.Method.SendChat($"/e 攻击1已选中<<targetclass>> 》 <<t>>");
     }
     #endregion
     
