@@ -1003,15 +1003,15 @@ public class the_Palace_of_the_Dead
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
     }
     
-    [ScriptMethod(name: "[DR] 曼提克取消时，移速复原至1倍", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42"])]
+    [ScriptMethod(name: "[DR] 曼提克取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42"])]
     public void RemoveManticore(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.SendChat($"/pdrspeed 1");
-        accessory.Method.SendChat($"/e 可达鸭：移速已更改：1");
-        if (isTTS)accessory.Method.TTS("移速已复原至1倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至1倍");
+        accessory.Method.SendChat($"/pdrspeed -1");
+        accessory.Method.SendChat($"/e 可达鸭：移速已更改：默认");
+        if (isTTS)accessory.Method.TTS("移速已复原至默认值");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
 
     [ScriptMethod(name: "[DR] 变身梦魔时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:43"])]
@@ -1025,15 +1025,15 @@ public class the_Palace_of_the_Dead
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.2倍");
     }
     
-    [ScriptMethod(name: "[DR] 梦魔取消时，移速复原至1倍", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:43"])]
+    [ScriptMethod(name: "[DR] 梦魔取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:43"])]
     public void RemoveSuccubus(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.SendChat($"/pdrspeed 1");
-        accessory.Method.SendChat($"/e 可达鸭：移速已更改：1");
-        if (isTTS)accessory.Method.TTS("移速已复原至1倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至1倍");
+        accessory.Method.SendChat($"/pdrspeed -1");
+        accessory.Method.SendChat($"/e 可达鸭：移速已更改：默认");
+        if (isTTS)accessory.Method.TTS("移速已复原至默认值");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     
     #endregion
