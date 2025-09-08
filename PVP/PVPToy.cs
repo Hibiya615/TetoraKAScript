@@ -81,7 +81,7 @@ public class PVPToy
         accessory.Method.SendChat($"/e 侦测到被狙！鸭鸭试着帮你开了盾！<se.1> <se.1>");
     }
     
-    [ScriptMethod(name: "被蛮荒崩裂播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"])]
+    [ScriptMethod(name: "被蛮荒崩裂播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"],suppress:2000)]
     public void PrimalRendTargetTTS(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -100,7 +100,7 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "被涤罪之心播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"])]
+    [ScriptMethod(name: "被涤罪之心播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"],suppress:2000)]
     public void AfflatusPurgationTargetTTS(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
