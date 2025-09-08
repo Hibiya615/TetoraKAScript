@@ -641,12 +641,12 @@
   {
     "Name": "死者宫殿",
     "Guid": "4210c323-eba4-4d67-a7e7-b90799494729",
-    "Version": "0.0.0.31",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/the_Palace_of_the_Dead.cs",
-    "Note": "v0.0.0.4:\n死者宫殿 初版绘制",
-    "UpdateInfo": "v0.0.0.4 部分层数进行二次更新",
+    "Note": "v0.0.0.5:\n死者宫殿 初版绘制",
+    "UpdateInfo": "v0.0.0.5 全部层数进行二次更新",
     "TerritoryIds": [
       561,
       562,

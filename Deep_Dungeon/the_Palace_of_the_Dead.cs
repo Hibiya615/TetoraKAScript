@@ -22,22 +22,21 @@ namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.4",note: noteStr)]
+    version: "0.0.0.5",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
-        目前支持层数：1~100、141~170，其他层数可能会有点问题
-        重要：可能存在绘制重复或范围错误，请携带ARR反馈！
+        出现问题请携带ARR反馈！
         暂未支持【形态变化】【眩晕】【催眠】等限制，有需可以考虑使用Splatoon
         """;
     
     // 眩晕、催眠、无法发动技能（形态变化）等状态都需要销毁绘图
-    // 已二次验证：1~100  141~170  
+    // 190 BOSS 有待修复的问题
     // 70 BOSS 会同时满足 170 BOSS 或天气的条件 导致触发重复 需要额外判断sid , 170 BOSS 的伤害提高 也与强化自身 冲突 需额外判断sid
     // 1~99层 与 101~199层 大量怪物技能ID重复，需要额外判断sid
     
@@ -114,10 +113,12 @@ public class the_Palace_of_the_Dead
     }
     
     //190 治疗爆弹怪 计数  注意暂时还没有写重置计数!!
-    private int timesRemedyBomb=0;
+    private int timesRemedyBomb = 0;
+    private int Sap = 0;
     public void Init(ScriptAccessory accessory) {
         
-        timesRemedyBomb=0;  //190 治疗爆弹怪 计数
+        timesRemedyBomb=0;  // 190 治疗爆弹怪 生成计数
+        Sap = 0; // 190 地面爆破 读条计数
         
     }
     
@@ -157,16 +158,15 @@ public class the_Palace_of_the_Dead
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10.8f); // 表格8m + 目标圈 2.8m
         dp.DestoryAt = 4200;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        accessory.Method.SendDraw( DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
     
-    [ScriptMethod(name: "地宫斯卡尼特 唧唧咋咋（睡眠钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6365"])]
+    [ScriptMethod(name: "地宫斯卡尼特 唧唧咋咋（睡眠钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6365", "SourceDataId:5803"])]
     public void 斯卡尼特_唧唧咋咋(Event @event, ScriptAccessory accessory)
     {
-        //121~129 深宫斯卡尼特 同技能ID
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"斯卡尼特_唧唧咋咋{@event.SourceId()}";
+        dp.Name = $"地宫斯卡尼特_唧唧咋咋{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 1f, 0.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(21.6f);
@@ -178,7 +178,9 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "30 宁吉兹济达 恐惧迷雾（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6429"])]
     public void 宁吉兹济达_恐惧迷雾(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("靠近场中BOSS", duration: 5000, true);
+        // BOSS SourceDataId:5804 ，与 130层BOSS 技能ID不同 无需限制
+        
+        if (isText)accessory.Method.TextInfo("靠近场中BOSS", duration: 5300, true);
         if (isTTS)accessory.Method.TTS("靠近场中BOSS");
         if (isEdgeTTS)accessory.Method.EdgeTTS("靠近场中BOSS");
         
@@ -206,7 +208,6 @@ public class the_Palace_of_the_Dead
             if(isTTS) accessory.Method.TTS("吸引");
             if(isEdgeTTS) accessory.Method.EdgeTTS("吸引");
         }
-        else { }
         /*
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"噩梦鬼鱼_吸蚀{@event.SourceId()}";
@@ -414,20 +415,23 @@ public class the_Palace_of_the_Dead
     public void 第91层(Event @event, ScriptAccessory accessory) { }
     #endregion
     
-    #region 101~110层
+    #region 101~110层 没有东西可以画
     [ScriptMethod(name: "—————— 101 ~ 110 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第101层(Event @event, ScriptAccessory accessory) { }
+    
+    // 彩蛋怪物 帝国兵驾驶员 DataId:6404 , NpcYell Id 4223 "魔导死神改……只要有那个……"
     #endregion
     
     #region 111~120层
     [ScriptMethod(name: "—————— 111 ~ 120 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第111层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "深宫蝾螈 粘膜 打断提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7014"])]
+    [ScriptMethod(name: "深宫蝾螈 粘膜 打断提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7014", "SourceDataId:6249"])]
     public void 深宫蝾螈_粘膜(Event @event, ScriptAccessory accessory)
     {
-        if(isText) accessory.Method.TextInfo("打断 <深宫蝾螈>", duration: 2700, true);
+        if(isText) accessory.Method.TextInfo("打断 <深宫蝾螈>", duration: 2300, true);
         if(isTTS) accessory.Method.TTS("打断深宫蝾螈");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("打断深宫蝾螈");
     }
     
     #endregion
@@ -436,14 +440,26 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "—————— 121 ~ 130 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第121层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "深宫弥诺陶洛斯 百一十吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6364"])]
+    [ScriptMethod(name: "深宫斯卡尼特 唧唧咋咋（睡眠钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6365", "SourceDataId:6267"])]
+    public void 深宫斯卡尼特_唧唧咋咋(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"深宫斯卡尼特_唧唧咋咋{@event.SourceId()}";
+        dp.Color = new Vector4(1f, 0f, 1f, 0.1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(21.6f); // 20m圆形 +目标圈1.6m
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "深宫弥诺陶洛斯 百一十吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6364", "SourceDataId:6266"])]
     public void 深宫弥诺陶洛斯_百一十吨回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫弥诺陶洛斯_百一十吨回转{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10.8f);
+        dp.Scale = new Vector2(10.8f); // 8m圆形 +目标圈2.8m
         dp.DestoryAt = 4200;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
@@ -452,11 +468,16 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "130 埃尔法德 恐惧迷雾（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7141"])]
     public void 埃尔法德_恐惧迷雾(Event @event, ScriptAccessory accessory)
     {
+        // BOSS SourceDataId:6170 ，技能ID与30层的不同 无需区分
+        if (isText)accessory.Method.TextInfo("靠近场中BOSS", duration: 1300, true);
+        if (isTTS)accessory.Method.TTS("靠近场中BOSS");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("靠近场中BOSS");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "埃尔法德_恐惧迷雾";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(58.8f);
+        dp.Scale = new Vector2(58.8f); // 表格54m +目标圈4.8m
         dp.InnerScale = new Vector2(4.8f);
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = 1700;
@@ -469,14 +490,13 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "—————— 131 ~ 140 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第131层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "深宫鬼鱼 吸蚀（吸引）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6372"])]
+    [ScriptMethod(name: "深宫鬼鱼 吸蚀（吸引）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6372", "SourceDataId:6274"])]
     public void 深宫鬼鱼_吸蚀(Event @event, ScriptAccessory accessory)
     {
         if(!KnockPenalty) {
             if(isTTS) accessory.Method.TTS("吸引后钢铁");
             if(isEdgeTTS) accessory.Method.EdgeTTS("吸引后钢铁");
         }
-        else { }
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫鬼鱼_吸蚀{@event.SourceId()}";
@@ -487,7 +507,7 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宫鬼鱼 洪水（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6372"])]
+    [ScriptMethod(name: "深宫鬼鱼 洪水（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6373", "SourceDataId:6274"])]
     public void 深宫鬼鱼_洪水(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -499,15 +519,14 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宫冥鬼之眼 5级石化 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7031"])]
+    [ScriptMethod(name: "深宫冥鬼之眼 5级石化 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7031", "SourceDataId:6272"])]
     public void 深宫冥鬼之眼_5级石化(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-
         dp.Name = $"深宫冥鬼之眼_5级石化{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(7.1f);
+        dp.Scale = new Vector2(7.1f); // 6m扇形 +目标圈1.1m
         dp.Radian = 120f.DegToRad();
         dp.DestoryAt = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
@@ -640,48 +659,65 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "—————— 171 ~ 180 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第171层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "深宫独眼雪巨人 怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7061"])]
+    [ScriptMethod(name: "深宫独眼雪巨人 怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7061", "SourceDataId:6317"])]
     public void 深宫独眼雪巨人_怒视(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫独眼雪巨人_怒视{@event.SourceId()}";
-        dp.Scale = new (7, 21f);
+        dp.Scale = new (7, 21f); // 表格长度17m +目标圈4m
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "深宫独眼雪巨人 百吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6971"])]
+    [ScriptMethod(name: "深宫独眼雪巨人 百吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6971", "SourceDataId:6317"])]
     public void 深宫独眼雪巨人_百吨回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫独眼雪巨人_百吨回转{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(12f);
+        dp.Scale = new Vector2(12f);// 表格圆形8m +目标圈4m
         dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宫大脚巨猿 捶胸（脱战钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6973"])]
+    [ScriptMethod(name: "深宫大脚巨猿 捶胸（脱战钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6973", "SourceDataId:6318"])]
     public void 深宫大脚巨猿_捶胸(Event @event, ScriptAccessory accessory)
     {
+        // 从读条 [6973]吃香蕉（读条1.7s）开始 ， 随后会给自己附加持续 约15s的 [53]物理伤害提高 buff，持续时间内会不断造成 7063 捶胸 大范围圆形伤害，进入战斗后不会发动该技能（但平A也吃物理伤害提高）
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫大脚巨猿_捶胸{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0.8f, 0f, 0.3f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(53.6f);
-        dp.Delay = 1700;
-        dp.DestoryAt = 15300;
+        dp.Scale = new Vector2(53.6f); // 50m圆形 +目标圈3.6m
+        dp.Delay = 1700; // 读条吃香蕉时暂不显示
+        dp.DestoryAt = 15300; // 物理伤害提高buff存在时间
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宫大脚巨猿 捶胸销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:6499"], userControl: false)]
+    [ScriptMethod(name: "深宫大脚巨猿 捶胸销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:6499", "SourceDataId:6318"], userControl: false)]
     public void 深宫大脚巨猿_捶胸销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 进入战斗状态后，触发平A即销毁捶胸绘制
+        accessory.Method.RemoveDraw($"深宫大脚巨猿_捶胸{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "深宫大脚巨猿 捶胸销毁备用", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:53", "SourceDataId:6318"], userControl: false)]
+    public void 深宫大脚巨猿_捶胸销毁备用(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"深宫大脚巨猿_捶胸{@event.SourceId()}");
     }
+    
+    [ScriptMethod(name: "深宫妖鸟 极乐之风 打断提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7060", "SourceDataId:6316"])]
+    public void 深宫妖鸟_极乐之风(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("打断 <深宫妖鸟>", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("打断 <深宫妖鸟>");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("打断 <深宫妖鸟>");
+    }
+    
     #endregion
 
     #region 180层 BOSS 丹代恩索涅
@@ -706,8 +742,9 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "180 丹代恩索涅 黄道陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7166"])]
     public void 丹代恩索涅_黄道陨石(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("80%真伤", duration: 5, true);
-        accessory.Method.TTS("80%真伤");
+        if(isText) accessory.Method.TextInfo("80%真伤", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("80%真伤");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("80%真伤");
     }
     #endregion
 
@@ -715,7 +752,7 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "—————— 181 ~ 190 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第181层(Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "深宫加姆 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7078","SourceName:深宫加姆"])]
+    [ScriptMethod(name: "深宫加姆 寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7078", "SourceDataId:6335"])]
     public void 深宫加姆_寒冰咆哮(Event @event, ScriptAccessory accessory)
     {
         // 此处的 深宫加姆 与 81~90层的 地宫奇美拉 所释放的 钢铁月环 技能ID相同 ，但其对应的目标圈不同 ，所以需要区分画图
@@ -723,12 +760,12 @@ public class the_Palace_of_the_Dead
         dp.Name = $"深宫加姆_寒冰咆哮{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10.4f);
+        dp.Scale = new Vector2(10.4f); // 6m圆形 +目标圈4.4m
         dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宫加姆 雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7079","SourceName:深宫加姆"])]
+    [ScriptMethod(name: "深宫加姆 雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7078", "SourceDataId:6335"])]
     public void 深宫加姆_雷电咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -736,16 +773,28 @@ public class the_Palace_of_the_Dead
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
-        dp.InnerScale = new Vector2(7f);
+        dp.InnerScale = new Vector2(7.4f); // 内径约为 3m + 目标圈4.4m 
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = 4200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
+    /*
+    [ScriptMethod(name: "深宫洪水巨虫 大流沙（狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7070", "SourceDataId:6329"])]
+    public void 深宫洪水巨虫_大流沙(Event @event, ScriptAccessory accessory)
+    {
+        // 狂暴技能，可打断，可遁地逃
+        // dp.Name = $"深宫洪水巨虫_大流沙{@event.SourceId()}";
+        // dp.Scale = new Vector2(23.6f); // 20m圆形 +目标圈3.6m
+        // dp.DestoryAt = 700;
+    }
+    */
+    
+    // 高危怪 水龙 SourceDataId:6328
+    
     #endregion
     
-    #region 190层 BOSS 爆弹怪教父
-    // 190层 BOSS 爆弹怪教父
+    #region 190层 BOSS 爆弹怪教父 [熔岩爆弹怪预测计数问题待修复]
     [ScriptMethod(name: "190 眩晕爆弹怪 冰碎（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6387"])]
     public void 眩晕爆弹怪_冰碎(Event @event, ScriptAccessory accessory)
     {
@@ -764,18 +813,28 @@ public class the_Palace_of_the_Dead
     {
         accessory.Method.TextInfo("击杀治疗爆弹怪", duration: 5, true);
         accessory.Method.TTS("击杀治疗爆弹怪"); 
-        //Interlocked.Increment(ref timesRemedyBomb);  //防止多线程出问题，锁定一下
-        //++timesRemedyBomb; //记录 治疗爆弹怪出现次数  注意：还没有写重置次数条件
+        // Interlocked.Increment(ref timesRemedyBomb);  //防止多线程出问题，锁定一下
+        ++timesRemedyBomb; //记录 治疗爆弹怪出现次数  注意：还没有写重置次数条件 需要在团灭重生时销毁 （或者反正这个也就单挑比较有用死了就重置算了x）
+        if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：已记录 治疗爆弹怪生成 第{timesRemedyBomb}次");
+    }
+    
+    [ScriptMethod(name: "190 地面爆破 读条计数", userControl:false, eventType: EventTypeEnum.AddCombatant, eventCondition: ["ActionId:7169"])]
+    public void 地面爆破读条计数(Event @event, ScriptAccessory accessory)
+    {
+        ++Sap;
+        if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破读条次数： {Sap}");
     }
     
     
-    /*  有点计数问题，先放着等有缘人修
+    /*/  有点计数问题，先放着等有缘人修
     [ScriptMethod(name: "190 熔岩爆弹怪 出现位置预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
     public void 熔岩爆弹怪_震撼弹预测(Event @event, ScriptAccessory accessory)
     {
         //在治疗爆弹怪 刷新约54s后 出现熔岩爆弹怪 ，期间BOSS会读条3次 [7169]地面爆破  第3次与第2次间隔较长，应在第3次黄圈读条时准备将BOSS拉去刷新位置
         //暂未知 治疗爆弹怪死亡时间 与BOSS黄圈技能时间轴是否有关联
         //在刷新45s时 大约会读条第3次黄圈，故应 Delay = 45000，DestoryAt = 9000
+        
+        if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：已捕获 治疗爆弹怪生成{timesRemedyBomb}次，开始45秒后绘制倒计时");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "熔岩爆弹怪_震撼弹预测";
@@ -784,59 +843,62 @@ public class the_Palace_of_the_Dead
         dp.Delay = 45000;
         dp.DestoryAt = 9000;
         
+        // 根据 治疗爆弹怪 出现次数 决定 熔岩爆弹怪 生成位置
+        // 或者根据 地面爆破 读条3n次 决定位置
         switch(timesRemedyBomb) {
 
             case 1: {
                 dp.Position = new Vector3(-288.63f, 0.14f,-300.26f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
 
             case 2:{
                 dp.Position = new Vector3(-297.46f, 0.12f,-297.52f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
 
             case 3:{
                 dp.Position = new Vector3(-288.84f, 0.12f,-305.54f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
             
             case 4:{
                 dp.Position = new Vector3(-309.13f, 0.05f,-303.74f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
             
             case 5:{
                 dp.Position = new Vector3(-298.36f, 0.05f,-293.63f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
             
             case 6:{
                 dp.Position = new Vector3(-301.96f, 0.05f,-314.29f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
             
             case 7:{
                 dp.Position = new Vector3(-299.12f, 0.05f,-297.56f);
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
 
             default: {
-                accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
+                if(isDeveloper) accessory.Method.SendChat($"/e 调试信息 timeRemedyBomb={timesRemedyBomb}");
                 break;
             }
 
         }
         
-        // accessory.Method.TextInfo("已预测 <熔岩爆弹怪> 刷新位置", duration: 5, false);
-        // accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");   
+        if(isText) accessory.Method.TextInfo("已预测 <熔岩爆弹怪> 刷新位置", duration: 5000, false);
+        if(isTTS) accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");   
+        if(isEdgeTTS) accessory.Method.EdgeTTS("已预测熔岩爆弹怪刷新位置");  
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -846,13 +908,14 @@ public class the_Palace_of_the_Dead
         accessory.Method.RemoveDraw($"熔岩爆弹怪_震撼弹预测");
     }
     
-    */
+    // */
     
     [ScriptMethod(name: "190 熔岩爆弹怪 震撼弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"])]
     public void 熔岩爆弹怪_震撼弹(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("将熔岩爆弹怪推至BOSS脚下", duration: 5, true);
-        accessory.Method.TTS("将熔岩爆弹怪推至BOSS脚下");
+        if(isText) accessory.Method.TextInfo("将熔岩爆弹怪推至BOSS脚下", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("将熔岩爆弹怪推至BOSS脚下");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("将熔岩爆弹怪推至BOSS脚下");  
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "熔岩爆弹怪_震撼弹";
@@ -879,11 +942,9 @@ public class the_Palace_of_the_Dead
             
         if (!isExplosionInterrupted)
         {
-            accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 10, true);
-            accessory.Method.TTS("99.9%真伤，注意瞬回");
-        }
-        else
-        {
+            if(isText) accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 9500, true);
+            if(isTTS) accessory.Method.TTS("99.9%真伤，注意瞬回");
+            if(isEdgeTTS) accessory.Method.EdgeTTS("99.9%真伤，注意瞬回");  
         }
     }
     
@@ -899,27 +960,26 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "—————— 191 ~ 200 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第191层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "奥尼克斯龙 邪视（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7043"])]
+    [ScriptMethod(name: "奥尼克斯龙 邪视（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7043", "SourceDataId:6338"])]
     public void 奥尼克斯龙_邪视(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"奥尼克斯龙_邪视{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 1f, 0.6f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(13f); 
+        dp.Scale = new Vector2(13f); // 技能范围8m圆形 +目标圈5m
         dp.DestoryAt = 2200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宫幽鬼之眼 5级即死 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7084"])]
+    [ScriptMethod(name: "深宫幽鬼之眼 5级即死 （扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7084", "SourceDataId:6341"])]
     public void 深宫幽鬼之眼_5级即死(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-
         dp.Name = $"深宫幽鬼之眼_5级即死{@event.SourceId()}";
         dp.Color = new Vector4(1f, 0f, 0f, 1f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(7.1f);
+        dp.Scale = new Vector2(7.1f); // 技能范围6m扇形 +目标圈1.1m
         dp.Radian = 120f.DegToRad();
         dp.DestoryAt = 3200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
