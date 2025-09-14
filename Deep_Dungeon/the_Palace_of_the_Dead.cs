@@ -22,13 +22,13 @@ namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.5",note: noteStr)]
+    version: "0.0.0.6",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
@@ -71,8 +71,8 @@ public class the_Palace_of_the_Dead
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    [UserSetting("测试性功能（慎用）")]
-    public bool isTest { get; set; } = false;
+    // [UserSetting("测试性功能（慎用）")]
+    // public bool isTest { get; set; } = false;
     
     [UserSetting("启用底裤（需要对应插件与权限）")]
     public bool isHack { get; set; } = false;
@@ -112,7 +112,8 @@ public class the_Palace_of_the_Dead
         KnockPenalty = false;
     }
     
-    //190 治疗爆弹怪 计数  注意暂时还没有写重置计数!!
+    //190 治疗爆弹怪 计数
+    
     private int timesRemedyBomb = 0;
     private int Sap = 0;
     public void Init(ScriptAccessory accessory) {
@@ -123,6 +124,14 @@ public class the_Palace_of_the_Dead
     }
     
     private bool isExplosionInterrupted = false;  // 190层 特大爆炸打断状态
+    
+    [ScriptMethod(name: "死亡重置", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:0"], userControl: false)]
+    public void 死亡重置(Event @event, ScriptAccessory accessory)
+    {
+        timesRemedyBomb=0;  // 190 治疗爆弹怪 生成计数
+        Sap = 0; // 190 地面爆破 读条计数
+        if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：检测到死亡，已重置变量");
+    }
     
     #endregion
     
@@ -794,7 +803,7 @@ public class the_Palace_of_the_Dead
     
     #endregion
     
-    #region 190层 BOSS 爆弹怪教父 [熔岩爆弹怪预测计数问题待修复]
+    #region 190层 BOSS 爆弹怪教父
     [ScriptMethod(name: "190 眩晕爆弹怪 冰碎（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6387"])]
     public void 眩晕爆弹怪_冰碎(Event @event, ScriptAccessory accessory)
     {
@@ -811,28 +820,114 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "190 治疗爆弹怪 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
     public void 治疗爆弹怪_击杀提示(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.TextInfo("击杀治疗爆弹怪", duration: 5, true);
-        accessory.Method.TTS("击杀治疗爆弹怪"); 
+        if(isText) accessory.Method.TextInfo("击杀治疗爆弹怪", duration: 5000, false);
+        if(isTTS) accessory.Method.TTS("击杀治疗爆弹怪");   
+        if(isEdgeTTS) accessory.Method.EdgeTTS("击杀治疗爆弹怪");  
+        
         // Interlocked.Increment(ref timesRemedyBomb);  //防止多线程出问题，锁定一下
         ++timesRemedyBomb; //记录 治疗爆弹怪出现次数  注意：还没有写重置次数条件 需要在团灭重生时销毁 （或者反正这个也就单挑比较有用死了就重置算了x）
-        if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：已记录 治疗爆弹怪生成 第{timesRemedyBomb}次");
+        // if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：已记录 治疗爆弹怪生成 第{timesRemedyBomb}次");
     }
     
-    [ScriptMethod(name: "190 地面爆破 读条计数", userControl:false, eventType: EventTypeEnum.AddCombatant, eventCondition: ["ActionId:7169"])]
+    [ScriptMethod(name: "190 地面爆破 读条计数", userControl:false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7169"])]
     public void 地面爆破读条计数(Event @event, ScriptAccessory accessory)
     {
         ++Sap;
         if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破读条次数： {Sap}");
     }
     
+    [ScriptMethod(name: "190 熔岩爆弹怪 出现位置预测", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:7169"])]
+    public void 熔岩爆弹怪_震撼弹预测_通过地面爆破读条次数(Event @event, ScriptAccessory accessory)
+    {
+        //暂未知 治疗爆弹怪死亡时间 与BOSS黄圈技能时间轴是否有关联
+        // 在打治疗爆弹怪时，BOSS应读条1次地面爆破，正常击杀时间打完后，BOSS应再读条3次地面爆破，所以在第4n次读条时该开始绘制预测
+        
+        if (Sap % 4 == 0 && Sap > 0)
+        {
+            
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "熔岩爆弹怪_震撼弹预测";
+        dp.Color = new Vector4(0f, 0f, 1f, 1.5f);
+        dp.Scale = new Vector2(7.2f);
+        dp.DestoryAt = 5500;
+        
+        // 根据 地面爆破 读条4n次 决定位置
+        switch (Sap / 4)
+        {
+            case 1:
+            {
+                dp.Position = new Vector3(-288.63f, 0.14f, -300.26f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测1");
+                break;
+            }
+
+            case 2:
+            {
+                dp.Position = new Vector3(-297.46f, 0.12f, -297.52f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测2");
+                break;
+            }
+
+            case 3:
+            {
+                dp.Position = new Vector3(-288.84f, 0.12f, -305.54f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测3");
+                break;
+            }
+
+            case 4:
+            {
+                dp.Position = new Vector3(-309.13f, 0.05f, -303.74f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测4");
+                break;
+            }
+
+            case 5:
+            {
+                dp.Position = new Vector3(-298.36f, 0.05f, -293.63f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测5");
+                break;
+            }
+
+            case 6:
+            {
+                dp.Position = new Vector3(-301.96f, 0.05f, -314.29f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测6");
+                break;
+            }
+
+            case 7:
+            {
+                dp.Position = new Vector3(-299.12f, 0.05f, -297.56f);
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次，开始绘制生成位置预测7");
+                break;
+            }
+
+            default:
+            {
+                if (isDeveloper) accessory.Method.SendChat($"/e 调试信息：地面爆破第{Sap}次（4n次），开始绘制生成位置预测");
+                break;
+            }
+          
+        }
+        
+        if(isText) accessory.Method.TextInfo("已预测 <熔岩爆弹怪> 刷新位置", duration: 3500, false);
+        if(isTTS) accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");   
+        if(isEdgeTTS) accessory.Method.EdgeTTS("已预测熔岩爆弹怪刷新位置");  
+        
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        }
+        
+    }
     
-    /*/  有点计数问题，先放着等有缘人修
+    /* //  废案
     [ScriptMethod(name: "190 熔岩爆弹怪 出现位置预测", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6385"])]
-    public void 熔岩爆弹怪_震撼弹预测(Event @event, ScriptAccessory accessory)
+    public void 熔岩爆弹怪_震撼弹预测_通过治疗爆弹怪(Event @event, ScriptAccessory accessory)
     {
         //在治疗爆弹怪 刷新约54s后 出现熔岩爆弹怪 ，期间BOSS会读条3次 [7169]地面爆破  第3次与第2次间隔较长，应在第3次黄圈读条时准备将BOSS拉去刷新位置
         //暂未知 治疗爆弹怪死亡时间 与BOSS黄圈技能时间轴是否有关联
-        //在刷新45s时 大约会读条第3次黄圈，故应 Delay = 45000，DestoryAt = 9000
+        //在刷新45s时 大约会读条第3次黄圈（该出现预兆时分别为 4n 次读条），故应 Delay = 45000，DestoryAt = 9000
         
         if(isDeveloper) accessory.Method.SendChat($"/e 调试信息：已捕获 治疗爆弹怪生成{timesRemedyBomb}次，开始45秒后绘制倒计时");
         
@@ -844,7 +939,6 @@ public class the_Palace_of_the_Dead
         dp.DestoryAt = 9000;
         
         // 根据 治疗爆弹怪 出现次数 决定 熔岩爆弹怪 生成位置
-        // 或者根据 地面爆破 读条3n次 决定位置
         switch(timesRemedyBomb) {
 
             case 1: {
@@ -895,20 +989,16 @@ public class the_Palace_of_the_Dead
             }
 
         }
-        
-        if(isText) accessory.Method.TextInfo("已预测 <熔岩爆弹怪> 刷新位置", duration: 5000, false);
-        if(isTTS) accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");   
-        if(isEdgeTTS) accessory.Method.EdgeTTS("已预测熔岩爆弹怪刷新位置");  
+
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
+    } 
+    */
     
     [ScriptMethod(name: "熔岩爆弹怪 震撼弹预测销毁", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"], userControl: false)]
     public void 熔岩爆弹怪_震撼弹预测销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"熔岩爆弹怪_震撼弹预测");
     }
-    
-    // */
     
     [ScriptMethod(name: "190 熔岩爆弹怪 震撼弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6386"])]
     public void 熔岩爆弹怪_震撼弹(Event @event, ScriptAccessory accessory)
@@ -932,21 +1022,22 @@ public class the_Palace_of_the_Dead
         accessory.Method.RemoveDraw($"熔岩爆弹怪_震撼弹");
     }
     
-    
+
     [ScriptMethod(name: "190 爆弹怪教父 特大爆炸提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7103"])]
     public async void 爆弹怪教父_特大爆炸提示(Event @event, ScriptAccessory accessory)
     { 
         isExplosionInterrupted = false;
         
-        await Task.Delay(14800);
+        await Task.Delay(15800);
             
         if (!isExplosionInterrupted)
         {
-            if(isText) accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 9500, true);
+            if(isText) accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 8500, true);
             if(isTTS) accessory.Method.TTS("99.9%真伤，注意瞬回");
             if(isEdgeTTS) accessory.Method.EdgeTTS("99.9%真伤，注意瞬回");  
         }
     }
+
     
     [ScriptMethod(name: "特大爆炸打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:7103"], userControl: false)]
     public void 特大爆炸打断销毁(Event @event, ScriptAccessory accessory)
