@@ -712,12 +712,12 @@
   {
     "Name": "兽道诸神信仰：伪神降临",
     "Guid": "da82aeb0-9635-4f13-a1c1-39a0c859f596",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Daivadipa.cs",
-    "Note": "v0.0.0.2:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
-    "UpdateInfo": "API12",
+    "Note": "v0.0.0.3:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
+    "UpdateInfo": "v0.0.0.3:略微调整强制移动距离，增加用户设置选项",
     "TerritoryIds": [
       957
     ]

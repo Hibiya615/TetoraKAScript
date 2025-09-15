@@ -21,23 +21,37 @@ using System.Threading.Tasks;
 namespace DevoutPilgrimsVSDaivadipa;
 
 [ScriptType(guid: "da82aeb0-9635-4f13-a1c1-39a0c859f596", name: "兽道诸神信仰：伪神降临", territorys: [957],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Daivadipa
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV90 特殊Fate 绘制
         兽道诸神信仰：伪神降临
         """;
+    
+    #region 基础控制
+    
+    [UserSetting("TTS开关（TTS请二选一开启）")]
+    public bool isTTS { get; set; } = false;
+    
+    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    #endregion
     
     [ScriptMethod(name: "迷失连线", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^758[67]$"])]
     public void 迷失连线(Event @event, ScriptAccessory accessory)
     {
         // Data ID 7586: 迷失少女 ；7587：迷失者
-        accessory.Method.TextInfo("迷失出现", duration: 5000, true);
-        accessory.Method.TTS("迷失出现");
+        if(isText) accessory.Method.TextInfo("迷失出现", duration: 5000, true);
+        if(isTTS) accessory.Method.TTS("迷失出现");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("迷失出现");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "迷失连线";
@@ -62,11 +76,15 @@ public class Daivadipa
         switch (@event.ActionId())
         {
             case 26498:
-                accessory.Method.TextInfo("先蓝色安全", duration: 5000, false);
+                if(isText) accessory.Method.TextInfo("先蓝色安全", duration: 5000, false);
+                if(isTTS) accessory.Method.TTS("先蓝色安全");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("先蓝色安全");
                 break;
 
             case 26499:
-                accessory.Method.TextInfo("先红色安全", duration: 5000, true);
+                if(isText) accessory.Method.TextInfo("先红色安全", duration: 5000, true);
+                if(isTTS) accessory.Method.TTS("先红色安全");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("先红色安全");
                 break;
         }
     }
@@ -219,30 +237,34 @@ public class Daivadipa
         dp.Name = "移动命令";
         dp.Color = accessory.Data.DefaultSafeColor;
         dp.Owner = @event.TargetId();
-        dp.Scale = new Vector2(1f, 5f);
+        dp.Scale = new Vector2(1f, 6f);
         dp.DestoryAt = 3000;
         
         switch (@event["StatusID"])
         {
             case "1958":
                 dp.Rotation = 0f.DegToRad();
-                accessory.Method.EdgeTTS("向前移动到安全区");
-                accessory.Method.TextInfo("强制移动：前", duration: 3000, true);
+                if(isText) accessory.Method.TextInfo("强制移动：前", duration: 3000, true);
+                if(isTTS) accessory.Method.TTS("向前移动到安全区");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("向前移动到安全区");
                 break;
             case "1959":
                 dp.Rotation = 180f.DegToRad();
-                accessory.Method.EdgeTTS("向后移动到安全区");
-                accessory.Method.TextInfo("强制移动：后", duration: 3000, true);
+                if(isText) accessory.Method.TextInfo("强制移动：后", duration: 3000, true);
+                if(isTTS) accessory.Method.TTS("向后移动到安全区");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("向后移动到安全区");
                 break;
             case "1960":
                 dp.Rotation = 90f.DegToRad();
-                accessory.Method.EdgeTTS("向左移动到安全区");
-                accessory.Method.TextInfo("强制移动：左", duration: 3000, true);
+                if(isText) accessory.Method.TextInfo("强制移动：左", duration: 3000, true);
+                if(isTTS) accessory.Method.TTS("向左移动到安全区");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("向左移动到安全区");
                 break;
             case "1961":
                 dp.Rotation = 270f.DegToRad();
-                accessory.Method.EdgeTTS("向右移动到安全区");
-                accessory.Method.TextInfo("强制移动：右", duration: 3000, true);
+                if(isText) accessory.Method.TextInfo("强制移动：右", duration: 3000, true);
+                if(isTTS) accessory.Method.TTS("向右移动到安全区");
+                if(isEdgeTTS) accessory.Method.EdgeTTS("向右移动到安全区");
                 break;
         }
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Arrow, dp);
