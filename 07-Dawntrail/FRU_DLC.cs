@@ -12,22 +12,22 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
+// using ECommons;
+// using ECommons.DalamudServices;
+//  ECommons.GameFunctions;
+// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace FRU_DLC;
 
 [ScriptType(guid: "981e39b5-ea99-4b85-a4b1-0e698d4c4036", name: "FRU_DLC [光暗未来绝境战_额外补充]", territorys: [1238],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class FRU_DLC
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         光暗未来绝境战 额外补充部分
         可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分
         建议先在方法设置里全部关闭，再按自己需求开启
