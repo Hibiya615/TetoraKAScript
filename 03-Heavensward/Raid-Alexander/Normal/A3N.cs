@@ -12,22 +12,22 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
+// using ECommons;
+// using ECommons.DalamudServices;
+// using ECommons.GameFunctions;
+// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace A3N;
 
 [ScriptType(guid: "69712d1f-26c4-441f-97f0-e63f8baf98a6", name: "A3N", territorys: [444],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class A3N
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV60 亚历山大机神城 启动之章3（有生命活水） 初版绘制
         """;
     
