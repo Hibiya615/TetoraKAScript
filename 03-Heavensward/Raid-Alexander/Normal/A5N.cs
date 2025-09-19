@@ -3,25 +3,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 using KodakkuAssist.Extensions;
 
 namespace A5N;
 
 [ScriptType(guid: "1462516c-2bc2-4560-8244-387845cc098d", name: "A5N", territorys: [520],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class A5N
 {

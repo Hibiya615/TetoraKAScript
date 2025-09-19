@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
@@ -12,16 +10,12 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Extensions;
 using KodakkuAssist.Data;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace Zurvan;
 
 [ScriptType(guid: "214f8fbd-ad04-430f-8bba-fd7319581780", name: "祖尔宛歼灭战", territorys: [637],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Zurvan
 {
@@ -320,3 +314,4 @@ public static class EventExtensions
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
 }
+

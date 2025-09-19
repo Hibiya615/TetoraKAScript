@@ -3,25 +3,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 using KodakkuAssist.Extensions;
 
 namespace the_Whorleater_Extreme;
 
 [ScriptType(guid: "07f20e0e-9463-4a10-9dd1-956fde6a9c46", name: "利维亚桑歼殛战", territorys: [359],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class the_Whorleater_Extreme
 {

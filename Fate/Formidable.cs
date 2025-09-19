@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
@@ -12,16 +10,12 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace A_Finale_Most_Formidable;
 
 [ScriptType(guid: "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489", name: "激斗畏惧装甲之秘密武器", territorys: [814],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class Formidable
 {

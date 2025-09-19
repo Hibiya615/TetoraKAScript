@@ -3,24 +3,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
-// using ECommons;
-// using ECommons.DalamudServices;
-// using ECommons.GameFunctions;
-// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace DhormeChimera;
 
 [ScriptType(guid: "e24bb311-704f-4f4c-8188-87eaa8da8b29", name: "死化奇美拉讨伐战", territorys: [368],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class DhormeChimera
 {

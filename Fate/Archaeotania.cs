@@ -12,16 +12,12 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace TheHead_theTail_theWholeDamnedThing;
 
 [ScriptType(guid: "f11c3069-d163-41dd-904e-b016cfcf089c", name: "灾厄的古塔尼亚之深海讨伐战", territorys: [818],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Archaeotania
 {

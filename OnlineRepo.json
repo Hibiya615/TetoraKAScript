@@ -2,7 +2,7 @@
   {
     "Name": "随机任务：主线任务",
     "Guid": "84c15eea-2a19-4477-ad21-cd43d1263cfa",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Dungeon/MainScenario_Roulette.cs",
@@ -17,7 +17,7 @@
   {
     "Name": "邪龙王座龙巢神殿",
     "Guid": "ac6caf4e-5eee-406c-8621-a5f3c5c7e9b0",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Dungeon/theAery.cs",
@@ -30,7 +30,7 @@
   {
     "Name": "鏖战红莲阿拉米格",
     "Guid": "aa0ae191-da3f-48f1-9340-46a56cfeeabf",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/AlaMhigo.cs",
@@ -43,7 +43,7 @@
   {
     "Name": "疯狂战舰无限回廊",
     "Guid": "c76136e1-1b5b-4cfb-a677-4cc0917fa050",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/theFractalContinuum-Hard.cs",
@@ -56,7 +56,7 @@
   {
     "Name": "污染庭园圣茉夏娜植物园",
     "Guid": "7e87b5d1-ae21-4115-9483-d8dc0f1d1652",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/SaintMocianne'sArboretum%20(Hard).cs",
@@ -69,7 +69,7 @@
   {
     "Name": "异界遗构希尔科斯孪晶塔",
     "Guid": "bfb00cd3-ccec-4b21-b3d7-e290f49e6a75",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Dungeon/theTwinning.cs",
@@ -82,7 +82,7 @@
   {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ifrit(Hard).cs",
@@ -95,7 +95,7 @@
   {
     "Name": "迦楼罗歼灭战",
     "Guid": "ef230d41-5fbf-413d-b745-7227efebec48",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Garuda(Hard).cs",
@@ -108,7 +108,7 @@
   {
     "Name": "拉姆歼灭战",
     "Guid": "de6d6f10-775d-4c45-91ec-2bd4ed6762c7",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ramuh(Hard).cs",
@@ -121,7 +121,7 @@
   {
     "Name": "希瓦歼灭战",
     "Guid": "cddb93a8-e01e-40fe-989c-5153ad62bfbc",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Shiva.cs",
@@ -134,7 +134,7 @@
   {
     "Name": "莫古力贤王歼灭战(整活版)",
     "Guid": "cd81e178-12e6-4e53-9b81-63002cc51ecb",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Good_King_Moggle-Hard.cs",
@@ -147,7 +147,7 @@
   {
     "Name": "那布里亚勒斯讨伐战",
     "Guid": "64206b9e-cd0a-47ec-960d-15f39a888f9e",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Nabriales.cs",
@@ -160,7 +160,7 @@
   {
     "Name": "海德拉讨伐战",
     "Guid": "d32d7489-a1bb-4117-98dd-ee895390804d",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Hydra.cs",
@@ -173,7 +173,7 @@
   {
     "Name": "死化奇美拉讨伐战",
     "Guid": "e24bb311-704f-4f4c-8188-87eaa8da8b29",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/DhormeChimera.cs",
@@ -186,7 +186,7 @@
   {
     "Name": "奥丁歼灭战",
     "Guid": "1a07440d-a7bd-4b67-b781-90d14087ee60",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Odin.cs",
@@ -199,7 +199,7 @@
   {
     "Name": "大桥上的决斗",
     "Guid": "3e4102cb-9410-44fd-85e8-d43a3bc25737",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleOnTheBigBridge.cs",
@@ -212,7 +212,7 @@
   {
     "Name": "无限城的死斗",
     "Guid": "90783a42-7947-4392-9c3e-f3162d52c248",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleInTheBigKeep.cs",
@@ -225,7 +225,7 @@
   {
     "Name": "尼德霍格征龙战",
     "Guid": "dcfdb19e-0357-4214-b64e-205100f55822",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Nidhogg.cs",
@@ -238,7 +238,7 @@
   {
     "Name": "萨菲洛特歼灭战",
     "Guid": "6d0824b3-6d67-4450-8b4e-46857257579e",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Sephirot.cs",
@@ -251,7 +251,7 @@
   {
     "Name": "祖尔宛歼灭战",
     "Guid": "214f8fbd-ad04-430f-8bba-fd7319581780",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Zurvan.cs",
@@ -264,7 +264,7 @@
   {
     "Name": "须佐之男歼灭战",
     "Guid": "2c4b6205-6a77-4c89-b641-2c2359a43f25",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Susano.cs",
@@ -277,7 +277,7 @@
   {
     "Name": "吉祥天女歼灭战",
     "Guid": "a7bacd3e-834f-41ba-a210-c66e2c12d208",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Lakshmi.cs",
@@ -290,7 +290,7 @@
   {
     "Name": "神龙歼灭战",
     "Guid": "da23fd13-2d1f-41d3-b2c9-91fd8d948a98",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Shinryu.cs",
@@ -303,7 +303,7 @@
   {
     "Name": "月读歼灭战",
     "Guid": "97415dc8-cd16-4c9b-87be-026a297c3451",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Tsukuyomi.cs",
@@ -316,7 +316,7 @@
   {
     "Name": "白虎镇魂战",
     "Guid": "6a9e30e9-c58e-4f39-9f1e-ad26e5d49dc3",
-    "Version": "0.0.0.11",
+    "Version": "0.0.0.12",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main  ",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Byakko.cs",
@@ -329,7 +329,7 @@
   {
     "Name": "朱雀镇魂战",
     "Guid": "fc907987-bad9-4c70-97f6-b91e2e70544b",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Suzaku.cs",
@@ -342,7 +342,7 @@
   {
     "Name": "保镖歼灭战",
     "Guid": "944c8879-0d4e-4182-87ea-c38769990f2d",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Yojimbo.cs",
@@ -355,7 +355,7 @@
   {
     "Name": "缇坦妮雅歼灭战",
     "Guid": "71a3a109-0ac3-4041-aa87-ff156f5aaeea",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Trials/Titania.cs",
@@ -368,7 +368,7 @@
   {
     "Name": "哈迪斯歼灭战",
     "Guid": "ebcac22b-8a1d-49c4-ae1f-1470be15f7e3",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Trials/Hades.cs",
@@ -381,7 +381,7 @@
   {
     "Name": "高贝扎歼灭战",
     "Guid": "8a526afb-eefd-44ec-a105-7dc8fcd28e47",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Golbez.cs",
@@ -394,7 +394,7 @@
   {
     "Name": "泽罗姆斯歼灭战",
     "Guid": "1d6d7238-e986-408c-9c25-b24955542ee0",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Zeromus.cs",
@@ -407,7 +407,7 @@
   {
     "Name": "迦楼罗歼殛战",
     "Guid": "3e4685ed-1425-4ddc-8222-a2c15dcc9ad5",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Garuda(Extreme).cs",
@@ -420,7 +420,7 @@
   {
     "Name": "伊弗利特歼殛战",
     "Guid": "dbb7983a-d2c4-4621-9734-76772e3f206a",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Ifrit(Extreme).cs",
@@ -433,7 +433,7 @@
   {
     "Name": "莫古力贤王歼殛战",
     "Guid": "fc6a6125-4a1d-4669-be4c-9b375dc70ae0",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Good_King_Moggle(Extreme).cs",
@@ -446,7 +446,7 @@
   {
     "Name": "利维亚桑歼殛战",
     "Guid": "07f20e0e-9463-4a10-9dd1-956fde6a9c46",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Leviathan(Extreme).cs",
@@ -459,7 +459,7 @@
   {
     "Name": "俾斯麦歼殛战",
     "Guid": "56751be8-113f-4496-8b46-982ff96d90c3",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials-Extreme/Bismarck-Extreme.cs",
@@ -472,7 +472,7 @@
   {
     "Name": "A3N",
     "Guid": "69712d1f-26c4-441f-97f0-e63f8baf98a6",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A3N.cs",
@@ -485,7 +485,7 @@
   {
     "Name": "A5N",
     "Guid": "1462516c-2bc2-4560-8244-387845cc098d",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A5N.cs",
@@ -498,7 +498,7 @@
   {
     "Name": "O4N",
     "Guid": "f24f9cef-717e-4a2a-9616-d470443d6d8a",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O4n.cs",
@@ -511,7 +511,7 @@
   {
     "Name": "O5N",
     "Guid": "af11ce46-2c6a-46ba-b2bc-c542e5f5b7b5",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O5n.cs",
@@ -524,7 +524,7 @@
   {
     "Name": "O11N",
     "Guid": "2232ae84-c1e7-4382-88b4-d691887f27cf",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O11n.cs",
@@ -537,7 +537,7 @@
   {
     "Name": "E1N",
     "Guid": "35c751e5-2958-4f55-b783-405b4acfde1b",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E1n.cs",
@@ -550,7 +550,7 @@
   {
     "Name": "E2N",
     "Guid": "b59c7db9-1fba-4476-8701-1e3043cb7dc8",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E2n.cs",
@@ -563,7 +563,7 @@
   {
     "Name": "E8N",
     "Guid": "c4d533c8-8798-441d-b849-fc3cd5cf63d9",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E8n.cs",
@@ -576,7 +576,7 @@
   {
     "Name": "E9N",
     "Guid": "e4b80c15-7885-46b7-8e3d-201a6a248c89",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E9n.cs",
@@ -589,7 +589,7 @@
   {
     "Name": "E10N",
     "Guid": "038e00e8-d378-4f43-89ab-e27df5561d5a",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E10n.cs",
@@ -602,7 +602,7 @@
   {
     "Name": "E12N",
     "Guid": "3f88ad9c-e7a7-4e00-b19e-546609b319ba",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E12n.cs",
@@ -615,7 +615,7 @@
   {
     "Name": "P10N",
     "Guid": "f28cc2f2-6ce2-4526-a303-56fe1c02dea8",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P10n.cs",
@@ -628,7 +628,7 @@
   {
     "Name": "P11N",
     "Guid": "07be068a-65ea-4fd9-a324-9ec5326bb04b",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P11n.cs",
@@ -641,7 +641,7 @@
   {
     "Name": "死者宫殿",
     "Guid": "4210c323-eba4-4d67-a7e7-b90799494729",
-    "Version": "0.0.0.6",
+    "Version": "0.0.0.7",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/the_Palace_of_the_Dead.cs",
@@ -673,7 +673,7 @@
   {
     "Name": "天青斗场",
     "Guid": "7703f1a9-5698-4896-8908-bb8e415c1321",
-    "Version": "0.0.0.5",
+    "Version": "0.0.0.6",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/Celestium.cs",
@@ -686,7 +686,7 @@
   {
     "Name": "激斗畏惧装甲之秘密武器",
     "Guid": "5f55a121-1fcc-48ce-a0e8-b6fbd4ce8489",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Formidable.cs",
@@ -699,7 +699,7 @@
   {
     "Name": "灾厄的古塔尼亚之深海讨伐战",
     "Guid": "f11c3069-d163-41dd-904e-b016cfcf089c",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
@@ -712,7 +712,7 @@
   {
     "Name": "兽道诸神信仰：伪神降临",
     "Guid": "da82aeb0-9635-4f13-a1c1-39a0c859f596",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Daivadipa.cs",
@@ -725,7 +725,7 @@
   {
     "Name": "侵略兵器召回指令：破坏侵略兵器希",
     "Guid": "b73d07ef-aa90-45a9-ab4b-fc3ccce8791b",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Chi.cs",
@@ -738,7 +738,7 @@
   {
     "Name": "蛇王得酷热涅：荒野的死斗",
     "Guid": "ab67129e-880f-48e8-852e-f92b4afa68e5",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Ttokrrone.cs",
@@ -751,7 +751,7 @@
   {
     "Name": "亩鼠米卡：盛装巡游皆大欢喜",
     "Guid": "22134617-0ca4-463e-a40d-675ef1c20cf2",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Mica_the_MagicalMu.cs",
@@ -764,7 +764,7 @@
   {
     "Name": "FRU_DLC [光暗未来绝境战_额外补充]",
     "Guid": "981e39b5-ea99-4b85-a4b1-0e698d4c4036",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/FRU_DLC.cs",

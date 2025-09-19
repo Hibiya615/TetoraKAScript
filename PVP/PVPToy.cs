@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
@@ -12,16 +10,12 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-// using ECommons;
-// using ECommons.DalamudServices;
-// using ECommons.GameFunctions;
-// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace PVPToy;
 
 [ScriptType(guid: "2312052e-6575-4a91-9e3d-b84699dca8fe", name: "PVP小玩具", territorys: [250, 431, 554, 888, 1273],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class PVPToy
 {

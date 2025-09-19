@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
@@ -12,16 +10,12 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace Byakko;
 
 [ScriptType(guid: "6a9e30e9-c58e-4f39-9f1e-ad26e5d49dc3", name: "白虎镇魂战", territorys: [746],
-    version: "0.0.0.11", author: "Tetora", note: noteStr)]
+    version: "0.0.0.12", author: "Tetora", note: noteStr)]
 
 public class Byakko
 {
