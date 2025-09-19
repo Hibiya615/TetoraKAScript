@@ -12,22 +12,22 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
+// using ECommons;
+// using ECommons.DalamudServices;
+// using ECommons.GameFunctions;
+// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace MainScenario_Roulette;
 
 [ScriptType(guid: "84c15eea-2a19-4477-ad21-cd43d1263cfa", name: "随机任务：主线任务", territorys: [1043, 1044, 1048],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class MainScenario_Roulette
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV50 随机任务：主线任务 初版绘制
         选项中的DR辅助需要你正确安装Daily Routines插件才可使用
         """;
@@ -253,13 +253,13 @@ public class MainScenario_Roulette
         switch (@event.ActionId())
         {
             case 29010:  // 左
-                dp.Rotation = 45f.DegToRad();
+                dp.Rotation = MathHelpers.DegToRad(45f);
                 break;
             case 29008:  // 中
-                dp.Rotation = 0f.DegToRad();
+                dp.Rotation = MathHelpers.DegToRad(0f);
                 break;
             case 29009:  // 右
-                dp.Rotation = 315f.DegToRad();
+                dp.Rotation = MathHelpers.DegToRad(315f);
                 break;
         }
         dp.DestoryAt = 1900;
@@ -422,5 +422,28 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
+    }
+}
+
+public static class MathHelpers
+{
+    public static float DegToRad(float degrees)
+    {
+        return degrees * (float)(Math.PI / 180.0);
+    }
+    
+    public static double DegToRad(double degrees)
+    {
+        return degrees * Math.PI / 180.0;
+    }
+    
+    public static float RadToDeg(float radians)
+    {
+        return radians * (float)(180.0 / Math.PI);
+    }
+    
+    public static double RadToDeg(double radians)
+    {
+        return radians * 180.0 / Math.PI;
     }
 }

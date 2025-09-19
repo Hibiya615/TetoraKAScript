@@ -2,12 +2,12 @@
   {
     "Name": "随机任务：主线任务",
     "Guid": "84c15eea-2a19-4477-ad21-cd43d1263cfa",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Dungeon/MainScenario_Roulette.cs",
-    "Note": "v0.0.0.1:\r\nLV50 随机任务：主线任务 初版绘制\r\n选项中的DR辅助需要你正确安装Daily Routines插件才可使用",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nLV50 随机任务：主线任务 初版绘制\r\n选项中的DR辅助需要你正确安装Daily Routines插件才可使用",
+    "UpdateInfo": "v0.0.0.2: 7.3",
     "TerritoryIds": [
       1043,
       1044,
@@ -173,12 +173,12 @@
   {
     "Name": "死化奇美拉讨伐战",
     "Guid": "e24bb311-704f-4f4c-8188-87eaa8da8b29",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/DhormeChimera.cs",
-    "Note": "v0.0.0.2:\r\nLV50 死化奇美拉讨伐战 初版绘制",
-    "UpdateInfo": "增加TTS选项",
+    "Note": "v0.0.0.3:\r\nLV50 死化奇美拉讨伐战 初版绘制",
+    "UpdateInfo": "v0.0.0.3: 7.3",
     "TerritoryIds": [
       368
     ]

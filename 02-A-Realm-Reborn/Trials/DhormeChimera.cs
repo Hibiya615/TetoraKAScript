@@ -11,22 +11,22 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
+// using ECommons;
+// using ECommons.DalamudServices;
+// using ECommons.GameFunctions;
+// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace DhormeChimera;
 
 [ScriptType(guid: "e24bb311-704f-4f4c-8188-87eaa8da8b29", name: "死化奇美拉讨伐战", territorys: [368],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class DhormeChimera
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         LV50 死化奇美拉讨伐战 初版绘制
         """;
     
@@ -83,8 +83,8 @@ public class DhormeChimera
         dp.Color = new Vector4(1f, 0.2f, 1f, 0.4f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(9.7f);
-        dp.Radian = 120f.DegToRad();
-        dp.Rotation = 45f.DegToRad();
+        dp.Radian = MathHelpers.DegToRad(120f);
+        dp.Rotation = MathHelpers.DegToRad(45);
         dp.DestoryAt = 60000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
@@ -97,8 +97,8 @@ public class DhormeChimera
         dp.Color = new Vector4(0f, 1f, 1f, 0.4f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(9.7f);
-        dp.Radian = 120f.DegToRad();
-        dp.Rotation = -45f.DegToRad();
+        dp.Radian = MathHelpers.DegToRad(120f);
+        dp.Rotation = MathHelpers.DegToRad(-45);
         dp.DestoryAt = 60000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
@@ -279,17 +279,25 @@ public static class EventExtensions
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
 }
-public static class Extensions
+public static class MathHelpers
 {
-    public static void TTS(this ScriptAccessory accessory, string text, bool isTTS, bool isDRTTS)
+    public static float DegToRad(float degrees)
     {
-        if (isDRTTS)
-        {
-            accessory.Method.SendChat($"/pdr tts {text}");
-        }
-        else if (isTTS)
-        {
-            accessory.Method.TTS(text);
-        }
+        return degrees * (float)(Math.PI / 180.0);
+    }
+    
+    public static double DegToRad(double degrees)
+    {
+        return degrees * Math.PI / 180.0;
+    }
+    
+    public static float RadToDeg(float radians)
+    {
+        return radians * (float)(180.0 / Math.PI);
+    }
+    
+    public static double RadToDeg(double radians)
+    {
+        return radians * 180.0 / Math.PI;
     }
 }
