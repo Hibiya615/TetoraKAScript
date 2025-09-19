@@ -1,37 +1,33 @@
 using Dalamud.Game.ClientState.Objects.Types;
-using ECommons.DalamudServices;
-using System;
-using System.Linq;
-using System.Numerics;
-using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
-using KodakkuAssist.Script;
-using KodakkuAssist.Module.GameEvent;
+using FFXIVClientStructs;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using FFXIVClientStructs.FFXIV.Client.UI;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Module.Draw.Manager;
-using ECommons.ExcelServices.TerritoryEnumeration;
-using System.Reflection.Metadata;
-using System.Net;
-using System.Threading.Tasks;
-using System.Runtime.Intrinsics.Arm;
+using KodakkuAssist.Module.GameEvent;
+using KodakkuAssist.Script;
+using Lumina.Data.Structs;
+using Newtonsoft.Json;
+using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using ECommons.Reflection;
-using System.Windows;
-using ECommons;
-using ECommons.GameFunctions;
-using FFXIVClientStructs;
-using System;
+using System.Linq;
+using System.Net;
+using System.Numerics;
+using System.Reflection.Metadata;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Xml.Linq;
-using FFXIVClientStructs.FFXIV.Client.UI;
-using Lumina.Data.Structs;
 
 namespace E7S;
 
 
 [ScriptType(name: "E7S", territorys: [908], guid: "edb1e7fd-79cf-4bff-b134-7c55a1d31b36",
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class E7S
 {
@@ -113,7 +109,7 @@ public class E7S
     [ScriptMethod(name: "debug", eventType: EventTypeEnum.Chat, eventCondition: ["Message:debug"])]
     public async void debug(Event @event, ScriptAccessory accessory)
     {
-        var myself = IbcHelper.GetByEntityId(accessory.Data.Me);
+        var myself = accessory.Data.Objects.SearchByEntityId(accessory.Data.Me) as IBattleChara;
         if (myself == null) return;
         var buffId = myself.HasStatus(2238) ? 2238 : 2239;
         DebugMsg($"buffId: {buffId}", accessory);
@@ -297,7 +293,7 @@ public class E7S
                 // 2238 Light     //19516 & 19490     // 0x8BE
                 // 2239 Darkness  //19517 & 19491     // 0x8BF
                 DebugMsg($"{LightsCourseCount}: {@event.ActionId()}", accessory);
-                var myself = IbcHelper.GetByEntityId(accessory.Data.Me);
+                var myself = accessory.Data.Objects.SearchByEntityId(accessory.Data.Me) as IBattleChara;
                 if (myself == null) return;
                 var buffId = myself.HasStatus(2238) ? 2238 : 2239;
                 DebugMsg($"buffId: {buffId}", accessory);
@@ -333,7 +329,7 @@ public class E7S
                 // 2238 Light     //19516 & 19490     // 0x8BE
                 // 2239 Darkness  //19517 & 19491 & 19521     // 0x8BF
                 DebugMsg($"{LightsCourseCount}: {@event.ActionId()}", accessory);
-                var myself = IbcHelper.GetByEntityId(accessory.Data.Me);
+                var myself = accessory.Data.Objects.SearchByEntityId(accessory.Data.Me) as IBattleChara;
                 if (myself == null) return;
                 var buffId = myself.HasStatus(2238) ? 2238 : 2239;
                 DebugMsg($"buffId: {buffId}", accessory);
@@ -745,36 +741,47 @@ public static class Extensions
 
 public static class IbcHelper
 {
-    public static IBattleChara? GetById(uint id)
+    public static KodakkuAssist.Data.IGameObject? GetById(ScriptAccessory accessory, uint id)
     {
-        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
+        return accessory.Data.Objects.SearchByEntityId(id);
     }
 
-    public static IBattleChara? GetMe()
+    public static KodakkuAssist.Data.IGameObject? GetMe(ScriptAccessory accessory)
     {
-        return Svc.ClientState.LocalPlayer;
+        return accessory.Data.Objects.SearchByEntityId(accessory.Data.Me);
     }
 
-    public static IGameObject? GetFirstByDataId(uint dataId)
+    public static KodakkuAssist.Data.IGameObject? GetFirstByDataId(ScriptAccessory accessory, uint dataId)
     {
-        return Svc.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
+        return accessory.Data.Objects.Where(x => x.DataId == dataId).FirstOrDefault();
     }
 
-    public static IEnumerable<IGameObject?> GetByDataId(uint dataId)
+    public static IEnumerable<KodakkuAssist.Data.IGameObject> GetByDataId(ScriptAccessory accessory, uint dataId)
     {
-        return Svc.Objects.Where(x => x.DataId == dataId);
-    }
-    public static IBattleChara? GetByEntityId(uint id)
-    {
-        return (IBattleChara?)Svc.Objects.SearchByEntityId(id);
-    }
-    public static bool HasStatus(this IBattleChara chara, uint statusId)
-    {
-        return chara.StatusList.Any(x => x.StatusId == statusId);
+        return accessory.Data.Objects.Where(x => x.DataId == dataId);
     }
 
-    public static bool HasStatus(this IBattleChara chara, uint[] statusIds)
+    public static IEnumerable<KodakkuAssist.Data.IGameObject> GetParty(ScriptAccessory accessory)
     {
-        return chara.StatusList.Any(x => statusIds.Contains(x.StatusId));
+        foreach (var pid in accessory.Data.PartyList)
+        {
+            var obj = accessory.Data.Objects.SearchByEntityId(pid);
+            if (obj != null) yield return obj;
+        }
+    }
+
+    public static IEnumerable<KodakkuAssist.Data.IGameObject> GetPartyEntities(ScriptAccessory accessory)
+    {
+        return accessory.Data.Objects.Where(obj => accessory.Data.PartyList.Contains(obj.EntityId));
+    }
+
+    public static bool HasStatus(this IBattleChara ibc, uint statusId)
+    {
+        return ibc.StatusList.Any(x => x.StatusId == statusId);
+    }
+
+    public static bool HasStatusAny(this IBattleChara ibc, uint[] statusIds)
+    {
+        return ibc.StatusList.Any(x => statusIds.Contains(x.StatusId));
     }
 }

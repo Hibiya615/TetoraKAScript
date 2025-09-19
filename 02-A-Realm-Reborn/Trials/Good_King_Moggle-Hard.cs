@@ -3,25 +3,19 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
-using ECommons;
-using ECommons.DalamudServices;
-using ECommons.GameFunctions;
-using ECommons.MathHelpers;
 using System.Threading.Tasks;
 using KodakkuAssist.Extensions;
 
 namespace Thornmarch_Hard;
 
 [ScriptType(guid: "cd81e178-12e6-4e53-9b81-63002cc51ecb", name: "莫古力贤王歼灭战(整活版)", territorys: [1067],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Thornmarch_Hard
 {
@@ -688,3 +682,113 @@ public static class EventExtensions
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
 }
+
+
+
+#region 计算函数
+
+public static class MathTools
+{
+    public static float DegToRad(this float deg) => (deg + 360f) % 360f / 180f * float.Pi;
+    public static float RadToDeg(this float rad) => (rad + 2 * float.Pi) % (2 * float.Pi) / float.Pi * 180f;
+
+    /// <summary>
+    /// 获得任意点与中心点的弧度值，以(0, 0, 1)方向为0，以(1, 0, 0)方向为pi/2。
+    /// 即，逆时针方向增加。
+    /// </summary>
+    /// <param name="point">任意点</param>
+    /// <param name="center">中心点</param>
+    /// <returns></returns>
+    public static float GetRadian(this Vector3 point, Vector3 center)
+        => MathF.Atan2(point.X - center.X, point.Z - center.Z);
+
+    /// <summary>
+    /// 获得任意点与中心点的长度。
+    /// </summary>
+    /// <param name="point">任意点</param>
+    /// <param name="center">中心点</param>
+    /// <returns></returns>
+    public static float GetLength(this Vector3 point, Vector3 center)
+        => new Vector2(point.X - center.X, point.Z - center.Z).Length();
+
+    /// <summary>
+    /// 将任意点以中心点为圆心，逆时针旋转并延长。
+    /// </summary>
+    /// <param name="point">任意点</param>
+    /// <param name="center">中心点</param>
+    /// <param name="radian">旋转弧度</param>
+    /// <param name="length">基于该点延伸长度</param>
+    /// <returns></returns>
+    public static Vector3 RotateAndExtend(this Vector3 point, Vector3 center, float radian, float length)
+    {
+        var baseRad = point.GetRadian(center);
+        var baseLength = point.GetLength(center);
+        var rotRad = baseRad + radian;
+        return new Vector3(
+            center.X + MathF.Sin(rotRad) * (length + baseLength),
+            center.Y,
+            center.Z + MathF.Cos(rotRad) * (length + baseLength)
+        );
+    }
+
+    /// <summary>
+    /// 获得某角度所在划分区域
+    /// </summary>
+    /// <param name="radian">输入弧度</param>
+    /// <param name="regionNum">区域划分数量</param>
+    /// <param name="baseRegionIdx">0度所在区域的初始Idx</param>>
+    /// <param name="isDiagDiv">是否为斜分割，默认为false</param>
+    /// <param name="isCw">是否顺时针增加，默认为false</param>
+    /// <returns></returns>
+    public static int RadianToRegion(this float radian, int regionNum, int baseRegionIdx = 0, bool isDiagDiv = false, bool isCw = false)
+    {
+        var sepRad = float.Pi * 2 / regionNum;
+        var inputAngle = radian * (isCw ? -1 : 1) + (isDiagDiv ? sepRad / 2 : 0);
+        var rad = (inputAngle + 4 * float.Pi) % (2 * float.Pi);
+        return ((int)Math.Floor(rad / sepRad) + baseRegionIdx + regionNum) % regionNum;
+    }
+
+    /// <summary>
+    /// 将输入点左右折叠
+    /// </summary>
+    /// <param name="point">待折叠点</param>
+    /// <param name="centerX">中心折线坐标点</param>
+    /// <returns></returns>
+    public static Vector3 FoldPointHorizon(this Vector3 point, float centerX)
+        => point with { X = 2 * centerX - point.X };
+
+    /// <summary>
+    /// 将输入点上下折叠
+    /// </summary>
+    /// <param name="point">待折叠点</param>
+    /// <param name="centerZ">中心折线坐标点</param>
+    /// <returns></returns>
+    public static Vector3 FoldPointVertical(this Vector3 point, float centerZ)
+        => point with { Z = 2 * centerZ - point.Z };
+
+    /// <summary>
+    /// 将输入点中心对称
+    /// </summary>
+    /// <param name="point">输入点</param>
+    /// <param name="center">中心点</param>
+    /// <returns></returns>
+    public static Vector3 PointCenterSymmetry(this Vector3 point, Vector3 center)
+        => point.RotateAndExtend(center, float.Pi, 0);
+
+    /// <summary>
+    /// 获取给定数的指定位数
+    /// </summary>
+    /// <param name="val">给定数值</param>
+    /// <param name="x">对应位数，个位为1</param>
+    /// <returns></returns>
+    public static int GetDecimalDigit(this int val, int x)
+    {
+        var valStr = val.ToString();
+        var length = valStr.Length;
+        if (x < 1 || x > length) return -1;
+        var digitChar = valStr[length - x]; // 从右往左取第x位
+        return int.Parse(digitChar.ToString());
+    }
+}
+
+#endregion 计算函数

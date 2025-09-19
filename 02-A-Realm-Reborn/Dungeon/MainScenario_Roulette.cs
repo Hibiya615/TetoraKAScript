@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
@@ -12,16 +10,12 @@ using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
-// using ECommons;
-// using ECommons.DalamudServices;
-// using ECommons.GameFunctions;
-// using ECommons.MathHelpers;
 using System.Threading.Tasks;
 
 namespace MainScenario_Roulette;
 
 [ScriptType(guid: "84c15eea-2a19-4477-ad21-cd43d1263cfa", name: "随机任务：主线任务", territorys: [1043, 1044, 1048],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class MainScenario_Roulette
 {
