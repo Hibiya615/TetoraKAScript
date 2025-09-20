@@ -1,3 +1,4 @@
+
 using System;
 using System.ComponentModel;
 using System.Linq;
@@ -55,6 +56,8 @@ public class The_Ageless_Necropolis
     }
     
     #endregion
+    
+    #region 简单机制
     
     [ScriptMethod(name: "招死之手_压溃（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44523"])]
     public void 招死之手_压溃(Event @event, ScriptAccessory accessory)
@@ -131,7 +134,52 @@ public class The_Ageless_Necropolis
     }
     */
     
-    [ScriptMethod(name:"青魂记录", eventType:EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^02[56](C|D|E)$"], userControl:false)]
+    [ScriptMethod(name: "青之魂块_大十字（距离衰减安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44535"])]
+    public void 青之魂块_大十字距离衰减安全区(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS("去斜角贴边");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("去斜角贴边");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "青之魂块_大十字距离衰减安全区";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(5f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(0.5f);
+        dp.DestoryAt = 4700;
+        
+        Vector3[] offsets = {
+            new Vector3(6, 0, 6),
+            new Vector3(6, 0, -6),
+            new Vector3(-6, 0, 6),
+            new Vector3(-6, 0, -6)
+        };
+
+        foreach (var offset in offsets)
+        {
+            dp.Offset = offset;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "暗之巨腕_拖入（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44817"])]
+    public void 暗之巨腕_拖入(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "暗之巨腕_拖入";
+        dp.Scale = new (10, 36f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    #endregion
+    
+    #region 青魂
+    
+    // ActionId: 青魂 [44527] ; 青之波动 [44528] ; 青之连魂 [普 44531] [极 44564]; 灵魂轮转 [44609] ; 青之连波潮 [45166]
+    
+   [ScriptMethod(name:"青魂记录", eventType:EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^02[56](C|D|E)$"], userControl:false)]
     public void 青魂记录(Event @event, ScriptAccessory accessory) 
     {
         if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG] 成功检测到TargetIcon生成, Id: {@event.Id().ToString("X4")}, targetid: {@event.TargetId()}");
@@ -158,8 +206,6 @@ public class The_Ageless_Necropolis
         }
     }
     
-    
-
     [ScriptMethod(name: "青之波动（释放钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44528"])]
     public void 青之波动(Event @event, ScriptAccessory accessory)
     {
@@ -200,44 +246,8 @@ public class The_Ageless_Necropolis
         }
     }
     
-    [ScriptMethod(name: "青之魂块_大十字（距离衰减安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44535"])]
-    public void 青之魂块_大十字距离衰减安全区(Event @event, ScriptAccessory accessory)
-    {
-        if (isTTS)accessory.Method.TTS("去斜角贴边");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("去斜角贴边");
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "青之魂块_大十字距离衰减安全区";
-        dp.Color = accessory.Data.DefaultSafeColor.WithW(5f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(0.5f);
-        dp.DestoryAt = 4700;
-        
-        Vector3[] offsets = {
-            new Vector3(6, 0, 6),
-            new Vector3(6, 0, -6),
-            new Vector3(-6, 0, 6),
-            new Vector3(-6, 0, -6)
-        };
+    #endregion
 
-        foreach (var offset in offsets)
-        {
-            dp.Offset = offset;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "暗之巨腕_拖入（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44817"])]
-    public void 暗之巨腕_拖入(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "暗之巨腕_拖入";
-        dp.Scale = new (10, 36f);
-        dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = 4700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
-    }
 }
 
 public static class EventExtensions
