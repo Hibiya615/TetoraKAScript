@@ -42,20 +42,16 @@ public class The_Ageless_Necropolis
     uint Circle4=0; // 025C [青之连魂]
     uint Dount1=0; // 026E [青魂]
     uint Dount4=0; // 025D [青之连魂]
-    uint MidDanger1=0;  // 
-    uint MidDanger4=0;  // 025F [青之连魂]
-    uint SideDanger1=0;  // 
-    uint SideDanger4=0;  // 025E [青之连魂]
+    uint MidDanger=0;  // 025F [青魂] [青之连魂]
+    uint SideDanger=0;  // 025E [青魂] [青之连魂]
     
     public void Init(ScriptAccessory accessory) {
         Circle1=0;
         Circle4=0;
         Dount1=0; 
         Dount4=0; 
-        MidDanger1=0;
-        MidDanger4=0;
-        SideDanger1=0;
-        SideDanger4=0;
+        MidDanger=0;
+        SideDanger=0;
     }
     
     #endregion

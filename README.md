@@ -37,6 +37,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 - `LV63 须佐之男歼灭战` `LV67 吉祥天女歼灭战` `LV70 神龙歼灭战` `LV70 月读歼灭战` `LV70 白虎镇魂战` `LV70 朱雀镇魂战` `LV70 保镖歼灭战`
 - `LV73 缇坦妮雅歼灭战` `LV80 哈迪斯歼灭战`
 - `LV90 高贝扎歼灭战` `LV90 泽罗姆斯歼灭战`
+- `LV100 永远之暗歼灭战`
 
 **讨伐歼殛战 / Trials-Extreme**
 

@@ -405,6 +405,19 @@
     ]
   },
   {
+    "Name": "永远之暗歼灭战",
+    "Guid": "07a60fa1-8228-4e24-841d-f9000fcbf06e",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "",
+    "DownloadUrl": "",
+    "Note": "v0.0.0.1:\r\nLV100 7.3 永远之暗歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1295
+    ]
+  },
+  {
     "Name": "迦楼罗歼殛战",
     "Guid": "3e4685ed-1425-4ddc-8222-a2c15dcc9ad5",
     "Version": "0.0.0.2",
