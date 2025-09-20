@@ -38,16 +38,24 @@ public class The_Ageless_Necropolis
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
     
-    uint Circle=0; // TargetIcon:025C [青之连魂] / 026D [青魂]
-    uint Dount=0; // TargetIcon:025D [青之连魂] / 026E [青魂]
-    uint MidDanger=0;  // TargetIcon:025F
-    uint SideDanger=0;  // TargetIcon:025E
+    uint Circle1=0; // 026D [青魂]
+    uint Circle4=0; // 025C [青之连魂]
+    uint Dount1=0; // 026E [青魂]
+    uint Dount4=0; // 025D [青之连魂]
+    uint MidDanger1=0;  // 
+    uint MidDanger4=0;  // 025F [青之连魂]
+    uint SideDanger1=0;  // 
+    uint SideDanger4=0;  // 025E [青之连魂]
     
     public void Init(ScriptAccessory accessory) {
-        Circle=0;
-        Dount=0; 
-        MidDanger=0;
-        SideDanger=0;
+        Circle1=0;
+        Circle4=0;
+        Dount1=0; 
+        Dount4=0; 
+        MidDanger1=0;
+        MidDanger4=0;
+        SideDanger1=0;
+        SideDanger4=0;
     }
     
     #endregion
@@ -127,36 +135,36 @@ public class The_Ageless_Necropolis
     }
     */
     
-    
     [ScriptMethod(name:"青魂记录", eventType:EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^02[56](C|D|E)$"], userControl:false)]
-    public void 青魂记录(Event ev, ScriptAccessory accessory) 
+    public void 青魂记录(Event @event, ScriptAccessory accessory) 
     {
-        // ActionId: 青魂 [44527] ; 青之波动 [44528] ; 青之连魂 [44531] ; 灵魂轮转 [44609] ; 青之连波潮 [45166]
-        
-        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG] 成功检测到TargetIcon生成");
-        switch (ev.Id)
+        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG] 成功检测到TargetIcon生成, Id: {@event.Id().ToString("X4")}, targetid: {@event.TargetId()}");
+         
+        var idStr = @event.Id().ToString("X4");
+        switch (idStr)
         {
-            case 0x025C:
-                Circle = 1;
+            case "026D":
+                Circle1 = 1;
+                if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已记录：青魂 = 钢铁");
+                break;
+            case "026E":
+                Dount1  = 1;
+                if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已记录：青魂 = 月环");
+                break;
+            case "025C":
+                Circle4 = 1;
                 if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已记录：青之连魂 = 钢铁");
                 break;  
-            case 0x026D:
-                Circle = 1;
-                if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已记录：青魂 = 钢铁");
-                break;  
-            case 0x025D:
-                Dount  = 1;
+            case "025D":
+                Dount4  = 1;
                 if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已记录：青之连魂 = 月环");
-                break;
-            case 0x026E:
-                Dount  = 1;
-                if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已记录：青魂 = 月环");
                 break;
         }
     }
     
-    /*
-    [ScriptMethod(name: "青之波动/青之连波潮（释放钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44528"])]
+    
+
+    [ScriptMethod(name: "青之波动（释放钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44528"])]
     public void 青之波动(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -164,12 +172,21 @@ public class The_Ageless_Necropolis
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.DestoryAt = 5600;
-        if (Circle == 1)
+        if (Circle1 == 1)
         {
-            
+            dp.Scale = new Vector2(20f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+
+        if (Dount1 == 1)
+        {
+            dp.Scale = new Vector2(41f);
+            dp.InnerScale = new Vector2(16f);
+            dp.Radian = float.Pi * 2;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
         }
     }
-    */
+
     
     [ScriptMethod(name:"青魂销毁", eventType:EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4518[12]$"], userControl:false)]
     public void 青魂销毁(Event @event, ScriptAccessory accessory) 
@@ -177,11 +194,11 @@ public class The_Ageless_Necropolis
         switch (@event.ActionId)
         {
             case 45181:
-                Circle = 0;
+                Circle1 = 0;
                 if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已清除：青魂 = 钢铁");
                 break;  
             case 45182:
-                Dount  = 0;
+                Dount1  = 0;
                 if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]已清除：青魂 = 月环");
                 break;
         }
@@ -338,6 +355,24 @@ public static class EventExtensions
     public static uint Param(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
+    }
+    
+    public static uint Id(this Event @event)
+    {
+        var idStr = @event["Id"];
+        if (string.IsNullOrEmpty(idStr)) return 0;
+        
+        if (idStr.StartsWith("0x", StringComparison.OrdinalIgnoreCase))
+        {
+            return uint.Parse(idStr.Substring(2), System.Globalization.NumberStyles.HexNumber);
+        }
+        
+        if (idStr.Length <= 4 && idStr.All(c => char.IsDigit(c) || (c >= 'A' && c <= 'F') || (c >= 'a' && c <= 'f')))
+        {
+            return uint.Parse(idStr, System.Globalization.NumberStyles.HexNumber);
+        }
+        
+        return uint.Parse(idStr);
     }
     
 }
