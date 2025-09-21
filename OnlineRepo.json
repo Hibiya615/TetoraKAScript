@@ -409,8 +409,8 @@
     "Guid": "07a60fa1-8228-4e24-841d-f9000fcbf06e",
     "Version": "0.0.0.1",
     "Author": "Tetora",
-    "Repo": "",
-    "DownloadUrl": "",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/The_Ageless_Necropolis.cs",
     "Note": "v0.0.0.1:\r\nLV100 7.3 永远之暗歼灭战 初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
