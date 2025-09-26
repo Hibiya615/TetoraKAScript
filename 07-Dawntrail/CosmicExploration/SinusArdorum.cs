@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace SinusArdorum;
 
-[ScriptType(guid: "8f9e094e-2aa2-4dfc-9020-ac9dac53e525", name: "宇宙探索小工具", territorys: [1237],
+[ScriptType(guid: "8f9e094e-2aa2-4dfc-9020-ac9dac53e525", name: "宇宙探索小工具", territorys: [1237, 1291],
     version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class SinusArdorum
@@ -102,13 +102,28 @@ public class SinusArdorum
     
     #region 各种提醒
     
-    [ScriptMethod(name: "探索任务目标完成提醒", eventType: EventTypeEnum.Chat,
-        eventCondition: ["Type:SystemMessage", "Message:完成了探索任务的目标.*"])]
+    [ScriptMethod(name: "Artisan - 制作完成提醒", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Debug", "Message:[Artisan] 制作X次已完成。"])]
+    public void Art制作完成提醒(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("制作完成", duration: 1300, false);
+        if (isTTS)accessory.Method.TTS("制作完成");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("制作完成");
+    }
+    
+    [ScriptMethod(name: "探索任务目标完成提醒", eventType: EventTypeEnum.Chat, eventCondition: ["Type:SystemMessage", "Message:完成了探索任务的目标！"])]
     public void 探索任务目标完成提醒(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("任务目标完成", duration: 2000, true);
+        if (isText)accessory.Method.TextInfo("任务目标完成", duration: 1800, false);
         if (isTTS)accessory.Method.TTS("任务目标完成");
         if (isEdgeTTS)accessory.Method.EdgeTTS("任务目标完成");
+    }
+    
+    [ScriptMethod(name: "出现连续任务提醒", eventType: EventTypeEnum.Chat, eventCondition: ["Type:SystemMessage", "Message:出现了连续任务"])]
+    public void 出现连续任务提醒(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("出现连续任务", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("出现连续任务");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("出现连续任务");
     }
     
     #endregion
