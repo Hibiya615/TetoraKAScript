@@ -19,26 +19,27 @@ namespace Eureka_Orthos;
 
 [ScriptType(guid: "5e8a4051-53f7-4eb3-bb32-b18df8b113aa", name: "正统优雷卡", 
     territorys: [1099,1100,1101,1102,1103,1104,1105,1106,1107,1108],
-    version: "0.0.0.32", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class Eureka_Orthos {
     const string noteStr =
         """
-        v0.0.0.31:
+        v0.0.0.4:
         正统优雷卡绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         现支持层数：1~20、71~100
-        严重错误：暂未支持【缓速】【形态变化】【石化】【眩晕】【催眠】等限制
-        怪物死亡也暂时没有销毁绘图，先拯救ARR完再说[?]
+        严重错误：暂未支持【缓速】，遇到没特效的技能可能会比判定提早消失
         """;
 
-    //对应怪物死亡、眩晕、催眠、石化1511、无法发动技能1113等状态都需要销毁绘图，缓速3493需要额外注意没有omen的技能
-    // 71~79层 【正统狼獾 杀人爪】【正统雷兽 尾镰】【正统雷兽 电火花】均未支持缓速
+    // 缓速[3493] 需要额外注意没有omen的技能
+    // 如71~79层 【正统狼獾 杀人爪】【正统雷兽 尾镰】【正统雷兽 电火花】均未支持缓速
             
 
     #region 各种记录
     
     /*  StatusID
+     *  眩晕 2（如近战扫腿、T下踢）
+     *  睡眠 3（如法系催眠、奶妈沉静）
      *  变身 565
      *  诅咒 1087 （拟态怪 - 怨念）
      *  失明 1088
@@ -92,8 +93,26 @@ public class Eureka_Orthos {
     [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
     public void 打断销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"正统系统γ_高压电流{@event.TargetId()}");
-        accessory.Method.RemoveDraw($"正统自控化奇美拉_(寒冰|雷电)咆哮{@event.TargetId()}");
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+    
+    [ScriptMethod(name: "特殊状态销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2|3|1511|1113)$"], userControl: false)]
+    public void 特殊状态销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 赋予对应怪物 眩晕[2]、睡眠[3]、石化[1511]、(形态变化）无法发动技能[1113] 等状态都需要销毁绘图
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+        
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
     }
 
     public bool KnockPenalty = false;
@@ -108,6 +127,22 @@ public class Eureka_Orthos {
     public void 下击退buff(Event @event, ScriptAccessory accessory)
     {
     KnockPenalty = false;
+    }
+    
+    public bool Slow = false;
+    
+    [ScriptMethod(name: "缓速记录", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3493"],suppress:1000, userControl: false)]
+    public void 缓速记录(Event @event, ScriptAccessory accessory)
+    {
+        Slow = true;
+        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 已记录缓速");
+    }
+    
+    [ScriptMethod(name: "缓速移除", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3493"],suppress:1000, userControl: false)]
+    public void 缓速移除(Event @event, ScriptAccessory accessory)
+    {
+        Slow = false;
+        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 已移除缓速");
     }
     
     #endregion

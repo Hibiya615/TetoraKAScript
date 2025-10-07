@@ -16,23 +16,20 @@ namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.7",note: noteStr)]
+    version: "0.0.0.8",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.6:
+        v0.0.0.8:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
-        暂未支持【形态变化】【眩晕】【催眠】等限制，有需可以考虑使用Splatoon
         """;
     
-    // 眩晕、催眠、无法发动技能（形态变化）等状态都需要销毁绘图
-    // 190 BOSS 有待修复的问题
     // 70 BOSS 会同时满足 170 BOSS 或天气的条件 导致触发重复 需要额外判断sid , 170 BOSS 的伤害提高 也与强化自身 冲突 需额外判断sid
-    // 1~99层 与 101~199层 大量怪物技能ID重复，需要额外判断sid
+    // 【已完成】1~99层 与 101~199层 大量怪物技能ID重复，需要额外判断sid
     
     #region 各种记录
     
@@ -81,8 +78,26 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
     public void 打断销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"深宫假面_强麻痹{@event.TargetId()}");
-        accessory.Method.RemoveDraw($"深宫浮灵_强麻痹{@event.TargetId()}");
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+    
+    [ScriptMethod(name: "特殊状态销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2|3|1511|1113)$"], userControl: false)]
+    public void 特殊状态销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 赋予对应怪物 眩晕[2]、睡眠[3]、石化[1511]、(形态变化）无法发动技能[1113] 等状态都需要销毁绘图
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+        
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
     }
     
     [ScriptMethod(name: "防击退销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(7548|7559)$"],userControl: false)]
