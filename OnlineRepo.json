@@ -405,6 +405,19 @@
     ]
   },
   {
+    "Name": "永恒女王歼灭战",
+    "Guid": "16a531a4-28b9-414d-9209-ba6673d1f268",
+    "Version": "0.0.0.3",
+    "Author": "Poetry",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/The_Interphos.cs",
+    "Note": "v0.0.0.3:\r\nLV100 永恒女王歼灭战 绘制\r\n原作者：Poetry",
+    "UpdateInfo": "0.0.0.3: 适配并略微修改",
+    "TerritoryIds": [
+      1202
+    ]
+  },
+  {
     "Name": "永远之暗歼灭战",
     "Guid": "07a60fa1-8228-4e24-841d-f9000fcbf06e",
     "Version": "0.0.0.1",
