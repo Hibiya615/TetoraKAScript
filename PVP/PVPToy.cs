@@ -11,6 +11,13 @@ using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
 using System.Threading.Tasks;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Runtime.CompilerServices;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+
 
 namespace PVPToy;
 
@@ -21,12 +28,20 @@ public class PVPToy
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         PVP小玩具，仅纷争前线可用
-        可在狼狱进行测试
+        可在狼狱进行测试（小队画图在单人情况下不生效）
+        推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
         """;
     
+    // 其它需求尝试：在赤魔没有选中目标的时候阻止LB释放，以防止三角死亡LB自动放自己身上
+    // 用户需求：查对方头标，只给有标记的人画（只给标记的四小画）以减少负荷
+    // 可以绘制的技能推荐：DK马桶、机工炮塔[DataId:14673]、骑士保护建立连线
+    
     #region 基础控制
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
     
     [UserSetting("启用目标标记播报")]
     public bool isTargetTTS { get; set; } = false;
@@ -34,8 +49,11 @@ public class PVPToy
     [UserSetting("启用自动选中目标标记")]
     public bool isAutoTarget { get; set; } = false;
     
-    [UserSetting("启用自动净化")]
-    public bool isAutoPurify { get; set; } = false;
+    [UserSetting("启用自动诗人光阴神净化")]
+    public bool isAutoWarden { get; set; } = false;
+    
+    [UserSetting("启用被抓自动防御")]
+    public bool isAutoGuard { get; set; } = false;
     
     [UserSetting("请确认你已经有相关插件与对应权限")]
     public bool isHack { get; set; } = false;
@@ -67,12 +85,34 @@ public class PVPToy
     
     #endregion
     
-    [ScriptMethod(name: "被狙自动开盾", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29415"],suppress:5000)]
+    #region 自动播报/执行
+    
+    [ScriptMethod(name: "被狙自动开盾", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29415"])]
     public void MarksmansTarget(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.SendChat($"/pvpac 防御");
-        accessory.Method.SendChat($"/e 侦测到被狙！鸭鸭试着帮你开了盾！<se.1> <se.1>");
+        if (@event.TargetId() != accessory.Data.Me) return;
+        if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE))
+        {
+            if (isText) accessory.Method.TextInfo("已尝试自动使用《防御》", duration: 1800, true);
+            accessory.Method.SendChat($"/pvpac 防御");
+            accessory.Method.SendChat($"/e 侦测到被狙！鸭鸭试着帮你开了盾！<se.1> <se.1>");
+        }
+    }
+    
+    [ScriptMethod(name: "被战士抓自动防御", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29081"])]
+    public void AutoGuardWhenDedication(Event @event, ScriptAccessory accessory)
+    {
+        // 献身 技能ID 29081 ； 附加减速 StatusID 1344 ； 生效间隔 约0.45s
+        if (isAutoGuard)
+        {
+            if (@event.TargetId() != accessory.Data.Me) return;
+            if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE))
+            {
+                if (isText) accessory.Method.TextInfo("已尝试自动使用《防御》", duration: 1800, true);
+                accessory.Method.SendChat($"/pvpac 防御");
+                accessory.Method.SendChat($"/e 侦测到被战士抓了！鸭鸭试着帮你进行了防御！<se.3> <se.3>");
+            }
+        }
     }
     
     [ScriptMethod(name: "被蛮荒崩裂播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"],suppress:2000)]
@@ -82,15 +122,19 @@ public class PVPToy
         accessory.Method.EdgeTTS("被晕了");
     }
     
-    [ScriptMethod(name: "被蛮荒崩裂自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"],suppress:25000)]
-    public void PrimalRendAutoPurify(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "被蛮荒崩裂自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"])]
+    public void PrimalRendAutoWarden(Event @event, ScriptAccessory accessory)
     {
         // 蛮荒崩裂 技能ID 29084 ； 附加眩晕 StatusID 1343 ； 生效间隔 约1s
-        if (isAutoPurify)
+        if (isAutoWarden)
         {
-            if (@event.TargetId() != accessory.Data.Me) return; 
-            accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
-            accessory.Method.SendChat($"/e 侦测到成为蛮荒崩裂目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
+            if (@event.TargetId() != accessory.Data.Me) return;
+            if (ActionExt.IsSpellReady(29400) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC47))
+            {
+                if (isText) accessory.Method.TextInfo("已尝试自动使用《光阴神净化》", duration: 1800, true);
+                accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
+                accessory.Method.SendChat($"/e 侦测到成为蛮荒崩裂目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
+            }
         }
     }
     
@@ -101,17 +145,171 @@ public class PVPToy
         accessory.Method.EdgeTTS("被晕了");
     }
     
-    [ScriptMethod(name: "被涤罪之心自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"],suppress:25000)]
-    public void AfflatusPurgationAutoPurify(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "被涤罪之心自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"])]
+    public void AfflatusPurgationAutoWarden(Event @event, ScriptAccessory accessory)
     {
         // 涤罪之心 技能ID 29230 ； 附加眩晕 StatusID 1343 ； 生效间隔 约0.8s
-        if (isAutoPurify)
+        if (isAutoWarden)
         {
             if (@event.TargetId() != accessory.Data.Me) return;
-            accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
-            accessory.Method.SendChat($"/e 侦测到成为涤罪之心目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
+            if (ActionExt.IsSpellReady(29400) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC47))
+            {
+                if (isText) accessory.Method.TextInfo("已尝试自动使用《光阴神净化》", duration: 1800, true);
+                accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
+                accessory.Method.SendChat($"/e 侦测到成为涤罪之心目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
+            }
         }
     }
+        
+    #endregion
+    
+    #region 技能绘制
+    
+    public bool isPartyMember(ScriptAccessory accessory, uint SourceId)
+    {
+        return accessory.Data.PartyList.Contains(SourceId);
+    }
+    
+    private bool PartyFilter(ScriptAccessory sa, IGameObject? obj)
+    {
+        if (obj == null || !obj.IsValid()) return false;
+        
+        if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) return false;
+
+        var targetPlayer = obj as IPlayerCharacter;
+        if (targetPlayer == null) return false;
+        
+        bool isInMyAlliance = false;
+        
+        isInMyAlliance = sa.Data.PartyList?.Any(p => p == targetPlayer.EntityId) ?? false;
+        
+        if (!isInMyAlliance)
+        {
+            if (targetPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.AllianceMember))
+            {
+                isInMyAlliance = true;
+            }
+        }
+
+        return isInMyAlliance;
+    }
+
+    [ScriptMethod(name: "自身冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
+    public void SkyShatterSelf(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "冲天Self内圈";
+        dp.Color = new Vector4(0f, 1f, 1f, 0.8f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = "冲天Self外圈";
+        dp1.Color = new Vector4(0f, 1f, 1f, 0.5f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(10f);
+        dp1.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+    }
+    
+    [ScriptMethod(name: "自身冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
+    public void 自身冲天销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 考虑到意外死亡情况（如在天上死亡）所以不使用 ActionEffect 来销毁
+        if (@event.TargetId() != accessory.Data.Me) return;
+        accessory.Method.RemoveDraw($"冲天Self.*");
+    }
+    
+
+    [ScriptMethod(name: "团队队友冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
+    public void SkyShatterAlliance(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+        
+        if (PartyFilter(accessory, obj))
+        {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name =  $"队友冲天{@event.SourceId()}";
+        dp.Color = new Vector4(0f, 1f, 1f, 0.15f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f);
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+        
+    [ScriptMethod(name: "团队队友冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
+    public void 团队队友冲天销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"队友冲天{@event.SourceId()}");
+    }
+
+    
+    [ScriptMethod(name: "敌方冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
+    public void SkyShatterEnmity(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"敌方冲天内圈{@event.SourceId()}";
+            dp.Color = new Vector4(1f, 0f, 0f, 1f);
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(5f);
+            dp.DestoryAt = 5000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = $"敌方冲天外圈{@event.SourceId()}";
+            dp1.Color = new Vector4(1, 0f, 0f, 0.5f);
+            dp1.Owner = @event.SourceId();
+            dp1.Scale = new Vector2(10f);
+            dp1.DestoryAt = 5000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+        }
+    }
+    
+        
+    [ScriptMethod(name: "敌方冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
+    public void 敌方冲天销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"敌方冲天(内|外)圈{@event.SourceId()}");
+    }
+    
+    
+    [ScriptMethod(name: "小队中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
+    public void MesotesParty(Event @event, ScriptAccessory accessory)
+    {
+        // 中庸之道 施放者 StatusID：3118 持续15s ； 无敌效果 StatusID：3119 间隔判定,每次判定持续5s
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队中庸之道{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+            dp.Position = @event.EffectPosition();
+            dp.Scale = new Vector2(5f);
+            dp.DestoryAt = 15000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+        
+    [ScriptMethod(name: "小队中庸之道销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
+    public void 小队中庸之道销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 考虑到提前死亡，所以在持有者buff消失时就应销毁绘制
+        accessory.Method.RemoveDraw($"小队中庸之道{@event.SourceId()}");
+    }
+
+    
+    #endregion
     
     #region 目标标记播报
     
@@ -187,6 +385,7 @@ public class PVPToy
     }
     #endregion
     
+    #region 移速更改
     
     [ScriptMethod(name: "[DR] 冲天时更改移速（不与敏捷共存）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void 冲天Add(Event @event, ScriptAccessory accessory)
@@ -242,6 +441,8 @@ public class PVPToy
         }
         
     }
+    
+    #endregion
     
 }
 
@@ -357,4 +558,210 @@ public static class EventExtensions
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
+}
+
+public enum MarkType
+{
+    None = -1,
+    Attack1 = 0,
+    Attack2 = 1,
+    Attack3 = 2,
+    Attack4 = 3,
+    Attack5 = 4,
+    Bind1 = 5,
+    Bind2 = 6,
+    Bind3 = 7,
+    Ignore1 = 8,
+    Ignore2 = 9,
+    Square = 10,
+    Circle = 11,
+    Cross = 12,
+    Triangle = 13,
+    Attack6 = 14,
+    Attack7 = 15,
+    Attack8 = 16,
+    Count = 17
+}
+
+public static class IbcHelper
+{
+    public static IGameObject? GetById(this ScriptAccessory sa, ulong gameObjectId)
+    {
+        return sa.Data.Objects.SearchById(gameObjectId);
+    }
+
+    public static IGameObject? GetMe(this ScriptAccessory sa)
+    {
+        return sa.Data.Objects.LocalPlayer;
+    }
+
+    public static IEnumerable<IGameObject?> GetByDataId(this ScriptAccessory sa, uint dataId)
+    {
+        return sa.Data.Objects.Where(x => x.DataId == dataId);
+    }
+
+    public static string GetPlayerJob(this ScriptAccessory sa, IPlayerCharacter? playerObject, bool fullName = false)
+    {
+        if (playerObject == null) return "None";
+        return fullName ? playerObject.ClassJob.Value.Name.ToString() : playerObject.ClassJob.Value.Abbreviation.ToString();
+    }
+
+    public static float GetStatusRemainingTime(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return 0;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return charaStruct->GetStatusManager()->GetRemainingTime(statusIdx);
+        }
+    }
+
+    public static bool HasStatus(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return false;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return statusIdx != -1;
+        }
+    }
+
+    /// <summary>
+    /// 获取指定标记索引的对象EntityId
+    /// </summary>
+    public static unsafe ulong GetMarkerEntityId(uint markerIndex)
+    {
+        var markingController = MarkingController.Instance();
+        if (markingController == null) return 0;
+        if (markerIndex >= 17) return 0;
+
+        return markingController->Markers[(int)markerIndex];
+    }
+
+    /// <summary>
+    /// 获取对象身上的标记
+    /// </summary>
+    /// <returns>MarkType</returns>
+    public static MarkType GetObjectMarker(IGameObject? obj)
+    {
+        if (obj == null || !obj.IsValid()) return MarkType.None;
+
+        ulong targetEntityId = obj.EntityId;
+            
+        for (uint i = 0; i < 17; i++)
+        {
+            var markerEntityId = GetMarkerEntityId(i);
+            if (markerEntityId == targetEntityId)
+            {
+                return (MarkType)i;
+            }
+        }
+
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 检查对象是否有指定的标记
+    /// </summary>
+    public static bool HasMarker(IGameObject? obj, MarkType markType)
+    {
+        return GetObjectMarker(obj) == markType;
+    }
+
+    /// <summary>
+    /// 检查对象是否有任何标记
+    /// </summary>
+    public static bool HasAnyMarker(IGameObject? obj)
+    {
+        return GetObjectMarker(obj) != MarkType.None;
+    }
+
+    private static ulong GetMarkerForObject(IGameObject? obj)
+    {
+        if (obj == null) return 0;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return markerEntityId;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private static MarkType GetMarkerTypeForObject(IGameObject? obj)
+    {
+        if (obj == null) return MarkType.None;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return (MarkType)i;
+                }
+            }
+        }
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 获取标记的名称
+    /// </summary>
+    public static string GetMarkerName(MarkType markType)
+    {
+        return markType switch
+        {
+            MarkType.Attack1 => "攻击1",
+            MarkType.Attack2 => "攻击2",
+            MarkType.Attack3 => "攻击3",
+            MarkType.Attack4 => "攻击4",
+            MarkType.Attack5 => "攻击5",
+            MarkType.Bind1 => "止步1",
+            MarkType.Bind2 => "止步2",
+            MarkType.Bind3 => "止步3",
+            MarkType.Ignore1 => "禁止1",
+            MarkType.Ignore2 => "禁止2",
+            MarkType.Square => "方块",
+            MarkType.Circle => "圆圈",
+            MarkType.Cross => "十字",
+            MarkType.Triangle => "三角",
+            MarkType.Attack6 => "攻击6",
+            MarkType.Attack7 => "攻击7",
+            MarkType.Attack8 => "攻击8",
+            _ => "无标记"
+        };
+    }
+}
+
+public static class ActionExt
+{
+    public static unsafe bool IsReadyWithCanCast(uint actionId, ActionType actionType)
+    {
+        var am = ActionManager.Instance();
+        if (am == null) return false;
+
+        var adjustedId = am->GetAdjustedActionId(actionId);
+
+        // 0 = Ready）
+        if (am->GetActionStatus(actionType, adjustedId) != 0)
+            return false;
+
+        ulong targetId = 0;
+        var ts = TargetSystem.Instance();
+        if (ts != null && ts->GetTargetObject() != null)
+            targetId = ts->GetTargetObject()->GetGameObjectId();
+
+        return am->GetActionStatus(actionType, adjustedId, targetId) == 0;
+    }
+
+    public static bool IsSpellReady(this uint spellId) => IsReadyWithCanCast(spellId, ActionType.Action);
+    public static bool IsAbilityReady(this uint abilityId) => IsReadyWithCanCast(abilityId, ActionType.Ability);
 }
