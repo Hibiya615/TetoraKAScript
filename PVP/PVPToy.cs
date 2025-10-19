@@ -135,7 +135,7 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "对方诗人LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29401"])]
+    [ScriptMethod(name: "对方诗人LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29401"],suppress:3000)]
     public void FinalFantasiaTTS(Event @event, ScriptAccessory accessory)
     {
         // 英雄的幻想曲 ActionId:29401 ； 英雄的幻想曲（GCD缩短 30s） StatusID:3144； 英豪的幻想曲（周边30m内 加攻击加速度，LB增长，持续判定，每次5s） StatusID:3145 
@@ -146,8 +146,10 @@ public class PVPToy
 
         if (!PartyFilter(accessory, obj))
         {
-            if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1300, true);
+            string tname = @event["TargetName"]?.ToString();
+            if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1800, true);
             if (isTTS)  accessory.Method.EdgeTTS("对方诗人LB");
+            accessory.Method.SendChat($"/e 鸭鸭:检测到对方诗人LB！来源《{tname}》");
         }
     }
     
@@ -172,14 +174,16 @@ public class PVPToy
             {
                 if (IbcHelper.HasMarker(tobj, mark))
                 {
-                    if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1300, true);
+                    string tname = @event["TargetName"]?.ToString();
+                    if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1800, true);
                     if (isTTS)  accessory.Method.EdgeTTS("对方诗人LB");
+                    accessory.Method.SendChat($"/e 鸭鸭:检测到标记对象获得诗人LB！目标《{tname}》");
                 }
             }
         }
     }
     
-    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"])]
+    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"],suppress:3000)]
     public void CelestialRiverTTS(Event @event, ScriptAccessory accessory)
     {
         // 星河漫天 ActionId:29255 ； 星河漫天（队友buff） StatusID:3105； 星河漫天（敌方debuff） StatusID:3106 
@@ -189,8 +193,10 @@ public class PVPToy
 
         if (!PartyFilter(accessory, obj))
         {
-            if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1300, true);
+            string tname = @event["TargetName"]?.ToString();
+            if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1800, true);
             if (isTTS)  accessory.Method.EdgeTTS("对方占星LB");
+            accessory.Method.SendChat($"/e 鸭鸭:检测到对方占星LB！来源《{tname}》");
         }
     }
     
@@ -213,8 +219,10 @@ public class PVPToy
             {
                 if (IbcHelper.HasMarker(tobj, mark))
                 {
-                    if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1300, true);
+                    string tname = @event["TargetName"]?.ToString();
+                    if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1800, true);
                     if (isTTS)  accessory.Method.EdgeTTS("对方占星LB");
+                    accessory.Method.SendChat($"/e 鸭鸭:检测到标记对象获得占星LB！目标《{tname}》");
                 }
             }
         }
@@ -447,7 +455,7 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
+    [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"],suppress:3000)]
     public void MesotesPartyConnected(Event @event, ScriptAccessory accessory)
     {
         // if (isPartyMember(accessory, @event.SourceId()))
