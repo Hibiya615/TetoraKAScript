@@ -11,18 +11,19 @@ using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.0.8",note: noteStr)]
+    version: "0.0.0.9",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.0.8:
+        v0.0.0.9:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
@@ -67,6 +68,27 @@ public class the_Palace_of_the_Dead
     
     [UserSetting("启用底裤（需要对应插件与权限）")]
     public bool isHack { get; set; } = false;
+    
+    [UserSetting(note: "选择默认遁地深度")]
+    public DepthsEnum Depths { get; set; } = DepthsEnum.Default;
+    
+    public enum DepthsEnum
+    {
+        [Description("0")]
+        Default = 0,
+        [Description("2")]
+        Depths2 = 1,
+        [Description("3")]
+        Depths3 = 2,
+        [Description("5")]
+        Depths5 = 3,
+        [Description("7")]
+        Depths7 = 4,
+        [Description("20")]
+        Depths20 = 5,
+        [Description("50")]
+        Depths50 = 6,
+    }
     
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
@@ -1091,50 +1113,87 @@ public class the_Palace_of_the_Dead
     
     [ScriptMethod(name: "—————— 底裤部分（需要对应插件与权限） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 底裤部分(Event @event, ScriptAccessory accessory) { }
+    
+    // 过层时候会触发一次 解除变身（60s）和变身（剩余时间），所以需要额外限制 Duration 以免在过层时触发
 
-    [ScriptMethod(name: "[DR] 变身曼提克时，移速改为1.5倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:42"])]
-    public void AddManticore(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[DR] 变身曼提克时，移速改为1.5倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:42", "Duration:60.00"])]
+    public void AddManticoreSpeed(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
         accessory.Method.SendChat($"/pdrspeed 1.5");
-        accessory.Method.SendChat($"/e 可达鸭：移速已更改：1.5x");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.5x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
     }
     
-    [ScriptMethod(name: "[DR] 曼提克取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42"])]
-    public void RemoveManticore(Event @event, ScriptAccessory accessory)
+    
+    [ScriptMethod(name: "[DR] 曼提克取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42", "Duration:0.00"])]
+    public void RemoveManticoreSpeed(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
         accessory.Method.SendChat($"/pdrspeed -1");
-        accessory.Method.SendChat($"/e 可达鸭：移速已更改：默认");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
+    
 
-    [ScriptMethod(name: "[DR] 变身梦魔时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:43"])]
-    public void AddSuccubus(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[DR] 变身梦魔时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:43", "Duration:60.00"])]
+    public void AddSuccubusSpeed(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
         accessory.Method.SendChat($"/pdrspeed 1.2");
-        accessory.Method.SendChat($"/e 可达鸭：移速已更改：1.2x");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.2x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.2倍");
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.2倍");
     }
     
-    [ScriptMethod(name: "[DR] 梦魔取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:43"])]
-    public void RemoveSuccubus(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[DR] 梦魔取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:43", "Duration:0.00"])]
+    public void RemoveSuccubusSpeed(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
         accessory.Method.SendChat($"/pdrspeed -1");
-        accessory.Method.SendChat($"/e 可达鸭：移速已更改：默认");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
+    
+    
+    // 梦魔和基路伯会用于BOSS房，不做自动遁地处理
+    
+    [ScriptMethod(name: "[IC] 变身曼提克时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:42", "Duration:60.00"])]
+    public void AddManticoreDepths(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/i-ching-commander y_adjust 0");
+        accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
+        if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
+        // if (isTTS)accessory.Method.TTS("已取消遁地");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
+    }
+    
+    
+    [ScriptMethod(name: "[IC] 曼提克取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42", "Duration:0.00"])]
+    public void RemoveManticoreDepths(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+    
+        // 获取深度的描述值
+        string depthValue = Depths.GetDescription();
+        
+        accessory.Method.SendChat($"/i-ching-commander y_adjust -{depthValue}");
+        accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
+        if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
+        // if (isTTS)accessory.Method.TTS("已自动遁地");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
+    }
+    
     
     #endregion
     
@@ -1255,6 +1314,16 @@ public static class EventExtensions
     }
 }
 
+public static class EnumExtensions
+{
+    public static string GetDescription(this Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var attribute = field?.GetCustomAttributes(typeof(DescriptionAttribute), false)
+            .FirstOrDefault() as DescriptionAttribute;
+        return attribute?.Description ?? value.ToString();
+    }
+}
 
 
 #region 计算函数
