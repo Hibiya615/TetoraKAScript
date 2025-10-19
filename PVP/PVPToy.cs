@@ -34,18 +34,19 @@ public class PVPToy
         推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
         """;
     
-    // 用户需求：查对方头标，只给有标记的人画（只给标记的四小画）以减少负荷
-    
     #region 基础控制
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    [UserSetting("启用目标标记播报")]
-    public bool isTargetTTS { get; set; } = false;
+    [UserSetting("启用目标标记播报及连线")]
+    public bool isTargetBroadcast { get; set; } = false;
     
     [UserSetting("启用自动选中目标标记")]
     public bool isAutoTarget { get; set; } = false;
+    
+    [UserSetting("启用仅绘制敌方目标标记 [适用:龙骑冲天]" )]
+    public bool isDrawMark { get; set; } = false;
     
     [UserSetting("启用自动诗人光阴神净化")]
     public bool isAutoWarden { get; set; } = false;
@@ -80,6 +81,23 @@ public class PVPToy
         Default = 0,
         Speed1 = 1,
     }
+    
+    private List<MarkType> checkMark = new List<MarkType>()
+    {
+        MarkType.Attack1,
+        MarkType.Attack2,
+        MarkType.Attack3,
+        MarkType.Attack4,
+        MarkType.Attack5,
+        MarkType.Bind1,
+        MarkType.Bind2,
+        MarkType.Bind3,
+        MarkType.Ignore1,
+        MarkType.Ignore2,
+        MarkType.Attack6,
+        MarkType.Attack7,
+        MarkType.Attack8,
+    };
     
     #endregion
     
@@ -191,6 +209,9 @@ public class PVPToy
 
         return isInMyAlliance;
     }
+    
+    [ScriptMethod(name: "—————— 技能绘制 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 技能绘制(Event @event, ScriptAccessory accessory) { }
 
     [ScriptMethod(name: "自身冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterSelf(Event @event, ScriptAccessory accessory)
@@ -251,34 +272,73 @@ public class PVPToy
     [ScriptMethod(name: "敌方冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterEnmity(Event @event, ScriptAccessory accessory)
     {
+        if (isDrawMark) return;
+            var obj = IbcHelper.GetById(accessory, @event.SourceId);
+            if (obj == null || !obj.IsValid()) return;
+
+            if (!PartyFilter(accessory, obj))
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"敌方冲天内圈{@event.SourceId()}";
+                dp.Color = new Vector4(1f, 0f, 0f, 1f);
+                dp.Owner = @event.SourceId();
+                dp.Scale = new Vector2(5f);
+                dp.DestoryAt = 5000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+                var dp1 = accessory.Data.GetDefaultDrawProperties();
+                dp1.Name = $"敌方冲天外圈{@event.SourceId()}";
+                dp1.Color = new Vector4(1, 0f, 0f, 0.5f);
+                dp1.Owner = @event.SourceId();
+                dp1.Scale = new Vector2(10f);
+                dp1.DestoryAt = 5000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+            }
+    }
+    
+    [ScriptMethod(name: "敌方标记冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
+    public void SkyShatterMark(Event @event, ScriptAccessory accessory)
+    {
+        if (!isDrawMark) return;
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
 
         if (!PartyFilter(accessory, obj))
         {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"敌方冲天内圈{@event.SourceId()}";
-            dp.Color = new Vector4(1f, 0f, 0f, 1f);
-            dp.Owner = @event.SourceId();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 5000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            var tid = @event.TargetId();
+            var tobj = IbcHelper.GetById(accessory, tid);
+            if (tobj == null || !tobj.IsValid()) return;
 
-            var dp1 = accessory.Data.GetDefaultDrawProperties();
-            dp1.Name = $"敌方冲天外圈{@event.SourceId()}";
-            dp1.Color = new Vector4(1, 0f, 0f, 0.5f);
-            dp1.Owner = @event.SourceId();
-            dp1.Scale = new Vector2(10f);
-            dp1.DestoryAt = 5000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+            if (!IbcHelper.HasAnyMarker(tobj)) return;
+
+            foreach (var mark in checkMark)
+            {
+                if (IbcHelper.HasMarker(tobj, mark))
+                {
+                    var dp = accessory.Data.GetDefaultDrawProperties();
+                    dp.Name = $"敌方标记冲天内圈{@event.SourceId()}";
+                    dp.Color = new Vector4(1f, 0f, 0f, 1f);
+                    dp.Owner = @event.SourceId();
+                    dp.Scale = new Vector2(5f);
+                    dp.DestoryAt = 5000;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+                    var dp1 = accessory.Data.GetDefaultDrawProperties();
+                    dp1.Name = $"敌方标记冲天外圈{@event.SourceId()}";
+                    dp1.Color = new Vector4(1, 0f, 0f, 0.6f);
+                    dp1.Owner = @event.SourceId();
+                    dp1.Scale = new Vector2(10f);
+                    dp1.DestoryAt = 5000;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                }
+            }
         }
     }
-    
         
     [ScriptMethod(name: "敌方冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
     public void 敌方冲天销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"敌方冲天(内|外)圈{@event.SourceId()}");
+        accessory.Method.RemoveDraw($"敌方.*冲天.*{@event.SourceId()}");
     }
     
     
@@ -295,6 +355,23 @@ public class PVPToy
             dp.Scale = new Vector2(5f);
             dp.DestoryAt = 15000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
+    public void MesotesPartyConnected(Event @event, ScriptAccessory accessory)
+    {
+        // if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队中庸之道连线{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultSafeColor;
+            dp.Owner = accessory.Data.Me;
+            dp.TargetPosition = @event.EffectPosition();
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.Scale = new(1);
+            dp.DestoryAt = 500;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
     
@@ -363,7 +440,7 @@ public class PVPToy
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队象式浮空炮塔{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(0.4f);
+            dp.Color = accessory.Data.DefaultSafeColor.WithW(0.6f);
             dp.Position = @event.EffectPosition();
             dp.Scale = new Vector2(5f);
             dp.DestoryAt = 10000;
@@ -539,37 +616,102 @@ public class PVPToy
     //  方块 11 ； 圆圈 12 ； 十字 13 ； 三角 14 ； 止步1 06 ； 止步2 07 ； 止步3 08 ； 禁止1 09 ； 禁止2 10
     //  攻击1 01 ； 攻击2 02 ； 攻击3 03 ； 攻击4 04 ； 攻击5 05 ； 攻击6 15； 攻击7 16； 攻击8 17
     
+    [ScriptMethod(name: "—————— 目标标记播报及连线 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 目标标记播报及连线(Event @event, ScriptAccessory accessory) { }
+    
     [ScriptMethod(name: "三角标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
     public void TriangleMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetTTS) accessory.Method.EdgeTTS("三角已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 三角已标记<<targetclass>> 》 <<t>>");
+        if(isTargetBroadcast) accessory.Method.EdgeTTS("三角已标记");
+        if(isTargetBroadcast) accessory.Method.SendChat($"/e 三角已标记<<targetclass>> 》 <<t>>");
+    }
+    
+    [ScriptMethod(name: "三角标记连线", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
+    public void TriangleConnected(Event @event, ScriptAccessory accessory)
+    {
+        if(!isTargetBroadcast) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "三角标记连线";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = new Vector4(0f, 1f, 1f, 1);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.TargetId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 500;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
     [ScriptMethod(name: "十字标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
     public void CrossMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetTTS) accessory.Method.EdgeTTS("十字已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 十字已标记<<targetclass>> 》 <<t>>");
+        if(isTargetBroadcast) accessory.Method.EdgeTTS("十字已标记");
+        if(isTargetBroadcast) accessory.Method.SendChat($"/e 十字已标记<<targetclass>> 》 <<t>>");
+    }
+    
+    [ScriptMethod(name: "十字标记连线", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
+    public void CrossConnected(Event @event, ScriptAccessory accessory)
+    {
+        if(!isTargetBroadcast) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "十字标记连线";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = new Vector4(0f, 1f, 1f, 1);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.TargetId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 500;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
     [ScriptMethod(name: "方块标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
     public void SquareMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetTTS) accessory.Method.EdgeTTS("方块已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 方块已标记<<targetclass>> 》 <<t>>");
+        if(isTargetBroadcast) accessory.Method.EdgeTTS("方块已标记");
+        if(isTargetBroadcast) accessory.Method.SendChat($"/e 方块已标记<<targetclass>> 》 <<t>>");
+    }
+    
+    [ScriptMethod(name: "方块标记连线", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
+    public void SquareConnected(Event @event, ScriptAccessory accessory)
+    {
+        if(!isTargetBroadcast) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "方块标记连线";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = new Vector4(0f, 1f, 1f, 1);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.TargetId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 500;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
     [ScriptMethod(name: "攻击1标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
     public void Attack1Mark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetTTS) accessory.Method.EdgeTTS("攻击1已标记");
-        if(isTargetTTS) accessory.Method.SendChat($"/e 攻击1已标记<<targetclass>> 》 <<t>>");
+        if(isTargetBroadcast) accessory.Method.EdgeTTS("攻击1已标记");
+        if(isTargetBroadcast) accessory.Method.SendChat($"/e 攻击1已标记<<targetclass>> 》 <<t>>");
+    }
+    
+    [ScriptMethod(name: "攻击1标记连线", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
+    public void Attack1Connected(Event @event, ScriptAccessory accessory)
+    {
+        if(!isTargetBroadcast) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "攻击1标记连线";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = new Vector4(0f, 1f, 1f, 1);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.TargetId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 500;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
     #endregion
     
     #region 自动选中目标标记
+    [ScriptMethod(name: "—————— 自动选中目标标记 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 自动选中目标标记(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "自动焦点大饼", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:12"])]
     public void CircleTarget(Event @event, ScriptAccessory accessory)
@@ -609,6 +751,9 @@ public class PVPToy
     #endregion
     
     #region 移速更改
+    
+    [ScriptMethod(name: "—————— 底裤功能 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 底裤功能(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "[DR] 冲天时更改移速（不与敏捷共存）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void 冲天Add(Event @event, ScriptAccessory accessory)
@@ -664,6 +809,39 @@ public class PVPToy
         }
         
     }
+    
+    #endregion
+    
+    #region 测试项目
+
+    /*
+    [ScriptMethod(name: "—————— 测试项目 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 测试项目(Event @event, ScriptAccessory accessory) { }
+    
+    
+    [ScriptMethod(name: "[Debug] 头标检测", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:test"])]
+    public void 头标检测(Event @event, ScriptAccessory accessory)
+    {
+        var j = IbcHelper.HasAnyMarker(accessory.Data.MyObject?.TargetObject);
+        accessory.Log.Debug($"{j}");
+    
+        var x = IbcHelper.GetObjectMarker(accessory.Data.MyObject?.TargetObject);
+        accessory.Log.Debug($"{x}");
+        
+        MarkType[] attackMarkers = {
+            MarkType.Attack1, MarkType.Attack2, MarkType.Attack3, MarkType.Attack4,
+            MarkType.Attack5, MarkType.Attack6, MarkType.Attack7, MarkType.Attack8,
+            MarkType.Bind1, MarkType.Bind2, MarkType.Bind3, MarkType.Ignore1, MarkType.Ignore2
+        };
+    
+        foreach (var markType in attackMarkers)
+        {
+            var hasMarker = IbcHelper.HasMarker(accessory.Data.MyObject?.TargetObject, markType);
+            accessory.Log.Debug($"标记 {markType}: {hasMarker}");
+        }
+    }
+    
+    */
     
     #endregion
     
