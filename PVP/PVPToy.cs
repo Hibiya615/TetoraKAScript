@@ -32,9 +32,13 @@ public class PVPToy
         PVP小玩具，仅纷争前线可用
         可在狼狱进行测试（小队画图在单人情况下不生效）
         推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
+        标记一般是防四小，所以启用仅标记选项的话就是防四小的播报/绘制
         """;
     
     #region 基础控制
+    
+    [UserSetting("EdgeTTS开关")]
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -45,8 +49,8 @@ public class PVPToy
     [UserSetting("启用自动选中目标标记")]
     public bool isAutoTarget { get; set; } = false;
     
-    [UserSetting("启用仅绘制敌方目标标记 [适用:龙骑冲天]" )]
-    public bool isDrawMark { get; set; } = false;
+    [UserSetting("启用仅适用敌方目标标记 [适用:龙骑冲天绘制、占星诗人LB播报]" )]
+    public bool isOnlyMark { get; set; } = false;
     
     [UserSetting("启用自动诗人光阴神净化")]
     public bool isAutoWarden { get; set; } = false;
@@ -131,11 +135,96 @@ public class PVPToy
         }
     }
     
+    [ScriptMethod(name: "对方诗人LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29401"])]
+    public void FinalFantasiaTTS(Event @event, ScriptAccessory accessory)
+    {
+        // 英雄的幻想曲 ActionId:29401 ； 英雄的幻想曲（GCD缩短 30s） StatusID:3144； 英豪的幻想曲（周边30m内 加攻击加速度，LB增长，持续判定，每次5s） StatusID:3145 
+        if (isOnlyMark) return;  // 未启用选项，播报对方全体，而非四小标记
+        // 检测敌对状态
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1300, true);
+            if (isTTS)  accessory.Method.EdgeTTS("对方诗人LB");
+        }
+    }
+    
+    [ScriptMethod(name: "对方标记诗人LB播报", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3144"],suppress:3000)]
+    public void FinalFantasiaMarkTTS(Event @event, ScriptAccessory accessory)
+    {
+        if (!isOnlyMark) return; // 开启选项，只播报对方四小，采用有头顶标记的人获得 LB Buff时判断
+        // 检测敌对状态
+        var obj = IbcHelper.GetById(accessory, @event.SourceId); 
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj)) 
+        {
+            // 检测目标标记
+            var tid = @event.TargetId(); 
+            var tobj = IbcHelper.GetById(accessory, tid);
+            if (tobj == null || !tobj.IsValid()) return;
+
+            if (!IbcHelper.HasAnyMarker(tobj)) return;
+
+            foreach (var mark in checkMark)
+            {
+                if (IbcHelper.HasMarker(tobj, mark))
+                {
+                    if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1300, true);
+                    if (isTTS)  accessory.Method.EdgeTTS("对方诗人LB");
+                }
+            }
+        }
+    }
+    
+    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"])]
+    public void CelestialRiverTTS(Event @event, ScriptAccessory accessory)
+    {
+        // 星河漫天 ActionId:29255 ； 星河漫天（队友buff） StatusID:3105； 星河漫天（敌方debuff） StatusID:3106 
+        if (isOnlyMark) return;  // 未启用选项，播报对方全体，而非四小标记
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1300, true);
+            if (isTTS)  accessory.Method.EdgeTTS("对方占星LB");
+        }
+    }
+    
+    [ScriptMethod(name: "对方标记占星LB播报", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3105"],suppress:3000)]
+    public void CelestialRiverMarkTTS(Event @event, ScriptAccessory accessory)
+    {
+        if (!isOnlyMark) return; // 开启选项，只播报对方四小，采用有头顶标记的人获得 LB Buff时判断
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            var tid = @event.TargetId();
+            var tobj = IbcHelper.GetById(accessory, tid);
+            if (tobj == null || !tobj.IsValid()) return;
+
+            if (!IbcHelper.HasAnyMarker(tobj)) return;
+
+            foreach (var mark in checkMark)
+            {
+                if (IbcHelper.HasMarker(tobj, mark))
+                {
+                    if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1300, true);
+                    if (isTTS)  accessory.Method.EdgeTTS("对方占星LB");
+                }
+            }
+        }
+    }
+    
     [ScriptMethod(name: "被蛮荒崩裂播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"],suppress:2000)]
     public void PrimalRendTargetTTS(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.EdgeTTS("被晕了");
+        if (isTTS)  accessory.Method.EdgeTTS("被晕了");
     }
     
     [ScriptMethod(name: "被蛮荒崩裂自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"])]
@@ -158,7 +247,7 @@ public class PVPToy
     public void AfflatusPurgationTargetTTS(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.EdgeTTS("被晕了");
+        if (isTTS)  accessory.Method.EdgeTTS("被晕了");
     }
     
     [ScriptMethod(name: "被涤罪之心自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"])]
@@ -272,7 +361,7 @@ public class PVPToy
     [ScriptMethod(name: "敌方冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterEnmity(Event @event, ScriptAccessory accessory)
     {
-        if (isDrawMark) return;
+        if (isOnlyMark) return; // 没开启选项，绘制对方全部
             var obj = IbcHelper.GetById(accessory, @event.SourceId);
             if (obj == null || !obj.IsValid()) return;
 
@@ -299,7 +388,7 @@ public class PVPToy
     [ScriptMethod(name: "敌方标记冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterMark(Event @event, ScriptAccessory accessory)
     {
-        if (!isDrawMark) return;
+        if (!isOnlyMark) return; // 开启选项，只绘制对方四小
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
 
@@ -554,7 +643,7 @@ public class PVPToy
         if (@event.TargetId() != accessory.Data.Me) return; 
         
         if (isText)accessory.Method.TextInfo("被保护", duration: 7300, false);
-        accessory.Method.EdgeTTS("被保护");
+        if (isTTS)  accessory.Method.EdgeTTS("被保护");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"被保护连线{@event.SourceId()}";
@@ -622,7 +711,7 @@ public class PVPToy
     [ScriptMethod(name: "三角标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
     public void TriangleMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast) accessory.Method.EdgeTTS("三角已标记");
+        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("三角已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 三角已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -644,7 +733,7 @@ public class PVPToy
     [ScriptMethod(name: "十字标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
     public void CrossMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast) accessory.Method.EdgeTTS("十字已标记");
+        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("十字已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 十字已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -666,7 +755,7 @@ public class PVPToy
     [ScriptMethod(name: "方块标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
     public void SquareMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast) accessory.Method.EdgeTTS("方块已标记");
+        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("方块已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 方块已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -688,7 +777,7 @@ public class PVPToy
     [ScriptMethod(name: "攻击1标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
     public void Attack1Mark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast) accessory.Method.EdgeTTS("攻击1已标记");
+        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("攻击1已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 攻击1已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -750,7 +839,7 @@ public class PVPToy
     }
     #endregion
     
-    #region 移速更改
+    #region 底裤功能
     
     [ScriptMethod(name: "—————— 底裤功能 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 底裤功能(Event @event, ScriptAccessory accessory) { }
@@ -762,32 +851,32 @@ public class PVPToy
         if (SkySpeed == SkySpeedEnum.Default)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed -1");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已恢复为默认值");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已恢复为默认值");
         }
         else if (SkySpeed == SkySpeedEnum.AddPoint1)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.1");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.1");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.1");
         }
         else if (SkySpeed == SkySpeedEnum.AddPoint2)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.2");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.2");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.2");
         }
         else if (SkySpeed == SkySpeedEnum.AddPoint3)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.3");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.3");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.3");
         }
         else if (SkySpeed == SkySpeedEnum.AddPoint4)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.4");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.4");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.4");
         }
         else if (SkySpeed == SkySpeedEnum.AddPoint5)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.5");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已设置为1.5");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.5");
         }
     }
     
@@ -800,12 +889,12 @@ public class PVPToy
         if (RemoveSpeed == RemoveSpeedEnum.Default)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed -1");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已恢复为默认值");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已恢复为默认值");
         }
         else if (RemoveSpeed == RemoveSpeedEnum.Speed1)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1");
-            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 移速已恢复为1");
+            if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已恢复为1");
         }
         
     }
