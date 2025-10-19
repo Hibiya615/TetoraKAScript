@@ -458,7 +458,7 @@ public class PVPToy
     [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"],suppress:3000)]
     public void MesotesPartyConnected(Event @event, ScriptAccessory accessory)
     {
-        // if (isPartyMember(accessory, @event.SourceId()))
+        if (isPartyMember(accessory, @event.SourceId()))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队中庸之道连线{@event.SourceId()}";
