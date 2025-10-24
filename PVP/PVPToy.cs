@@ -29,16 +29,15 @@ public class PVPToy
     const string noteStr =
         """
         v0.0.0.2:
-        PVP小玩具，仅纷争前线可用
-        可在狼狱进行测试（小队画图在单人情况下不生效）
+        PVP小玩具，仅纷争前线可用，可在狼狱进行测试
         推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
-        标记一般是防四小，所以启用仅标记选项的话就是防四小的播报/绘制
+        标记一般是防四小，所以启用仅标记选项的话就是防四小的播报
         """;
     
     #region 基础控制
     
     [UserSetting("EdgeTTS开关")]
-    public bool isTTS { get; set; } = true;
+    public bool isEdgeTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -49,7 +48,7 @@ public class PVPToy
     [UserSetting("启用自动选中目标标记")]
     public bool isAutoTarget { get; set; } = false;
     
-    [UserSetting("启用仅适用敌方目标标记 [适用:龙骑冲天绘制、占星诗人LB播报]" )]
+    [UserSetting("启用仅适用敌方目标标记 [适用:占星诗人LB播报]" )]
     public bool isOnlyMark { get; set; } = false;
     
     [UserSetting("启用自动诗人光阴神净化")]
@@ -107,6 +106,35 @@ public class PVPToy
     
     #region 自动播报/执行
     
+    public bool isPartyMember(ScriptAccessory accessory, uint SourceId)
+    {
+        return accessory.Data.PartyList.Contains(SourceId);
+    }
+    
+    private bool PartyFilter(ScriptAccessory sa, IGameObject? obj)
+    {
+        if (obj == null || !obj.IsValid()) return false;
+        
+        if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) return false;
+
+        var targetPlayer = obj as IPlayerCharacter;
+        if (targetPlayer == null) return false;
+        
+        bool isInMyAlliance = false;
+        
+        isInMyAlliance = sa.Data.PartyList?.Any(p => p == targetPlayer.EntityId) ?? false;
+        
+        if (!isInMyAlliance)
+        {
+            if (targetPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.AllianceMember))
+            {
+                isInMyAlliance = true;
+            }
+        }
+
+        return isInMyAlliance;
+    }
+    
     [ScriptMethod(name: "被狙自动开盾", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29415"])]
     public void MarksmansTarget(Event @event, ScriptAccessory accessory)
     {
@@ -148,7 +176,7 @@ public class PVPToy
         {
             string tname = @event["TargetName"]?.ToString();
             if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1800, true);
-            if (isTTS)  accessory.Method.EdgeTTS("对方诗人LB");
+            if (isEdgeTTS)  accessory.Method.EdgeTTS("对方诗人LB");
             accessory.Method.SendChat($"/e 鸭鸭:检测到对方诗人LB！来源《{tname}》");
         }
     }
@@ -176,7 +204,7 @@ public class PVPToy
                 {
                     string tname = @event["TargetName"]?.ToString();
                     if (isText) accessory.Method.TextInfo("检测到对方《诗人LB》", duration: 1800, true);
-                    if (isTTS)  accessory.Method.EdgeTTS("对方诗人LB");
+                    if (isEdgeTTS)  accessory.Method.EdgeTTS("对方诗人LB");
                     accessory.Method.SendChat($"/e 鸭鸭:检测到标记对象获得诗人LB！目标《{tname}》");
                 }
             }
@@ -195,7 +223,7 @@ public class PVPToy
         {
             string tname = @event["TargetName"]?.ToString();
             if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1800, true);
-            if (isTTS)  accessory.Method.EdgeTTS("对方占星LB");
+            if (isEdgeTTS)  accessory.Method.EdgeTTS("对方占星LB");
             accessory.Method.SendChat($"/e 鸭鸭:检测到对方占星LB！来源《{tname}》");
         }
     }
@@ -221,7 +249,7 @@ public class PVPToy
                 {
                     string tname = @event["TargetName"]?.ToString();
                     if (isText) accessory.Method.TextInfo("检测到对方《占星LB》", duration: 1800, true);
-                    if (isTTS)  accessory.Method.EdgeTTS("对方占星LB");
+                    if (isEdgeTTS)  accessory.Method.EdgeTTS("对方占星LB");
                     accessory.Method.SendChat($"/e 鸭鸭:检测到标记对象获得占星LB！目标《{tname}》");
                 }
             }
@@ -232,7 +260,7 @@ public class PVPToy
     public void PrimalRendTargetTTS(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
-        if (isTTS)  accessory.Method.EdgeTTS("被晕了");
+        if (isEdgeTTS)  accessory.Method.EdgeTTS("被晕了");
     }
     
     [ScriptMethod(name: "被蛮荒崩裂自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"])]
@@ -255,7 +283,7 @@ public class PVPToy
     public void AfflatusPurgationTargetTTS(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
-        if (isTTS)  accessory.Method.EdgeTTS("被晕了");
+        if (isEdgeTTS)  accessory.Method.EdgeTTS("被晕了");
     }
     
     [ScriptMethod(name: "被涤罪之心自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29230"])]
@@ -276,438 +304,6 @@ public class PVPToy
         
     #endregion
     
-    #region 技能绘制
-    
-    public bool isPartyMember(ScriptAccessory accessory, uint SourceId)
-    {
-        return accessory.Data.PartyList.Contains(SourceId);
-    }
-    
-    private bool PartyFilter(ScriptAccessory sa, IGameObject? obj)
-    {
-        if (obj == null || !obj.IsValid()) return false;
-        
-        if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) return false;
-
-        var targetPlayer = obj as IPlayerCharacter;
-        if (targetPlayer == null) return false;
-        
-        bool isInMyAlliance = false;
-        
-        isInMyAlliance = sa.Data.PartyList?.Any(p => p == targetPlayer.EntityId) ?? false;
-        
-        if (!isInMyAlliance)
-        {
-            if (targetPlayer.StatusFlags.HasFlag(Dalamud.Game.ClientState.Objects.Enums.StatusFlags.AllianceMember))
-            {
-                isInMyAlliance = true;
-            }
-        }
-
-        return isInMyAlliance;
-    }
-    
-    [ScriptMethod(name: "—————— 技能绘制 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 技能绘制(Event @event, ScriptAccessory accessory) { }
-
-    [ScriptMethod(name: "自身冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
-    public void SkyShatterSelf(Event @event, ScriptAccessory accessory)
-    {
-        if (@event.TargetId() != accessory.Data.Me) return;
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "冲天Self内圈";
-        dp.Color = new Vector4(0f, 1f, 1f, 0.8f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(5f);
-        dp.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        
-        var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = "冲天Self外圈";
-        dp1.Color = new Vector4(0f, 1f, 1f, 0.5f);
-        dp1.Owner = @event.SourceId();
-        dp1.Scale = new Vector2(10f);
-        dp1.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
-    }
-    
-    [ScriptMethod(name: "自身冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
-    public void 自身冲天销毁(Event @event, ScriptAccessory accessory)
-    {
-        // 考虑到意外死亡情况（如在天上死亡）所以不使用 ActionEffect 来销毁
-        if (@event.TargetId() != accessory.Data.Me) return;
-        accessory.Method.RemoveDraw($"冲天Self.*");
-    }
-    
-
-    [ScriptMethod(name: "队友冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
-    public void SkyShatterAlliance(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-        
-        if (PartyFilter(accessory, obj))
-        {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name =  $"队友冲天{@event.SourceId()}";
-        dp.Color = new Vector4(0f, 1f, 1f, 0.15f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 5000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-        
-    [ScriptMethod(name: "队友冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
-    public void 队友冲天销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"队友冲天{@event.SourceId()}");
-    }
-
-    
-    [ScriptMethod(name: "敌方冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
-    public void SkyShatterEnmity(Event @event, ScriptAccessory accessory)
-    {
-        if (isOnlyMark) return; // 没开启选项，绘制对方全部
-            var obj = IbcHelper.GetById(accessory, @event.SourceId);
-            if (obj == null || !obj.IsValid()) return;
-
-            if (!PartyFilter(accessory, obj))
-            {
-                var dp = accessory.Data.GetDefaultDrawProperties();
-                dp.Name = $"敌方冲天内圈{@event.SourceId()}";
-                dp.Color = new Vector4(1f, 0f, 0f, 1f);
-                dp.Owner = @event.SourceId();
-                dp.Scale = new Vector2(5f);
-                dp.DestoryAt = 5000;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-                var dp1 = accessory.Data.GetDefaultDrawProperties();
-                dp1.Name = $"敌方冲天外圈{@event.SourceId()}";
-                dp1.Color = new Vector4(1, 0f, 0f, 0.5f);
-                dp1.Owner = @event.SourceId();
-                dp1.Scale = new Vector2(10f);
-                dp1.DestoryAt = 5000;
-                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
-            }
-    }
-    
-    [ScriptMethod(name: "敌方标记冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
-    public void SkyShatterMark(Event @event, ScriptAccessory accessory)
-    {
-        if (!isOnlyMark) return; // 开启选项，只绘制对方四小
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-
-        if (!PartyFilter(accessory, obj))
-        {
-            var tid = @event.TargetId();
-            var tobj = IbcHelper.GetById(accessory, tid);
-            if (tobj == null || !tobj.IsValid()) return;
-
-            if (!IbcHelper.HasAnyMarker(tobj)) return;
-
-            foreach (var mark in checkMark)
-            {
-                if (IbcHelper.HasMarker(tobj, mark))
-                {
-                    var dp = accessory.Data.GetDefaultDrawProperties();
-                    dp.Name = $"敌方标记冲天内圈{@event.SourceId()}";
-                    dp.Color = new Vector4(1f, 0f, 0f, 1f);
-                    dp.Owner = @event.SourceId();
-                    dp.Scale = new Vector2(5f);
-                    dp.DestoryAt = 5000;
-                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-
-                    var dp1 = accessory.Data.GetDefaultDrawProperties();
-                    dp1.Name = $"敌方标记冲天外圈{@event.SourceId()}";
-                    dp1.Color = new Vector4(1, 0f, 0f, 0.6f);
-                    dp1.Owner = @event.SourceId();
-                    dp1.Scale = new Vector2(10f);
-                    dp1.DestoryAt = 5000;
-                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
-                }
-            }
-        }
-    }
-        
-    [ScriptMethod(name: "敌方冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
-    public void 敌方冲天销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"敌方.*冲天.*{@event.SourceId()}");
-    }
-    
-    
-    [ScriptMethod(name: "小队中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
-    public void MesotesParty(Event @event, ScriptAccessory accessory)
-    {
-        // 中庸之道 施放者 StatusID：3118 持续15s ； 无敌效果 StatusID：3119 间隔判定,每次判定持续5s
-        if (isPartyMember(accessory, @event.SourceId()))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"小队中庸之道{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 15000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"],suppress:3000)]
-    public void MesotesPartyConnected(Event @event, ScriptAccessory accessory)
-    {
-        if (isPartyMember(accessory, @event.SourceId()))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"小队中庸之道连线{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor;
-            dp.Owner = accessory.Data.Me;
-            dp.TargetPosition = @event.EffectPosition();
-            dp.ScaleMode |= ScaleMode.YByDistance;
-            dp.Scale = new(1);
-            dp.DestoryAt = 500;
-            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-        }
-    }
-    
-        
-    [ScriptMethod(name: "小队中庸之道销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
-    public void 小队中庸之道销毁(Event @event, ScriptAccessory accessory)
-    {
-        // 考虑到提前死亡，所以在持有者buff消失时就应销毁绘制
-        accessory.Method.RemoveDraw($"小队中庸之道{@event.SourceId()}");
-    }
-    
-    [ScriptMethod(name: "敌方中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
-    public void MesotesEnmity(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-
-        if (!PartyFilter(accessory, obj))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"敌方中庸之道{@event.SourceId()}";
-            dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 15000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "敌方中庸之道销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
-    public void 敌方中庸之道销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"敌方中庸之道{@event.SourceId()}");
-    }
-    
-    [ScriptMethod(name: "敌方腐秽大地绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29094"],suppress:3000)]
-    public void SaltedEarthEnmity(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-
-        if (!PartyFilter(accessory, obj))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"敌方腐秽大地{@event.SourceId()}";
-            dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 10000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "敌方腐秽大地销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3036"],userControl: false)]
-    public void 敌方腐秽大地销毁(Event @event, ScriptAccessory accessory)
-    {
-        // 腐秽大地 施放者 StatusID：3036 持续10s ；区域自身效果（减伤+持续恢复）StatusID：3037 间隔判定,每次判定持续5s ；区域敌方效果（出血）StatusID：3038 间隔判定,每次判定持续5s 
-        accessory.Method.RemoveDraw($"敌方腐秽大地{@event.SourceId()}");
-    }
-    
-    [ScriptMethod(name: "小队机工炮塔绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29412"],suppress:3000)]
-    public void BishopAutoturretParty(Event @event, ScriptAccessory accessory)
-    {
-        // 象式浮空炮塔 DataId:14673
-        if (isPartyMember(accessory, @event.SourceId()))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"小队象式浮空炮塔{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(0.6f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 10000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-        
-    [ScriptMethod(name: "小队机工炮塔销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3155"],userControl: false)]
-    public void 小队机工炮塔销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"小队象式浮空炮塔{@event.SourceId()}");
-    }
-    
-    [ScriptMethod(name: "敌方机工炮塔绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29412"],suppress:3000)]
-    public void BishopAutoturretEnmity(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-
-        if (!PartyFilter(accessory, obj))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"敌方象式浮空炮塔{@event.SourceId()}";
-            dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 10000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "敌方机工炮塔销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3155"],userControl: false)]
-    public void 敌方机工炮塔销毁(Event @event, ScriptAccessory accessory)
-    {
-        // 象式浮空炮塔启动中 施放者 StatusID：3155 持续10s ；区域小队效果（盾）StatusID：3156 每次持续6s ； 以太炮 ActionId: 29413
-        accessory.Method.RemoveDraw($"敌方象式浮空炮塔{@event.SourceId()}");
-    }
-
-    [ScriptMethod(name: "敌方彗星判定时间绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43252"])]
-    public void CometEnmity(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-        
-        if (!PartyFilter(accessory, obj))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name =  $"敌方彗星{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(10f);
-            dp.ScaleMode = ScaleMode.ByTime;
-            dp.DestoryAt = 2400;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
-    
-    [ScriptMethod(name: "敌方彗星销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:43252"],userControl: false)]
-    public void 敌方彗星销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"敌方彗星{@event.SourceId()}");
-    }
-    
-    [ScriptMethod(name: "保护连线", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1301"])]
-    public void 保护连线(Event @event, ScriptAccessory accessory)
-    {
-        // 卫护 ActionId:29066 ; 保护 StatusID:1300 8S , 被保护 StatusID:1301 , Buff持续8s
-        
-        if (@event.SourceId() != accessory.Data.Me) return; 
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "保护连线";
-        dp.Owner = accessory.Data.Me;
-        dp.Color = new Vector4(0f, 1f, 1f, 1f);
-        dp.ScaleMode |= ScaleMode.YByDistance;
-        dp.TargetObject = @event.TargetId();
-        dp.Scale = new(1);
-        dp.DestoryAt = 8000;
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-    }
-    
-    [ScriptMethod(name: "保护范围", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1301"])]
-    public void 保护范围(Event @event, ScriptAccessory accessory)
-    {
-        // 取用的为 1301 被保护 ID，所以 sid为自己 施放保护 ，连线至被保护对象 tid，范围应画在 tid 身上以方便自己跟
-        
-        if (@event.SourceId() != accessory.Data.Me) return; 
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "保护范围";
-        dp.Owner = @event.TargetId();
-        dp.Color = new Vector4(0f, 1f, 1f, 0.15f);
-        dp.Scale = new(10);
-        dp.DestoryAt = 8000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        
-        var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = "保护范围描边";
-        dp1.Owner = @event.TargetId();
-        dp1.Color = new Vector4(0f, 1f, 1f, 8f);
-        dp1.Scale = new Vector2(10f);
-        dp1.InnerScale = new Vector2(9.97f);
-        dp1.Radian = float.Pi * 2;
-        dp1.DestoryAt = 8000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
-    }
-    
-    [ScriptMethod(name: "被保护连线", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1301"])]
-    public void 被保护连线(Event @event, ScriptAccessory accessory)
-    {
-        // 取用的为 1301 被保护 ID，所以 sid为 施放保护的人 ，被保护对象 tid为自己
-        
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        
-        if (isText)accessory.Method.TextInfo("被保护", duration: 7300, false);
-        if (isTTS)  accessory.Method.EdgeTTS("被保护");
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"被保护连线{@event.SourceId()}";
-        dp.Owner = accessory.Data.Me;
-        dp.TargetObject = @event.SourceId();
-        dp.Color = accessory.Data.DefaultSafeColor;
-        dp.ScaleMode |= ScaleMode.YByDistance;
-        dp.Scale = new(1);
-        dp.DestoryAt = 8000;
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-    }
-    
-    [ScriptMethod(name: "被保护范围", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1301"])]
-    public void 被保护范围(Event @event, ScriptAccessory accessory)
-    {
-        // 取用的为 1301 被保护 ID，所以 sid为队友 施放保护 ，连线至被保护对象（自己），范围应画在 sid 身上以方便自己跟
-        
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"被保护范围{@event.SourceId()}";
-        dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.25f);
-        dp.Scale = new(10);
-        dp.DestoryAt = 8000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        
-        var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = $"被保护范围描边{@event.SourceId()}";
-        dp1.Owner = @event.SourceId();
-        dp1.Color = accessory.Data.DefaultSafeColor.WithW(8f);
-        dp1.Scale = new Vector2(10f);
-        dp1.InnerScale = new Vector2(9.97f);
-        dp1.Radian = float.Pi * 2;
-        dp1.DestoryAt = 8000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
-    }
-    
-    [ScriptMethod(name: "保护销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:1300"],userControl: false)]
-    public void 保护销毁(Event @event, ScriptAccessory accessory)
-    {
-        // 1300 为 保护 ID，即自身死亡销毁了保护状态时，销毁保护他人绘制
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.RemoveDraw($"保护.*");
-    }
-    
-    [ScriptMethod(name: "被保护销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:1301"],userControl: false)]
-    public void 被保护销毁(Event @event, ScriptAccessory accessory)
-    {
-        // 1301 为 被保护 ID，即自身死亡销毁了被保护状态时，销毁他人保护自己的绘制
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.RemoveDraw($"被保护.*{@event.SourceId()}");
-    }
-    
-    
-    #endregion
-    
     #region 目标标记播报及连线
     
     //  方块 11 ； 圆圈 12 ； 十字 13 ； 三角 14 ； 止步1 06 ； 止步2 07 ； 止步3 08 ； 禁止1 09 ； 禁止2 10
@@ -719,7 +315,7 @@ public class PVPToy
     [ScriptMethod(name: "三角标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:14"])]
     public void TriangleMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("三角已标记");
+        if(isTargetBroadcast && isEdgeTTS) accessory.Method.EdgeTTS("三角已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 三角已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -741,7 +337,7 @@ public class PVPToy
     [ScriptMethod(name: "十字标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:13"])]
     public void CrossMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("十字已标记");
+        if(isTargetBroadcast && isEdgeTTS) accessory.Method.EdgeTTS("十字已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 十字已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -763,7 +359,7 @@ public class PVPToy
     [ScriptMethod(name: "方块标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:11"])]
     public void SquareMark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("方块已标记");
+        if(isTargetBroadcast && isEdgeTTS) accessory.Method.EdgeTTS("方块已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 方块已标记<<targetclass>> 》 <<t>>");
     }
     
@@ -785,7 +381,7 @@ public class PVPToy
     [ScriptMethod(name: "攻击1标记播报", eventType: EventTypeEnum.Marker, eventCondition: ["Operate:Add", "Id:01"])]
     public void Attack1Mark(Event @event, ScriptAccessory accessory)
     {
-        if(isTargetBroadcast && isTTS) accessory.Method.EdgeTTS("攻击1已标记");
+        if(isTargetBroadcast && isEdgeTTS) accessory.Method.EdgeTTS("攻击1已标记");
         if(isTargetBroadcast) accessory.Method.SendChat($"/e 攻击1已标记<<targetclass>> 》 <<t>>");
     }
     
