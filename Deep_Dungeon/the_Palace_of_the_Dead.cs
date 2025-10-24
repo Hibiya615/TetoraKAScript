@@ -979,30 +979,29 @@ public class the_Palace_of_the_Dead
     }
     
 
-    private CancellationTokenSource? _explosionCts;
+    private Guid _currentExplosionOperationId = Guid.Empty;
 
     [ScriptMethod(name: "190 爆弹怪教父 特大爆炸提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7103"])]
     public async void 爆弹怪教父_特大爆炸提示(Event @event, ScriptAccessory accessory)
     { 
-        _explosionCts?.Cancel();
-        _explosionCts = new CancellationTokenSource();
+        var operationId = Guid.NewGuid();
+        _currentExplosionOperationId = operationId;
     
-        try
-        {
-            await Task.Delay(15800, _explosionCts.Token);  
-        
-            if(isText) accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 8500, true);
-            if(isTTS) accessory.Method.TTS("99.9%真伤，注意瞬回");
-            if(isEdgeTTS) accessory.Method.EdgeTTS("99.9%真伤，注意瞬回");  
-        }
-        catch (TaskCanceledException) { }
+        await Task.Delay(15800);
+    
+        if (_currentExplosionOperationId != operationId) return;
+    
+        if(isText) accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 8500, true);
+        if(isTTS) accessory.Method.TTS("99.9%真伤，注意瞬回");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("99.9%真伤，注意瞬回");  
     }
 
     [ScriptMethod(name: "特大爆炸打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:7103"], userControl: false)]
     public void 特大爆炸打断销毁(Event @event, ScriptAccessory accessory)
     {
-        _explosionCts?.Cancel();
+        _currentExplosionOperationId = Guid.NewGuid();
     }
+    
     #endregion
     
     #region 191~200层 小怪
