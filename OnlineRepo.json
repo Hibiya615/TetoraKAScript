@@ -812,5 +812,16 @@
     "TerritoryIds": [
       1273
     ]
+  },
+  {
+    "Name": "PVP技能绘制",
+    "Guid": "070e161a-26e9-4a57-8b19-da8c4201058c",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/PVP/PVPAction.cs",
+    "Note": "v0.0.0.1:\r\nPVP技能绘制，全部地图可用，未做任何区域限制。\r\n推荐先自己过一遍设置把不需要的关闭\r\n【仅适用敌方目标标记】是用于四小的，因为一般都会给四小标头标x",
+    "UpdateInfo": "",
+    "TerritoryIds": []
   }
 ]
