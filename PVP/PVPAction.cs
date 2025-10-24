@@ -36,14 +36,14 @@ public class PVPTAction
     
     #region 基础控制
     
-    [UserSetting("EdgeTTS开关")]
+    [UserSetting("TTS开关")]
     public bool isTTS { get; set; } = true;
+    
+    [UserSetting("EdgeTTS开关")]
+    public bool isEdgeTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
-    
-    [UserSetting("启用目标标记播报及连线")]
-    public bool isTargetBroadcast { get; set; } = false;
     
     [UserSetting("启用仅适用敌方目标标记 [适用:龙骑冲天绘制]" )]
     public bool isOnlyMark { get; set; } = false;
@@ -442,7 +442,8 @@ public class PVPTAction
         if (@event.TargetId() != accessory.Data.Me) return; 
         
         if (isText)accessory.Method.TextInfo("被保护", duration: 7300, false);
-        if (isTTS)  accessory.Method.EdgeTTS("被保护");
+        if (isTTS)  accessory.Method.TTS("被保护");
+        if (isEdgeTTS)  accessory.Method.EdgeTTS("被保护");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"被保护连线{@event.SourceId()}";
