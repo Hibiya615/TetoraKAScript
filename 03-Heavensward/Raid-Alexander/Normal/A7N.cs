@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace A7N;
 
 [ScriptType(guid: "48d652cd-16c4-413f-a08c-49a308ccb98f", name: "A7N", territorys: [522],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
 public class A7N
 {
