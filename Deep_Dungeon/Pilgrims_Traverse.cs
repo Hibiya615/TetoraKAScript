@@ -1633,6 +1633,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1); 
     }
     
+    /*
     [ScriptMethod(name: "インヴォークド・デストルドー_死の視線（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44355"])]
     public void 死の視線(Event @event, ScriptAccessory accessory)
     {
@@ -1650,6 +1651,7 @@ public class Pilgrims_Traverse
         dp.DestoryAt = @event.DurationMilliseconds();
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
+    */
     
     [ScriptMethod(name: "インヴォークド・デストルドー_怪光線（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44354"])]
     public void 怪光線(Event @event, ScriptAccessory accessory)
