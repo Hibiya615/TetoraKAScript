@@ -710,6 +710,30 @@
     ]
   },
   {
+    "Name": "朝圣交错路",
+    "Guid": "3f65b3c0-df48-4ef8-89ae-b8091b7690f1",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Pilgrims_Traverse.cs",
+    "Note": "v0.0.0.1:\r\n朝圣交错路测试绘制\r\n未经过任何测试与验证，纯白板瞎写，自己对自己负责\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n出现问题请携带ARR反馈！",
+    "UpdateInfo": "v0.0.0.1: 纯瞎画，错了不负责，不建议使用",
+    "TerritoryIds": [
+      1281,
+      1282,
+      1283,
+      1284,
+      1285,
+      1286,
+      1287,
+      1288,
+      1289,
+      1290,
+      1311,
+      1333
+    ]
+  },
+  {
     "Name": "天青斗场",
     "Guid": "7703f1a9-5698-4896-8908-bb8e415c1321",
     "Version": "0.0.0.6",

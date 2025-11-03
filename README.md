@@ -68,7 +68,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 **深层迷宫 / Deep Dungeons / ディープダンジョン**
 
-`死者宫殿`
+`死者宫殿` `朝圣交错路`
 
 **临危受命 / Fate**
 

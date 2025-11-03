@@ -30,6 +30,7 @@ public class Pilgrims_Traverse
         """
         v0.0.0.1:
         朝圣交错路测试绘制
+        未经过任何测试与验证，纯白板瞎写，自己对自己负责
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
         """;
@@ -290,7 +291,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・トレチャリー_救済の拳", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40401|40549)$"])]
+    [ScriptMethod(name: "フォーギヴン・トレチャリー_救済の拳（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40401|40549)$"])]
     public void 救済の拳(Event @event, ScriptAccessory accessory)
     {
         // 右刀 40401 ； 左刀 40549
@@ -1065,7 +1066,7 @@ public class Pilgrims_Traverse
     
     // 80 BOSS
     
-    [ScriptMethod(name: "フォーギヴン・プロファニティー_紫雷の輪戒（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43468"])]
+    [ScriptMethod(name: "80 フォーギヴン・プロファニティー_紫雷の輪戒（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43468"])]
     public void 紫雷の輪戒 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1079,7 +1080,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・プロファニティー_痛傷の円戒（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43472"])]
+    [ScriptMethod(name: "80 フォーギヴン・プロファニティー_痛傷の円戒（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43472"])]
     public void 痛傷の円戒 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1091,7 +1092,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・プロファニティー_冒涜の光（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43473"])]
+    [ScriptMethod(name: "80 フォーギヴン・プロファニティー_冒涜の光（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43473"])]
     public void 冒涜の光(Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
@@ -1247,7 +1248,7 @@ public class Pilgrims_Traverse
         // if (isEdgeTTS)accessory.Method.EdgeTTS("背对");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "インヴォークド・カイム_大凶眼";
+        dp.Name = $"インヴォークド・カイム_大凶眼{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId;
         dp.TargetObject = accessory.Data.Me;
@@ -1316,7 +1317,7 @@ public class Pilgrims_Traverse
     
     // 90 BOSS
     
-    [ScriptMethod(name: "マラコーダ_旋背撃（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[01]$"])]
+    [ScriptMethod(name: "90 マラコーダ_旋背击（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[01]$"])]
     public void マラコーダ_旋背撃(Event @event, ScriptAccessory accessory)
     {
         // 左下安全: 44250 ; 右下安全: 44251
@@ -1336,7 +1337,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "マラコーダ_縦断衝/横断衝（前后/左右扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[89]$"])]
+    [ScriptMethod(name: "90 マラコーダ_纵断击/横断击（前后/左右扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[89]$"])]
     public void マラコーダ_縦断横断衝(Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
@@ -1362,9 +1363,9 @@ public class Pilgrims_Traverse
         }
     }
     
-    // マラコーダ_尽滅 
+    // マラコーダ_尽滅 (击退) ActionId:44266  if (KnockPenalty) return;
     
-    [ScriptMethod(name: "指向魔法陣_魔陣光（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(43796|44257)$"])]
+    [ScriptMethod(name: "90 指向魔法阵_魔阵光（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(43796|44257)$"])]
     public void 指向魔法陣_魔陣光(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1378,11 +1379,341 @@ public class Pilgrims_Traverse
     
     #endregion
     
-    #region 91~100层 
+    #region 91~98层 
     [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "インヴォークド・パペット_キエエエエ（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44512"])]
+    public void キエエエエ (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・パペット_キエエエエ{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・ドリームエビル_夢魔の視線（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44349"])]
+    public void 夢魔の視線(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ドリームエビル_夢魔の視線{@event.SourceId()}";
+        dp.Scale = new (5f, 41f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "インヴォークド・ドリームエビル_死重爆（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44350"])]
+    public void 死重爆 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ドリームエビル_死重爆{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(18f);
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "トラバース・ヴァイオレットトリフィド_クリープアイヴィ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44499"])]
+    public void クリープアイヴィ(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"トラバース・ヴァイオレットトリフィド_クリープアイヴィ{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(7.4f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "トラバース・ヤテベオ_ロトンステンチ（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44500"])]
+    public void ロトンステンチ(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"トラバース・ヤテベオ_ロトンステンチ{@event.SourceId()}";
+        dp.Scale = new (12f, 45f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "トラバース・ワーグ_ヘビースマッシュ（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44342"])]
+    public void ヘビースマッシュ (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"トラバース・ワーグ_ヘビースマッシュ{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    /*
+    [ScriptMethod(name: "インヴォークド・ダハーカ_テイルドライブ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void テイルドライブ(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ダハーカ_テイルドライブ{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(7f + IbcHelper.GetHitboxRadius(obj)); // 7m + 目标圈
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    */
+    
+    [ScriptMethod(name: "インヴォークド・ダハーカ_リシックブレス（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44508"])]
+    public void リシックブレス(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ダハーカ_リシックブレス{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(28f + IbcHelper.GetHitboxRadius(obj)); // 28m + 目标圈
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・ソウトゥース_ネクター1（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44356"])]
+    public void ネクター1(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ソウトゥース_ネクター1{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・ソウトゥース_ネクター2（左下半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44357"])]
+    public void ネクター2(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ソウトゥース_ネクター2{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
+        dp.Radian = 180f.DegToRad();
+        dp.Rotation = 135f.DegToRad();
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・ソウトゥース_ネクター3（右下半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44358"])]
+    public void ネクター3(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・ソウトゥース_ネクター3{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
+        dp.Radian = 180f.DegToRad(); 
+        dp.Rotation = 225f.DegToRad();
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "トラバース・マレヴォレンス_スマッシュブロー（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44513"])]
+    public void スマッシュブロー(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"トラバース・マレヴォレンス_スマッシュブロー{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(11.8f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・アルケオデーモン_ダークホーリー（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44514"])]
+    public void ダークホーリー (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・アルケオデーモン_ダークホーリー{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・アルケオデーモン_ライフブレイク（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44515"])]
+    public void ライフブレイク(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・アルケオデーモン_ライフブレイク{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(35f + IbcHelper.GetHitboxRadius(obj)); // 35m + 目标圈
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・アケローン_オーソリティスラッシュ（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^445(09|10)$"])]
+    public void オーソリティスラッシュ(Event @event, ScriptAccessory accessory)
+    {
+        // 右刀 44509 ； 左刀 44510
+        var isR = @event.ActionId == 44509;
+        
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・アケローン_オーソリティスラッシュ{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f + IbcHelper.GetHitboxRadius(obj)); // 40m + 目标圈
+        dp.Radian = 180f.DegToRad(); 
+        dp.Rotation = isR ? 270f.DegToRad() : 90f.DegToRad();
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・グシオン_スラム（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4434[57]$"])]
+    public void スラム(Event @event, ScriptAccessory accessory)
+    {
+        // 先右刀 44345 ； 先左刀 44347
+        var isR = @event.ActionId == 44345;
+
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・グシオン_スラム1{@event.SourceId()}";
+        dp.Scale = new (40f, 80f);
+        dp.Rotation = isR ? 270f.DegToRad() : 90f.DegToRad();
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"インヴォークド・グシオン_スラム2{@event.SourceId()}";
+        dp1.Color = accessory.Data.DefaultDangerColor;
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new (40f, 80f);
+        dp1.Rotation = isR ? 90f.DegToRad() : 270f.DegToRad();
+        dp1.Delay = @event.DurationMilliseconds();
+        dp1.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp1); 
+    }
+    
+    [ScriptMethod(name: "インヴォークド・デストルドー_死の視線（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44355"])]
+    public void 死の視線(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo("背对", duration: 2000, true);
+        // if (isTTS)accessory.Method.TTS("背对");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("背对");
+
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・デストルドー_死の視線{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId;
+        dp.TargetObject = accessory.Data.Me;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.Scale = new(1);
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "インヴォークド・デストルドー_怪光線（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44354"])]
+    public void 怪光線(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"インヴォークド・デストルドー_怪光線{@event.SourceId()}";
+        dp.Scale = new (16f, 60f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
     #endregion
 
+    #region 99层 BOSS 卓异的悲寂
+    
+    [ScriptMethod(name: "99 焰の枷（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[39]$"])]
+    public void 焰の枷(Event @event, ScriptAccessory accessory)
+    {
+        int duration = @event.ActionId == 44069 ? 11300 : 8300;
+    
+        if (isText) accessory.Method.TextInfo("停止行动", duration: duration, true);
+        if (isTTS) accessory.Method.TTS("停止行动");
+        if (isEdgeTTS) accessory.Method.EdgeTTS("停止行动");
+    }
+    
+    [ScriptMethod(name: "99 荆棘之尾（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45118"])]
+    public void 荆棘之尾(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"荆棘之尾";
+        dp.Scale = new (4f, 50f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "99 光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^440(67|73)]$"])]
+    public void 光耀之剑(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"光耀之剑";
+        dp.Scale = new (15f, 30f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+    }
+    
+    [ScriptMethod(name: "99 净罪之环（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44083"])]
+    public void 净罪之环 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"净罪之环";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(3f);
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    #endregion
     
     /*
     #region 底裤部分
