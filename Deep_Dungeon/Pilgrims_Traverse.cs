@@ -22,15 +22,16 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.0.1",note: noteStr)]
+    version: "0.0.0.2",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         朝圣交错路测试绘制
         未经过任何测试与验证，纯白板瞎写，自己对自己负责
+        修正部分机制，详情见dc
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
         """;
@@ -39,7 +40,7 @@ public class Pilgrims_Traverse
     #region 各种记录
     
     /*  StatusID
-     *  变身 565 [StackCount:42 曼提克 ]
+     *  变身 4708 [StackCount:54 Param:566 泥球 ]  [StackCount:55 Param:567 爆弹之母 ]
      *  诅咒 1087 （拟态怪 - 怨念）
      *  失明 1088
      *  最大体力减少 1089
@@ -88,6 +89,22 @@ public class Pilgrims_Traverse
     
     // [UserSetting("测试性功能（慎用）")]
     // public bool isTest { get; set; } = false;
+    
+    [UserSetting("启用小工具（已确认设置完毕）")]
+    public bool isMiniTools { get; set; } = false;
+    
+    [UserSetting(note: "选择自动苏生之炎对象")]
+    public RekindleEnum Rekindle { get; set; } = RekindleEnum.TargetsTarget;
+    
+    public enum RekindleEnum
+    {
+        [Description("<tt>")]
+        TargetsTarget = 0,
+        [Description("<2>")]
+        PartyList2 = 1,
+        [Description("<me>")]
+        Me = 2,
+    }
     
     [UserSetting("启用底裤（需要对应插件与权限）")]
     public bool isHack { get; set; } = false;
@@ -187,6 +204,31 @@ public class Pilgrims_Traverse
         if (isTTS) accessory.Method.TTS("打断拟态怪");
         if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
+    
+    #region 小工具部分
+    
+    [ScriptMethod(name: "—————— 小工具部分（先自行关闭不需要的功能） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 小工具部分(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "自动取消二段火神冲（防止遁地打不到导致自动循环卡死）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4403"])]
+    public void AutoRemoveCrimsonStrike(Event @event, ScriptAccessory accessory)
+    {
+        if(!isMiniTools || @event.TargetId() != accessory.Data.Me) return;
+        accessory.Method.SendChat($"/statusoff 深红强袭预备");
+        if (isDeveloper) accessory.Method.SendChat($"/e 鸭鸭：已取消《深红强袭预备》");
+    }
+    
+    [ScriptMethod(name: "自动尝试挂不死鸟热水（遁地了也很team）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1868"])]
+    public void AutoUseRekindle(Event @event, ScriptAccessory accessory)
+    {
+        string rekindleValue = Rekindle.GetDescription();
+        
+        if(!isMiniTools || @event.TargetId() != accessory.Data.Me) return;
+        accessory.Method.SendChat($"/ac 星极超流 {rekindleValue}");
+        accessory.Method.SendChat($"/e 鸭鸭：已尝试自动给《{rekindleValue}》挂上不死鸟热水");
+    }
+    
+    #endregion
     
     #region  1~10层 
     [ScriptMethod(name: "—————— 1 ~ 10 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
@@ -372,8 +414,8 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "フォーギヴン・ペチュランス_テンタクル（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4469[01]$"])]
     public void テンタクル(Event @event, ScriptAccessory accessory)
     {
-        // 右刀 44690 ； 左刀 44691
-        var isR = @event.ActionId == 44690;
+        // 右刀 44691 ； 左刀 44690
+        var isR = @event.ActionId == 44691;
         
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null) return;
@@ -600,9 +642,10 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "トラバース・タロース_サブダックション（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
+    [ScriptMethod(name: "交错路塔罗斯_地层俯冲（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
     public void サブダックション (Event @event, ScriptAccessory accessory)
     {
+        // 在 执行贯穿 [ActionId:42516 / 3.7s] 4s后 显示第2段月环  两次判定间隔约3.1s
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"トラバース・タロース_サブダックション{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -610,8 +653,8 @@ public class Pilgrims_Traverse
         dp.Scale = new Vector2(11f);
         dp.InnerScale = new Vector2(5f);
         dp.Radian = float.Pi * 2;
-        dp.Delay = 5000;
-        dp.DestoryAt = @event.DurationMilliseconds() - 5000;
+        dp.Delay = 4000;
+        dp.DestoryAt = 3100;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
@@ -630,8 +673,8 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "フォーギヴン・ライオティング_ショックウェーブ（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
     public void ショックウェーブ(Event @event, ScriptAccessory accessory)
     {
-        // 先右刀 42216 ； 先左刀 42214
-        var isR = @event.ActionId == 42216;
+        // 先右刀 42214 ； 先左刀 42216
+        var isR = @event.ActionId == 42214;
         
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null) return;
@@ -987,7 +1030,20 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・スランダー_メタモーフィックブラスト（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44761"])]
+        
+    [ScriptMethod(name: "得到宽恕的诋毁_造山风暴（点名圆形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44762"])]
+    public void 地火喷发(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "地火喷发";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "得到宽恕的诋毁_变质岩波（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44761"])]
     public void メタモーフィックブラスト(Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
@@ -997,7 +1053,7 @@ public class Pilgrims_Traverse
         dp.Name = $"フォーギヴン・スランダー_メタモーフィックブラスト{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(11f + IbcHelper.GetHitboxRadius(obj)); // 11m + 目标圈
+        dp.Scale = new Vector2(15f);
         dp.Radian = 90f.DegToRad(); 
         dp.DestoryAt = @event.DurationMilliseconds();
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
@@ -1063,6 +1119,7 @@ public class Pilgrims_Traverse
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
         }
     }
+
     
     // 80 BOSS
     
@@ -1717,40 +1774,16 @@ public class Pilgrims_Traverse
     
     #endregion
     
-    /*
+
     #region 底裤部分
     
     [ScriptMethod(name: "—————— 底裤部分（需要对应插件与权限） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 底裤部分(Event @event, ScriptAccessory accessory) { }
     
-    // 过层时候会触发一次 解除变身（60s）和变身（剩余时间），所以需要额外限制 Duration 以免在过层时触发
+    // 过层时候会触发一次 解除变身（60s）和变身（剩余时间），所以需要额外限制 Duration 以免在过层时触发 ; 这次 BOSS房 不可能变身 不用考虑
 
-    [ScriptMethod(name: "[DR] 变身曼提克时，移速改为1.5倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:42", "Duration:60.00"])]
-    public void AddManticoreSpeed(Event @event, ScriptAccessory accessory)
-    {
-        if(!isHack) return;
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.SendChat($"/pdrspeed 1.5");
-        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.5x");
-        if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
-    }
-    
-    
-    [ScriptMethod(name: "[DR] 曼提克取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42", "Duration:0.00"])]
-    public void RemoveManticoreSpeed(Event @event, ScriptAccessory accessory)
-    {
-        if(!isHack) return;
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.SendChat($"/pdrspeed -1");
-        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
-        if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
-    }
-    
-
-    [ScriptMethod(name: "[DR] 变身梦魔时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:43", "Duration:60.00"])]
-    public void AddSuccubusSpeed(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[DR] 变身泥球时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:54", "Duration:60.00"])]
+    public void AddMudPieSpeed(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -1760,8 +1793,9 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.2倍");
     }
     
-    [ScriptMethod(name: "[DR] 梦魔取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:43", "Duration:0.00"])]
-    public void RemoveSuccubusSpeed(Event @event, ScriptAccessory accessory)
+    
+    [ScriptMethod(name: "[DR] 泥球取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:54", "Duration:0.00"])]
+    public void RemoveMudPieSpeed(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -1771,11 +1805,31 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     
+
+    [ScriptMethod(name: "[DR] 变身爆弹之母时，移速改为1.5倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:60.00"])]
+    public void AddProgenitrixSpeed(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed 1.5");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.5x");
+        if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
+    }
     
-    // 梦魔和基路伯会用于BOSS房，不做自动遁地处理
+    [ScriptMethod(name: "[DR] 爆弹之母取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:0.00"])]
+    public void RemoveProgenitrixSpeed(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed -1");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
+        if (isTTS)accessory.Method.TTS("移速已复原至默认值");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
+    }
     
-    [ScriptMethod(name: "[IC] 变身曼提克时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:565", "StackCount:42", "Duration:60.00"])]
-    public void AddManticoreDepths(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[IC] 变身泥球时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:54", "Duration:60.00"])]
+    public void AddMudPieDepths(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -1787,8 +1841,36 @@ public class Pilgrims_Traverse
     }
     
     
-    [ScriptMethod(name: "[IC] 曼提克取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:42", "Duration:0.00"])]
-    public void RemoveManticoreDepths(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[IC] 泥球取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:54", "Duration:0.00"])]
+    public void RemoveMudPieDepths(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+    
+        // 获取深度的描述值
+        string depthValue = Depths.GetDescription();
+        
+        accessory.Method.SendChat($"/i-ching-commander y_adjust -{depthValue}");
+        accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
+        if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
+        // if (isTTS)accessory.Method.TTS("已自动遁地");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
+    }
+    
+    [ScriptMethod(name: "[IC] 变身爆弹母时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:60.00"])]
+    public void AddProgenitrixDepths(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/i-ching-commander y_adjust 0");
+        accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
+        if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
+        // if (isTTS)accessory.Method.TTS("已取消遁地");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
+    }
+    
+    [ScriptMethod(name: "[IC] 爆弹母取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:0.00"])]
+    public void RemoveProgenitrixDepths(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -1805,7 +1887,7 @@ public class Pilgrims_Traverse
     
     
     #endregion
-    */
+
     
 }
 
