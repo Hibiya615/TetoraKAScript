@@ -22,16 +22,15 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.0.2",note: noteStr)]
+    version: "0.0.0.3",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         朝圣交错路测试绘制
-        未经过任何测试与验证，纯白板瞎写，自己对自己负责
-        修正部分机制，详情见dc
+        未全部测试，可能部分有误，更新日志见dc
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
         """;
@@ -41,6 +40,8 @@ public class Pilgrims_Traverse
     
     /*  StatusID
      *  变身 4708 [StackCount:54 Param:566 泥球 ]  [StackCount:55 Param:567 爆弹之母 ]
+     *  极速冲刺 4709
+     *  禁止使用杜松香 4591
      *  诅咒 1087 （拟态怪 - 怨念）
      *  失明 1088
      *  最大体力减少 1089
@@ -197,10 +198,10 @@ public class Pilgrims_Traverse
     #endregion
     
     // 通用内容
-    [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6397"])]
+    [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44852"])]
     public void 拟态怪_怨念(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2300, true);
+        if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2000, true);
         if (isTTS) accessory.Method.TTS("打断拟态怪");
         if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
@@ -574,16 +575,40 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "元祖マリクテンダー_ニードルシュート（前后扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44866"])]
-    public void ニードルシュート (Event @event, ScriptAccessory accessory)
+    // 60 BOSS 始祖马利克巨人掌
+    
+    [ScriptMethod(name: "60 始祖马利克巨人掌_飞针射击（前后扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44866"])]
+    public void 始祖马利克巨人掌_飞针射击 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"元祖マリクテンダー_ニードルシュート";
+        dp.Name = $"始祖马利克巨人掌_飞针射击";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f);
         dp.Radian = 60f.DegToRad(); 
         dp.DestoryAt = @event.DurationMilliseconds();
+    
+        float[] rotations = { 0f, 180f };
+    
+        foreach (float rotation in rotations)
+        {
+            dp.Rotation = rotation.DegToRad();
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "60 始祖马利克巨人掌_飞针回旋（旋转扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44868"])]
+    public void 始祖马利克巨人掌_飞针回旋 (Event @event, ScriptAccessory accessory)
+    {
+        // 飞针回旋 [ ActionId: 44868 - Cast: 4.7s ] ; 共判定 10 次，每次旋转 60° , 间隔约 1s , 伤害来源 ActionId: 44909 ；
+        // 顺时针旋转 [ TargetIcon: 00A7 ] ; 逆时针旋转 [ TargetIcon: 00A7 ] 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"始祖马利克巨人掌_飞针回旋";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 60f.DegToRad(); 
+        dp.DestoryAt = 13700; 
     
         float[] rotations = { 0f, 180f };
     
@@ -670,8 +695,8 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・ライオティング_ショックウェーブ（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
-    public void ショックウェーブ(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "得到宽恕的暴动_左/右侧震荡波（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
+    public void 得到宽恕的暴动_左右侧震荡波(Event @event, ScriptAccessory accessory)
     {
         // 先右刀 42214 ； 先左刀 42216
         var isR = @event.ActionId == 42214;
@@ -680,7 +705,7 @@ public class Pilgrims_Traverse
         if (obj == null) return;
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ライオティング_ショックウェーブ1";
+        dp.Name = $"得到宽恕的暴动_左右侧震荡波1{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
@@ -690,7 +715,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = $"フォーギヴン・ライオティング_ショックウェーブ2";
+        dp1.Name = $"得到宽恕的暴动_左右侧震荡波2{@event.SourceId()}";
         dp1.Color = accessory.Data.DefaultDangerColor;
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj));
@@ -820,7 +845,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // 70 BOSS
+    // 70 BOSS 得到宽恕的热忱
     
     [ScriptMethod(name: "フォーギヴン・ズィール_ズィールグラワー（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11)$"])]
     public void ズィールグラワー(Event @event, ScriptAccessory accessory)
@@ -848,17 +873,43 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "フォーギヴン・ズィール_ズィールグラワー_光球2（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
-    public void ズィールグラワー_光球2 (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
+    public void 得到宽恕的热忱_光球_光轮安全区 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ズィール_ズィールグラワー_光球2";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Name = $"得到宽恕的热忱_光球 光轮安全区";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(3f);
         dp.DestoryAt = @event.DurationMilliseconds();
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"得到宽恕的热忱_光球 光轮描边";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(20f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(3f);
+        dp1.InnerScale = new Vector2(2.95f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 1700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
+    
+    /*
+    [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
+    public void 得到宽恕的热忱_光球 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的热忱_光球 光轮";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(20f);
+        dp.InnerScale = new Vector2(3f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 1700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    */
     
     [ScriptMethod(name: "フォーギヴン・ズィール_アイ・オブ・ズィール（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:^434(18|26)$"])]
     public void ズィール (Event @event, ScriptAccessory accessory)
@@ -905,15 +956,32 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "トラバース・フルドゥ_炸裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44770"])]
-    public void フルドゥ_炸裂 (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "交错路爆岩怪_炸裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42770"])]
+    public void 交错路爆岩怪_炸裂 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・フルドゥ_炸裂{@event.SourceId()}";
+        dp.Name = $"交错路爆岩怪_炸裂{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "交错路爆岩怪_自爆（距离衰减）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42771"])]
+    public void 交错路爆岩怪_自爆 (Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("远离自爆（距离衰减）", duration: 4000, true);
+        if (isTTS)accessory.Method.TTS("远离自爆");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("远离自爆");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路爆岩怪_自爆{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(20f);
+        dp.DestoryAt = 4700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -945,33 +1013,52 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・スパイト_双水流（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(42578|42748)$"])]
+    [ScriptMethod(name: "得到宽恕的恶意_双水流（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(42578|42748)$"])]
     public void スパイト_双水流 (Event @event, ScriptAccessory accessory)
     {
         // 先钢铁: 42578  ; 先月环: 42748
-        var isCircle = @event.ActionId == 42578;
+        if (@event.ActionId == 42578)
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"得到宽恕的恶意_圆环双水流_钢铁{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(10);
+            dp.DestoryAt = 4700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     
-        var innerRadius = isCircle ? 10f : 40f;
-        var outerRadius = isCircle ? 40f : 10f;
-    
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・スパイト_双水流{(isCircle ? "钢铁" : "月环")}{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(innerRadius);
-        dp.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    
-        var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = $"フォーギヴン・スパイト_双水流{(isCircle ? "月环" : "钢铁")}{@event.SourceId()}";
-        dp1.Color = accessory.Data.DefaultDangerColor;
-        dp1.Owner = @event.SourceId();
-        dp1.Scale = new Vector2(outerRadius);
-        dp1.InnerScale = new Vector2(innerRadius);
-        dp1.Radian = float.Pi * 2;
-        dp1.Delay = @event.DurationMilliseconds();
-        dp1.DestoryAt = 3000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = $"得到宽恕的恶意_圆环双水流_月环{@event.SourceId()}";
+            dp1.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+            dp1.Owner = @event.SourceId();
+            dp1.Scale = new Vector2(40);
+            dp1.InnerScale = new Vector2(10);
+            dp1.Radian = float.Pi * 2;
+            dp1.Delay = 4700;
+            dp1.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+        }
+        else
+        {
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = $"得到宽恕的恶意_环圆双水流_月环{@event.SourceId()}";
+            dp1.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+            dp1.Owner = @event.SourceId();
+            dp1.Scale = new Vector2(40);
+            dp1.InnerScale = new Vector2(10);
+            dp1.Radian = float.Pi * 2;
+            dp1.DestoryAt = 4700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+            
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"得到宽恕的恶意_环圆双水流_钢铁{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(10);
+            dp.Delay = 4700;
+            dp.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
     }
     
     [ScriptMethod(name: "フォーギヴン・アロガンス_連蹴り（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44759"])]
@@ -1059,16 +1146,27 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・ディセンション_マイティスピン（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42523"])]
-    public void ディセンション_マイティスピン (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "得到宽恕的腐败_旋转火力（脱战大钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42523"])]
+    public void 得到宽恕的腐败_旋转火力 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ディセンション_マイティスピン{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Name = $"得到宽恕的腐败_旋转火力{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(45f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 15700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"得到宽恕的腐败_旋转火力描边{@event.SourceId()}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(45f);
+        dp1.InnerScale = new Vector2(44.94f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 15700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
     [ScriptMethod(name: "フォーギヴン・コラプション_フロントバラージ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42577"])]
@@ -1332,16 +1430,27 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "インヴォークド・バエル_インシネレイトラハール（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43133"])]
-    public void インシネレイトラハール (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "召引巴尔_火山泥流爆（脱战大钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43133"])]
+    public void 召引巴尔_火山泥流爆 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"インヴォークド・バエル_インシネレイトラハール{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Name = $"召引巴尔_火山泥流爆{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(46f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 15700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"召引巴尔_火山泥流爆描边{@event.SourceId()}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(46f);
+        dp1.InnerScale = new Vector2(45.94f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 15700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
     [ScriptMethod(name: "インヴォークド・バエル_アビサルレイ（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43134"])]
@@ -1374,8 +1483,8 @@ public class Pilgrims_Traverse
     
     // 90 BOSS
     
-    [ScriptMethod(name: "90 マラコーダ_旋背击（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[01]$"])]
-    public void マラコーダ_旋背撃(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "90 马纳果达_旋背击（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[01]$"])]
+    public void 马纳果达_旋背击(Event @event, ScriptAccessory accessory)
     {
         // 左下安全: 44250 ; 右下安全: 44251
         var isR = @event.ActionId == 44250;
@@ -1384,24 +1493,24 @@ public class Pilgrims_Traverse
         if (obj == null) return;
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"マラコーダ_旋背撃";
+        dp.Name = $"马纳果达_旋背击";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
         dp.Radian = 270f.DegToRad();
-        dp.Rotation = isR ? 45f.DegToRad() : 315f.DegToRad();
+        dp.Rotation = isR ? 315f.DegToRad() : 45f.DegToRad();
         dp.DestoryAt = @event.DurationMilliseconds();
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "90 マラコーダ_纵断击/横断击（前后/左右扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[89]$"])]
-    public void マラコーダ_縦断横断衝(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "90 马纳果达_纵断击/横断击（前后/左右扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[89]$"])]
+    public void 马纳果达_纵断横断击(Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null) return;
     
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"マラコーダ_縦断横断衝";
+        dp.Name = $"马纳果达_纵断横断击";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj));
@@ -1774,7 +1883,6 @@ public class Pilgrims_Traverse
     
     #endregion
     
-
     #region 底裤部分
     
     [ScriptMethod(name: "—————— 底裤部分（需要对应插件与权限） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
@@ -1857,7 +1965,7 @@ public class Pilgrims_Traverse
         // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
     }
     
-    [ScriptMethod(name: "[IC] 变身爆弹母时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:60.00"])]
+    [ScriptMethod(name: "[IC] 变身爆弹之母时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:60.00"])]
     public void AddProgenitrixDepths(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
@@ -1869,7 +1977,7 @@ public class Pilgrims_Traverse
         // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
     }
     
-    [ScriptMethod(name: "[IC] 爆弹母取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:0.00"])]
+    [ScriptMethod(name: "[IC] 爆弹之母取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55", "Duration:0.00"])]
     public void RemoveProgenitrixDepths(Event @event, ScriptAccessory accessory)
     {
         if(!isHack) return;
