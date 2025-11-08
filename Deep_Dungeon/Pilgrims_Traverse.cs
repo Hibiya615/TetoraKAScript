@@ -23,13 +23,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.0.5",note: noteStr)]
+    version: "0.0.0.6",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         朝圣交错路测试绘制
         未全部测试，可能部分有误，更新日志见dc
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -2053,19 +2053,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    uint Spinelash = 0; // 棘刺尾 读条点名直线记录
-    
-    public void Init(ScriptAccessory accessory) {
-        Spinelash = 0;
-    }
-    
-    [ScriptMethod(name:"棘刺尾读条记录", eventType:EventTypeEnum.StartCasting, eventCondition: ["ActionId:44085"], userControl:false)]
-    public void 棘刺尾读条记录(Event @event, ScriptAccessory accessory)
-    {
-        Spinelash = 1;
-        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG] 已记录: 棘刺尾读条");
-    }
-    
     [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线预兆）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:00EA"])]
     public void 棘刺尾预兆(Event @event, ScriptAccessory accessory)
     {
@@ -2073,7 +2060,7 @@ public class Pilgrims_Traverse
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         
-        var boss = accessory.Data.Objects.GetByDataId(18666).FirstOrDefault();  // 卓异的悲寂歼灭战 DataId: 18666
+        var boss = accessory.Data.Objects.GetByDataId(18666).FirstOrDefault();  // 歼灭战 - 卓异的悲寂 DataId: 18666
         if (boss == null) return;
         dp.Owner = boss.GameObjectId;
 
@@ -2083,9 +2070,6 @@ public class Pilgrims_Traverse
         dp.FixRotation = true;
         dp.DestoryAt = 6400;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
-        
-        Spinelash++;
-        if (isDeveloper)  accessory.Method.SendChat($"/e [DEBUG] 当前点名次数:{Spinelash}");
     }
     
     [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45118"])]
@@ -2134,10 +2118,167 @@ public class Pilgrims_Traverse
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(3f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 2700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    
+    #endregion
+    
+    #region 卓异的悲寂深想战 满贡品难度Q40
+    
+    [ScriptMethod(name: "—————— 卓异的悲寂深想战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 卓异的悲寂深想战(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
+    public void Q40_火球 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_火球";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 1800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
+    public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
+    {
+        // 44797 先东西 ; 44798 先南北 ; 水晶DataId: 2014832
+    
+        var isFirst = @event.ActionId == 44797 ? "左右" : "上下";
+        var isSecond = @event.ActionId == 44797 ? "上下" : "左右";
+        
+        if (isText) accessory.Method.TextInfo($"地火：  先{isFirst} ， 再{isSecond}", duration: 16700, true);
+        if (isTTS) accessory.Method.TTS($"先{isFirst}, 后{isSecond}");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"先{isFirst}, 后{isSecond}");
+        accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
+
+    }
+    
+    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
+    public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS) accessory.Method.TTS($"抓人牢狱");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
+    }
+    
+    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
+    public void Q40_净罪之环 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_净罪之环";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(3f);
+        dp.DestoryAt = 2700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+
+    // TargetIconId: 0061 拉线预兆
+    
+    uint Spinelash = 0; // 棘刺尾 读条点名直线记录
+    
+    public void Init(ScriptAccessory accessory) {
+        Spinelash = 0;
+    }
+    
+    [ScriptMethod(name: "棘刺尾（点名分摊提示）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:020F"])]
+    public void Q40_棘刺尾提示(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != MapIds.TheFinalVerseQuantum) return; // 深想战 - 卓异的悲寂 DataId: 18670
+        
+        Spinelash++;
+        
+        if (isTTS)accessory.Method.TTS("挡枪分摊");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("挡枪分摊");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"棘刺尾预兆";
+        dp.Scale = new (1f, 30f);
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1.4f);
+        
+        switch (Spinelash)
+        {
+            case 1 :
+                dp.Position = new Vector3(-613.4f, 0f, -315f); // 左
+                break;
+            case 2 :
+                dp.Position = new Vector3(-586.6f, 0f, -315f); // 右
+                break;
+            case 3 :
+                dp.Position = new Vector3(-600f, 0f, -315f); // 中
+                break;
+        }
+        
+        dp.DestoryAt = 6400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+        
+        if (isDeveloper)  accessory.Method.SendChat($"/e [DEBUG] 当前点名次数:{Spinelash}");
+    }
+    
+    [ScriptMethod(name: "棘刺尾（直线分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45119"])]
+    public void Q40_棘刺尾(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"棘刺尾";
+        dp.Scale = new (8f, 60f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "戒律的光链：恢复 [奶妈治疗热风]", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4564"])]
+    public void Q40_戒律的光链_恢复 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_戒律的光链_恢复";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(21f);
+        dp.InnerScale = new Vector2(20.95f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 65000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "戒律的光链：能力 [DPS]", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4565"])]
+    public void Q40_戒律的光链_能力 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_戒律的光链_能力{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(6f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(8f);
+        dp.InnerScale = new Vector2(7.96f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 65000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "戒律的光链备用销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:regex:^456[45]$"],userControl: false)]
+    public void 戒律的光链备用销毁(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.StatusId == 4564) accessory.Method.RemoveDraw("Q40_戒律的光链_恢复");
+        if (@event.StatusId == 4565) accessory.Method.RemoveDraw($"Q40_戒律的光链_能力{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "尾连击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44161"])]
+    public void Q40_尾连击(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"尾连击";
+        dp.Scale = new (9f, 42f);
+        dp.Offset = new Vector3(0f, 0f, 10f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
     
     #endregion
     
