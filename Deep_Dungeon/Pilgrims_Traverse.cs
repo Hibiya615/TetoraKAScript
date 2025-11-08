@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
@@ -23,13 +24,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.0.6",note: noteStr)]
+    version: "0.0.0.7",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.0.6:
+        v0.0.0.7:
         朝圣交错路测试绘制
         未全部测试，可能部分有误，更新日志见dc
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -89,11 +90,20 @@ public class Pilgrims_Traverse
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    // [UserSetting("测试性功能（慎用）")]
-    // public bool isTest { get; set; } = false;
+    [UserSetting("是否启用遁地特殊绘制")]
+    public bool isUnderGround { get; set; } = true;
+    
+    [UserSetting("遁地能打到的AOE颜色")]
+    public ScriptColor UnderGround_AOEs { get; set; } = new() { V4 = new(1f, 0f, 0f, 1f) };
     
     [UserSetting("启用小工具（已确认设置完毕）")]
     public bool isMiniTools { get; set; } = false;
+    
+    [UserSetting("设置传送装置查找颜色")]
+    public ScriptColor teleporter { get; set; } = new() { V4 = new(0f, 1f, 0f, 2f) };
+    
+    [UserSetting("设置光耀烛台查找颜色")]
+    public ScriptColor votiveCandelabra { get; set; } = new() { V4 = new(1f, 0f, 1f, 1.4f) };
     
     [UserSetting(note: "选择自动苏生之炎对象")]
     public RekindleEnum Rekindle { get; set; } = RekindleEnum.TargetsTarget;
@@ -241,6 +251,49 @@ public class Pilgrims_Traverse
         dp.DestoryAt = 1500;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    
+    [ScriptMethod(name: "传送装置查找", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014756", "Operate:Add"])]
+    public void 传送装置查找(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"传送装置查找";
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Scale = new (1f);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.Color = teleporter.V4;
+        dp.DestoryAt = 3000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp); 
+    }
+    
+    [ScriptMethod(name: "光耀烛台查找", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014759", "Operate:Add"])]
+    public void 光耀烛台查找(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"光耀烛台";
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Scale = new (1f);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.Color = votiveCandelabra.V4;
+        dp.DestoryAt = 3000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp); 
+    }
+
+    [ScriptMethod(name: "光耀烛台销毁", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:16", "Id2:32"], userControl: false)]
+    public void 光耀烛台销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"光耀烛台");
+    }
+    
+    /*
+    [ScriptMethod(name: "光耀烛台 温暖气息提示", eventType: EventTypeEnum.Chat, eventCondition: ["Type:SystemMessage", "Message:察觉到了灯火般温暖的神秘气息……"])]
+    public void 光耀烛台_温暖气息提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS("本层有烛台");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("本层有烛台");
+    }
+    */
     
     /*
     [ScriptMethod(name: "队友爆弹之母 大爆炸范围绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44629"])]
@@ -737,114 +790,162 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 61 ~ 70 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "トラバース・ノーム_プレインパウン（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44753"])]
-    public void プレインパウン (Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・ノーム_プレインパウン{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(6f);
-        dp.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-    
-    [ScriptMethod(name: "トラバース・クリフモール_ヘッドバット（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44740"])]
-    public void ヘッドバット(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "61~64 得到宽恕的疑念 潜伏透视", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18832"])]
+    public void 得到宽恕的疑念_潜伏 (Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null) return;
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・クリフモール_ヘッドバット{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Name = $"得到宽恕的疑念_潜伏{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(6f + IbcHelper.GetHitboxRadius(obj)); // 6m + 目标圈
-        dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
-    
-    [ScriptMethod(name: "交错路塔罗斯_地层俯冲（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
-    public void サブダックション (Event @event, ScriptAccessory accessory)
-    {
-        // 在 执行贯穿 [ActionId:42516 / 3.7s] 4s后 显示第2段月环  两次判定间隔约3.1s
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・タロース_サブダックション{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(11f);
-        dp.InnerScale = new Vector2(5f);
-        dp.Radian = float.Pi * 2;
-        dp.Delay = 4000;
-        dp.DestoryAt = 3100;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
-    }
-    
-    [ScriptMethod(name: "フォーギヴン・ダウト_ボディプレス（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44748"])]
-    public void ボディプレス (Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ダウト_ボディプレス{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(7f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.Scale = new Vector2(IbcHelper.GetHitboxRadius(obj)); // 目标圈为2.4m，只有在+5m内才可见，开怪后状态消失
+        dp.DestoryAt = 600000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "得到宽恕的暴动_左/右侧震荡波（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
+    [ScriptMethod(name: "61~64 得到宽恕的疑念 潜伏面向", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18832"])]
+    public void 得到宽恕的疑念_潜伏面向 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的疑念_潜伏面向{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f); // 参考视觉引战范围
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 600000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "得到宽恕的疑念 潜伏销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:676"],userControl: false)]
+    public void 得到宽恕的疑念_潜伏销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"得到宽恕的疑念_潜伏.*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "得到宽恕的疑念 潜伏备用销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44749|45130)"],userControl: false)]
+    public void 得到宽恕的疑念_潜伏备用销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 44749 滑跃 ; 45130 平A攻击
+        accessory.Method.RemoveDraw($"得到宽恕的疑念_潜伏.*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "61~69 交错路塔罗斯_执行贯穿（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
+    public void 交错路塔罗斯_执行贯穿 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路塔罗斯_执行贯穿{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "61~69 交错路塔罗斯_地层俯冲（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
+    public void 交错路塔罗斯_地层俯冲 (Event @event, ScriptAccessory accessory)
+    {
+        // 在 执行贯穿 [ActionId:42516 / 3.7s] 4s后 显示第2段月环  两次判定间隔约3.1s
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路塔罗斯_地层俯冲{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(11f);
+        dp.InnerScale = new Vector2(5f);
+        dp.Radian = float.Pi * 2;
+        dp.Delay = 3700;
+        dp.DestoryAt = 3000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "61~64 得到宽恕的疑念_躯体重压（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44748"])]
+    public void 得到宽恕的疑念_躯体重压 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的疑念_躯体重压{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(7f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "61~63 交错路诺姆_平地捶打（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44753"])]
+    public void 交错路诺姆_平地捶打 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路诺姆_平地捶打{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "61~63 交错路壁崖鼹鼠_冲顶（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44740"])]
+    public void 交错路壁崖鼹鼠_冲顶(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路壁崖鼹鼠_冲顶{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "62~65 得到宽恕的暴动_左/右侧震荡波（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
     public void 得到宽恕的暴动_左右侧震荡波(Event @event, ScriptAccessory accessory)
     {
         // 先右刀 42214 ； 先左刀 42216
         var isR = @event.ActionId == 42214;
         
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的暴动_左右侧震荡波1{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
+        dp.Scale = new Vector2(30f);
         dp.Radian = 180f.DegToRad(); 
         dp.Rotation = isR ? 270f.DegToRad() : 90f.DegToRad();
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = $"得到宽恕的暴动_左右侧震荡波2{@event.SourceId()}";
         dp1.Color = accessory.Data.DefaultDangerColor;
         dp1.Owner = @event.SourceId();
-        dp1.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj));
+        dp1.Scale = new Vector2(30f);
         dp1.Radian = 180f.DegToRad(); 
         dp1.Rotation = isR ? 90f.DegToRad() : 270f.DegToRad();
-        dp1.Delay = @event.DurationMilliseconds();
+        dp1.Delay = 4700;
         dp1.DestoryAt = 3000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
     }
     
-    [ScriptMethod(name: "フォーギヴン・グラッジ_ヘイルファイア（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42515"])]
-    public void ヘイルファイア(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "63~66 得到宽恕的怨恨_冰雹发射（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42515"])]
+    public void 得到宽恕的怨恨_冰雹发射(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・グラッジ_ヘイルファイア{@event.SourceId()}";
+        dp.Name = $"得到宽恕的怨恨_冰雹发射{@event.SourceId()}";
         dp.Scale = new (4f, 45f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = @event.DurationMilliseconds();
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "フォーギヴン・イムパリティー_ロックスライド（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44743"])]
-    public void ロックスライド(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "64~66 得到宽恕的不公_岩石崩溃（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44743"])]
+    public void 得到宽恕的不公_岩石崩溃(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・イムパリティー_ロックスライド{@event.SourceId()}";
-        dp.Scale = new (10f, 80f);
+        dp.Name = $"得到宽恕的不公_岩石崩溃{@event.SourceId()}";
+        dp.Scale = new (10f, 80f); // 范围待确定，可能是10,40
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 3700;
         
         float[] rotations = { 0f, 90f };
     
@@ -855,121 +956,106 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "フォーギヴン・アタッチメント_スーウェッジウォーター（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4475[01]$"])]
-    public void スーウェッジウォーター(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "65~67 得到宽恕的依恋_臭水（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4475[01]$"])]
+    public void 得到宽恕的依恋_臭水(Event @event, ScriptAccessory accessory)
     {
         // 前刀 44750 ； 后刀 44751
         var isF = @event.ActionId == 44750;
-
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・アタッチメント_スーウェッジウォーター";
+        dp.Name = $"得到宽恕的依恋_臭水";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
+        dp.Scale = new Vector2(12f);
         dp.Radian = 180f.DegToRad(); 
         dp.Rotation = isF ? 0f.DegToRad() : 180f.DegToRad();
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "トラバース・クイーンビー_アンファイナルスティング（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42510"])]
-    public void アンファイナルスティング(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "65~68 交错路蜂后_未终针（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42510"])]
+    public void 交错路蜂后_未终针(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・クイーンビー_アンファイナルスティング{@event.SourceId()}";
+        dp.Name = $"交错路蜂后_未终针{@event.SourceId()}";
         dp.Scale = new (3f, 8f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = @event.DurationMilliseconds();
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "フォーギヴン・コンテンション_針幾千本（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42220"])]
-    public void 針幾千本(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "66~69 得到宽恕的主见_几千针刺（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42220"])]
+    public void 得到宽恕的主见_几千针刺(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・コンテンション_針幾千本{@event.SourceId()}";
+        dp.Name = $"得到宽恕的主见_几千针刺{@event.SourceId()}";
         dp.Scale = new (8f, 20f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = @event.DurationMilliseconds();
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
+        dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "トラバース・ンゴツィ_土石流（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44755"])]
-    public void 土石流(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "67~69 交错路恩戈齐_泥石流（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44755"])]
+    public void 交错路恩戈齐_泥石流(Event @event, ScriptAccessory accessory)
     {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・ンゴツィ_土石流{@event.SourceId()}";
+        dp.Name = $"交错路恩戈齐_泥石流{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(9f + IbcHelper.GetHitboxRadius(obj)); // 9m + 目标圈
+        dp.Scale = new Vector2(13f);
         dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 3700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・ヴォラシティ_ストーンゲイズ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44746"])]
-    public void ストーンゲイズ (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "67~69 得到宽恕的贪食_石化凝视（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44746"])]
+    public void 得到宽恕的贪食_石化凝视 (Event @event, ScriptAccessory accessory)
     {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ヴォラシティ_ストーンゲイズ{@event.SourceId()}";
+        dp.Name = $"得到宽恕的贪食_石化凝视{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(7.7f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
+        dp.Scale = new Vector2(10f);
         dp.Radian = 90f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "フォーギヴン・ヴォラシティ_ボディスラム（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44747"])]
-    public void ボディスラム (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "67~69 得到宽恕的贪食_猛撞（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44747"])]
+    public void 得到宽恕的贪食_猛撞 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ヴォラシティ_ボディスラム{@event.SourceId()}";
+        dp.Name = $"得到宽恕的贪食_猛撞{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 2200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
     // 70 BOSS 得到宽恕的热忱
     
-    [ScriptMethod(name: "フォーギヴン・ズィール_ズィールグラワー（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11)$"])]
-    public void ズィールグラワー(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "70 得到宽恕的热忱_热忱怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11)$"])]
+    public void 得到宽恕的热忱_热忱怒视(Event @event, ScriptAccessory accessory)
     {
+        // 两个 ActionId对应 从近到远 (43406) / 从远到近 (43411)
+        var ZealousGlower = @event.ActionId == 43411 ? "从远到近" : "从近到远";
+        if (isText)accessory.Method.TextInfo($"光球月环: {ZealousGlower}", duration: 4500, true);
+        if (isTTS)accessory.Method.TTS($"{ZealousGlower}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"{ZealousGlower}");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ズィール_ズィールグラワー";
+        dp.Name = $"得到宽恕的热忱_热忱怒视";
         dp.Scale = new (10f, 25f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = 5000;
+        dp.DestoryAt = 5200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
-    
-    /*
-    [ScriptMethod(name: "フォーギヴン・ズィール_ズィールグラワー_光球1", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11|18|26)$"])]
-    public void ズィールグラワー_光球1 (Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ズィール_ズィールグラワー_光球1";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(1f);
-        dp.DestoryAt = 1000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-    */
     
     [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
     public void 得到宽恕的热忱_光球_光轮安全区 (Event @event, ScriptAccessory accessory)
@@ -979,7 +1065,8 @@ public class Pilgrims_Traverse
         dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(3f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 1700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
@@ -1009,11 +1096,12 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "フォーギヴン・ズィール_アイ・オブ・ズィール（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:^434(18|26)$"])]
-    public void ズィール (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "70 得到宽恕的热忱_热忱之眼（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:^434(18|26)$"])]
+    public void 得到宽恕的热忱_热忱之眼 (Event @event, ScriptAccessory accessory)
     {
+        // 两个技能ID应该是对应 顺时针 (43418) / 逆时针 (43423)
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"フォーギヴン・ズィール_アイ・オブ・ズィール";
+        dp.Name = $"得到宽恕的热忱_热忱之眼";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
@@ -1024,17 +1112,19 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "2000ミナ・スイング（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43429"])]
-    public void スイング (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "70 得到宽恕的热忱_二千迈纳回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43429"])]
+    public void 得到宽恕的热忱_二千迈纳回转 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"2000ミナ・スイング";
+        dp.Name = $"得到宽恕的热忱_二千迈纳回转";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8f);
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 6700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    
+    // 八重横扫 ActionId: 43432 从开始读条到第8下判定约 26.2s , 预兆读条 43437 , 伤害源 4343[3456] 估计对应四个方向
     
     #endregion
     
@@ -1383,106 +1473,122 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 81 ~ 90 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "トラバース・ライダー_ストームスラッシュ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43321"])]
-    public void ストームスラッシュ(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・ライダー_ストームスラッシュ{@event.SourceId()}";
+    [ScriptMethod(name: "81~83 召引格雷姆林_利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44770"])]
+    public void 召引格雷姆林_利爪(Event @event, ScriptAccessory accessory)
+    {var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引格雷姆林_利爪{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(5.2f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
-        dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
-    
-    [ScriptMethod(name: "インヴォークド・グレムリン_クロウ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44770"])]
-    public void クロウ(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"インヴォークド・グレムリン_クロウ{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(4.2f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
+        dp.Scale = new Vector2(6f);
         dp.Radian = 90f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "トラバース・カブス_ダーラ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44775"])]
-    public void カブス_ダーラ(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "81~83 交错路异豺_夜冲击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44774"])]
+    public void 交错路异豺_夜冲击(Event @event, ScriptAccessory accessory)
     {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・カブス_ダーラ{@event.SourceId()}";
+        dp.Name = $"交错路异豺_夜冲击{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(40f + IbcHelper.GetHitboxRadius(obj)); // 40m + 目标圈
+        dp.Scale = new Vector2(10f);
         dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
-
-    [ScriptMethod(name: "トラバース・ノール_ノックスブラスト（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44774"])]
-    public void ノックスブラスト(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・ノール_ノックスブラスト{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(7f + IbcHelper.GetHitboxRadius(obj)); // 7m + 目标圈
-        dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "インヴォークド・アークデーモン_アビサルスイング（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44780"])]
-    public void アビサルスイング(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "81~84 交错路卡部斯_昏暗（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44775"])]
+    public void 交错路卡部斯_昏暗(Event @event, ScriptAccessory accessory)
     {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"インヴォークド・アークデーモン_アビサルスイング{@event.SourceId()}";
+        dp.Name = $"交错路卡部斯_昏暗{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(6.7f + IbcHelper.GetHitboxRadius(obj)); // ??m + 目标圈
+        dp.Scale = new Vector2(40f);
         dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+        
+    [ScriptMethod(name: "81~84 交错路骑兵_风暴斩（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43321"])]
+    public void 交错路骑兵_风暴斩(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路骑兵_风暴斩{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "トラバース・キャマ_キックアンドテイル（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
-    public void キックアンドテイル1(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "81~84 交错路骑兵_残杀（冲锋击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43319"])]
+    public void 交错路骑兵_残杀(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS("冲锋击退+三连击退");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("冲锋击退+三连击退");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路骑兵_残杀{@event.SourceId()}";
+        dp.Owner = @event.SourceId();
+        dp.TargetObject = @event.TargetId();
+        dp.Scale = new (6f);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "83~85 召引小恶灵_冰结陷阱（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44779"])]
+    public void 召引小恶灵_冰结陷阱 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・キャマ_キックアンドテイル1{@event.SourceId()}";
+        dp.Name = $"召引小恶灵_冰结陷阱{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "84~86 召引上级恶魔_深渊回转（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44780"])]
+    public void 召引上级恶魔_深渊回转(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引上级恶魔_深渊回转{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "84~88 交错路卡玛_飞踢后摆尾（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
+    public void 交错路卡玛_飞踢后摆尾1(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路卡玛_飞踢后摆尾1{@event.SourceId()}";
         dp.Scale = new (3f, 8f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = 3000;
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "トラバース・キャマ_キックアンドテイル（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
-    public void キックアンドテイル2(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "84~88 交错路卡玛_飞踢后摆尾（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
+    public void 交错路卡玛_飞踢后摆尾2(Event @event, ScriptAccessory accessory)
     {
+        // 二段扫尾 ActionId: 43131
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"トラバース・キャマ_キックアンドテイル2{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Name = $"交错路卡玛_飞踢后摆尾2{@event.SourceId()}";
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(9.4f); // 6m + 目标圈 3.4m
+        dp.Scale = new Vector2(10f);
         dp.Radian = 120f.DegToRad();
         dp.Rotation = 180f.DegToRad();
         dp.Delay = 2700;
@@ -1510,19 +1616,106 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "インヴォークド・トルバドゥール_ダーラ（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44787"])]
-    public void ダーラ(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "86~89 召引洪巴巴_三/四重强击 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4332[34]$"])]
+    public void 召引洪巴巴_三四重强击(Event @event, ScriptAccessory accessory)
     {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
+        string skullDasherCount = @event.ActionId == 43323 ? "三" : "四";
+    
+        if (isText) accessory.Method.TextInfo($"{skullDasherCount}连平A + 大顺劈", duration: 4000, true);
+        if (isTTS) accessory.Method.TTS($"{skullDasherCount}连平A接顺劈");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"{skullDasherCount}连平A接顺劈");
+    }
+    
+    [ScriptMethod(name: "86~89 召引洪巴巴_长啸（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44293"])]
+    public void 召引洪巴巴_长啸 (Event @event, ScriptAccessory accessory)
+    {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"インヴォークド・トルバドゥール_ダーラ{@event.SourceId()}";
+        dp.Name = $"召引洪巴巴_长啸{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(20f + IbcHelper.GetHitboxRadius(obj)); // 20m + 目标圈
-        dp.Radian = 60f.DegToRad(); 
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.Scale = new Vector2(25f);
+        dp.Radian = 120f.DegToRad();
+        dp.DestoryAt = 1200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "84~86 召引梦魔_攻心欲火（热病点名）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43322"])]
+    public void 召引梦魔_攻心欲火 (Event @event, ScriptAccessory accessory)
+    {
+        if (isText) accessory.Method.TextInfo($"踢晕 <召引梦魔> 范围热病", duration: 4300, true);
+        if (isTTS) accessory.Method.TTS($"踢晕梦魔热病");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"踢晕梦魔热病");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引梦魔_攻心欲火{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(10f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "86~89 召引行吟诗人_昏暗（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44787"])]
+    public void 召引行吟诗人_昏暗(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引行吟诗人_昏暗{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(20f);
+        dp.Radian = 60f.DegToRad();
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "86~89 召引行吟诗人_心魔（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44788"])]
+    public void 召引行吟诗人_心魔 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引行吟诗人_心魔{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "86~89 召引刻耳柏洛斯_闪电（面前圆形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44784"])]
+    public void 召引刻耳柏洛斯_闪电 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引刻耳柏洛斯_闪电{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "86~89 召引刻耳柏洛斯_地狱爪袭（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44785"])]
+    public void 召引刻耳柏洛斯_地狱爪袭(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引刻耳柏洛斯_地狱爪袭{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(9f);
+        dp.Radian = 90f.DegToRad();
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "86-89 召引刻耳柏洛斯_摆尾（背后扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44786"])]
+    public void 召引刻耳柏洛斯_摆尾(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"召引刻耳柏洛斯_摆尾{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(19f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.Rotation = 180f.DegToRad();
+        dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
@@ -1549,31 +1742,19 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "インヴォークド・バエル_アビサルレイ（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43134"])]
-    public void アビサルレイ(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "86~89 召引巴尔_深渊射线（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43134"])]
+    public void 召引巴尔_深渊射线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"インヴォークド・バエル_アビサルレイ{@event.SourceId()}";
+        dp.Name = $"召引巴尔_深渊射线{@event.SourceId()}";
         dp.Scale = new (20f, 40f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.DestoryAt = @event.DurationMilliseconds();
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
+        dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "86-89 召引刻耳柏洛斯_摆尾（背后扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44786"])]
-    public void 召引刻耳柏洛斯_摆尾(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"召引刻耳柏洛斯_摆尾{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(19f);
-        dp.Radian = 90f.DegToRad(); 
-        dp.Rotation = 180f;
-        dp.DestoryAt = 4700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
     
     // 90 BOSS
     
@@ -1710,7 +1891,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "91~98 召引梦祸_梦祸视线（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44349"])]
+    [ScriptMethod(name: "91~98 召引梦祸_梦祸视线（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44349"])]
     public void 召引梦祸_梦祸视线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
@@ -1720,7 +1901,8 @@ public class Pilgrims_Traverse
         dp.Name = $"召引梦祸_梦祸视线{@event.SourceId()}";
         dp.Scale = new (5f, 41f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+                      else {dp.Color = accessory.Data.DefaultDangerColor; }
         dp.DestoryAt = 2700;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
@@ -1762,7 +1944,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "91~93 交错路食人花_腐烂恶臭（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44500"])]
+    [ScriptMethod(name: "91~93 交错路食人花_腐烂恶臭（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44500"])]
     public void 交错路食人花_腐烂恶臭(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
@@ -1772,7 +1954,8 @@ public class Pilgrims_Traverse
         dp.Name = $"交错路食人花_腐烂恶臭{@event.SourceId()}";
         dp.Scale = new (12f, 45f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
         dp.DestoryAt = 2700;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
@@ -1824,21 +2007,32 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    /*
-    [ScriptMethod(name: "93~95 召引扎哈克_尾部打击（瞬发扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+
+    [ScriptMethod(name: "93~95 召引扎哈克_尾部打击（瞬发扫尾）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18854"])]
     public void 召引扎哈克_尾部打击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"召引扎哈克_尾部打击{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10.5f); // 7m + 目标圈 3.5m
+        dp.Scale = new Vector2(10.5f); // 参考值, 目标圈 3.5m
         dp.Radian = 90f.DegToRad();
-        dp.DestoryAt = @event.DurationMilliseconds();
+        dp.Rotation = 180f.DegToRad();
+        dp.DestoryAt = 600000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
-    */
+    
+    [ScriptMethod(name: "召引扎哈克_尾部打击销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:18854"],userControl: false)]
+    public void 召引扎哈克_尾部打击销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"召引扎哈克_尾部打击{@event.SourceId()}");
+    }
 
+    [ScriptMethod(name: "召引扎哈克_尾部打击备用销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:18854"],userControl: false)]
+    public void 召引扎哈克_尾部打击备用销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"召引扎哈克_尾部打击{@event.SourceId()}");
+    }
     
     [ScriptMethod(name: "93~98 召引锯齿花_前方/左侧/右侧花蜜喷吐", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4435[6-8]$"])]
     public void 召引锯齿花_花蜜喷吐(Event @event, ScriptAccessory accessory)
@@ -1956,7 +2150,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp1); 
     }
     
-    [ScriptMethod(name: "96~98 召引破坏本能_怪光线（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44354"])]
+    [ScriptMethod(name: "96~98 召引破坏本能_怪光线（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44354"])]
     public void 召引破坏本能_怪光线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
@@ -1966,7 +2160,8 @@ public class Pilgrims_Traverse
         dp.Name = $"召引破坏本能_怪光线{@event.SourceId()}";
         dp.Scale = new (8f, 60f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        if (isUnderGround) {dp.Color = UnderGround_AOEs.V4; }
+        else {dp.Color = accessory.Data.DefaultDangerColor; }
         dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
