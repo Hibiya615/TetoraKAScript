@@ -241,8 +241,8 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "自身爆弹之母 大爆炸范围绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44629"])]
     public void 爆弹之母_大爆炸Self (Event @event, ScriptAccessory accessory)
     {
+        if(!isMiniTools) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
-
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"爆弹之母_大爆炸{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
@@ -255,6 +255,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "传送装置查找", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014756", "Operate:Add"])]
     public void 传送装置查找(Event @event, ScriptAccessory accessory)
     {
+        if(!isMiniTools) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"传送装置查找";
         dp.Owner = accessory.Data.Me;
@@ -269,6 +270,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "光耀烛台查找", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014759", "Operate:Add"])]
     public void 光耀烛台查找(Event @event, ScriptAccessory accessory)
     {
+        if(!isMiniTools) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"光耀烛台";
         dp.Owner = accessory.Data.Me;
@@ -290,6 +292,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "光耀烛台 温暖气息提示", eventType: EventTypeEnum.Chat, eventCondition: ["Type:SystemMessage", "Message:察觉到了灯火般温暖的神秘气息……"])]
     public void 光耀烛台_温暖气息提示(Event @event, ScriptAccessory accessory)
     {
+        if(!isMiniTools) return;
         if (isTTS)accessory.Method.TTS("本层有烛台");
         if (isEdgeTTS)accessory.Method.EdgeTTS("本层有烛台");
     }
@@ -299,8 +302,8 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "队友爆弹之母 大爆炸范围绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44629"])]
     public void 爆弹之母_大爆炸Party (Event @event, ScriptAccessory accessory)
     {
+        if(!isMiniTools) return;
         if (@event.TargetId() == accessory.Data.Me) return; 
-
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"爆弹之母_大爆炸{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultSafeColor.WithW(0.4f);
