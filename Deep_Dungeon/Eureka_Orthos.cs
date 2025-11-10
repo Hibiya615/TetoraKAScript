@@ -112,7 +112,7 @@ public class Eureka_Orthos {
     [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
     public void 死亡销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
     }
 
     public bool KnockPenalty = false;

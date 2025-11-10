@@ -17,13 +17,13 @@ namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.1.0",note: noteStr)]
+    version: "0.0.1.1",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.1.0:
+        v0.0.1.1:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
@@ -119,7 +119,7 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
     public void 死亡销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
     }
     
     [ScriptMethod(name: "防击退销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(7548|7559)$"],userControl: false)]
