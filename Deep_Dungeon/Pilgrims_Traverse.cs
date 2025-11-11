@@ -24,13 +24,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.0.9",note: noteStr)]
+    version: "0.0.1.0",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.0.9:
+        v0.0.1.0:
         朝圣交错路测试绘制
         未全部测试，可能部分有误，更新日志见dc
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -554,6 +554,26 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第21层(Event @event, ScriptAccessory accessory) { }
     
+    [ScriptMethod(name: "21~23 得到宽恕的贿赂_以太火花（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44680"])]
+    public void 得到宽恕的贿赂_以太火花(Event @event, ScriptAccessory accessory)
+    {
+        if (!isUnderGround) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的贿赂_以太火花{@event.SourceId()}";
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (4f, 12f);
+        dp.Color = UnderGround_AOEs.V4;
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "24~25 交错路冰海天使_捕食行动 死刑提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44681"])]
+    public void 交错路冰海天使_捕食行动(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS("眩晕冰海天使死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("眩晕冰海天使死刑");
+    }
+    
     [ScriptMethod(name: "26~29 得到宽恕的残忍_流明无限（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44668"])]
     public void 得到宽恕的残忍_流明无限(Event @event, ScriptAccessory accessory)
     {
@@ -567,6 +587,19 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
+    [ScriptMethod(name: "26~27 得到宽恕的奢望_撕裂利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44669"])]
+    public void 得到宽恕的奢望_撕裂利爪(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的奢望_撕裂利爪{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
     [ScriptMethod(name: "28~29 得到宽恕的狭隘_灾厄之语（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44683"])]
     public void 得到宽恕的狭隘_灾厄之语(Event @event, ScriptAccessory accessory)
     {
@@ -575,6 +608,31 @@ public class Pilgrims_Traverse
         dp.Name = $"得到宽恕的狭隘_灾厄之语{@event.SourceId()}";
         dp.Owner = @event.SourceId();
         dp.Scale = new (6f, 47f);
+        dp.Color = UnderGround_AOEs.V4;
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "28~29 得到宽恕的狭隘_重击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44684"])]
+    public void 得到宽恕的狭隘_重击 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的狭隘_重击{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "28~29 交错路魔像_巨像之光（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44675"])]
+    public void 交错路魔像_巨像之光(Event @event, ScriptAccessory accessory)
+    {
+        if (!isUnderGround) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路魔像_巨像之光{@event.SourceId()}";
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (6f, 60f);
         dp.Color = UnderGround_AOEs.V4;
         dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
@@ -633,7 +691,27 @@ public class Pilgrims_Traverse
         dp.DestoryAt = 7700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
+    
+    /* 好像实体从一开始就存在，暂时不画，需要筛选可见性
+    [ScriptMethod(name: "30 恕罪圣环（旋转圆形）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17930"])]
+    public void 得到宽恕的背信_恕罪圣环 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的背信_恕罪圣环";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(4f);
+        dp.DestoryAt = 60000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
 
+    [ScriptMethod(name: "恕罪圣环销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:17930"],userControl: false)]
+    public void 恕罪圣环销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("得到宽恕的背信_恕罪圣环");
+    }
+    */
+    
     #endregion
     
     #region  31~40层
@@ -702,6 +780,22 @@ public class Pilgrims_Traverse
         dp.DestoryAt = 2700;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "36~39 交错路石兵_爆发拳（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40558"])]
+    public void 交错路石兵_爆发拳 (Event @event, ScriptAccessory accessory)
+    {
+        // 在 重拳波 [ActionId:40558 / 3.7s] 4s后 显示第2段月环  两次判定间隔约2s
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"交错路石兵_爆发拳{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(15f);
+        dp.InnerScale = new Vector2(9f);
+        dp.Radian = float.Pi * 2;
+        dp.Delay = 4000;
+        dp.DestoryAt = 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
     [ScriptMethod(name: "37~39 得到宽恕的暴躁_左/右触手（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4469[01]$"])]
@@ -1423,11 +1517,11 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "70 得到宽恕的热忱_热忱怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11)$"])]
     public void 得到宽恕的热忱_热忱怒视(Event @event, ScriptAccessory accessory)
     {
-        // 两个 ActionId对应 从近到远 (43406) / 从远到近 (43411)
+        // 两个 ActionId对应 从近到远 (43406) / 从远到近 (43411) 为本体无意义读条，之后连续4个id为接下来的分段伤害
         var zealousGlower = @event.ActionId == 43411 ? "从远到近" : "从近到远";
-        if (isText)accessory.Method.TextInfo($"光球月环: {zealousGlower}", duration: 4500, true);
-        if (isTTS)accessory.Method.TTS($"{zealousGlower}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"{zealousGlower}");
+        if (isText)accessory.Method.TextInfo($"光球月环: {zealousGlower}", duration: 8600, true);
+        if (isTTS)accessory.Method.TTS($"月环{zealousGlower}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"月环{zealousGlower}");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的热忱_热忱怒视";
@@ -1437,6 +1531,67 @@ public class Pilgrims_Traverse
         dp.DestoryAt = 5200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
+    
+    [ScriptMethod(name: "70 得到宽恕的热忱_月环安全区预测", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(07|12|18|23)$"])]
+    public void 得到宽恕的热忱_月环安全区预测 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        
+        dp1.InnerScale = dp.InnerScale = new Vector2(2.92f);
+        dp1.Scale = dp.Scale = new Vector2(3f);
+        dp1.Radian = dp.Radian = float.Pi * 2;
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        
+        switch (@event.ActionId())
+        {
+            case 43407: // 热忱怒视 从近到远
+                dp1.Name = dp.Name = $"得到宽恕的热忱_热忱怒视_从近到远预边";
+                dp1.Position = dp.Position = @event.EffectPosition();
+                dp1.DestoryAt = dp.Delay = 4700;
+                dp.DestoryAt = 6000;
+                break;
+            case 43412: // 热忱怒视 从远到近
+                dp1.Name = dp.Name = $"得到宽恕的热忱_热忱怒视_从远到近预测";
+                dp1.Position = dp.Position = @event.EffectPosition();
+                dp1.DestoryAt = dp.Delay = 4700;
+                dp.DestoryAt = 6000;
+                break;
+            case 43418: // 热忱之眼 从左顺时针
+                dp1.Owner = dp.Owner = @event.SourceId();
+                dp1.Offset = dp.Offset = new Vector3(-7.5f, 0f, 0f);
+                dp1.Name = dp.Name = $"得到宽恕的热忱_热忱之眼_从左顺时针预测";
+                dp1.DestoryAt = dp.Delay = 8400;
+                dp.DestoryAt = 1600;
+                break;
+            case 43423: // 热忱之眼 从右逆时针
+                dp1.Owner = dp.Owner = @event.SourceId();
+                dp1.Offset = dp.Offset = new Vector3(7.5f, 0f, 0f);
+                dp1.Name = dp.Name = $"得到宽恕的热忱_热忱之眼_从右逆时针预测";
+                dp1.DestoryAt = dp.Delay = 8400;
+                dp.DestoryAt = 1600;
+                break;            
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+
+    }
+    
+    /*
+    [ScriptMethod(name: "70 得到宽恕的热忱_热忱怒视（分段直线绘制）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(0[789]|10)$"])]
+    public void 得到宽恕的热忱_热忱怒视分段(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的热忱_热忱怒视分段";
+        dp.Scale = new (10f, 10f);
+        dp.Position = @event.EffectPosition();
+        dp.Offset = new Vector3(0f, 0f, 5f);
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.DurationMilliseconds();
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    */
     
     [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
     public void 得到宽恕的热忱_光球_光轮安全区 (Event @event, ScriptAccessory accessory)
@@ -1455,7 +1610,7 @@ public class Pilgrims_Traverse
         dp.Color = accessory.Data.DefaultSafeColor.WithW(20f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(3f);
-        dp1.InnerScale = new Vector2(2.95f);
+        dp1.InnerScale = new Vector2(2.94f);
         dp1.Radian = float.Pi * 2;
         dp1.DestoryAt = 1700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
@@ -1477,10 +1632,15 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_热忱之眼（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:^434(18|26)$"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_热忱之眼（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(18|23)$"])]
     public void 得到宽恕的热忱_热忱之眼 (Event @event, ScriptAccessory accessory)
     {
-        // 两个技能ID应该是对应 顺时针 (43418) / 逆时针 (43423)
+        // 两个技能id对应 从左顺时针 (43418) / 从右逆时针 (43423)
+        var ardorousEye = @event.ActionId == 43418 ? "从BOSS左侧开始，顺时针" : "从BOSS右侧开始，逆时针";
+        if (isText)accessory.Method.TextInfo($"光球月环: {ardorousEye}", duration: 10000, true);
+        if (isTTS)accessory.Method.TTS($"月环{ardorousEye}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"月环{ardorousEye}");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的热忱_热忱之眼";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -1489,7 +1649,7 @@ public class Pilgrims_Traverse
         dp.InnerScale = new Vector2(5f);
         dp.Radian = float.Pi * 2;
         dp.Delay = 5000;
-        dp.DestoryAt = 5000;
+        dp.DestoryAt = 3400;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
@@ -1503,6 +1663,27 @@ public class Pilgrims_Traverse
         dp.Scale = new Vector2(8f);
         dp.DestoryAt = 6700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "70 得到宽恕的热忱_吼叫（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43431"])]
+    public void 得到宽恕的热忱_吼叫(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("中间击退（防击退有效）", duration: 6000, true);
+        if (isTTS)accessory.Method.TTS("击退");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("击退");
+    }
+    
+    [ScriptMethod(name: "70 得到宽恕的热忱_八重横扫（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43432"])]
+    public void 得到宽恕的热忱_八重横扫(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的热忱_八重横扫";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 24600;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
     // 八重横扫 ActionId: 43432 从开始读条到第8下判定约 26.2s , 预兆读条 43437 , 伤害源 4343[3456] 估计对应四个方向
@@ -1751,7 +1932,6 @@ public class Pilgrims_Traverse
         dp.InnerScale = new Vector2(5f);
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = 4700;
-        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
@@ -1841,6 +2021,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "80 得到宽恕的不敬_亡途黑暗 吃白色提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4518"])]
     public void 得到宽恕的不敬_亡途黑暗(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("吃白色半场刀", duration: 10000, true);
         if (isTTS)accessory.Method.TTS("吃白色半场刀");
         if (isEdgeTTS)accessory.Method.EdgeTTS("吃白色半场刀");
@@ -1849,6 +2030,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "80 得到宽恕的不敬_亡途重负 少移动提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4519", "Param:1"])]
     public void 得到宽恕的不敬_亡途重负(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("减少移动，别到8层", duration: 16300, true);
         if (isTTS)accessory.Method.TTS("减少移动");
         if (isEdgeTTS)accessory.Method.EdgeTTS("减少移动");
