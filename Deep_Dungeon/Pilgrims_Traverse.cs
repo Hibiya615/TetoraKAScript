@@ -24,13 +24,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.0",note: noteStr)]
+    version: "0.0.1.1",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.0:
+        v0.0.1.1:
         朝圣交错路测试绘制
         未全部测试，可能部分有误，更新日志见dc
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -45,17 +45,18 @@ public class Pilgrims_Traverse
      *  极速冲刺 4709
      *  禁止使用杜松香 4591
      *  诅咒 1087 （拟态怪 - 怨念）
-     *  失明 1088
+     *  失明 1088 （妖宫没有）
      *  最大体力减少 1089
      *  伤害降低 1090
-     *  加速 1091
-     *  能力封印 1092
+     *  能力封印 1092（妖宫没有）
      *  最大体力魔力提升 1093
      *  禁止使用道具  1094
      *  禁止冲刺 1095
      *  击退无效 1096
      *  禁止体力自然恢复 1097
      *  无法发动技能 1113 （形态变化）
+     *  冲刺 1548 （天气的普通冲刺）
+     *  加速 4718 （妖宫为魔陶器，不是天气）
      */
     
     /*  DataId
@@ -336,7 +337,7 @@ public class Pilgrims_Traverse
     {
         string rekindleValue = Rekindle.GetDescription();
         
-        if(!isMiniTools || @event.TargetId() != accessory.Data.Me) return;
+        if(!isMiniTools ||  @event.SourceId() != accessory.Data.Me || @event.TargetId() != accessory.Data.Me) return;
         accessory.Method.SendChat($"/ac 星极超流 {rekindleValue}");
         accessory.Method.SendChat($"/e 鸭鸭：已尝试自动给《{rekindleValue}》挂上不死鸟热水");
     }
@@ -768,6 +769,21 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
+    [ScriptMethod(name: "36~39 得到宽恕的疫病_双重毒粉（二段扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41344"])]
+    public void 得到宽恕的疫病_双重毒粉(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"得到宽恕的疫病_双重毒粉{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f);
+        dp.Radian = 120f.DegToRad();
+        dp.Rotation = 180f.DegToRad();
+        dp.Delay = 2700;
+        dp.DestoryAt = 5600;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
     [ScriptMethod(name: "36~39 交错路石兵_冲波炮（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40891"])]
     public void 交错路石兵_冲波炮(Event @event, ScriptAccessory accessory)
     {
@@ -815,6 +831,23 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
+    [ScriptMethod(name: "40 得到宽恕的天真_祝圣吹息 播报", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4212[34]$"])]
+    public void 得到宽恕的天真_祝圣吹息 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.ActionId == 42123)
+        {
+            if (isText)accessory.Method.TextInfo("三连击退", duration: 2000, true);
+            if (isTTS)accessory.Method.TTS("三连击退");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("三连击退");
+        }
+        else
+        {
+            if (isText)accessory.Method.TextInfo("三连钢铁", duration: 2000, true);
+            if (isTTS)accessory.Method.TTS("三连钢铁");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("三连钢铁");
+        }
+    }
+    
     [ScriptMethod(name: "40 得到宽恕的天真_光水弹（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42129"])]
     public void 得到宽恕的天真_光水弹 (Event @event, ScriptAccessory accessory)
     {
@@ -823,8 +856,39 @@ public class Pilgrims_Traverse
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(20f);
-        dp.DestoryAt = 9700;
+        dp.Delay = @event.SourceDataId() == 9020 ? 0 : 4800;
+        dp.DestoryAt = @event.SourceDataId() == 9020 ? 9700 : 4900;
+        dp.ScaleMode = @event.SourceDataId() == 9020 ? ScaleMode.ByTime : ScaleMode.None;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "40 得到宽恕的天真_震水弹（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42128"])]
+    public void 得到宽恕的天真_震水弹击退(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "得到宽恕的天真_震水弹击退";
+        dp.Scale = new Vector2(1f, 21f);
+        dp.Color = new Vector4(0f, 1f, 1f, 3f);
+        dp.Owner = accessory.Data.Me;
+        dp.TargetPosition = @event.TargetPosition();
+        dp.Rotation = float.Pi;
+        dp.Delay = @event.SourceDataId() == 9020 ? 0 : 7500;
+        dp.DestoryAt = @event.SourceDataId() == 9020 ? 9700 : 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "40 得到宽恕的天真_震水弹（第一次击退位置）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42128", "SourceDataId:18467"], suppress:9700)]
+    public void 得到宽恕的天真_震水弹击退位置(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "得到宽恕的天真_震水弹击退位置";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.InnerScale = new Vector2(4.92f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 9700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
     [ScriptMethod(name: "40 得到宽恕的天真_圆浪（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45169"])]
@@ -843,14 +907,21 @@ public class Pilgrims_Traverse
     public void 得到宽恕的天真_环浪 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的天真_环浪";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
+        dp1.Owner = dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(25f);
         dp.InnerScale = new Vector2(8f);
-        dp.Radian = float.Pi * 2;
-        dp.DestoryAt = 6700;
+        dp1.Radian = dp.Radian = float.Pi * 2;
+        dp1.DestoryAt = dp.DestoryAt = 6700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        
+        dp1.Name = $"得到宽恕的天真_环浪安全区";
+        dp1.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+        dp1.Scale = new Vector2(7.9f);
+        dp1.InnerScale = new Vector2(7.75f);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
     #endregion
@@ -2799,9 +2870,10 @@ public class Pilgrims_Traverse
     
     // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
     // 被侵蚀的食罪灵  NPCID: 14038 目标圈 15.0m
-    // 深渊烈焰（步进地火）Q0  先上下 ActionId: 44075 / 后左右 ActionId: 44076 / 召唤晶体: 44078 / 晶体爆炸: 44079
-    // 深渊烈焰（步进地火）Y99 先左右 ActionId: 44074 / 后上下 ActionId: 44077 / 召唤晶体: 44078 / 晶体爆炸: 44079
-    // 以太吸取 Q0&Y99  暗 6.7s ActionId: 44088 / 光 10.7s ActionId: 44092 [无范围] / 暗 11.7s ActionId: 44093 (但是暗比光快)
+    // 深渊烈焰（步进地火）普通难度          先上下 ActionId: 44075 / 后左右 ActionId: 44076
+    // 召唤晶体: 44078 / 晶体爆炸: 44079   先左右 ActionId: 44074 / 后上下 ActionId: 44077
+    // debuff: 4559 暗 / 4560 光
+    // 以太吸取 普通难度  44088 短暗 / 44089 长暗 / 44090 短光 / 44092 长光
     
     
     [ScriptMethod(name: "99 烈焰锢（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[39]$"])]
@@ -2921,17 +2993,14 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 卓异的悲寂深想战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 卓异的悲寂深想战(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
-    public void Q40_火球 (Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"Q40_火球";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Position = @event.EffectPosition();
-        dp.Scale = new Vector2(6f);
-        dp.DestoryAt = 1800;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
+    // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
+    // 被侵蚀的食罪灵  NPCID: 14038 目标圈 15.0m
+    // 深渊烈焰（步进地火）          先上下 ActionId: 44798 / 后左右 ActionId: 
+    // 召唤晶体:  / 晶体爆炸:    先左右 ActionId:44797  / 后上下 ActionId: 
+    // debuff: 4559 暗 / 4560 光
+    // 以太吸取   44129 短暗 / 44130 长暗 / 44131 短光 / 44133 长光
+    
+    // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
     
     [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
     public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
@@ -2948,27 +3017,47 @@ public class Pilgrims_Traverse
 
     }
     
-    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
-    public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
-    {
-        if (isTTS) accessory.Method.TTS($"抓人牢狱");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
-    }
-    
-    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
-    public void Q40_净罪之环 (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(04|10)$"])]
+    public void Q40_光耀之剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"Q40_净罪之环";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Name = $"光耀之剑";
+        dp.Scale = new (15f, 30f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(3f);
-        dp.DestoryAt = 2700;
-        dp.ScaleMode = ScaleMode.ByTime;
+        dp.Offset = new Vector3 (0, 0 ,15); // 原本实体在直线中间，应用 Straight，但考虑到omen效果还是选用 Rect偏移
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = @event.ActionId() == 44104 ? 4700 : 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
+    public void Q40_火球 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_火球";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 1800;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
-
-    // TargetIconId: 0061 拉线预兆
+    
+    [ScriptMethod(name: "烈焰链 准备提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
+    public void Q40_烈焰链_准备提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("回中间准备拉线", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("回中间准备拉线");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("回中间准备拉线");
+    }
+    
+    [ScriptMethod(name: "烈焰链 拉线提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4563"])]
+    public void Q40_烈焰链_拉线提示(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        // if (isText)accessory.Method.TextInfo("扯断连线", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("扯断连线");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("扯断连线");
+    }
     
     uint _spinelash = 0; // 棘刺尾 读条点名直线记录
     
@@ -3018,6 +3107,9 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
+    // P2 戒律的光链（职能debuff）→ 烈焰领域（引导牢笼连线 +吸引） → 引导三连黄圈 → 尾连击（死刑塔 + 斜线AOE） → 黑暗神圣（AOE+DOT）→ 尾连击（死刑塔 + 斜线AOE）
+    // → 深渊爆焰（存储地火）+ 引导三连黄圈 → 净罪之环（抓人牢笼）+黑白配 → 地火判定
+    
     [ScriptMethod(name: "戒律的光链：恢复 [奶妈治疗热风]", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4564"])]
     public void Q40_戒律的光链_恢复 (Event @event, ScriptAccessory accessory)
     {
@@ -3066,6 +3158,54 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
+    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
+    public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS) accessory.Method.TTS($"抓人牢狱");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
+    }
+    
+    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
+    public void Q40_净罪之环 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_净罪之环";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(3f);
+        dp.DestoryAt = 2700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    // P3 罪与罚（传毒） [第一次] 光耀之剑（直线）+ 烈焰锢 / 火球 → [第二次] 棘刺尾（挡枪分摊 + 小怪） → 净罪之环（抓人牢狱）+ 拉线+十字火
+    // → [第三次] 深渊爆焰 存储地火 + 黑白配 → 以太吸取（buff检测）+ 地火判定 → 黑暗神圣（AOE+DOT）
+    
+    [ScriptMethod(name: "罪与罚（传毒）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44165"])]
+    public void Q40_罪与罚提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("传毒阶段: 先吃暗", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS($"吃暗，准备传毒");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"吃暗，准备传毒");
+    }
+    
+    [ScriptMethod(name: "罪与罚（传毒）驱散死宣提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4594"])]
+    public void Q40_罪与罚驱散死宣提示(Event @event, ScriptAccessory accessory)
+    {
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
+        if (isHealer && isText)accessory.Method.TextInfo("驱散死宣", duration: 3300, true);
+        if (isHealer && isTTS) accessory.Method.TTS($"驱散死宣");
+        if (isHealer && isEdgeTTS) accessory.Method.EdgeTTS($"驱散死宣");
+    }
+    
+    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170$"])]
+    public void Q40_烈焰缠身提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("火人阶段就位", duration: 3000, true);
+        if (isTTS) accessory.Method.TTS($"火人阶段就位");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位");
+    }
+    
     #endregion
     
     #region 底裤部分
@@ -3074,6 +3214,41 @@ public class Pilgrims_Traverse
     public void 底裤部分(Event @event, ScriptAccessory accessory) { }
     
     // 这次 BOSS房 不可能变身 不用考虑 ， 由于变身全是烛台给的buff, 也不用考虑过层时触发的 Duration
+    
+    /*
+    [ScriptMethod(name: "[DR] 天气冲刺时，移速复原至默认值", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1548"])]
+    public void SprintSpeedDefault(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed -1");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
+        if (isTTS)accessory.Method.TTS("移速已复原至默认值");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
+    }
+    */
+    
+    [ScriptMethod(name: "[DR] 天气冲刺时，将移速固定至1.4倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1548"])]
+    public void SprintSpeed(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed 1.4");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.4x");
+        if (isTTS)accessory.Method.TTS("移速已更改至1.4倍");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.4倍");
+    }
+    
+    [ScriptMethod(name: "[DR] 极速冲刺时，移速复原至默认值", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4709"])]
+    public void SwiftSprintSpeedDefault(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/pdrspeed -1");
+        accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
+        if (isTTS)accessory.Method.TTS("移速已复原至默认值");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
+    }
 
     [ScriptMethod(name: "[DR] 变身泥球时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:54"])]
     public void AddMudPieSpeed(Event @event, ScriptAccessory accessory)

@@ -712,12 +712,12 @@
   {
     "Name": "朝圣交错路",
     "Guid": "3f65b3c0-df48-4ef8-89ae-b8091b7690f1",
-    "Version": "0.0.1.0",
+    "Version": "0.0.1.1",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Pilgrims_Traverse.cs",
-    "Note": "v0.0.1.0:\r\n朝圣交错路测试绘制\r\n未全部测试，可能部分有误，更新日志见dc\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n出现问题请携带ARR反馈！",
-    "UpdateInfo": "v0.0.1.0: 朝圣交错路测试绘制 更新内容见dc",
+    "Note": "v0.0.1.1:\r\n朝圣交错路测试绘制\r\n未全部测试，可能部分有误，更新日志见dc\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n出现问题请携带ARR反馈！",
+    "UpdateInfo": "v0.0.1.1: 朝圣交错路测试绘制 更新内容见dc",
     "TerritoryIds": [
       1281,
       1282,
