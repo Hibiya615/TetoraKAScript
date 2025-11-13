@@ -24,17 +24,16 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.1",note: noteStr)]
+    version: "0.0.1.2",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.1:
-        朝圣交错路测试绘制
-        未全部测试，可能部分有误，更新日志见dc
+        v0.0.1.2:
+        朝圣交错路基础绘制
+        更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
-        出现问题请携带ARR反馈！
         """;
 
     
@@ -744,19 +743,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "35~38 交错路石狮_捕猎爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44698"])]
-    public void 交错路石狮_捕猎爪(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"交错路石狮_捕猎爪{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(9f);
-        dp.Radian = 90f.DegToRad(); 
-        dp.DestoryAt = 2700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-    }
-    
     [ScriptMethod(name: "36~38 交错路判官_葬送击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44694"])]
     public void 交错路判官_葬送击(Event @event, ScriptAccessory accessory)
     {
@@ -798,20 +784,18 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "36~39 交错路石兵_爆发拳（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40558"])]
+    [ScriptMethod(name: "36~39 交错路石兵_爆发拳（二段钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40558"])]
     public void 交错路石兵_爆发拳 (Event @event, ScriptAccessory accessory)
     {
-        // 在 重拳波 [ActionId:40558 / 3.7s] 4s后 显示第2段月环  两次判定间隔约2s
+        // 在 重拳波 [ActionId:40558 / 3.7s] 4s后 显示第2段钢铁  两次判定间隔约2s
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路石兵_爆发拳{@event.SourceId()}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(15f);
-        dp.InnerScale = new Vector2(9f);
-        dp.Radian = float.Pi * 2;
         dp.Delay = 4000;
         dp.DestoryAt = 2000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
     [ScriptMethod(name: "37~39 得到宽恕的暴躁_左/右触手（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4469[01]$"])]
@@ -3015,6 +2999,15 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"先{isFirst}, 后{isSecond}");
         accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
 
+    }
+    
+    [ScriptMethod(name: "深渊极光 踩塔提示", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:2", "Index:27"])]
+    public void Q40_深渊极光提示 (Event @event, ScriptAccessory accessory)
+    {
+        // 实际上 Index 为 27~30 ，对应场上4座塔
+        if (isText)accessory.Method.TextInfo($"吃白色，准备踩塔", duration: 2000, false);
+        if (isTTS)accessory.Method.TTS($"吃白色，准备踩塔");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"吃白色，准备踩塔");
     }
     
     [ScriptMethod(name: "光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(04|10)$"])]
