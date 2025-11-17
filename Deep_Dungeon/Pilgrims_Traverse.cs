@@ -24,13 +24,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.2",note: noteStr)]
+    version: "0.0.1.3",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.2:
+        v0.0.1.3:
         朝圣交错路基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -111,6 +111,20 @@ public class Pilgrims_Traverse
     [UserSetting(note: "选择自动苏生之炎对象")]
     public RekindleEnum Rekindle { get; set; } = RekindleEnum.TargetsTarget;
     
+    [UserSetting("烈焰领域自动防击退（T职除外，底裤防击退需要同时启用底裤选项）")]
+    public AutoAntiKnockbackEnum AutoAntiKnockback { get; set; } = AutoAntiKnockbackEnum.None;
+    
+    private static List<string> _AutoAntiKnockback = ["亲疏自行", "沉稳咏唱"];
+    
+    public enum AutoAntiKnockbackEnum
+    {
+        None = -1,
+        亲疏自行 = 0,
+        沉稳咏唱 = 1,
+        DR = 2,
+        IChing = 3,
+    }
+    
     public enum RekindleEnum
     {
         [Description("<tt>")]
@@ -171,7 +185,11 @@ public class Pilgrims_Traverse
     public void Init(ScriptAccessory accessory) {
         PerilousLair = 0; // 80 BOSS 伤痛圆戒 钢铁
         RoaringRing = 0; // 80 BOSS 紫雷环戒 月环
+        _myLightVengeance=0; // 99 光之回音
+        _myDarkVengeance=0; // 99 暗之回音
+        _blackandwhite = 0; // 卓异的悲寂深想战 黑白配 点名记录
         _spinelash = 0; // 卓异的悲寂深想战 棘刺尾 直线点名次数记录
+        ResetMechanic(); // 卓异的悲寂 地火晶体重置
     }
     
     [ScriptMethod(name: "伤头&插言 打断销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^75(38|51)$"], userControl: false)]
@@ -2859,6 +2877,9 @@ public class Pilgrims_Traverse
     // debuff: 4559 暗 / 4560 光
     // 以太吸取 普通难度  44088 短暗 / 44089 长暗 / 44090 短光 / 44092 长光
     
+    uint _myLightVengeance=0;
+    uint _myDarkVengeance=0; 
+    
     
     [ScriptMethod(name: "99 烈焰锢（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[39]$"])]
     public void 烈焰锢(Event @event, ScriptAccessory accessory)
@@ -2979,18 +3000,27 @@ public class Pilgrims_Traverse
     
     // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
     // 被侵蚀的食罪灵  NPCID: 14038 目标圈 15.0m
-    // 深渊烈焰（步进地火）          先上下 ActionId: 44798 / 后左右 ActionId: 
-    // 召唤晶体:  / 晶体爆炸:    先左右 ActionId:44797  / 后上下 ActionId: 
-    // debuff: 4559 暗 / 4560 光
-    // 以太吸取   44129 短暗 / 44130 长暗 / 44131 短光 / 44133 长光
     
     // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
     
+    // 生成水晶:44115（每次6个）/ 水晶读条爆炸:44118 / 水晶DataId: 2014832 // 每次移动4m, 爆炸间隔 0.8~0.9s
+    
+    private readonly Dictionary<uint, string> crystalDirections = new Dictionary<uint, string>();
+    private readonly HashSet<uint> processedCrystals = new HashSet<uint>();
+    private readonly Dictionary<Vector3, string> crystalPositionDirections = new Dictionary<Vector3, string>();
+
+    private int firstGroupCount = 0;
+    private int secondGroupCount = 0;
+    private int firstGroup44115Count = 0;
+    private int secondGroup44115Count = 0;
+    private bool isFirstGroupComplete = false;
+    private string firstGroupDirection = "vertical";
+    private string secondGroupDirection = "horizontal"; 
+    private bool resetScheduled = false;
+
     [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
     public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
     {
-        // 44797 先东西 ; 44798 先南北 ; 水晶DataId: 2014832
-    
         var isFirst = @event.ActionId == 44797 ? "左右" : "上下";
         var isSecond = @event.ActionId == 44797 ? "上下" : "左右";
         
@@ -2998,7 +3028,223 @@ public class Pilgrims_Traverse
         if (isTTS) accessory.Method.TTS($"先{isFirst}, 后{isSecond}");
         if (isEdgeTTS) accessory.Method.EdgeTTS($"先{isFirst}, 后{isSecond}");
         accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
+    }
+    
+    [ScriptMethod(name: "深渊爆焰晶体生成技能", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44115"], userControl:false)]
+    public void Q40_深渊爆焰晶体生成技能(Event @event, ScriptAccessory accessory)
+    {
+        Vector3 spawnPosition = @event.EffectPosition;
+        
+        string direction;
+        
+        if (firstGroup44115Count < 6)
+        {
+            direction = firstGroupDirection;
+            firstGroup44115Count++;
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火44115] 第一组{firstGroup44115Count}/6: 位置{spawnPosition}, 方向{direction}");
+        }
+        else if (secondGroup44115Count < 6)
+        {
+            direction = secondGroupDirection;
+            secondGroup44115Count++;
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火44115] 第二组{secondGroup44115Count}/6: 位置{spawnPosition}, 方向{direction}");
+        }
+        else
+        {
+            direction = "vertical";
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火警告] 44115技能超出12个限制");
+        }
+        
+        // 直接记录位置和方向
+        crystalPositionDirections[spawnPosition] = direction;
+        
+        if (firstGroup44115Count + secondGroup44115Count == 12)
+        {
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火] 通过44115完成12个晶体记录");
+        }
+    }
+    
+    [ScriptMethod(name: "深渊爆焰晶体生成调试", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014832"], userControl:false)]
+    public void Q40_深渊爆焰晶体生成调试(Event @event, ScriptAccessory accessory)
+    {
+        uint crystalSourceId = @event.SourceId();
+        Vector3 crystalPosition = @event.SourcePosition();
+        
+        if(isDeveloper) accessory.Method.SendChat($"/e [地火调试] ObjectChanged: {crystalSourceId} 位置{crystalPosition}");
+    }
+    
+    [ScriptMethod(name: "深渊爆焰BOSS读条记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"] ,userControl:false)]
+    public void Q40_深渊爆焰BOSS读条记录(Event @event, ScriptAccessory accessory)
+    {
+        ResetMechanic();
+        
+        if (@event.ActionId == 44798)
+        {
+            firstGroupDirection = "vertical"; // 先上下
+            secondGroupDirection = "horizontal";
+        }
+        else if (@event.ActionId == 44797)
+        {
+            firstGroupDirection = "horizontal"; // 先左右
+            secondGroupDirection = "vertical";
+        }
+        
+        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 重置: 先{firstGroupDirection}后{secondGroupDirection}, 44115计数清零");
+    }
+    
+    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44118"])]
+    public void Q40_深渊爆焰初始(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "深渊爆焰初始";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 6700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
 
+    [ScriptMethod(name: "深渊爆焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44118"])]
+    public void Q40_深渊爆焰步进(Event @event, ScriptAccessory accessory)
+    {
+        uint fireSourceId = @event.SourceId();
+        Vector3 firePosition = @event.SourcePosition();
+        
+        string direction = FindDirectionByPosition(firePosition);
+        
+        if (string.IsNullOrEmpty(direction))
+        {
+            direction = "vertical";
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火警告] 未找到位置{firePosition}的方向记录");
+            return;
+        }
+        
+        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 地火源{fireSourceId}使用方向: {direction}");
+        
+        int maxSteps = (direction == "vertical") ? 7 : 10;
+        
+        for (int predictStep = 1; predictStep <= 2; predictStep++)
+        {
+            var predictPositions = CalculateStepPositions(firePosition, direction, predictStep);
+            foreach (var predictPos in predictPositions)
+            {
+                var predictDp = accessory.Data.GetDefaultDrawProperties();
+                predictDp.Name = $"深渊爆焰步进{predictStep}预测";
+                predictDp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+                predictDp.Owner = fireSourceId;
+                predictDp.Position = predictPos;
+                predictDp.Scale = new Vector2(5f);
+                predictDp.DestoryAt = 800 * predictStep;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, predictDp);
+            }
+        }
+        
+        for (int step = 1; step <= maxSteps; step++) 
+        {
+            var stepPositions = CalculateStepPositions(firePosition, direction, step);
+            
+            foreach (var stepPos in stepPositions)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"深渊爆焰步进{step}";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+                dp.Owner = fireSourceId;
+                dp.Position = stepPos;
+                dp.Scale = new Vector2(5f);
+                dp.DestoryAt = 800;
+                dp.Delay = 800 * step;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                
+                for (int predictStep = step + 1; predictStep <= step + 2; predictStep++)
+                {
+                    if (predictStep <= maxSteps)
+                    {
+                        var nextStepPositions = CalculateStepPositions(firePosition, direction, predictStep);
+                        foreach (var nextStepPos in nextStepPositions)
+                        {
+                            var predictDp = accessory.Data.GetDefaultDrawProperties();
+                            predictDp.Name = $"深渊爆焰步进{predictStep}预测";
+                            
+                            float alpha = predictStep == step + 1 ? 0.8f : 0.4f;
+                            predictDp.Color = accessory.Data.DefaultDangerColor.WithW(alpha);
+                            
+                            predictDp.Owner = fireSourceId;
+                            predictDp.Position = nextStepPos;
+                            predictDp.Scale = new Vector2(5f);
+                            predictDp.DestoryAt = 800;
+                            predictDp.Delay = 800 * step; 
+                            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, predictDp);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private string FindDirectionByPosition(Vector3 position, float tolerance = 0.5f)
+    {
+        foreach (var kvp in crystalPositionDirections)
+        {
+            if (IsPositionMatch(kvp.Key, position, tolerance))
+            {
+                return kvp.Value;
+            }
+        }
+        return null;
+    }
+    
+    private bool IsPositionMatch(Vector3 pos1, Vector3 pos2, float tolerance = 0.5f)
+    {
+        return Math.Abs(pos1.X - pos2.X) < tolerance &&
+               Math.Abs(pos1.Y - pos2.Y) < tolerance &&
+               Math.Abs(pos1.Z - pos2.Z) < tolerance;
+    }
+    
+    private List<Vector3> CalculateStepPositions(Vector3 startPos, string direction, int step)
+    {
+        float offset = 4f * step;
+        var positions = new List<Vector3>();
+
+        switch (direction)
+        {
+            case "vertical":
+                positions.Add(new Vector3(startPos.X, startPos.Y, startPos.Z + offset));
+                positions.Add(new Vector3(startPos.X, startPos.Y, startPos.Z - offset));
+                break;
+            case "horizontal":
+                positions.Add(new Vector3(startPos.X + offset, startPos.Y, startPos.Z));
+                positions.Add(new Vector3(startPos.X - offset, startPos.Y, startPos.Z));
+                break;
+            default:
+                positions.Add(startPos);
+                break;
+        }
+        return positions;
+    }
+    private async void ScheduleDelayedReset(ScriptAccessory accessory)
+    {
+        int maxWaitTime = 30000;
+        
+        await System.Threading.Tasks.Task.Delay(maxWaitTime);
+        
+        if (processedCrystals.Count > 0)
+        {
+            ResetMechanic();
+            if(isDeveloper) accessory.Method.SendChat($"/e [Debug] 已重置地火晶体计数");
+        }
+    }
+
+    private void ResetMechanic()
+    {
+        firstGroup44115Count = 0;
+        secondGroup44115Count = 0;
+        crystalPositionDirections.Clear();
+        firstGroupDirection = "vertical";
+        secondGroupDirection = "horizontal";
+        resetScheduled = false;
+        processedCrystals.Clear();
+        crystalDirections.Clear();
     }
     
     [ScriptMethod(name: "深渊极光 踩塔提示", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:2", "Index:27"])]
@@ -3008,6 +3254,51 @@ public class Pilgrims_Traverse
         if (isText)accessory.Method.TextInfo($"吃白色，准备踩塔", duration: 2000, false);
         if (isTTS)accessory.Method.TTS($"吃白色，准备踩塔");
         if (isEdgeTTS)accessory.Method.EdgeTTS($"吃白色，准备踩塔");
+    }
+    
+    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
+    public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS) accessory.Method.TTS($"抓人牢狱");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
+    }
+    
+    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
+    public void Q40_净罪之环 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_净罪之环";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(3f);
+        dp.DestoryAt = 2700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    uint _blackandwhite = 0; // 黑白配 点名记录
+    
+    [ScriptMethod(name: "黑白配 点名记录", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^004(D|E)$"] ,userControl:false)]
+    public void Q40_黑白配点名记录 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        _blackandwhite = 1;
+        if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 成功记录黑白配点名");
+    }
+
+    [ScriptMethod(name: "黑白配 判定提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:80000026", "Instance:8003EA93"],suppress: 1000)]
+    public async void Q40_黑白配判定提示 (Event @event, ScriptAccessory accessory)
+    {
+        // 之后的参数为 [31~34|9|1|0]，但是鸭子用不了.jpg
+        // 光与暗的以太中和了……
+        if (_blackandwhite == 0)return;
+        await Task.Delay(1000);
+        Console.Beep(2000, 200); 
+        // if (isTTS)accessory.Method.TTS($"重！");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS($"重！");
+        // accessory.Method.SendChat($"/e [黑白配] 中! <se.4> <se.4> <se.4> ");
+
+        _blackandwhite = 0;
     }
     
     [ScriptMethod(name: "光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(04|10)$"])]
@@ -3138,6 +3429,43 @@ public class Pilgrims_Traverse
         if (@event.StatusId == 4565) accessory.Method.RemoveDraw($"Q40_戒律的光链_能力{@event.SourceId()}");
     }
     
+    [ScriptMethod(name: "烈焰领域（吸引）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
+    public void Q40_烈焰领域提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("吸引，坦克最远引导连线", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS($"吸引");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"吸引");
+    }
+    
+    [ScriptMethod(name: "烈焰领域（吸引）自动防击退 [T职以外]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
+    public void Q40_烈焰领域自动防击退(Event @event, ScriptAccessory accessory)
+    {
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        if (isTank) return;
+
+        if (AutoAntiKnockback == AutoAntiKnockbackEnum.亲疏自行) 
+        { 
+            accessory.Method.SendChat($"/ac 亲疏自行"); 
+            accessory.Method.SendChat($"/e [Kodakku]：已尝试自动使用防击退 - 亲疏自行");
+        }
+        else if (AutoAntiKnockback == AutoAntiKnockbackEnum.沉稳咏唱) 
+        { 
+            accessory.Method.SendChat($"/ac 沉稳咏唱"); 
+            accessory.Method.SendChat($"/e [Kodakku]：已尝试自动使用防击退 - 沉稳咏唱");
+        }
+        else if (AutoAntiKnockback == AutoAntiKnockbackEnum.DR && isHack) 
+        { 
+            accessory.Method.SendChat($"/pdr load AutoAntiKnockback"); 
+            accessory.Method.SendChat($"/e [Kodakku]：已尝试自动开启防击退 - DR");
+        }
+        else if (AutoAntiKnockback == AutoAntiKnockbackEnum.IChing && isHack) 
+        {
+            accessory.Method.SendChat($"/i-ching-commander anti_knock 0 0"); 
+            accessory.Method.SendChat($"/e [Kodakku]：已尝试自动开启防击退 - I-Ching");
+        }
+        
+    }
+    
     [ScriptMethod(name: "尾连击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44161"])]
     public void Q40_尾连击(Event @event, ScriptAccessory accessory)
     {
@@ -3151,24 +3479,32 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
-    public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "尾连击安全区指路", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4415[78]$"])]
+    public void Q40_尾连击指路(Event @event, ScriptAccessory accessory)
     {
-        if (isTTS) accessory.Method.TTS($"抓人牢狱");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
+        // 44157 打右上左下 左上安全 ; 44158 打左上右下 右上安全
+        
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        if (!isTank) return; 
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "尾连击安全区指路";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetPosition = @event.ActionId() ==44157 ? new Vector3(-603.5f, 0f, -312f) : new Vector3(-596.5f, 0f, -312.4f);
+        dp.Scale = new(0.3f);
+        dp.Delay = 1500;
+        dp.DestoryAt = 4200;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
-    public void Q40_净罪之环 (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "黑暗神圣（AOE）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44164"])]
+    public void Q40_黑暗神圣提示(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"Q40_净罪之环";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(3f);
-        dp.DestoryAt = 2700;
-        dp.ScaleMode = ScaleMode.ByTime;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        // if (isText)accessory.Method.TextInfo("流血AOE", duration: 6000, true);
+        if (isTTS) accessory.Method.TTS($"流雪AOE");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"流雪AOE");
     }
     
     // P3 罪与罚（传毒） [第一次] 光耀之剑（直线）+ 烈焰锢 / 火球 → [第二次] 棘刺尾（挡枪分摊 + 小怪） → 净罪之环（抓人牢狱）+ 拉线+十字火
@@ -3182,6 +3518,63 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"吃暗，准备传毒");
     }
     
+    [ScriptMethod(name: "罪积蓄（毒）点名播报", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567", "Param:1"])]
+    public void 罪积蓄点名播报(Event @event, ScriptAccessory accessory)
+    {
+        string tname = @event["TargetName"]?.ToString() ?? "未知目标";
+        if (isTTS)accessory.Method.TTS($"毒点{tname}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"毒点{tname}");
+    }
+    
+    [ScriptMethod(name: "罪积蓄（毒）绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567"])]
+    public async void 罪积蓄绘制(Event @event, ScriptAccessory accessory)
+    {
+        uint layerCount = @event.StatusParam;
+    
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = dp.Name = $"罪积蓄{layerCount}";
+        dp1.Owner = dp.Owner = @event.TargetId();
+        
+        if (layerCount == 1)
+        {
+            accessory.Method.RemoveDraw($"罪积蓄.*");
+            await Task.Delay(50); 
+            dp.Color = new Vector4(1f, 1f, 1f, 2f);
+            dp1.Color = new Vector4(1f, 1f, 1f, 10f);
+            dp1.Scale = dp.Scale = new Vector2(0.7f); // 描边外径
+            dp1.InnerScale = new Vector2(0.65f);
+            dp1.Radian = float.Pi * 2;
+            dp1.DestoryAt = dp.DestoryAt = 30000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+        else if (layerCount == 12)
+        {
+            accessory.Method.RemoveDraw($"罪积蓄.*");
+            await Task.Delay(50); 
+            dp.Color = new Vector4(1f, 1f, 1f, 0.8f);
+            dp.Scale = new Vector2(4f);
+            dp.DestoryAt = 12000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+        else if (layerCount >= 12 && layerCount <= 15)
+        {
+            if (isTTS) accessory.Method.TTS($"{layerCount}");
+            if (isEdgeTTS) accessory.Method.EdgeTTS($"{layerCount}");
+        }
+        else
+        {
+            return;
+        }
+    }
+    
+    [ScriptMethod(name: "罪积蓄销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4567"],userControl: false)]
+    public void 罪积蓄销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"罪积蓄.*");
+    }
+    
     [ScriptMethod(name: "罪与罚（传毒）驱散死宣提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4594"])]
     public void Q40_罪与罚驱散死宣提示(Event @event, ScriptAccessory accessory)
     {
@@ -3191,12 +3584,44 @@ public class Pilgrims_Traverse
         if (isHealer && isEdgeTTS) accessory.Method.EdgeTTS($"驱散死宣");
     }
     
-    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170$"])]
+    
+    /*
+    [ScriptMethod(name: "以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4413[13]$"])]
+    public void Q40_以太吸取(Event @event, ScriptAccessory accessory)
+    {
+        // debuff: 4559 暗 / 4560 光
+        // 需要额外判断当前自身是否持有【毒 4567】
+        (string firstDrainAether, string secondDrainAether) = @event.ActionId switch
+        {
+            // 44129 => ("吃光", "吃暗"), // 短暗
+            // 44130 => ("吃暗", "吃光"), // 长暗
+            44131 => ("吃暗", "吃光"), // 短光
+            44133 => ("吃光", "吃暗"), // 长光
+            _ => ("未知", "未知")
+        };
+    
+        if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
+        if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
+    }
+    */
+    
+    // P4 烈焰缠身 → 深渊爆焰（存储地火）
+    
+    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170"])]
     public void Q40_烈焰缠身提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("火人阶段就位", duration: 3000, true);
         if (isTTS) accessory.Method.TTS($"火人阶段就位");
         if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位");
+    }
+    
+    [ScriptMethod(name: "自爆（火人爆炸）TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44171"])]
+    public void Q40_火焰分身_自爆(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo("AOE", duration: 1000, true);
+        if (isTTS) accessory.Method.TTS($"AOE");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"AOE");
     }
     
     #endregion
