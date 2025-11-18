@@ -48,5 +48,22 @@
       245,
       358
     ]
+  },
+  {
+    "Name": "PVP小玩具",
+    "Guid": "2312052e-6575-4a91-9e3d-b84699dca8fe",
+    "Version": "0.0.0.2",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://github.com/Hibiya615/TetoraKAScript/blob/main/PVP/PVPToy.cs",
+    "Note": "v0.0.0.2:\r\nPVP小玩具，仅纷争前线可用，可在狼狱进行测试\r\n推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担\r\n标记一般是防四小，所以启用仅标记选项的话就是防四小的播报",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      250,
+      431,
+      554,
+      888,
+      1273
+    ]
   }
 ]
