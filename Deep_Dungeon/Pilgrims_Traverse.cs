@@ -19,18 +19,19 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.3",note: noteStr)]
+    version: "0.0.1.4",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.3:
+        v0.0.1.4:
         朝圣交错路基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -185,8 +186,6 @@ public class Pilgrims_Traverse
     public void Init(ScriptAccessory accessory) {
         PerilousLair = 0; // 80 BOSS 伤痛圆戒 钢铁
         RoaringRing = 0; // 80 BOSS 紫雷环戒 月环
-        _myLightVengeance=0; // 99 光之回音
-        _myDarkVengeance=0; // 99 暗之回音
         _blackandwhite = 0; // 卓异的悲寂深想战 黑白配 点名记录
         _spinelash = 0; // 卓异的悲寂深想战 棘刺尾 直线点名次数记录
         ResetMechanic(); // 卓异的悲寂 地火晶体重置
@@ -661,7 +660,7 @@ public class Pilgrims_Traverse
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的背信_光耀颂词_光轮";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.2f);
         dp.Owner = @event.SourceId();
         
         switch (@event.ActionId())
@@ -695,40 +694,52 @@ public class Pilgrims_Traverse
     {
         // 右刀 无意义 40401 伤害源 40551 接左刀 救赎圣臂 40552 ； 左刀 40549  接右刀 救赎圣臂 40553
         var isR = @event.ActionId == 40401;
-        
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null) return;
-        
+
         var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        
         dp.Name = $"得到宽恕的背信_救赎圣拳";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(30f + IbcHelper.GetHitboxRadius(obj)); // 30m + 目标圈
-        dp.Radian = 180f.DegToRad(); 
-        dp.Rotation = isR ? 270f.DegToRad() : 90f.DegToRad();
-        dp.DestoryAt = 7700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.75f);
+        dp1.Owner = dp.Owner = @event.SourceId();
+        dp.Scale = new (30f, 60f);
+        dp.Offset = new Vector3(isR ? 15f : -15f, 0f, 0f);
+        dp1.Delay = dp.DestoryAt = 7400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+        
+        dp1.Name = $"得到宽恕的背信_救赎圣臂";
+        dp1.Color = new Vector4(1f, 0f, 0f, 1.5f);
+        dp1.Scale = new (30f);
+        dp1.Radian = 220f.DegToRad();
+        dp1.Rotation = isR ? 70f.DegToRad() : 290f.DegToRad(); 
+        dp1.DestoryAt = 7800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1); 
     }
     
-    /* 好像实体从一开始就存在，暂时不画，需要筛选可见性
-    [ScriptMethod(name: "30 恕罪圣环（旋转圆形）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17930"])]
+    [ScriptMethod(name: "30 恕罪圣环（旋转圆形）", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7750", "SourceDataId:17930"])]
     public void 得到宽恕的背信_恕罪圣环 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的背信_恕罪圣环";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(4f);
-        dp.DestoryAt = 60000;
+        dp.Color = new Vector4(0f, 0f, 1f, 3f);
+        dp1.Owner = dp.Owner = @event.SourceId();
+        dp1.Scale = dp.Scale = new Vector2(4f);
+        dp1.DestoryAt = dp.DestoryAt = 60000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        dp1.Name = "得到宽恕的背信_恕罪圣环描边";
+        dp1.Color = new Vector4(0f, 0f, 1f, 10f);
+        dp1.InnerScale = new Vector2(3.94f);
+        dp1.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
-    [ScriptMethod(name: "恕罪圣环销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:17930"],userControl: false)]
+    [ScriptMethod(name: "恕罪圣环销毁", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7740", "SourceDataId:17930"] ,userControl:false)]
     public void 恕罪圣环销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw("得到宽恕的背信_恕罪圣环");
+        accessory.Method.RemoveDraw("得到宽恕的背信_恕罪圣环.*");
     }
-    */
+
     
     #endregion
     
@@ -2874,42 +2885,43 @@ public class Pilgrims_Traverse
     // 被侵蚀的食罪灵  NPCID: 14038 目标圈 15.0m
     // 深渊烈焰（步进地火）普通难度          先上下 ActionId: 44075 / 后左右 ActionId: 44076
     // 召唤晶体: 44078 / 晶体爆炸: 44079   先左右 ActionId: 44074 / 后上下 ActionId: 44077
-    // debuff: 4559 暗 / 4560 光
-    // 以太吸取 普通难度  44088 短暗 / 44089 长暗 / 44090 短光 / 44092 长光
     
     uint _myLightVengeance=0;
     uint _myDarkVengeance=0; 
     
-    
     [ScriptMethod(name: "99 烈焰锢（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[39]$"])]
-    public void 烈焰锢(Event @event, ScriptAccessory accessory)
+    public void Normal_烈焰锢(Event @event, ScriptAccessory accessory)
     {
         // 本体无意义读条 快: 44063 源: 44064  / 慢: 44069 源:44070 , 其中 源 比 无意义 读条更多 0.7s
         // 烈焰锢 (热病) StatusID: 4562 , 赋予时间约 2.6s
         
-        var chara = accessory.Data.Objects.OfType<IBattleChara>().FirstOrDefault();
-        var nameId = chara?.NameId;
-        if (chara == null) return;
-        
-        int duration = @event.ActionId == 44069 ? 10900 : 7900;
+        bool isFastCast = @event.ActionId == 44063;
+        bool isSlowCast = @event.ActionId == 44069;
     
-        if (isText) accessory.Method.TextInfo("停止移动", duration: duration, true);
-        if (isTTS) accessory.Method.TTS("停止移动");
-        if (isEdgeTTS) accessory.Method.EdgeTTS("停止移动");
+        int duration = isFastCast ? 4000 : 7000;
+        string timingType = isFastCast ? "前" : "后";
+
+        if (isText) accessory.Method.TextInfo($"直线{timingType}停止移动", duration: duration, true);
+        if (isTTS) accessory.Method.TTS($"直线{timingType}停止移动");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
     [ScriptMethod(name: "99 火球（旋风）预备提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[18]$"])]
-    public void 火球预备(Event @event, ScriptAccessory accessory)
+    public void Normal_火球预备(Event @event, ScriptAccessory accessory)
     {
-        int duration = @event.ActionId == 44061 ? 5000 : 8000;
-    
-        if (isText) accessory.Method.TextInfo("旋风预备", duration: duration, true);
-        if (isTTS) accessory.Method.TTS("旋风预备");
-        if (isEdgeTTS) accessory.Method.EdgeTTS("旋风预备");
+        bool isFastCast = @event.ActionId == 44061;
+        bool isSlowCast = @event.ActionId == 44068;
+
+        int duration = isFastCast ? 5000 : 8000;
+        string timingType = isFastCast ? "前" : "后";
+
+        if (isText) accessory.Method.TextInfo($"直线{timingType}旋风", duration: duration, true);
+        if (isTTS) accessory.Method.TTS($"直线{timingType}旋风");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}旋风");
     }
     
     [ScriptMethod(name: "99 火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44062"])]
-    public void 火球 (Event @event, ScriptAccessory accessory)
+    public void Normal_火球 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"火球";
@@ -2921,7 +2933,7 @@ public class Pilgrims_Traverse
     }
     
     [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线预兆）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:00EA"])]
-    public void 棘刺尾预兆(Event @event, ScriptAccessory accessory)
+    public void Normal_棘刺尾预兆(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != MapIds.TheFinalVerse) return;
         
@@ -2940,7 +2952,7 @@ public class Pilgrims_Traverse
     }
     
     [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45118"])]
-    public void 棘刺尾(Event @event, ScriptAccessory accessory)
+    public void Normal_棘刺尾(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("快躲开", duration: 800, true);
         if (isTTS)accessory.Method.TTS("快躲开");
@@ -2957,7 +2969,7 @@ public class Pilgrims_Traverse
     }
     
     [ScriptMethod(name: "99 光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^440(67|73)$"])]
-    public void 光耀之剑(Event @event, ScriptAccessory accessory)
+    public void Normal_光耀之剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"光耀之剑";
@@ -2970,7 +2982,7 @@ public class Pilgrims_Traverse
     }
     
     [ScriptMethod(name: "99 净罪之环 TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44082"])]
-    public void 净罪之环tts(Event @event, ScriptAccessory accessory)
+    public void Normal_净罪之环tts(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("抓人牢狱", duration: 3000, true);
         if (isTTS)accessory.Method.TTS("抓人牢狱");
@@ -2978,7 +2990,7 @@ public class Pilgrims_Traverse
     }
     
     [ScriptMethod(name: "99 净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44083"])]
-    public void 净罪之环 (Event @event, ScriptAccessory accessory)
+    public void Normal_净罪之环 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"净罪之环";
@@ -2988,6 +3000,25 @@ public class Pilgrims_Traverse
         dp.DestoryAt = 2700;
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "99 以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4409[02]$"])]
+    public void Normal_以太吸取(Event @event, ScriptAccessory accessory)
+    {
+        // debuff: 4559 暗 / 4560 光
+        // 以太吸取 普通难度  44088 短暗 / 44089 长暗 / 44090 短光 / 44092 长光
+        (string firstDrainAether, string secondDrainAether) = @event.ActionId switch
+        {
+            // 44088 => ("吃光", "吃暗"), // 短暗
+            // 44089 => ("吃暗", "吃光"), // 长暗
+            44090 => ("吃暗", "吃光"), // 短光
+            44092 => ("吃光", "吃暗"), // 长光
+            _ => ("未知", "未知")
+        };
+    
+        if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
+        if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
     }
     
     
@@ -3011,18 +3042,35 @@ public class Pilgrims_Traverse
 
     private int firstGroupCount = 0;
     private int secondGroupCount = 0;
-    private int firstGroup44115Count = 0;
-    private int secondGroup44115Count = 0;
+    private int firstGroupAddCount = 0;
+    private int secondGroupAddCount = 0;
     private bool isFirstGroupComplete = false;
     private string firstGroupDirection = "vertical";
     private string secondGroupDirection = "horizontal"; 
     private bool resetScheduled = false;
 
-    [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
+    [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
     public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
     {
-        var isFirst = @event.ActionId == 44797 ? "左右" : "上下";
-        var isSecond = @event.ActionId == 44797 ? "上下" : "左右";
+        string isFirst, isSecond;
+ 
+        switch (@event.ActionId)
+        {
+            case 44075:
+            case 44798:
+                isFirst = "上下";
+                isSecond = "左右";
+                break;
+            case 44074:
+            case 44797:
+                isFirst = "左右";
+                isSecond = "上下";
+                break;
+            default:
+                isFirst = "未知";
+                isSecond = "未知";
+                break;
+        }
         
         if (isText) accessory.Method.TextInfo($"地火：  先{isFirst} ， 再{isSecond}", duration: 16700, true);
         if (isTTS) accessory.Method.TTS($"先{isFirst}, 后{isSecond}");
@@ -3030,37 +3078,37 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
     }
     
-    [ScriptMethod(name: "深渊爆焰晶体生成技能", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44115"], userControl:false)]
+    [ScriptMethod(name: "深渊爆焰晶体生成技能", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44078|44115)"], userControl:false)]
     public void Q40_深渊爆焰晶体生成技能(Event @event, ScriptAccessory accessory)
     {
         Vector3 spawnPosition = @event.EffectPosition;
         
         string direction;
         
-        if (firstGroup44115Count < 6)
+        if (firstGroupAddCount < 6)
         {
             direction = firstGroupDirection;
-            firstGroup44115Count++;
-            if(isDeveloper) accessory.Method.SendChat($"/e [地火44115] 第一组{firstGroup44115Count}/6: 位置{spawnPosition}, 方向{direction}");
+            firstGroupAddCount++;
+            // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第一组{firstGroupAddCount}/6: 位置{spawnPosition}, 方向{direction}");
         }
-        else if (secondGroup44115Count < 6)
+        else if (secondGroupAddCount < 6)
         {
             direction = secondGroupDirection;
-            secondGroup44115Count++;
-            if(isDeveloper) accessory.Method.SendChat($"/e [地火44115] 第二组{secondGroup44115Count}/6: 位置{spawnPosition}, 方向{direction}");
+            secondGroupAddCount++;
+            // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第二组{secondGroupAddCount}/6: 位置{spawnPosition}, 方向{direction}");
         }
         else
         {
             direction = "vertical";
-            if(isDeveloper) accessory.Method.SendChat($"/e [地火警告] 44115技能超出12个限制");
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火警告] Action生成晶体超出12个限制");
         }
         
         // 直接记录位置和方向
         crystalPositionDirections[spawnPosition] = direction;
         
-        if (firstGroup44115Count + secondGroup44115Count == 12)
+        if (firstGroupAddCount + secondGroupAddCount == 12)
         {
-            if(isDeveloper) accessory.Method.SendChat($"/e [地火] 通过44115完成12个晶体记录");
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火] 通过ActionId完成12个晶体记录");
         }
     }
     
@@ -3070,29 +3118,36 @@ public class Pilgrims_Traverse
         uint crystalSourceId = @event.SourceId();
         Vector3 crystalPosition = @event.SourcePosition();
         
-        if(isDeveloper) accessory.Method.SendChat($"/e [地火调试] ObjectChanged: {crystalSourceId} 位置{crystalPosition}");
+        // if(isDeveloper) accessory.Method.SendChat($"/e [地火调试] ObjectChanged: {crystalSourceId} 位置{crystalPosition}");
     }
     
-    [ScriptMethod(name: "深渊爆焰BOSS读条记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"] ,userControl:false)]
+    [ScriptMethod(name: "深渊爆焰BOSS读条记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"] ,userControl:false)]
     public void Q40_深渊爆焰BOSS读条记录(Event @event, ScriptAccessory accessory)
     {
         ResetMechanic();
         
-        if (@event.ActionId == 44798)
+        switch (@event.ActionId)
         {
-            firstGroupDirection = "vertical"; // 先上下
-            secondGroupDirection = "horizontal";
-        }
-        else if (@event.ActionId == 44797)
-        {
-            firstGroupDirection = "horizontal"; // 先左右
-            secondGroupDirection = "vertical";
+            case 44075:
+            case 44798:
+                firstGroupDirection = "vertical";   // 先上下
+                secondGroupDirection = "horizontal"; // 后左右
+                break;
+            case 44074:
+            case 44797:
+                firstGroupDirection = "horizontal"; // 先左右
+                secondGroupDirection = "vertical";   // 后上下
+                break;
+            default:
+                firstGroupDirection = "???";
+                secondGroupDirection = "???";
+                break;
         }
         
-        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 重置: 先{firstGroupDirection}后{secondGroupDirection}, 44115计数清零");
+        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 重置: 先{firstGroupDirection}后{secondGroupDirection}, ActionId[{@event.ActionId}]计数清零");
     }
     
-    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44118"])]
+    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(44079|44118)"])]
     public void Q40_深渊爆焰初始(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3105,7 +3160,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "深渊爆焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44118"])]
+    [ScriptMethod(name: "深渊爆焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44079|44118)"])]
     public void Q40_深渊爆焰步进(Event @event, ScriptAccessory accessory)
     {
         uint fireSourceId = @event.SourceId();
@@ -3152,7 +3207,7 @@ public class Pilgrims_Traverse
                 dp.Owner = fireSourceId;
                 dp.Position = stepPos;
                 dp.Scale = new Vector2(5f);
-                dp.DestoryAt = 800;
+                dp.DestoryAt = 1000;
                 dp.Delay = 800 * step;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                 
@@ -3172,7 +3227,7 @@ public class Pilgrims_Traverse
                             predictDp.Owner = fireSourceId;
                             predictDp.Position = nextStepPos;
                             predictDp.Scale = new Vector2(5f);
-                            predictDp.DestoryAt = 800;
+                            predictDp.DestoryAt = 1000;
                             predictDp.Delay = 800 * step; 
                             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, predictDp);
                         }
@@ -3237,8 +3292,8 @@ public class Pilgrims_Traverse
 
     private void ResetMechanic()
     {
-        firstGroup44115Count = 0;
-        secondGroup44115Count = 0;
+        firstGroupAddCount = 0;
+        secondGroupAddCount = 0;
         crystalPositionDirections.Clear();
         firstGroupDirection = "vertical";
         secondGroupDirection = "horizontal";
@@ -3314,6 +3369,20 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
+    [ScriptMethod(name: "火球（旋风）预备提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(097|105)$"])]
+    public void Q40_火球预备(Event @event, ScriptAccessory accessory)
+    {
+        bool isFastCast = @event.ActionId == 44097;
+        bool isSlowCast = @event.ActionId == 44105;
+
+        int duration = isFastCast ? 4000 : 7000;
+        string timingType = isFastCast ? "前" : "后";
+
+        if (isText) accessory.Method.TextInfo($"直线{timingType}旋风", duration: duration, true);
+        if (isTTS) accessory.Method.TTS($"直线{timingType}旋风");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}旋风");
+    }
+    
     [ScriptMethod(name: "火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
     public void Q40_火球 (Event @event, ScriptAccessory accessory)
     {
@@ -3324,6 +3393,23 @@ public class Pilgrims_Traverse
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 1800;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "烈焰锢（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(099|106)$"])]
+    public void Q40_烈焰锢(Event @event, ScriptAccessory accessory)
+    {
+        // 本体无意义读条 快: 44099 源: 44100  / 慢: 44106 源:44107 , 其中 源 比 无意义 读条更多 0.7s
+        // 烈焰锢 (热病) StatusID: 4562 , 赋予时间约 2.6s
+        
+        bool isFastCast = @event.ActionId == 44099;
+        bool isSlowCast = @event.ActionId == 44106;
+    
+        int duration = isFastCast ? 4000 : 7000;
+        string timingType = isFastCast ? "前" : "后";
+
+        if (isText) accessory.Method.TextInfo($"直线{timingType}停止移动", duration: duration, true);
+        if (isTTS) accessory.Method.TTS($"直线{timingType}停止移动");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
     [ScriptMethod(name: "烈焰链 准备提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
@@ -3584,13 +3670,13 @@ public class Pilgrims_Traverse
         if (isHealer && isEdgeTTS) accessory.Method.EdgeTTS($"驱散死宣");
     }
     
+    private const uint DarkVengeance = 0x11CF;    // 4559 = 0x11CF 暗之回音
+    private const uint LightVengeance = 0x11D0;   // 4560 = 0x11D0 光之回音
+    private const uint SinBearer = 0x11D7;        // 4567 = 0x11D7 罪积蓄 [毒]
     
-    /*
     [ScriptMethod(name: "以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4413[13]$"])]
     public void Q40_以太吸取(Event @event, ScriptAccessory accessory)
     {
-        // debuff: 4559 暗 / 4560 光
-        // 需要额外判断当前自身是否持有【毒 4567】
         (string firstDrainAether, string secondDrainAether) = @event.ActionId switch
         {
             // 44129 => ("吃光", "吃暗"), // 短暗
@@ -3599,12 +3685,27 @@ public class Pilgrims_Traverse
             44133 => ("吃光", "吃暗"), // 长光
             _ => ("未知", "未知")
         };
+        
+        var myObject = accessory.Data.MyObject;
+        if (myObject == null)
+        { 
+            return;
+        }
     
-        if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
-        if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
+        if (!IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11D7))
+        {
+            if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
+            if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
+        }
+        else
+        {
+            if (isText)accessory.Method.TextInfo($"毒，始终保持为暗", duration: 10000, true);
+            if (isTTS)accessory.Method.TTS($"保持为暗");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"保持为暗");
+        }
     }
-    */
+
     
     // P4 烈焰缠身 → 深渊爆焰（存储地火）
     
