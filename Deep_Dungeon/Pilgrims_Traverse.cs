@@ -25,13 +25,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.4",note: noteStr)]
+    version: "0.0.1.5",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.4:
+        v0.0.1.5:
         朝圣交错路基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -2879,6 +2879,188 @@ public class Pilgrims_Traverse
     
     #endregion
 
+    #region 卓异的悲寂 地火相关
+    
+    private readonly Dictionary<uint, string> crystalDirections = new Dictionary<uint, string>();
+    private readonly HashSet<uint> processedCrystals = new HashSet<uint>();
+    private readonly Dictionary<Vector3, string> crystalPositionDirections = new Dictionary<Vector3, string>();
+
+    private int firstGroupCount = 0;
+    private int secondGroupCount = 0;
+    private int firstGroupAddCount = 0;
+    private int secondGroupAddCount = 0;
+    private bool isFirstGroupComplete = false;
+    private string firstGroupDirection = "vertical";
+    private string secondGroupDirection = "horizontal"; 
+    private bool resetScheduled = false;
+
+    [ScriptMethod(name: "深渊爆焰晶体生成技能", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44078|44115)"], userControl:false)]
+    public void Q40_深渊爆焰晶体生成技能(Event @event, ScriptAccessory accessory)
+    {
+        Vector3 spawnPosition = @event.EffectPosition;
+        string direction;
+        
+        if (HelperExtensions.GetCurrentTerritoryId() == MapIds.TheFinalVerseQuantum) // 深想战 为 6+6 个晶体
+        {
+            if (firstGroupAddCount < 6)
+            {
+                direction = firstGroupDirection;
+                firstGroupAddCount++;
+                // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第一组{firstGroupAddCount}/6: 位置{spawnPosition}, 方向{direction}");
+            }
+            else if (secondGroupAddCount < 6)
+            {
+                direction = secondGroupDirection;
+                secondGroupAddCount++;
+                // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第二组{secondGroupAddCount}/6: 位置{spawnPosition}, 方向{direction}");
+            }
+            else
+            {
+                direction = "error";
+                if (isDeveloper) accessory.Method.SendChat($"/e [地火警告] Action生成晶体超出12个限制");
+            }
+
+            // 直接记录位置和方向
+            crystalPositionDirections[spawnPosition] = direction;
+
+            if (firstGroupAddCount + secondGroupAddCount == 12)
+            {
+                if (isDeveloper) accessory.Method.SendChat($"/e [地火] 通过ActionId完成12个晶体记录");
+            }
+        }
+        else // 普通 为 4+4 个晶体
+        {
+            if (firstGroupAddCount < 4)
+            {
+                direction = firstGroupDirection;
+                firstGroupAddCount++;
+                // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第一组{firstGroupAddCount}/4: 位置{spawnPosition}, 方向{direction}");
+            }
+            else if (secondGroupAddCount < 4)
+            {
+                direction = secondGroupDirection;
+                secondGroupAddCount++;
+                // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第二组{secondGroupAddCount}/4: 位置{spawnPosition}, 方向{direction}");
+            }
+            else
+            {
+                direction = "error";
+                if (isDeveloper) accessory.Method.SendChat($"/e [地火警告] Action生成晶体超出8个限制");
+            }
+
+            // 直接记录位置和方向
+            crystalPositionDirections[spawnPosition] = direction;
+
+            if (firstGroupAddCount + secondGroupAddCount == 8)
+            {
+                if (isDeveloper) accessory.Method.SendChat($"/e [地火] 通过ActionId完成8个晶体记录");
+            }
+        }
+    }
+    
+    [ScriptMethod(name: "深渊爆焰晶体生成调试", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014832"], userControl:false)]
+    public void Q40_深渊爆焰晶体生成调试(Event @event, ScriptAccessory accessory)
+    {
+        uint crystalSourceId = @event.SourceId();
+        Vector3 crystalPosition = @event.SourcePosition();
+        
+        // if(isDeveloper) accessory.Method.SendChat($"/e [地火调试] ObjectChanged: {crystalSourceId} 位置{crystalPosition}");
+    }
+    
+    [ScriptMethod(name: "深渊爆焰BOSS读条记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"] ,userControl:false)]
+    public void Q40_深渊爆焰BOSS读条记录(Event @event, ScriptAccessory accessory)
+    {
+        ResetMechanic();
+        
+        switch (@event.ActionId)
+        {
+            case 44075:
+            case 44798:
+                firstGroupDirection = "vertical";   // 先上下
+                secondGroupDirection = "horizontal"; // 后左右
+                break;
+            case 44074:
+            case 44797:
+                firstGroupDirection = "horizontal"; // 先左右
+                secondGroupDirection = "vertical";   // 后上下
+                break;
+            default:
+                firstGroupDirection = "???";
+                secondGroupDirection = "???";
+                break;
+        }
+        
+        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 重置: 先{firstGroupDirection}后{secondGroupDirection}, ActionId[{@event.ActionId}]计数清零");
+    }
+    
+    private string FindDirectionByPosition(Vector3 position, float tolerance = 0.5f)
+    {
+        foreach (var kvp in crystalPositionDirections)
+        {
+            if (IsPositionMatch(kvp.Key, position, tolerance))
+            {
+                return kvp.Value;
+            }
+        }
+        return null;
+    }
+    
+    private bool IsPositionMatch(Vector3 pos1, Vector3 pos2, float tolerance = 0.5f)
+    {
+        return Math.Abs(pos1.X - pos2.X) < tolerance &&
+               Math.Abs(pos1.Y - pos2.Y) < tolerance &&
+               Math.Abs(pos1.Z - pos2.Z) < tolerance;
+    }
+    
+    private List<Vector3> CalculateStepPositions(Vector3 startPos, string direction, int step)
+    {
+        float offset = 4f * step;
+        var positions = new List<Vector3>();
+
+        switch (direction)
+        {
+            case "vertical":
+                positions.Add(new Vector3(startPos.X, startPos.Y, startPos.Z + offset));
+                positions.Add(new Vector3(startPos.X, startPos.Y, startPos.Z - offset));
+                break;
+            case "horizontal":
+                positions.Add(new Vector3(startPos.X + offset, startPos.Y, startPos.Z));
+                positions.Add(new Vector3(startPos.X - offset, startPos.Y, startPos.Z));
+                break;
+            default:
+                positions.Add(startPos);
+                break;
+        }
+        return positions;
+    }
+    
+    private async void ScheduleDelayedReset(ScriptAccessory accessory)
+    {
+        int maxWaitTime = 30000;
+        
+        await System.Threading.Tasks.Task.Delay(maxWaitTime);
+        
+        if (processedCrystals.Count > 0)
+        {
+            ResetMechanic();
+            if(isDeveloper) accessory.Method.SendChat($"/e [Debug] 已重置地火晶体计数");
+        }
+    }
+    
+    private void ResetMechanic()
+    {
+        firstGroupAddCount = 0;
+        secondGroupAddCount = 0;
+        crystalPositionDirections.Clear();
+        firstGroupDirection = "vertical";
+        secondGroupDirection = "horizontal";
+        resetScheduled = false;
+        processedCrystals.Clear();
+        crystalDirections.Clear();
+    }
+    
+    #endregion
+    
     #region 99层 BOSS 卓异的悲寂
     
     // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
@@ -3002,153 +3184,8 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "99 以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4409[02]$"])]
-    public void Normal_以太吸取(Event @event, ScriptAccessory accessory)
-    {
-        // debuff: 4559 暗 / 4560 光
-        // 以太吸取 普通难度  44088 短暗 / 44089 长暗 / 44090 短光 / 44092 长光
-        (string firstDrainAether, string secondDrainAether) = @event.ActionId switch
-        {
-            // 44088 => ("吃光", "吃暗"), // 短暗
-            // 44089 => ("吃暗", "吃光"), // 长暗
-            44090 => ("吃暗", "吃光"), // 短光
-            44092 => ("吃光", "吃暗"), // 长光
-            _ => ("未知", "未知")
-        };
-    
-        if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
-        if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
-    }
-    
-    
-    #endregion
-    
-    #region 卓异的悲寂深想战 满贡品难度Q40
-    
-    [ScriptMethod(name: "—————— 卓异的悲寂深想战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 卓异的悲寂深想战(Event @event, ScriptAccessory accessory) { }
-    
-    // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
-    // 被侵蚀的食罪灵  NPCID: 14038 目标圈 15.0m
-    
-    // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
-    
-    // 生成水晶:44115（每次6个）/ 水晶读条爆炸:44118 / 水晶DataId: 2014832 // 每次移动4m, 爆炸间隔 0.8~0.9s
-    
-    private readonly Dictionary<uint, string> crystalDirections = new Dictionary<uint, string>();
-    private readonly HashSet<uint> processedCrystals = new HashSet<uint>();
-    private readonly Dictionary<Vector3, string> crystalPositionDirections = new Dictionary<Vector3, string>();
-
-    private int firstGroupCount = 0;
-    private int secondGroupCount = 0;
-    private int firstGroupAddCount = 0;
-    private int secondGroupAddCount = 0;
-    private bool isFirstGroupComplete = false;
-    private string firstGroupDirection = "vertical";
-    private string secondGroupDirection = "horizontal"; 
-    private bool resetScheduled = false;
-
-    [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
-    public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
-    {
-        string isFirst, isSecond;
- 
-        switch (@event.ActionId)
-        {
-            case 44075:
-            case 44798:
-                isFirst = "上下";
-                isSecond = "左右";
-                break;
-            case 44074:
-            case 44797:
-                isFirst = "左右";
-                isSecond = "上下";
-                break;
-            default:
-                isFirst = "未知";
-                isSecond = "未知";
-                break;
-        }
-        
-        if (isText) accessory.Method.TextInfo($"地火：  先{isFirst} ， 再{isSecond}", duration: 16700, true);
-        if (isTTS) accessory.Method.TTS($"先{isFirst}, 后{isSecond}");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"先{isFirst}, 后{isSecond}");
-        accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
-    }
-    
-    [ScriptMethod(name: "深渊爆焰晶体生成技能", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44078|44115)"], userControl:false)]
-    public void Q40_深渊爆焰晶体生成技能(Event @event, ScriptAccessory accessory)
-    {
-        Vector3 spawnPosition = @event.EffectPosition;
-        
-        string direction;
-        
-        if (firstGroupAddCount < 6)
-        {
-            direction = firstGroupDirection;
-            firstGroupAddCount++;
-            // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第一组{firstGroupAddCount}/6: 位置{spawnPosition}, 方向{direction}");
-        }
-        else if (secondGroupAddCount < 6)
-        {
-            direction = secondGroupDirection;
-            secondGroupAddCount++;
-            // if(isDeveloper) accessory.Method.SendChat($"/e [地火生成] 第二组{secondGroupAddCount}/6: 位置{spawnPosition}, 方向{direction}");
-        }
-        else
-        {
-            direction = "vertical";
-            if(isDeveloper) accessory.Method.SendChat($"/e [地火警告] Action生成晶体超出12个限制");
-        }
-        
-        // 直接记录位置和方向
-        crystalPositionDirections[spawnPosition] = direction;
-        
-        if (firstGroupAddCount + secondGroupAddCount == 12)
-        {
-            if(isDeveloper) accessory.Method.SendChat($"/e [地火] 通过ActionId完成12个晶体记录");
-        }
-    }
-    
-    [ScriptMethod(name: "深渊爆焰晶体生成调试", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014832"], userControl:false)]
-    public void Q40_深渊爆焰晶体生成调试(Event @event, ScriptAccessory accessory)
-    {
-        uint crystalSourceId = @event.SourceId();
-        Vector3 crystalPosition = @event.SourcePosition();
-        
-        // if(isDeveloper) accessory.Method.SendChat($"/e [地火调试] ObjectChanged: {crystalSourceId} 位置{crystalPosition}");
-    }
-    
-    [ScriptMethod(name: "深渊爆焰BOSS读条记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"] ,userControl:false)]
-    public void Q40_深渊爆焰BOSS读条记录(Event @event, ScriptAccessory accessory)
-    {
-        ResetMechanic();
-        
-        switch (@event.ActionId)
-        {
-            case 44075:
-            case 44798:
-                firstGroupDirection = "vertical";   // 先上下
-                secondGroupDirection = "horizontal"; // 后左右
-                break;
-            case 44074:
-            case 44797:
-                firstGroupDirection = "horizontal"; // 先左右
-                secondGroupDirection = "vertical";   // 后上下
-                break;
-            default:
-                firstGroupDirection = "???";
-                secondGroupDirection = "???";
-                break;
-        }
-        
-        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 重置: 先{firstGroupDirection}后{secondGroupDirection}, ActionId[{@event.ActionId}]计数清零");
-    }
-    
-    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(44079|44118)"])]
-    public void Q40_深渊爆焰初始(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "99 深渊烈焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44079"])]
+    public void Normal_深渊烈焰初始(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "深渊爆焰初始";
@@ -3159,9 +3196,9 @@ public class Pilgrims_Traverse
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
-
-    [ScriptMethod(name: "深渊爆焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44079|44118)"])]
-    public void Q40_深渊爆焰步进(Event @event, ScriptAccessory accessory)
+    
+   [ScriptMethod(name: "99 深渊烈焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44079"])]
+    public void Normal_深渊烈焰步进(Event @event, ScriptAccessory accessory)
     {
         uint fireSourceId = @event.SourceId();
         Vector3 firePosition = @event.SourcePosition();
@@ -3175,7 +3212,7 @@ public class Pilgrims_Traverse
             return;
         }
         
-        if(isDeveloper) accessory.Method.SendChat($"/e [地火] 地火源{fireSourceId}使用方向: {direction}");
+        // if(isDeveloper) accessory.Method.SendChat($"/e [地火] 地火源{fireSourceId}使用方向: {direction}");
         
         int maxSteps = (direction == "vertical") ? 7 : 10;
         
@@ -3236,70 +3273,159 @@ public class Pilgrims_Traverse
             }
         }
     }
-
-    private string FindDirectionByPosition(Vector3 position, float tolerance = 0.5f)
+    
+    [ScriptMethod(name: "99 以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4409[02]$"])]
+    public void Normal_以太吸取(Event @event, ScriptAccessory accessory)
     {
-        foreach (var kvp in crystalPositionDirections)
+        // debuff: 4559 暗 / 4560 光
+        // 以太吸取 普通难度  44088 短暗 / 44089 长暗 / 44090 短光 / 44092 长光
+        (string firstDrainAether, string secondDrainAether) = @event.ActionId switch
         {
-            if (IsPositionMatch(kvp.Key, position, tolerance))
-            {
-                return kvp.Value;
-            }
-        }
-        return null;
+            // 44088 => ("吃光", "吃暗"), // 短暗
+            // 44089 => ("吃暗", "吃光"), // 长暗
+            44090 => ("吃暗", "吃光"), // 短光
+            44092 => ("吃光", "吃暗"), // 长光
+            _ => ("未知", "未知")
+        };
+    
+        if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
+        if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
     }
     
-    private bool IsPositionMatch(Vector3 pos1, Vector3 pos2, float tolerance = 0.5f)
-    {
-        return Math.Abs(pos1.X - pos2.X) < tolerance &&
-               Math.Abs(pos1.Y - pos2.Y) < tolerance &&
-               Math.Abs(pos1.Z - pos2.Z) < tolerance;
-    }
     
-    private List<Vector3> CalculateStepPositions(Vector3 startPos, string direction, int step)
-    {
-        float offset = 4f * step;
-        var positions = new List<Vector3>();
+    #endregion
+    
+    #region 卓异的悲寂深想战 满贡品难度Q40
+    
+    [ScriptMethod(name: "—————— 卓异的悲寂深想战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 卓异的悲寂深想战(Event @event, ScriptAccessory accessory) { }
+    
+    // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
+    // 被侵蚀的食罪灵  NPCID: 14038 目标圈 15.0m
+    
+    // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
+    
+    // 生成水晶:44115（每次6个）/ 水晶读条爆炸:44118 / 水晶DataId: 2014832 // 每次移动4m, 爆炸间隔 0.8~0.9s
+    
 
-        switch (direction)
+    [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
+    public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
+    {
+        string isFirst, isSecond;
+ 
+        switch (@event.ActionId)
         {
-            case "vertical":
-                positions.Add(new Vector3(startPos.X, startPos.Y, startPos.Z + offset));
-                positions.Add(new Vector3(startPos.X, startPos.Y, startPos.Z - offset));
+            case 44075:
+            case 44798:
+                isFirst = "上下";
+                isSecond = "左右";
                 break;
-            case "horizontal":
-                positions.Add(new Vector3(startPos.X + offset, startPos.Y, startPos.Z));
-                positions.Add(new Vector3(startPos.X - offset, startPos.Y, startPos.Z));
+            case 44074:
+            case 44797:
+                isFirst = "左右";
+                isSecond = "上下";
                 break;
             default:
-                positions.Add(startPos);
+                isFirst = "未知";
+                isSecond = "未知";
                 break;
         }
-        return positions;
+        
+        if (isText) accessory.Method.TextInfo($"地火：  先{isFirst} ， 再{isSecond}", duration: 16700, true);
+        if (isTTS) accessory.Method.TTS($"先{isFirst}, 后{isSecond}");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"先{isFirst}, 后{isSecond}");
+        accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
     }
-    private async void ScheduleDelayedReset(ScriptAccessory accessory)
+    
+    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44118"])]
+    public void Q40_深渊爆焰初始(Event @event, ScriptAccessory accessory)
     {
-        int maxWaitTime = 30000;
-        
-        await System.Threading.Tasks.Task.Delay(maxWaitTime);
-        
-        if (processedCrystals.Count > 0)
-        {
-            ResetMechanic();
-            if(isDeveloper) accessory.Method.SendChat($"/e [Debug] 已重置地火晶体计数");
-        }
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "深渊爆焰初始";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 6700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    private void ResetMechanic()
+    [ScriptMethod(name: "深渊爆焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44118"])]
+    public void Q40_深渊爆焰步进(Event @event, ScriptAccessory accessory)
     {
-        firstGroupAddCount = 0;
-        secondGroupAddCount = 0;
-        crystalPositionDirections.Clear();
-        firstGroupDirection = "vertical";
-        secondGroupDirection = "horizontal";
-        resetScheduled = false;
-        processedCrystals.Clear();
-        crystalDirections.Clear();
+        uint fireSourceId = @event.SourceId();
+        Vector3 firePosition = @event.SourcePosition();
+        
+        string direction = FindDirectionByPosition(firePosition);
+        
+        if (string.IsNullOrEmpty(direction))
+        {
+            direction = "vertical";
+            if(isDeveloper) accessory.Method.SendChat($"/e [地火警告] 未找到位置{firePosition}的方向记录");
+            return;
+        }
+        
+        // if(isDeveloper) accessory.Method.SendChat($"/e [地火] 地火源{fireSourceId}使用方向: {direction}");
+        
+        int maxSteps = (direction == "vertical") ? 7 : 10;
+        
+        for (int predictStep = 1; predictStep <= 2; predictStep++)
+        {
+            var predictPositions = CalculateStepPositions(firePosition, direction, predictStep);
+            foreach (var predictPos in predictPositions)
+            {
+                var predictDp = accessory.Data.GetDefaultDrawProperties();
+                predictDp.Name = $"深渊爆焰步进{predictStep}预测";
+                predictDp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+                predictDp.Owner = fireSourceId;
+                predictDp.Position = predictPos;
+                predictDp.Scale = new Vector2(5f);
+                predictDp.DestoryAt = 800 * predictStep;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, predictDp);
+            }
+        }
+        
+        for (int step = 1; step <= maxSteps; step++) 
+        {
+            var stepPositions = CalculateStepPositions(firePosition, direction, step);
+            
+            foreach (var stepPos in stepPositions)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"深渊爆焰步进{step}";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+                dp.Owner = fireSourceId;
+                dp.Position = stepPos;
+                dp.Scale = new Vector2(5f);
+                dp.DestoryAt = 1000;
+                dp.Delay = 800 * step;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                
+                for (int predictStep = step + 1; predictStep <= step + 2; predictStep++)
+                {
+                    if (predictStep <= maxSteps)
+                    {
+                        var nextStepPositions = CalculateStepPositions(firePosition, direction, predictStep);
+                        foreach (var nextStepPos in nextStepPositions)
+                        {
+                            var predictDp = accessory.Data.GetDefaultDrawProperties();
+                            predictDp.Name = $"深渊爆焰步进{predictStep}预测";
+                            
+                            float alpha = predictStep == step + 1 ? 0.8f : 0.4f;
+                            predictDp.Color = accessory.Data.DefaultDangerColor.WithW(alpha);
+                            
+                            predictDp.Owner = fireSourceId;
+                            predictDp.Position = nextStepPos;
+                            predictDp.Scale = new Vector2(5f);
+                            predictDp.DestoryAt = 1000;
+                            predictDp.Delay = 800 * step; 
+                            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, predictDp);
+                        }
+                    }
+                }
+            }
+        }
     }
     
     [ScriptMethod(name: "深渊极光 踩塔提示", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:2", "Index:27"])]
