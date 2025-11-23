@@ -25,13 +25,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.5",note: noteStr)]
+    version: "0.0.1.6",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.5:
+        v0.0.1.6:
         朝圣交错路基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -111,6 +111,9 @@ public class Pilgrims_Traverse
     
     [UserSetting(note: "选择自动苏生之炎对象")]
     public RekindleEnum Rekindle { get; set; } = RekindleEnum.TargetsTarget;
+    
+    [UserSetting("深想战喝药提示总开关")]
+    public bool isPotions { get; set; } = true;
     
     [UserSetting("烈焰领域自动防击退（T职除外，底裤防击退需要同时启用底裤选项）")]
     public AutoAntiKnockbackEnum AutoAntiKnockback { get; set; } = AutoAntiKnockbackEnum.None;
@@ -2893,6 +2896,8 @@ public class Pilgrims_Traverse
     private string firstGroupDirection = "vertical";
     private string secondGroupDirection = "horizontal"; 
     private bool resetScheduled = false;
+    
+    // 生成水晶:44115（每次6个）/ 水晶DataId: 2014832 // 每次移动4m, 爆炸间隔 0.8~0.9s
 
     [ScriptMethod(name: "深渊爆焰晶体生成技能", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(44078|44115)"], userControl:false)]
     public void Q40_深渊爆焰晶体生成技能(Event @event, ScriptAccessory accessory)
@@ -3306,8 +3311,28 @@ public class Pilgrims_Traverse
     
     // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
     
-    // 生成水晶:44115（每次6个）/ 水晶读条爆炸:44118 / 水晶DataId: 2014832 // 每次移动4m, 爆炸间隔 0.8~0.9s
+    [ScriptMethod(name: "血量差提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2550"])]
+    public void Q40_血量差提示(Event @event, ScriptAccessory accessory)
+    {
+        string targetName = @event.TargetName();
     
+        var bossNameMapping = new Dictionary<string, string>
+        {
+            { "卓异的悲寂", "暗" },
+            { "Eminent Grief", "暗" },
+            { "エミネントグリーフ", "暗" },
+        
+            { "被侵蚀的食罪灵", "光" },
+            { "devoured eater", "光" },
+            { "侵蝕された罪喰い", "光" }
+        };
+    
+        string displayName = bossNameMapping.ContainsKey(targetName) ? bossNameMapping[targetName] : targetName;
+    
+        // if (isText) accessory.Method.TextInfo($"血量差,打{displayName}", duration: 2000, true);
+        if (isTTS) accessory.Method.TTS($"血量岔,打{displayName}");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"血量岔,打{displayName}");
+    }
 
     [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
     public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
@@ -3437,6 +3462,16 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS($"吃白色，准备踩塔");
     }
     
+    [ScriptMethod(name: "深渊极光 踩塔喝药提示", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:32", "Index:regex:^(2[789]|30)$"],suppress:5000)]
+    public void Q40_深渊极光踩塔喝药提示(Event @event, ScriptAccessory accessory)
+    {
+        // 自身踩塔时，也会有 StatusID 2922 出血状态，但自己不一定是最先踩塔的，所以取用第一个人踩到塔就提示
+        if(!isPotions) return;
+        // if (isText)accessory.Method.TextInfo("喝药", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("喝药");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("喝药");
+    }
+    
     [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
     public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
     {
@@ -3465,6 +3500,14 @@ public class Pilgrims_Traverse
         if (@event.TargetId() != accessory.Data.Me) return; 
         _blackandwhite = 1;
         if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 成功记录黑白配点名");
+    }
+    
+    [ScriptMethod(name: "黑白配 TTS提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^004(D|E)$"])]
+    public void Q40_黑白配TTS提示 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        if (isTTS)accessory.Method.TTS("黑白配");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("黑白配");
     }
 
     [ScriptMethod(name: "黑白配 判定提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:80000026", "Instance:8003EA93"],suppress: 1000)]
@@ -3521,8 +3564,8 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "烈焰锢（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(099|106)$"])]
-    public void Q40_烈焰锢(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "烈焰锢（热病）预备提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(099|106)$"])]
+    public void Q40_烈焰锢预备(Event @event, ScriptAccessory accessory)
     {
         // 本体无意义读条 快: 44099 源: 44100  / 慢: 44106 源:44107 , 其中 源 比 无意义 读条更多 0.7s
         // 烈焰锢 (热病) StatusID: 4562 , 赋予时间约 2.6s
@@ -3538,12 +3581,31 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
+    [ScriptMethod(name: "烈焰锢（热病）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4562"])]
+    public void Q40_烈焰锢(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        if (isTTS) accessory.Method.TTS($"停止移动");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"停止移动");
+    }
+    
     [ScriptMethod(name: "烈焰链 准备提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
     public void Q40_烈焰链_准备提示(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("回中间准备拉线", duration: 2000, true);
-        if (isTTS)accessory.Method.TTS("回中间准备拉线");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("回中间准备拉线");
+        if (isPotions)
+        {
+            var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+            if (isTank) return; // T还要我提醒喝药吗？
+            if (isText)accessory.Method.TextInfo("回中间准备拉线，准备火伤喝药", duration: 3000, true);
+            if (isTTS)accessory.Method.TTS("回中间准备拉线，准备喝药");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("回中间准备拉线，准备喝药");
+        }
+        else
+        {
+            if (isText)accessory.Method.TextInfo("回中间准备拉线", duration: 2000, true);
+            if (isTTS)accessory.Method.TTS("回中间准备拉线");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("回中间准备拉线");
+        }
     }
     
     [ScriptMethod(name: "烈焰链 拉线提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4563"])]
@@ -3603,8 +3665,23 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
+    [ScriptMethod(name: "仆从石像魔 转火提示", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:18672", "Targetable:True"])]
+    public void Q40_仆从石像魔提示(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo("击杀 仆从石像魔", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("击杀小怪");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("击杀小怪");
+    }
+    
     // P2 戒律的光链（职能debuff）→ 烈焰领域（引导牢笼连线 +吸引） → 引导三连黄圈 → 尾连击（死刑塔 + 斜线AOE） → 黑暗神圣（AOE+DOT）→ 尾连击（死刑塔 + 斜线AOE）
     // → 深渊爆焰（存储地火）+ 引导三连黄圈 → 净罪之环（抓人牢笼）+黑白配 → 地火判定
+    [ScriptMethod(name: "戒律的光链（职能debuff）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44801"])]
+    public void Q40_戒律的光链提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo("职能debuff站位，准备刷新光暗", duration: 4000, true);
+        if (isTTS) accessory.Method.TTS($"职能debuff站位");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"职能debuff站位");
+    }
     
     [ScriptMethod(name: "戒律的光链：恢复 [奶妈治疗热风]", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4564"])]
     public void Q40_戒律的光链_恢复 (Event @event, ScriptAccessory accessory)
@@ -3644,9 +3721,9 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "烈焰领域（吸引）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
     public void Q40_烈焰领域提示(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("吸引，坦克最远引导连线", duration: 5000, true);
-        if (isTTS) accessory.Method.TTS($"吸引");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"吸引");
+        if (isText)accessory.Method.TextInfo("吸引，刷新buff，坦克最远引导连线", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS($"吸引，刷新buff");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"吸引，刷新buff");
     }
     
     [ScriptMethod(name: "烈焰领域（吸引）自动防击退 [T职以外]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
@@ -3711,16 +3788,59 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
+    [ScriptMethod(name: "地火喷发（三连引导）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44156"])]
+    public void Q40_地火喷发 (Event @event, ScriptAccessory accessory)
+    {
+        var myObject = accessory.Data.MyObject;
+        if (myObject == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"Q40_地火喷发";
+        if (IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11D4) ||
+            IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11D5))
+        {
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(1.6f);
+        }
+        else
+        {
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        }
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "立体魔法阵 转火提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18676"],suppress:1000)]
+    public void Q40_立体魔法阵提示(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo("攻击 立体魔法阵", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS("攻击魔法阵");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("攻击魔法阵");
+    }
+    
     [ScriptMethod(name: "黑暗神圣（AOE）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44164"])]
     public void Q40_黑暗神圣提示(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo("流血AOE", duration: 6000, true);
-        if (isTTS) accessory.Method.TTS($"流雪AOE");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"流雪AOE");
+        if (isPotions)
+        {
+            var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+            if (isTank) return; // T还要我提醒喝药吗？
+            if (isTTS)accessory.Method.TTS("流雪AOE，喝药");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("流雪AOE，喝药");
+        }
+        else
+        {
+            if (isTTS)accessory.Method.TTS("流雪AOE");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("流雪AOE");
+        }
     }
     
     // P3 罪与罚（传毒） [第一次] 光耀之剑（直线）+ 烈焰锢 / 火球 → [第二次] 棘刺尾（挡枪分摊 + 小怪） → 净罪之环（抓人牢狱）+ 拉线+十字火
     // → [第三次] 深渊爆焰 存储地火 + 黑白配 → 以太吸取（buff检测）+ 地火判定 → 黑暗神圣（AOE+DOT）
+    // 一传同组 → 二传同职能 → 三传同组  [ T & D1 为一组；H & D2 为一组 ]
+    // 一传：[辣翅辣尾后] 有毒在[场中右上]光地板里，接毒在旁边 ； 二传：直线分摊后同职能原地传，其它人躲开 ； 三传：黑白配站位直接传
     
     [ScriptMethod(name: "罪与罚（传毒）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44165"])]
     public void Q40_罪与罚提示(Event @event, ScriptAccessory accessory)
@@ -3813,10 +3933,7 @@ public class Pilgrims_Traverse
         };
         
         var myObject = accessory.Data.MyObject;
-        if (myObject == null)
-        { 
-            return;
-        }
+        if (myObject == null) return;
     
         if (!IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11D7))
         {
@@ -3834,13 +3951,14 @@ public class Pilgrims_Traverse
 
     
     // P4 烈焰缠身 → 深渊爆焰（存储地火）
+    // 1合法（田园郡）优点：近战不丢输出  ；2合双X法 优点：近战不丢输出 ；2合单X法 缺点：近战丢输出且对DPS要求更高 ； 3合法 优点：总伤更低
     
     [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170"])]
     public void Q40_烈焰缠身提示(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("火人阶段就位", duration: 3000, true);
-        if (isTTS) accessory.Method.TTS($"火人阶段就位");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位");
+        if (isText)accessory.Method.TextInfo("火人阶段就位，刷新buff，保持喝药", duration: 3000, true);
+        if (isTTS) accessory.Method.TTS($"火人阶段就位，刷新buff");
+        if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位，刷新buff");
     }
     
     [ScriptMethod(name: "自爆（火人爆炸）TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44171"])]
