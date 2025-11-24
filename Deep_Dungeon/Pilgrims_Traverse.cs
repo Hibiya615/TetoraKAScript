@@ -25,14 +25,14 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.6",note: noteStr)]
+    version: "0.0.1.7",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.6:
-        朝圣交错路基础绘制
+        v0.0.1.7:
+        朝圣交错路 (Pilgrim's Traverse) 基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         """;
@@ -254,7 +254,7 @@ public class Pilgrims_Traverse
     #endregion
     
     // 通用内容
-    [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44852"])]
+    [ScriptMethod(name: "拟态怪_怨念提示 / Mimics Malice Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44852"])]
     public void 拟态怪_怨念(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2000, true);
@@ -264,10 +264,10 @@ public class Pilgrims_Traverse
     
     #region 小工具部分
     
-    [ScriptMethod(name: "—————— 小工具部分（先自行关闭不需要的功能） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 小工具部分（先自行关闭不需要的功能） / Tools ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 小工具部分(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "自身爆弹之母 大爆炸范围绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44629"])]
+    [ScriptMethod(name: "自身爆弹之母 大爆炸范围绘制 / Immolation Big Burst Draw", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44629"])]
     public void 爆弹之母_大爆炸Self (Event @event, ScriptAccessory accessory)
     {
         if(!isMiniTools) return;
@@ -281,7 +281,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "传送装置查找", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014756", "Operate:Add"])]
+    [ScriptMethod(name: "传送装置查找 / Teleportation Construct Finder", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014756", "Operate:Add"])]
     public void 传送装置查找(Event @event, ScriptAccessory accessory)
     {
         if(!isMiniTools) return;
@@ -296,7 +296,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp); 
     }
     
-    [ScriptMethod(name: "光耀烛台查找", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014759", "Operate:Add"])]
+    [ScriptMethod(name: "光耀烛台查找 / Votive Candelabra Finder", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014759", "Operate:Add"])]
     public void 光耀烛台查找(Event @event, ScriptAccessory accessory)
     {
         if(!isMiniTools) return;
@@ -343,7 +343,7 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "自动取消二段火神冲（防止遁地打不到导致自动循环卡死）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4403"])]
+    [ScriptMethod(name: "自动取消二段火神冲（防止遁地打不到导致自动循环卡死）/ AutoRemove CrimsonStrike", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4403"])]
     public void AutoRemoveCrimsonStrike(Event @event, ScriptAccessory accessory)
     {
         if(!isMiniTools || @event.TargetId() != accessory.Data.Me) return;
@@ -351,7 +351,7 @@ public class Pilgrims_Traverse
         if (isDeveloper) accessory.Method.SendChat($"/e 鸭鸭：已取消《深红强袭预备》");
     }
     
-    [ScriptMethod(name: "自动尝试挂不死鸟热水（遁地了也很team）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1868"])]
+    [ScriptMethod(name: "自动尝试挂不死鸟热水（遁地了也很team）/ TryAutoUse Rekindle", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1868"])]
     public void AutoUseRekindle(Event @event, ScriptAccessory accessory)
     {
         string rekindleValue = Rekindle.GetDescription();
@@ -367,7 +367,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 1 ~ 10 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第1层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "1~2 交错路石莲猬_飞叶快刀（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44631"])]
+    [ScriptMethod(name: "1~2 交错路石莲猬_飞叶快刀（直线）/ Leafcutter", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44631"])]
     public void 交错路石莲猬_飞叶快刀(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -380,7 +380,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "1~3 交错路草小人_草风（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44641"])]
+    [ScriptMethod(name: "1~3 交错路草小人_草风（直线）/ Rustling Wind", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44641"])]
     public void 交错路草小人_草风(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -393,7 +393,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "6~7 交错路杀人蜂_未终针（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44637"])]
+    [ScriptMethod(name: "6~7 交错路杀人蜂_未终针（直线）/ Unfinal Sting", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44637"])]
     public void 交错路杀人蜂_未终针(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -406,7 +406,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "6~9 交错路铁线莲_旋转攻击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44638"])]
+    [ScriptMethod(name: "6~9 交错路铁线莲_旋转攻击（直线）/ Spinning Attack", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44638"])]
     public void 交错路铁线莲_旋转攻击(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -419,7 +419,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
         
-    [ScriptMethod(name: "10 花小人_百花齐放（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44855"])]
+    [ScriptMethod(name: "10 花小人_百花齐放（钢铁）/ Hedge Mazing", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44855"])]
     public void 花小人_百花齐放 (Event @event, ScriptAccessory accessory)
     {
         // 44054 为无意义读条 (应是黄圈生成的过程), 伤害源为 44855 二者读条时间不同
@@ -443,7 +443,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "10 花人_压花（跳跃钢铁）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44058"])]
+    [ScriptMethod(name: "10 花人_压花（跳跃钢铁）/ Leafmash", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44058"])]
     public void 花人_压花 (Event @event, ScriptAccessory accessory)
     {
         // 花人本体读条 [ ActionId: 44055 ; Cast 9.7s] ,四连跳跃标记为 [ ActionId: 44058 ] 约在释放后 8.9s 造成伤害 每次间隔约 1.8s, 伤害源 [ ActionId: 44057 ; Cast 1.6s]
@@ -478,7 +478,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 11 ~ 20 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第11层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "11~12 交错路帕克_拍手（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44657"])]
+    [ScriptMethod(name: "11~12 交错路帕克_拍手（直线）/ Ovation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44657"])]
     public void 交错路帕克_拍手(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -491,7 +491,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "11~12 得到宽恕的无知_蛛网屏（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44646"])]
+    [ScriptMethod(name: "11~12 得到宽恕的无知_蛛网屏（直线）/ Silkscreen", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44646"])]
     public void 得到宽恕的无知_蛛网屏(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -504,7 +504,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "16~17 得到宽恕的违命_冲顶（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44651"])]
+    [ScriptMethod(name: "16~17 得到宽恕的违命_冲顶（直线）/ Head Butt", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44651"])]
     public void 得到宽恕的违命_冲顶(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -517,7 +517,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "20 得到宽恕的模仿_爆炸（四连钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4345[6-9]$"])]
+    [ScriptMethod(name: "20 得到宽恕的模仿_爆炸（四连钢铁）/ Burst", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4345[6-9]$"])]
     public void 得到宽恕的模仿_爆炸 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -549,7 +549,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "20 树根_缠绕（冰花）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014795", "Operate:Add"])]
+    [ScriptMethod(name: "20 树根_缠绕（冰花）/ Wood's Embrace", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2014795", "Operate:Add"])]
     public void 树根_缠绕(Event @event, ScriptAccessory accessory)
     {
         // 放置的头标点名 TargetIconId: 0017 , 缠绕 ActionId: 43462 
@@ -574,7 +574,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第21层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "21~23 得到宽恕的贿赂_以太火花（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44680"])]
+    [ScriptMethod(name: "21~23 得到宽恕的贿赂_以太火花（直线）/ Aetherial Spark", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44680"])]
     public void 得到宽恕的贿赂_以太火花(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -587,14 +587,14 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "24~25 交错路冰海天使_捕食行动 死刑提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44681"])]
+    [ScriptMethod(name: "24~25 交错路冰海天使_捕食行动 死刑提示 / Parasitism TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44681"])]
     public void 交错路冰海天使_捕食行动(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("眩晕冰海天使死刑");
         if (isEdgeTTS)accessory.Method.EdgeTTS("眩晕冰海天使死刑");
     }
     
-    [ScriptMethod(name: "26~29 得到宽恕的残忍_流明无限（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44668"])]
+    [ScriptMethod(name: "26~29 得到宽恕的残忍_流明无限（直线）/ Lumen Infinitum", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44668"])]
     public void 得到宽恕的残忍_流明无限(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -607,7 +607,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "26~27 得到宽恕的奢望_撕裂利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44669"])]
+    [ScriptMethod(name: "26~27 得到宽恕的奢望_撕裂利爪（顺劈）/ Ripper Claw", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44669"])]
     public void 得到宽恕的奢望_撕裂利爪(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -620,7 +620,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "28~29 得到宽恕的狭隘_灾厄之语（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44683"])]
+    [ScriptMethod(name: "28~29 得到宽恕的狭隘_灾厄之语（直线）/ Words of Woe", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44683"])]
     public void 得到宽恕的狭隘_灾厄之语(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -633,7 +633,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "28~29 得到宽恕的狭隘_重击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44684"])]
+    [ScriptMethod(name: "28~29 得到宽恕的狭隘_重击（钢铁）/ Swinge", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44684"])]
     public void 得到宽恕的狭隘_重击 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -645,7 +645,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "28~29 交错路魔像_巨像之光（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44675"])]
+    [ScriptMethod(name: "28~29 交错路魔像_巨像之光（穿墙直线）/ Stonelight", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44675"])]
     public void 交错路魔像_巨像之光(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -658,7 +658,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "30 得到宽恕的背信_光耀颂词 光轮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^39(642|643|674|743)$"])]
+    [ScriptMethod(name: "30 得到宽恕的背信_光耀颂词 光轮（月环）/ Brutal Halo", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^39(642|643|674|743)$"])]
     public void 得到宽恕的背信_光耀颂词_光轮 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -692,7 +692,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "30 得到宽恕的背信_救赎圣拳（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40401|40549)$"])]
+    [ScriptMethod(name: "30 得到宽恕的背信_救赎圣拳（左右刀）/ Grip of Salvation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(40401|40549)$"])]
     public void 得到宽恕的背信_救赎圣拳(Event @event, ScriptAccessory accessory)
     {
         // 右刀 无意义 40401 伤害源 40551 接左刀 救赎圣臂 40552 ； 左刀 40549  接右刀 救赎圣臂 40553
@@ -718,7 +718,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1); 
     }
     
-    [ScriptMethod(name: "30 恕罪圣环（旋转圆形）", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7750", "SourceDataId:17930"])]
+    [ScriptMethod(name: "30 恕罪圣环（旋转圆形）/ Bounds of Indulgence", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:7750", "SourceDataId:17930"])]
     public void 得到宽恕的背信_恕罪圣环 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -750,7 +750,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 31 ~ 40 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第31层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "31~33 交错路天马_天马嘶啸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44703"])]
+    [ScriptMethod(name: "31~33 交错路天马_天马嘶啸（钢铁）/ Nicker", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44703"])]
     public void 交错路天马_天马嘶啸 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -762,7 +762,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "32~35 交错路飞翼兽_高山气流（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44700"])]
+    [ScriptMethod(name: "32~35 交错路飞翼兽_高山气流（直线）/ Alpine Draft", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44700"])]
     public void 交错路飞翼兽_高山气流(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -775,7 +775,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "36~38 交错路判官_葬送击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44694"])]
+    [ScriptMethod(name: "36~38 交错路判官_葬送击（直线）/ Death's Door", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44694"])]
     public void 交错路判官_葬送击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -787,7 +787,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "36~39 得到宽恕的疫病_双重毒粉（二段扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41344"])]
+    [ScriptMethod(name: "36~39 得到宽恕的疫病_双重毒粉（二段扫尾）/ Poison Pollen Pair", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41344"])]
     public void 得到宽恕的疫病_双重毒粉(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -802,7 +802,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "36~39 交错路石兵_冲波炮（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40891"])]
+    [ScriptMethod(name: "36~39 交错路石兵_冲波炮（直线）/ Line of Fire", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40891"])]
     public void 交错路石兵_冲波炮(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -816,7 +816,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "36~39 交错路石兵_爆发拳（二段钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40558"])]
+    [ScriptMethod(name: "36~39 交错路石兵_爆发拳（二段钢铁）/ Buster Knuckles", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40558"])]
     public void 交错路石兵_爆发拳 (Event @event, ScriptAccessory accessory)
     {
         // 在 重拳波 [ActionId:40558 / 3.7s] 4s后 显示第2段钢铁  两次判定间隔约2s
@@ -830,7 +830,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "37~39 得到宽恕的暴躁_左/右触手（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4469[01]$"])]
+    [ScriptMethod(name: "37~39 得到宽恕的暴躁_左/右触手（左右刀）/ Left & Right Tentacle", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4469[01]$"])]
     public void 得到宽恕的暴躁_左右触手(Event @event, ScriptAccessory accessory)
     {
         // 右刀 44691 ； 左刀 44690
@@ -847,7 +847,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "40 得到宽恕的天真_祝圣吹息 播报", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4212[34]$"])]
+    [ScriptMethod(name: "40 得到宽恕的天真_祝圣吹息 播报 / Blown Blessing TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4212[34]$"])]
     public void 得到宽恕的天真_祝圣吹息 (Event @event, ScriptAccessory accessory)
     {
         if (@event.ActionId == 42123)
@@ -864,7 +864,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "40 得到宽恕的天真_光水弹（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42129"])]
+    [ScriptMethod(name: "40 得到宽恕的天真_光水弹（钢铁）/ Shining Shot", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42129"])]
     public void 得到宽恕的天真_光水弹 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -878,7 +878,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "40 得到宽恕的天真_震水弹（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42128"])]
+    [ScriptMethod(name: "40 得到宽恕的天真_震水弹（击退）/ Saltwater Shot", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42128"])]
     public void 得到宽恕的天真_震水弹击退(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -893,7 +893,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "40 得到宽恕的天真_震水弹（第一次击退位置）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42128", "SourceDataId:18467"], suppress:9700)]
+    [ScriptMethod(name: "40 得到宽恕的天真_震水弹（第一次击退位置）/ Saltwater Shot FirstReference", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42128", "SourceDataId:18467"], suppress:9700)]
     public void 得到宽恕的天真_震水弹击退位置(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -907,7 +907,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "40 得到宽恕的天真_圆浪（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45169"])]
+    [ScriptMethod(name: "40 得到宽恕的天真_圆浪（钢铁）/ Near Tide", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45169"])]
     public void 得到宽恕的天真_圆浪 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -919,7 +919,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "40 得到宽恕的天真_环浪（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45170"])]
+    [ScriptMethod(name: "40 得到宽恕的天真_环浪（月环）/ Far Tide", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45170"])]
     public void 得到宽恕的天真_环浪 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -946,7 +946,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 41 ~ 50 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第41层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "42~45 交错路兵装_愤怒一击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44714"])]
+    [ScriptMethod(name: "42~45 交错路兵装_愤怒一击（直线）/ Smite of Rage", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44714"])]
     public void 交错路兵装_愤怒一击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -959,7 +959,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "42~45 交错路兵装_愤怒旋风（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44715"])]
+    [ScriptMethod(name: "42~45 交错路兵装_愤怒旋风（钢铁）/ Whirl of Rage", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44715"])]
     public void 交错路兵装_愤怒旋风 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -971,7 +971,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "43~46 交错路托尔巴龟_龟足踏（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41724"])]
+    [ScriptMethod(name: "43~46 交错路托尔巴龟_龟足踏（钢铁）/ Tortoise Stomp", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41724"])]
     public void 交错路托尔巴龟_龟足踏 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -983,7 +983,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "46~49 交错路塑像_吸引震动（吸引）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41427"])]
+    [ScriptMethod(name: "46~49 交错路塑像_吸引震动（吸引）/ Magnetic Shock", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41427"])]
     public void 交错路塑像_吸引震动 (Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("吸引");
@@ -1008,7 +1008,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "46~49 交错路塑像_平原震裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41512"])]
+    [ScriptMethod(name: "46~49 交错路塑像_平原震裂（钢铁）/ Plaincracker", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41512"])]
     public void 交错路塑像_平原震裂 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1020,7 +1020,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "46~49 交错路三尖树_双重藤枝伏地（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41854"])]
+    [ScriptMethod(name: "46~49 交错路三尖树_双重藤枝伏地（扫尾）/ Creeping Combination", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:41854"])]
     public void 交错路三尖树_双重藤枝伏地(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1034,7 +1034,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "47~49 交错路蚁狮_二连行军（往返直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4470[89]$"])]
+    [ScriptMethod(name: "47~49 交错路蚁狮_二连行军（往返直线）/ One-two March", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4470[89]$"])]
     public void 交错路蚁狮_二连行军(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1063,7 +1063,7 @@ public class Pilgrims_Traverse
     
     // 50 BOSS 奥格布那巴利
     
-    [ScriptMethod(name: "50 奥格布那巴利_地面液化 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43531"])]
+    [ScriptMethod(name: "50 奥格布那巴利_地面液化 提示 / Liquefaction Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43531"])]
     public void 奥格布那巴利_地面液化(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("站在石头上", duration: 2000, true);
@@ -1071,7 +1071,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("站在石头上");
     }
     
-    [ScriptMethod(name: "50 奥格布那巴利_进沙坑 点名提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0280"])]
+    [ScriptMethod(name: "50 奥格布那巴利_进沙坑 点名提示 / Sandpit Tip", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0280"])]
     public void 奥格布那巴利_进沙坑点名(Event @event, ScriptAccessory accessory)
     {
         // 进沙坑 ActionId: 43533
@@ -1090,7 +1090,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "50 奥格布那巴利_破坑而出（首次追踪）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43534"])]
+    [ScriptMethod(name: "50 奥格布那巴利_破坑而出（首次追踪）/ Pit Ambush First", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43534"])]
     public void 奥格布那巴利_破坑而出 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1103,7 +1103,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "50 奥格布那巴利_冽风 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43537"])]
+    [ScriptMethod(name: "50 奥格布那巴利_冽风 提示 / Windraiser Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43537"])]
     public void 奥格布那巴利_冽风(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("稍后进流沙躲避击退\n(防击退无效)", duration: 3000, true);
@@ -1118,7 +1118,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "50 奥格布那巴利_烈风 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43538"])]
+    [ScriptMethod(name: "50 奥格布那巴利_烈风 提示 / Biting Wind Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43538"])]
     public async void 奥格布那巴利_烈风(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("击退倒计时", duration: 7000, false);
@@ -1133,7 +1133,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "53~56 交错路巨蜥_火鳞甲 读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42212"])]
+    [ScriptMethod(name: "53~56 交错路巨蜥_火鳞甲 读条提示 / Smoldering Scales Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42212"])]
     public void 交错路巨蜥_火鳞甲(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("巨蜥反伤");
@@ -1150,7 +1150,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "53~56 交错路巨蜥_火棘屏障 反伤提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4579"])]
+    [ScriptMethod(name: "53~56 交错路巨蜥_火棘屏障 反伤提示 / Blaze Spikes Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4579"])]
     public void 交错路巨蜥_火棘屏障(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1170,7 +1170,7 @@ public class Pilgrims_Traverse
         accessory.Method.RemoveDraw($"交错路巨蜥_火棘屏障{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "56~59 交错路沙地巨蟒_大地钻击（270°顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42091"])]
+    [ScriptMethod(name: "56~59 交错路沙地巨蟒_大地钻击（270°顺劈）/ Earthen Auger", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42091"])]
     public void 交错路沙地巨蟒_大地钻击 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1183,7 +1183,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "56~59 交错路巨人_蛮力金刚臂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44737"])]
+    [ScriptMethod(name: "56~59 交错路巨人_蛮力金刚臂（钢铁）/ Heavy Scrapline", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44737"])]
     public void 交错路巨人_蛮力金刚臂 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1195,7 +1195,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "57~59 交错路怒嚎_高速撞击（直线冲锋）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44730"])]
+    [ScriptMethod(name: "57~59 交错路怒嚎_高速撞击（直线冲锋）/ Barreling Smash", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44730"])]
     public void 交错路怒嚎_高速撞击(Event @event, ScriptAccessory accessory)
     {
         if (!isUnderGround) return;
@@ -1208,7 +1208,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "57~59 交错路怒嚎_尾镰（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44731"])]
+    [ScriptMethod(name: "57~59 交错路怒嚎_尾镰（钢铁）/ Scythe Tail", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44731"])]
     public void 交错路怒嚎_尾镰 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1220,7 +1220,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "57~59 交错路怒嚎_外环雷（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44732"])]
+    [ScriptMethod(name: "57~59 交错路怒嚎_外环雷（月环）/ Master of Levin", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44732"])]
     public void 交错路怒嚎_外环雷(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1234,7 +1234,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "57~59 交错路美甲兽_飞散性惑乱花粉块（精神失常）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42144"])]
+    [ScriptMethod(name: "57~59 交错路美甲兽_飞散性惑乱花粉块（精神失常）/ Bafflement Bulb", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42144"])]
     public void 交错路美甲兽_飞散性惑乱花粉块 (Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("打断美甲兽目押 （无任何抗性）", duration: 4300, true);
@@ -1260,7 +1260,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "57~59 交错路美甲兽_呵斥（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42147"])]
+    [ScriptMethod(name: "57~59 交错路美甲兽_呵斥（顺劈）/ Trounce", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42147"])]
     public void 交错路美甲兽_呵斥(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1273,7 +1273,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "57~59 交错路美甲兽_迅猛回旋（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42148"])]
+    [ScriptMethod(name: "57~59 交错路美甲兽_迅猛回旋（钢铁）/ Mighty Spin", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42148"])]
     public void 交错路美甲兽_迅猛回旋 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1289,7 +1289,7 @@ public class Pilgrims_Traverse
     
     #region 60 BOSS 始祖马利克巨人掌
     
-    [ScriptMethod(name: "60 始祖马利克巨人掌_飞针射击（前后扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44866"])]
+    [ScriptMethod(name: "60 始祖马利克巨人掌_飞针射击（前后扇形）/ Spineshot", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44866"])]
     public void 始祖马利克巨人掌_飞针射击 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1309,7 +1309,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "60 始祖马利克巨人掌_飞针回旋（旋转扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44868"])]
+    [ScriptMethod(name: "60 始祖马利克巨人掌_飞针回旋（旋转扇形）/ Spinning Needles", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44868"])]
     public void 始祖马利克巨人掌_飞针回旋 (Event @event, ScriptAccessory accessory)
     {
         // 飞针回旋 [ ActionId: 44868 - Cast: 4.7s ] ; 共判定 10 次，每次旋转 60° , 间隔约 1s , 伤害来源 ActionId: 44909 ；
@@ -1331,7 +1331,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "60 始祖马利克巨人掌_分株（仙人掌方形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4485[89]$"])]
+    [ScriptMethod(name: "60 始祖马利克巨人掌_分株（仙人掌方形）/ Branch Out", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4485[89]$"])]
     public void 始祖马利克巨人掌_分株(Event @event, ScriptAccessory accessory)
     {
         // 本体读条: 44857
@@ -1352,7 +1352,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 61 ~ 70 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "61~64 得到宽恕的疑念 潜伏透视", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18832"])]
+    [ScriptMethod(name: "61~64 得到宽恕的疑念 潜伏透视 / Concealed Forgiven Doubt", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18832"])]
     public void 得到宽恕的疑念_潜伏 (Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
@@ -1367,7 +1367,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "61~64 得到宽恕的疑念 潜伏面向", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18832"])]
+    [ScriptMethod(name: "61~64 得到宽恕的疑念 潜伏面向 / Forgiven Doubt Face", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18832"])]
     public void 得到宽恕的疑念_潜伏面向 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1393,7 +1393,7 @@ public class Pilgrims_Traverse
         accessory.Method.RemoveDraw($"得到宽恕的疑念_潜伏.*{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "61~69 交错路塔罗斯_执行贯穿（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
+    [ScriptMethod(name: "61~69 交错路塔罗斯_执行贯穿（钢铁）/ Accelerate", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
     public void 交错路塔罗斯_执行贯穿 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1405,7 +1405,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "61~69 交错路塔罗斯_地层俯冲（二段月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
+    [ScriptMethod(name: "61~69 交错路塔罗斯_地层俯冲（二段月环）/ Subduction", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42516"])]
     public void 交错路塔罗斯_地层俯冲 (Event @event, ScriptAccessory accessory)
     {
         // 在 执行贯穿 [ActionId:42516 / 3.7s] 4s后 显示第2段月环  两次判定间隔约3.1s
@@ -1421,7 +1421,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "61~64 得到宽恕的疑念_躯体重压（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44748"])]
+    [ScriptMethod(name: "61~64 得到宽恕的疑念_躯体重压（钢铁）/ Body Press", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44748"])]
     public void 得到宽恕的疑念_躯体重压 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1433,7 +1433,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "61~63 交错路诺姆_平地捶打（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44753"])]
+    [ScriptMethod(name: "61~63 交错路诺姆_平地捶打（钢铁）/ Plain Pound", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44753"])]
     public void 交错路诺姆_平地捶打 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1445,7 +1445,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "61~63 交错路壁崖鼹鼠_冲顶（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44740"])]
+    [ScriptMethod(name: "61~63 交错路壁崖鼹鼠_冲顶（顺劈）/ Head Butt", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44740"])]
     public void 交错路壁崖鼹鼠_冲顶(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1458,7 +1458,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "62~65 得到宽恕的暴动_左/右侧震荡波（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
+    [ScriptMethod(name: "62~65 得到宽恕的暴动_左/右侧震荡波（二连左右刀）/ Shockwave", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4221[46]$"])]
     public void 得到宽恕的暴动_左右侧震荡波(Event @event, ScriptAccessory accessory)
     {
         // 先右刀 42214 ； 先左刀 42216
@@ -1486,7 +1486,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
     }
     
-    [ScriptMethod(name: "63~66 得到宽恕的怨恨_冰雹发射（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42515"])]
+    [ScriptMethod(name: "63~66 得到宽恕的怨恨_冰雹发射（直线）/ Hailfire", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42515"])]
     public void 得到宽恕的怨恨_冰雹发射(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1499,7 +1499,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "64~66 得到宽恕的不公_岩石崩溃（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44743"])]
+    [ScriptMethod(name: "64~66 得到宽恕的不公_岩石崩溃（十字）/ Rockslide", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44743"])]
     public void 得到宽恕的不公_岩石崩溃(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1518,7 +1518,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "65~67 得到宽恕的依恋_臭水（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4475[01]$"])]
+    [ScriptMethod(name: "65~67 得到宽恕的依恋_臭水（前后刀）/ Sewer Water", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4475[01]$"])]
     public void 得到宽恕的依恋_臭水(Event @event, ScriptAccessory accessory)
     {
         // 前刀 44750 ； 后刀 44751
@@ -1535,7 +1535,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "65~68 交错路蜂后_未终针（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42510"])]
+    [ScriptMethod(name: "65~68 交错路蜂后_未终针（直线）/ Unfinal Sting", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42510"])]
     public void 交错路蜂后_未终针(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1548,7 +1548,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "66~69 得到宽恕的主见_几千针刺（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42220"])]
+    [ScriptMethod(name: "66~69 得到宽恕的主见_几千针刺（直线）/ Several Thousand Needles", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42220"])]
     public void 得到宽恕的主见_几千针刺(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1561,7 +1561,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "67~69 交错路恩戈齐_泥石流（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44755"])]
+    [ScriptMethod(name: "67~69 交错路恩戈齐_泥石流（顺劈）/ Landslip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44755"])]
     public void 交错路恩戈齐_泥石流(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1574,7 +1574,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "67~69 得到宽恕的贪食_石化凝视（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44746"])]
+    [ScriptMethod(name: "67~69 得到宽恕的贪食_石化凝视（顺劈）/ Stone Gaze", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44746"])]
     public void 得到宽恕的贪食_石化凝视 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1587,7 +1587,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "67~69 得到宽恕的贪食_猛撞（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44747"])]
+    [ScriptMethod(name: "67~69 得到宽恕的贪食_猛撞（钢铁）/ Body Slam", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44747"])]
     public void 得到宽恕的贪食_猛撞 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1601,7 +1601,7 @@ public class Pilgrims_Traverse
     
     // 70 BOSS 得到宽恕的热忱
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_热忱怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11)$"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_热忱怒视（直线）/ Zealous Glower", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(06|11)$"])]
     public void 得到宽恕的热忱_热忱怒视(Event @event, ScriptAccessory accessory)
     {
         // 两个 ActionId对应 从近到远 (43406) / 从远到近 (43411) 为本体无意义读条，之后连续4个id为接下来的分段伤害
@@ -1619,7 +1619,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_月环安全区预测", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(07|12|18|23)$"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_月环安全区预测 / Dount Safe Predict", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(07|12|18|23)$"])]
     public void 得到宽恕的热忱_月环安全区预测 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1680,7 +1680,7 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环安全区）/ Brutal Halo Safe Extent", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
     public void 得到宽恕的热忱_光球_光轮安全区 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1704,7 +1704,7 @@ public class Pilgrims_Traverse
     }
     
     /*
-    [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_光球 光轮（月环）/ Brutal Halo ", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43417"])]
     public void 得到宽恕的热忱_光球 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1719,7 +1719,7 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_热忱之眼（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(18|23)$"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_热忱之眼（月环）/ Ardorous Eye", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^434(18|23)$"])]
     public void 得到宽恕的热忱_热忱之眼 (Event @event, ScriptAccessory accessory)
     {
         // 两个技能id对应 从左顺时针 (43418) / 从右逆时针 (43423)
@@ -1740,7 +1740,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_二千迈纳回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43429"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_二千迈纳回转（钢铁）/ 2000-mina swing", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43429"])]
     public void 得到宽恕的热忱_二千迈纳回转 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1752,7 +1752,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_吼叫（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43431"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_吼叫（击退）/ Disorienting Groan Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43431"])]
     public void 得到宽恕的热忱_吼叫(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("中间击退（防击退有效）", duration: 6000, true);
@@ -1760,7 +1760,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("击退");
     }
     
-    [ScriptMethod(name: "70 得到宽恕的热忱_八重横扫（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43432"])]
+    [ScriptMethod(name: "70 得到宽恕的热忱_八重横扫（扇形）/ Octuple Swipe", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43432"])]
     public void 得到宽恕的热忱_八重横扫(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1781,7 +1781,7 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "—————— 71 ~ 80 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第71层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "71~74 交错路爆岩怪_炸裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42770"])]
+    [ScriptMethod(name: "71~74 交错路爆岩怪_炸裂（钢铁）/ Fracture", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42770"])]
     public void 交错路爆岩怪_炸裂 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1793,7 +1793,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "71~74 交错路爆岩怪_自爆（距离衰减）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42771"])]
+    [ScriptMethod(name: "71~74 交错路爆岩怪_自爆（距离衰减）/ Self-destruct", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42771"])]
     public void 交错路爆岩怪_自爆 (Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("远离自爆（距离衰减）", duration: 4000, true);
@@ -1819,7 +1819,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
     }
     
-    [ScriptMethod(name: "71~74 得到宽恕的怀疑_砂砾雨（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44763"])]
+    [ScriptMethod(name: "71~74 得到宽恕的怀疑_砂砾雨（直线）/ Gravel Shower", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44763"])]
     public void 得到宽恕的怀疑_砂砾雨(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1832,7 +1832,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "71~73 交错路铰颌蚁_喷沙（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44769"])]
+    [ScriptMethod(name: "71~73 交错路铰颌蚁_喷沙（顺劈）/ Sandblast", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44769"])]
     public void 交错路铰颌蚁_喷沙(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1845,7 +1845,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "72~75 得到宽恕的恶意_双水流（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(42578|42748)$"])]
+    [ScriptMethod(name: "72~75 得到宽恕的恶意_双水流（钢铁月环）/ Ablution", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(42578|42748)$"])]
     public void 得到宽恕的恶意_双水流 (Event @event, ScriptAccessory accessory)
     {
         // 先钢铁: 42578  ; 先月环: 42748
@@ -1885,7 +1885,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "73~76 得到宽恕的傲慢_连踢（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44759"])]
+    [ScriptMethod(name: "73~76 得到宽恕的傲慢_连踢（顺劈）/ Hail of Heels", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44759"])]
     public void 得到宽恕的傲慢_连踢(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1898,7 +1898,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "74~76 交错路巨虫_地震（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44767"])]
+    [ScriptMethod(name: "74~76 交错路巨虫_地震（钢铁）/ Earthquake", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44767"])]
     public void 交错路巨虫_地震 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1910,7 +1910,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "75~77 交错路阿米特_推翻（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44765"])]
+    [ScriptMethod(name: "75~77 交错路阿米特_推翻（钢铁）/ Topple", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44765"])]
     public void 交错路阿米特_推翻 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1922,7 +1922,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "75~78 得到宽恕的争执_呵斥（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42522"])]
+    [ScriptMethod(name: "75~78 得到宽恕的争执_呵斥（顺劈）/ Trounce", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42522"])]
     public void 得到宽恕的争执_呵斥(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1935,7 +1935,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "75~78 得到宽恕的争执_迅猛回旋（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42520"])]
+    [ScriptMethod(name: "75~78 得到宽恕的争执_迅猛回旋（钢铁）/ Mighty Spin", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42520"])]
     public void 得到宽恕的争执_迅猛回旋 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1947,7 +1947,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "76~79得到宽恕的腐败_旋转火力（脱战大钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42523"])]
+    [ScriptMethod(name: "76~79得到宽恕的腐败_旋转火力（脱战大钢铁）/ Rolling Barrage", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42523"])]
     public void 得到宽恕的腐败_旋转火力 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1970,7 +1970,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "76~79 得到宽恕的腐败_正面火力（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42577"])]
+    [ScriptMethod(name: "76~79 得到宽恕的腐败_正面火力（顺劈）/ Forward Barrage", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42577"])]
     public void 得到宽恕的腐败_正面火力(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1983,7 +1983,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "77~79 得到宽恕的诋毁_造山风暴（点名圆形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44762"])]
+    [ScriptMethod(name: "77~79 得到宽恕的诋毁_造山风暴（点名圆形）/ Orogenic Storm", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44762"])]
     public void 得到宽恕的诋毁_造山风暴(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1995,7 +1995,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "77~79 得到宽恕的诋毁_变质岩波（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44761"])]
+    [ScriptMethod(name: "77~79 得到宽恕的诋毁_变质岩波（顺劈）/ Metamorphic Blast", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44761"])]
     public void 得到宽恕的诋毁_变质岩波(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2008,7 +2008,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "77~79 得到宽恕的虚夸_环状射线（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44758"])]
+    [ScriptMethod(name: "77~79 得到宽恕的虚夸_环状射线（月环）/ Peripheral Lasers", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44758"])]
     public void 得到宽恕的虚夸_环状射线 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2032,7 +2032,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "77~79 得到宽恕的虚夸_十字射线（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44757"])]
+    [ScriptMethod(name: "77~79 得到宽恕的虚夸_十字射线（十字）/ Cross Lasers", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44757"])]
     public void 得到宽恕的虚夸_十字射线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2050,14 +2050,13 @@ public class Pilgrims_Traverse
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
         }
     }
-
     
     // 80 BOSS
     
     uint PerilousLair=0; // 伤痛圆戒 钢铁
     uint RoaringRing=0; // 紫雷环戒 月环
     
-    [ScriptMethod(name: "80 得到宽恕的不敬_伤痛圆戒（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43472"])]
+    [ScriptMethod(name: "80 得到宽恕的不敬_伤痛圆戒（钢铁）/ Perilous Lair", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43472"])]
     public void 得到宽恕的不敬_伤痛圆戒 (Event @event, ScriptAccessory accessory)
     {
         PerilousLair = 1;
@@ -2070,7 +2069,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "80 得到宽恕的不敬_紫雷环戒（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43468"])]
+    [ScriptMethod(name: "80 得到宽恕的不敬_紫雷环戒（月环）/ Roaring Ring", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43468"])]
     public void 得到宽恕的不敬_紫雷环戒 (Event @event, ScriptAccessory accessory)
     {
         RoaringRing = 1;
@@ -2092,7 +2091,7 @@ public class Pilgrims_Traverse
         RoaringRing = 0;
     }
     
-    [ScriptMethod(name: "80 得到宽恕的不敬_亵渎之光（光半场刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43473"])]
+    [ScriptMethod(name: "80 得到宽恕的不敬_亵渎之光（光半场刀）/ Profane Waul", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43473"])]
     public void 得到宽恕的不敬_亵渎之光(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2105,7 +2104,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "80 得到宽恕的不敬_亡途黑暗 吃白色提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4518"])]
+    [ScriptMethod(name: "80 得到宽恕的不敬_亡途黑暗 吃白色提示 / Shadow of Death Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4518"])]
     public void 得到宽恕的不敬_亡途黑暗(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -2114,7 +2113,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("吃白色半场刀");
     }
     
-    [ScriptMethod(name: "80 得到宽恕的不敬_亡途重负 少移动提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4519", "Param:1"])]
+    [ScriptMethod(name: "80 得到宽恕的不敬_亡途重负 少移动提示 / Nowhere to Run Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4519", "Param:1"])]
     public void 得到宽恕的不敬_亡途重负(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -2124,7 +2123,7 @@ public class Pilgrims_Traverse
     }
     
     /*
-    [ScriptMethod(name: "80 得到宽恕的不敬_雷气循环（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43476"])]
+    [ScriptMethod(name: "80 得到宽恕的不敬_雷气循环（钢铁）/ Stalking Static", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43476"])]
     public void 得到宽恕的不敬_雷气循环 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2137,15 +2136,13 @@ public class Pilgrims_Traverse
     }
     */
     
-    // フォーギヴン・プロファニティー_死出の道行き
-    
     #endregion
     
     #region  81~90层
     [ScriptMethod(name: "—————— 81 ~ 90 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "81~83 召引格雷姆林_利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44770"])]
+    [ScriptMethod(name: "81~83 召引格雷姆林_利爪（顺劈）/ Claw", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44770"])]
     public void 召引格雷姆林_利爪(Event @event, ScriptAccessory accessory)
     {var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"召引格雷姆林_利爪{@event.SourceId()}";
@@ -2157,7 +2154,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "81~83 交错路异豺_夜冲击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44774"])]
+    [ScriptMethod(name: "81~83 交错路异豺_夜冲击（顺劈）/ Nox Blast", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44774"])]
     public void 交错路异豺_夜冲击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2170,7 +2167,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "81~83 交错路异豺_咬杀（死刑提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44773"])]
+    [ScriptMethod(name: "81~83 交错路异豺_咬杀（死刑提示）/ Maul TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44773"])]
     public void 交错路异豺_咬杀(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("打断异豺死刑 （无任何抗性）", duration: 11300, true);
@@ -2178,7 +2175,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("打断异豺死刑");
     }
     
-    [ScriptMethod(name: "81~84 交错路卡部斯_昏暗（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44775"])]
+    [ScriptMethod(name: "81~84 交错路卡部斯_昏暗（顺劈）/ Dark II", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44775"])]
     public void 交错路卡部斯_昏暗(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2191,7 +2188,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
         
-    [ScriptMethod(name: "81~84 交错路骑兵_风暴斩（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43321"])]
+    [ScriptMethod(name: "81~84 交错路骑兵_风暴斩（顺劈）/ Storm Slash", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43321"])]
     public void 交错路骑兵_风暴斩(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2204,7 +2201,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "81~84 交错路骑兵_残杀（冲锋击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43319"])]
+    [ScriptMethod(name: "81~84 交错路骑兵_残杀（冲锋击退）/ Valfodr", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43319"])]
     public void 交错路骑兵_残杀(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("冲锋击退+三连击退");
@@ -2221,7 +2218,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "83~85 召引小恶灵_冰结陷阱（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44779"])]
+    [ScriptMethod(name: "83~85 召引小恶灵_冰结陷阱（钢铁）/ Blizzard Trap", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44779"])]
     public void 召引小恶灵_冰结陷阱 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2233,7 +2230,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "84~86 召引上级恶魔_深渊回转（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44780"])]
+    [ScriptMethod(name: "84~86 召引上级恶魔_深渊回转（顺劈）/ Abyssal Swing", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44780"])]
     public void 召引上级恶魔_深渊回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2246,7 +2243,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "84~88 交错路卡玛_飞踢后摆尾（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
+    [ScriptMethod(name: "84~88 交错路卡玛_飞踢后摆尾（直线）/ Claw and Tail Front", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
     public void 交错路卡玛_飞踢后摆尾1(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2259,7 +2256,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "84~88 交错路卡玛_飞踢后摆尾（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
+    [ScriptMethod(name: "84~88 交错路卡玛_飞踢后摆尾（扫尾）/ Claw and Tail Back", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43132"])]
     public void 交错路卡玛_飞踢后摆尾2(Event @event, ScriptAccessory accessory)
     {
         // 二段扫尾 ActionId: 43131
@@ -2276,27 +2273,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    /*
-    [ScriptMethod(name: "インヴォークド・カイム_大凶眼（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44782"])]
-    public void 大凶眼(Event @event, ScriptAccessory accessory)
-    {
-        // if (isText)accessory.Method.TextInfo("背对", duration: 2000, true);
-        // if (isTTS)accessory.Method.TTS("背对");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("背对");
-
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"インヴォークド・カイム_大凶眼{@event.SourceId()}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId;
-        dp.TargetObject = accessory.Data.Me;
-        dp.ScaleMode |= ScaleMode.YByDistance;
-        dp.Scale = new(1);
-        dp.DestoryAt = @event.DurationMilliseconds();
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
-    }
-    */
-    
-    [ScriptMethod(name: "86~89 召引洪巴巴_三/四重强击 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4332[34]$"])]
+    [ScriptMethod(name: "86~89 召引洪巴巴_三/四重强击 提示 / Triple & Quadruple Blow Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4332[34]$"])]
     public void 召引洪巴巴_三四重强击(Event @event, ScriptAccessory accessory)
     {
         string skullDasherCount = @event.ActionId == 43323 ? "三" : "四";
@@ -2306,7 +2283,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"{skullDasherCount}连平A接顺劈");
     }
     
-    [ScriptMethod(name: "86~89 召引洪巴巴_长啸（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44293"])]
+    [ScriptMethod(name: "86~89 召引洪巴巴_长啸（顺劈）/ Bellows", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44293"])]
     public void 召引洪巴巴_长啸 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2319,7 +2296,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "84~86 召引梦魔_攻心欲火（热病点名）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43322"])]
+    [ScriptMethod(name: "84~86 召引梦魔_攻心欲火（热病点名）/ Passions' Heat", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43322"])]
     public void 召引梦魔_攻心欲火 (Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"踢晕 <召引梦魔> 范围热病", duration: 4300, true);
@@ -2335,7 +2312,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "86~89 召引行吟诗人_昏暗（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44787"])]
+    [ScriptMethod(name: "86~89 召引行吟诗人_昏暗（顺劈）/ Dark II", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44787"])]
     public void 召引行吟诗人_昏暗(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2348,7 +2325,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "86~89 召引行吟诗人_心魔（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44788"])]
+    [ScriptMethod(name: "86~89 召引行吟诗人_心魔（钢铁）/ Inner Demons", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44788"])]
     public void 召引行吟诗人_心魔 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2360,7 +2337,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "86~89 召引刻耳柏洛斯_闪电（面前圆形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44784"])]
+    [ScriptMethod(name: "86~89 召引刻耳柏洛斯_闪电（面前圆形）/ Blitzen", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44784"])]
     public void 召引刻耳柏洛斯_闪电 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2372,7 +2349,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "86~89 召引刻耳柏洛斯_地狱爪袭（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44785"])]
+    [ScriptMethod(name: "86~89 召引刻耳柏洛斯_地狱爪袭（顺劈）/ Hellpounce", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44785"])]
     public void 召引刻耳柏洛斯_地狱爪袭(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2385,7 +2362,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "86-89 召引刻耳柏洛斯_摆尾（背后扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44786"])]
+    [ScriptMethod(name: "86-89 召引刻耳柏洛斯_摆尾（背后扇形）/ Tail Blow", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44786"])]
     public void 召引刻耳柏洛斯_摆尾(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2399,7 +2376,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "86-89 召引巴尔_火山泥流爆（脱战大钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43133"])]
+    [ScriptMethod(name: "86-89 召引巴尔_火山泥流爆（脱战大钢铁）/ Incinerating Lahar", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43133"])]
     public void 召引巴尔_火山泥流爆 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2422,7 +2399,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "86~89 召引巴尔_深渊射线（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43134"])]
+    [ScriptMethod(name: "86~89 召引巴尔_深渊射线（穿墙直线）/ Abyssal Ray", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43134"])]
     public void 召引巴尔_深渊射线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2436,10 +2413,9 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    
     // 90 BOSS
     
-    [ScriptMethod(name: "90 马纳果达_旋背击（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[01]$"])]
+    [ScriptMethod(name: "90 马纳果达_旋背击（扇形）/ Backhand", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4425[01]$"])]
     public void 马纳果达_旋背击(Event @event, ScriptAccessory accessory)
     {
         // 左下安全: 44250 ; 右下安全: 44251
@@ -2456,7 +2432,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "90 马纳果达_纵断击/横断击（前后/左右扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44262"])]
+    [ScriptMethod(name: "90 马纳果达_纵断击/横断击（前后/左右扇形）/ Fore-hind Folly & Twin-winged Treachery", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44262"])]
     public void 马纳果达_魔冲击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2497,7 +2473,7 @@ public class Pilgrims_Traverse
     }
     */
     
-    [ScriptMethod(name: "90 指向魔法阵_魔阵光（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(43796|44257)$"])]
+    [ScriptMethod(name: "90 指向魔法阵_魔阵光（直线）/ Arcane Beacon", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(43796|44257)$"])]
     public void 指向魔法阵_魔阵光(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2510,7 +2486,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "90 马纳果达_陨星（地面黄圈判定时间）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44268"])]
+    [ScriptMethod(name: "90 马纳果达_陨星（地面黄圈判定时间）/ Komet Animation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44268"])]
     public void 马纳果达_陨星 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2523,7 +2499,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "90 马纳果达_灭尽 击退安全区", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44266"])]
+    [ScriptMethod(name: "90 马纳果达_灭尽 击退安全区 / Skinflayer Safe", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44266"])]
     public void 马纳果达_灭尽安全区(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2535,7 +2511,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "90 马纳果达_灭尽 击退预测", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44266"])]
+    [ScriptMethod(name: "90 马纳果达_灭尽 击退预测 / Skinflayer Distance Prediction", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44266"])]
     public void 马纳果达_灭尽击退预测(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("靠近击退", duration: 4300, true);
@@ -2553,14 +2529,13 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
-    
     #endregion
     
     #region 91~98层 
     [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "91~94 召引玩偶_呀一一（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44512"])]
+    [ScriptMethod(name: "91~94 召引玩偶_呀一一（钢铁）/ Whinge", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44512"])]
     public void 召引玩偶_呀一一 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2572,7 +2547,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "91~98 召引梦祸_梦祸视线（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44349"])]
+    [ScriptMethod(name: "91~98 召引梦祸_梦祸视线（穿墙直线）/ Dark Vision", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44349"])]
     public void 召引梦祸_梦祸视线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
@@ -2589,7 +2564,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "91~98 召引梦祸_死重爆（自爆钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44350"])]
+    [ScriptMethod(name: "91~98 召引梦祸_死重爆（自爆钢铁）/ Endless Nightmare", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44350"])]
     public void 召引梦祸_死重爆 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2612,7 +2587,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "91~93 交错路紫罗兰三尖树_藤枝伏地（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44499"])]
+    [ScriptMethod(name: "91~93 交错路紫罗兰三尖树_藤枝伏地（顺劈）/ Creeping Ivy", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44499"])]
     public void 交错路紫罗兰三尖树_藤枝伏地(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2625,7 +2600,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "91~93 交错路食人花_腐烂恶臭（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44500"])]
+    [ScriptMethod(name: "91~93 交错路食人花_腐烂恶臭（穿墙直线）/ Rotten Stench", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44500"])]
     public void 交错路食人花_腐烂恶臭(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
@@ -2642,8 +2617,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-        
-    [ScriptMethod(name: "93~95 交错路座狼_三/四重猛击 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^443(39|40)$"])]
+    [ScriptMethod(name: "93~95 交错路座狼_三/四重猛击 提示 / Triple & Quadruple Skull Dasher Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^443(39|40)$"])]
     public void 交错路座狼_三四重猛击(Event @event, ScriptAccessory accessory)
     {
         string skullDasherCount = @event.ActionId == 44339 ? "三" : "四";
@@ -2663,7 +2637,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "93~95 交错路座狼_重挥碎击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44342"])]
+    [ScriptMethod(name: "93~95 交错路座狼_重挥碎击（钢铁）/ Heavy Smash", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44342"])]
     public void 交错路座狼_重挥碎击 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2675,7 +2649,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "93~95 召引扎哈克_石化吐息（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44508"])]
+    [ScriptMethod(name: "93~95 召引扎哈克_石化吐息（顺劈）/ Petribreath", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44508"])]
     public void 召引扎哈克_石化吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2688,8 +2662,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-
-    [ScriptMethod(name: "93~95 召引扎哈克_尾部打击（瞬发扫尾）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18854"])]
+    [ScriptMethod(name: "93~95 召引扎哈克_尾部打击（瞬发扫尾）/ Tail Drive", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18854"])]
     public void 召引扎哈克_尾部打击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2715,7 +2688,7 @@ public class Pilgrims_Traverse
         accessory.Method.RemoveDraw($"召引扎哈克_尾部打击{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "93~98 召引锯齿花_前方/左侧/右侧花蜜喷吐", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4435[6-8]$"])]
+    [ScriptMethod(name: "93~98 召引锯齿花_前方/左侧/右侧花蜜喷吐 / Honeyed", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4435[6-8]$"])]
     public void 召引锯齿花_花蜜喷吐(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2747,7 +2720,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "95~97 交错路恶意灵_碎震强击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44513"])]
+    [ScriptMethod(name: "95~97 交错路恶意灵_碎震强击（顺劈）/ Smashing Blow", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44513"])]
     public void 交错路恶意灵_碎震强击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2760,7 +2733,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "95~98 召引古恶魔_黑暗神圣（点名圆形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44514"])]
+    [ScriptMethod(name: "95~98 召引古恶魔_黑暗神圣（点名圆形）/ Unholy Darkness", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44514"])]
     public void 召引古恶魔_黑暗神圣 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2772,7 +2745,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "95_98 召引古恶魔_生命停止（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44515"])]
+    [ScriptMethod(name: "95_98 召引古恶魔_生命停止（顺劈）/ Karma", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44515"])]
     public void 召引古恶魔_生命停止(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2785,7 +2758,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "96~98 召引阿刻戎_权威斩（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^445(09|10)$"])]
+    [ScriptMethod(name: "96~98 召引阿刻戎_权威斩（左右刀）/ Authority's Edge", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^445(09|10)$"])]
     public void 召引阿刻戎_权威斩(Event @event, ScriptAccessory accessory)
     {
         // 右刀 44509 ； 左刀 44510
@@ -2802,7 +2775,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "96~98 召引古辛_左/右侧震击（二连左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4434[57]$"])]
+    [ScriptMethod(name: "96~98 召引古辛_左/右侧震击（二连左右刀）/ Left & Right Smite", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4434[57]$"])]
     public void 召引古辛_左右侧震击(Event @event, ScriptAccessory accessory)
     {
         // 先右刀 44345 ； 先左刀 44347
@@ -2831,7 +2804,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp1); 
     }
     
-    [ScriptMethod(name: "96~98 召引破坏本能_怪光线（穿墙直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44354"])]
+    [ScriptMethod(name: "96~98 召引破坏本能_怪光线（穿墙直线）/ Stare", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44354"])]
     public void 召引破坏本能_怪光线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
@@ -2848,7 +2821,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "96~98 召引破坏本能_死亡视线（背对连线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44355"])]
+    [ScriptMethod(name: "96~98 召引破坏本能_死亡视线（背对连线）/ Mortal Gaze Line", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44355"])]
     public void 召引破坏本能_死亡视线连线(Event @event, ScriptAccessory accessory)
     { 
         if (isText)accessory.Method.TextInfo("背对 <召引破坏本能>", duration: 2300, true);
@@ -2866,7 +2839,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "96~98 召引破坏本能_死亡视线（背对范围描边）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44355"])]
+    [ScriptMethod(name: "96~98 召引破坏本能_死亡视线（背对范围描边）/ Mortal Gaze Extent", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44355"])]
     public void 召引破坏本能_死亡视线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3076,7 +3049,7 @@ public class Pilgrims_Traverse
     uint _myLightVengeance=0;
     uint _myDarkVengeance=0; 
     
-    [ScriptMethod(name: "99 烈焰锢（热病）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[39]$"])]
+    [ScriptMethod(name: "99 烈焰锢（热病）/ Chains of Condemnation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[39]$"])]
     public void Normal_烈焰锢(Event @event, ScriptAccessory accessory)
     {
         // 本体无意义读条 快: 44063 源: 44064  / 慢: 44069 源:44070 , 其中 源 比 无意义 读条更多 0.7s
@@ -3093,7 +3066,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
-    [ScriptMethod(name: "99 火球（旋风）预备提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[18]$"])]
+    [ScriptMethod(name: "99 火球（旋风）预备提示 / Fireball Portent Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[18]$"])]
     public void Normal_火球预备(Event @event, ScriptAccessory accessory)
     {
         bool isFastCast = @event.ActionId == 44061;
@@ -3107,7 +3080,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}旋风");
     }
     
-    [ScriptMethod(name: "99 火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44062"])]
+    [ScriptMethod(name: "99 火球（旋风）/ Fireball", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44062"])]
     public void Normal_火球 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3119,7 +3092,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线预兆）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:00EA"])]
+    [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线预兆）/ Spinelash Portent", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:00EA"])]
     public void Normal_棘刺尾预兆(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != MapIds.TheFinalVerse) return;
@@ -3138,7 +3111,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45118"])]
+    [ScriptMethod(name: "99 卓异的悲寂_棘刺尾（穿刺点名直线）/ Spinelash Danger", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45118"])]
     public void Normal_棘刺尾(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("快躲开", duration: 800, true);
@@ -3155,7 +3128,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "99 光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^440(67|73)$"])]
+    [ScriptMethod(name: "99 光耀之剑（直线）/ Blade of First Light", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^440(67|73)$"])]
     public void Normal_光耀之剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3168,7 +3141,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "99 净罪之环 TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44082"])]
+    [ScriptMethod(name: "99 净罪之环 TTS / Bounds of Sin TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44082"])]
     public void Normal_净罪之环tts(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("抓人牢狱", duration: 3000, true);
@@ -3176,7 +3149,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("抓人牢狱");
     }
     
-    [ScriptMethod(name: "99 净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44083"])]
+    [ScriptMethod(name: "99 净罪之环（抓人牢狱 - 判定动画）/ Bounds of Sin Animation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44083"])]
     public void Normal_净罪之环 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3189,7 +3162,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "99 深渊烈焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44079"])]
+    [ScriptMethod(name: "99 深渊烈焰（地火）初始炸绘制 / Abyssal Blaze First", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44079"])]
     public void Normal_深渊烈焰初始(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3202,7 +3175,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-   [ScriptMethod(name: "99 深渊烈焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44079"])]
+   [ScriptMethod(name: "99 深渊烈焰（地火）步进炸 / Abyssal Blaze Continue", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44079"])]
     public void Normal_深渊烈焰步进(Event @event, ScriptAccessory accessory)
     {
         uint fireSourceId = @event.SourceId();
@@ -3279,7 +3252,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "99 以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4409[02]$"])]
+    [ScriptMethod(name: "99 以太吸取（buff检测）/ Drain Aether", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4409[02]$"])]
     public void Normal_以太吸取(Event @event, ScriptAccessory accessory)
     {
         // debuff: 4559 暗 / 4560 光
@@ -3303,7 +3276,7 @@ public class Pilgrims_Traverse
     
     #region 卓异的悲寂深想战 满贡品难度Q40
     
-    [ScriptMethod(name: "—————— 卓异的悲寂深想战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 卓异的悲寂深想战 / the Final Verse (Quantum) ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 卓异的悲寂深想战(Event @event, ScriptAccessory accessory) { }
     
     // 卓异的悲寂      NPCID: 14037 目标圈 28.5m
@@ -3311,7 +3284,7 @@ public class Pilgrims_Traverse
     
     // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
     
-    [ScriptMethod(name: "血量差提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2550"])]
+    [ScriptMethod(name: "血量差提示 / HP gap Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2550"])]
     public void Q40_血量差提示(Event @event, ScriptAccessory accessory)
     {
         string targetName = @event.TargetName();
@@ -3319,11 +3292,11 @@ public class Pilgrims_Traverse
         var bossNameMapping = new Dictionary<string, string>
         {
             { "卓异的悲寂", "暗" },
-            { "Eminent Grief", "暗" },
+            { "Eminent Grief", "Dark" },
             { "エミネントグリーフ", "暗" },
         
             { "被侵蚀的食罪灵", "光" },
-            { "devoured eater", "光" },
+            { "devoured eater", "Light" },
             { "侵蝕された罪喰い", "光" }
         };
     
@@ -3334,7 +3307,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"血量岔,打{displayName}");
     }
 
-    [ScriptMethod(name: "深渊爆焰（地火）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
+    [ScriptMethod(name: "深渊爆焰（地火）读条提示 / Scourging Blaze Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
     public void Q40_深渊爆焰提示(Event @event, ScriptAccessory accessory)
     {
         string isFirst, isSecond;
@@ -3363,7 +3336,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
     }
     
-    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44118"])]
+    [ScriptMethod(name: "深渊爆焰（地火）初始炸绘制 / Scourging Blaze First", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44118"])]
     public void Q40_深渊爆焰初始(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3376,7 +3349,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "深渊爆焰（地火）步进炸", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44118"])]
+    [ScriptMethod(name: "深渊爆焰（地火）步进炸 / Scourging Blaze Continue ", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:44118"])]
     public void Q40_深渊爆焰步进(Event @event, ScriptAccessory accessory)
     {
         uint fireSourceId = @event.SourceId();
@@ -3453,7 +3426,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "深渊极光 踩塔提示", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:2", "Index:27"])]
+    [ScriptMethod(name: "深渊极光 踩塔提示 / Abyssal Sun Preparatory Hint", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:2", "Index:27"])]
     public void Q40_深渊极光提示 (Event @event, ScriptAccessory accessory)
     {
         // 实际上 Index 为 27~30 ，对应场上4座塔
@@ -3462,7 +3435,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS($"吃白色，准备踩塔");
     }
     
-    [ScriptMethod(name: "深渊极光 踩塔喝药提示", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:32", "Index:regex:^(2[789]|30)$"],suppress:5000)]
+    [ScriptMethod(name: "深渊极光 踩塔喝药提示 / Abyssal Sun Use Potion Tip", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:32", "Index:regex:^(2[789]|30)$"],suppress:5000)]
     public void Q40_深渊极光踩塔喝药提示(Event @event, ScriptAccessory accessory)
     {
         // 自身踩塔时，也会有 StatusID 2922 出血状态，但自己不一定是最先踩塔的，所以取用第一个人踩到塔就提示
@@ -3472,14 +3445,14 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("喝药");
     }
     
-    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
+    [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示 / Bounds of Sin TTS ", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
     public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"抓人牢狱");
         if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
     }
     
-    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
+    [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）/ Bounds of Sin Animation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
     public void Q40_净罪之环 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3502,7 +3475,7 @@ public class Pilgrims_Traverse
         if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 成功记录黑白配点名");
     }
     
-    [ScriptMethod(name: "黑白配 TTS提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^004(D|E)$"])]
+    [ScriptMethod(name: "黑白配 TTS提示 / Black & White TTS", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^004(D|E)$"])]
     public void Q40_黑白配TTS提示 (Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -3510,9 +3483,10 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("黑白配");
     }
 
-    [ScriptMethod(name: "黑白配 判定提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:80000026", "Instance:8003EA93"],suppress: 1000)]
+    [ScriptMethod(name: "黑白配 判定提示 / Black & White Judgment", eventType: EventTypeEnum.Director, eventCondition: ["Command:80000026", "Instance:8003EA93"],suppress: 1000)]
     public async void Q40_黑白配判定提示 (Event @event, ScriptAccessory accessory)
     {
+        if(!isTTS || isEdgeTTS) return;
         // 之后的参数为 [31~34|9|1|0]，但是鸭子用不了.jpg
         // 光与暗的以太中和了……
         if (_blackandwhite == 0)return;
@@ -3525,7 +3499,7 @@ public class Pilgrims_Traverse
         _blackandwhite = 0;
     }
     
-    [ScriptMethod(name: "光耀之剑（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(04|10)$"])]
+    [ScriptMethod(name: "光耀之剑（直线）/ Blade of First Light", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(04|10)$"])]
     public void Q40_光耀之剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3538,7 +3512,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "火球（旋风）预备提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(097|105)$"])]
+    [ScriptMethod(name: "火球（旋风）预备提示 / Fireball Preparatory Hint", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(097|105)$"])]
     public void Q40_火球预备(Event @event, ScriptAccessory accessory)
     {
         bool isFastCast = @event.ActionId == 44097;
@@ -3552,7 +3526,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}旋风");
     }
     
-    [ScriptMethod(name: "火球（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
+    [ScriptMethod(name: "火球（旋风）/ Fireball Draw", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
     public void Q40_火球 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3564,7 +3538,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "烈焰锢（热病）预备提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(099|106)$"])]
+    [ScriptMethod(name: "烈焰锢（热病）预备提示 / Chains of Condemnation Preparatory Hint", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^44(099|106)$"])]
     public void Q40_烈焰锢预备(Event @event, ScriptAccessory accessory)
     {
         // 本体无意义读条 快: 44099 源: 44100  / 慢: 44106 源:44107 , 其中 源 比 无意义 读条更多 0.7s
@@ -3581,7 +3555,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
-    [ScriptMethod(name: "烈焰锢（热病）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4562"])]
+    [ScriptMethod(name: "烈焰锢（热病）提示 / Chains of Condemnation Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4562"])]
     public void Q40_烈焰锢(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -3589,7 +3563,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"停止移动");
     }
     
-    [ScriptMethod(name: "烈焰链 准备提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
+    [ScriptMethod(name: "烈焰链 准备提示 / Searing Chains Preparatory Hint", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
     public void Q40_烈焰链_准备提示(Event @event, ScriptAccessory accessory)
     {
         if (isPotions)
@@ -3608,7 +3582,7 @@ public class Pilgrims_Traverse
         }
     }
     
-    [ScriptMethod(name: "烈焰链 拉线提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4563"])]
+    [ScriptMethod(name: "烈焰链 拉线提示 / Searing Chains Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4563"])]
     public void Q40_烈焰链_拉线提示(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -3619,7 +3593,7 @@ public class Pilgrims_Traverse
     
     uint _spinelash = 0; // 棘刺尾 读条点名直线记录
     
-    [ScriptMethod(name: "棘刺尾（点名分摊提示）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:020F"])]
+    [ScriptMethod(name: "棘刺尾（点名分摊提示）/ Spinelash Position", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:020F"])]
     public void Q40_棘刺尾提示(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != MapIds.TheFinalVerseQuantum) return; // 深想战 - 卓异的悲寂 DataId: 18670
@@ -3653,7 +3627,7 @@ public class Pilgrims_Traverse
         if (isDeveloper)  accessory.Method.SendChat($"/e [DEBUG] 当前点名次数:{_spinelash}");
     }
     
-    [ScriptMethod(name: "棘刺尾（直线分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45119"])]
+    [ScriptMethod(name: "棘刺尾（直线分摊）/ Spinelash Stack", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45119"])]
     public void Q40_棘刺尾(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3665,7 +3639,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "仆从石像魔 转火提示", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:18672", "Targetable:True"])]
+    [ScriptMethod(name: "仆从石像魔 转火提示 / Vodoriga minion Reminder", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:18672", "Targetable:True"])]
     public void Q40_仆从石像魔提示(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo("击杀 仆从石像魔", duration: 2000, true);
@@ -3675,7 +3649,7 @@ public class Pilgrims_Traverse
     
     // P2 戒律的光链（职能debuff）→ 烈焰领域（引导牢笼连线 +吸引） → 引导三连黄圈 → 尾连击（死刑塔 + 斜线AOE） → 黑暗神圣（AOE+DOT）→ 尾连击（死刑塔 + 斜线AOE）
     // → 深渊爆焰（存储地火）+ 引导三连黄圈 → 净罪之环（抓人牢笼）+黑白配 → 地火判定
-    [ScriptMethod(name: "戒律的光链（职能debuff）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44801"])]
+    [ScriptMethod(name: "戒律的光链（职能debuff）读条提示 / Shackles of Sanctity Prompt", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44801"])]
     public void Q40_戒律的光链提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("职能debuff站位，准备刷新光暗", duration: 4000, true);
@@ -3683,7 +3657,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"职能debuff站位");
     }
     
-    [ScriptMethod(name: "戒律的光链：恢复 [奶妈治疗热风]", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4564"])]
+    [ScriptMethod(name: "戒律的光链：恢复 [奶妈治疗热风] / Shackled Healing Draw", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4564"])]
     public void Q40_戒律的光链_恢复 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3697,7 +3671,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "戒律的光链：能力 [DPS]", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4565"])]
+    [ScriptMethod(name: "戒律的光链：能力 [DPS] / Shackled Abilities Draw", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4565"])]
     public void Q40_戒律的光链_能力 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3718,7 +3692,7 @@ public class Pilgrims_Traverse
         if (@event.StatusId == 4565) accessory.Method.RemoveDraw($"Q40_戒律的光链_能力{@event.SourceId()}");
     }
     
-    [ScriptMethod(name: "烈焰领域（吸引）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
+    [ScriptMethod(name: "烈焰领域（吸引）读条提示 / Hellish Earth Prompt", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
     public void Q40_烈焰领域提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("吸引，刷新buff，坦克最远引导连线", duration: 5000, true);
@@ -3726,7 +3700,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"吸引，刷新buff");
     }
     
-    [ScriptMethod(name: "烈焰领域（吸引）自动防击退 [T职以外]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
+    [ScriptMethod(name: "烈焰领域（吸引）自动防击退 [T职以外] / Hellish Earth Auto-AntiKnockback (Except Tank)", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
     public void Q40_烈焰领域自动防击退(Event @event, ScriptAccessory accessory)
     {
         var isTank = accessory.Data.MyObject?.IsTank() ?? false;
@@ -3755,7 +3729,7 @@ public class Pilgrims_Traverse
         
     }
     
-    [ScriptMethod(name: "尾连击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44161"])]
+    [ScriptMethod(name: "尾连击（直线）/ Manifold Lashings", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44161"])]
     public void Q40_尾连击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3768,7 +3742,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
-    [ScriptMethod(name: "尾连击安全区指路", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4415[78]$"])]
+    [ScriptMethod(name: "尾连击安全区指路 / Manifold Lashings SafeGuide", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4415[78]$"])]
     public void Q40_尾连击指路(Event @event, ScriptAccessory accessory)
     {
         // 44157 打右上左下 左上安全 ; 44158 打左上右下 右上安全
@@ -3788,7 +3762,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "地火喷发（三连引导）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44156"])]
+    [ScriptMethod(name: "地火喷发（三连引导）/ Eruption", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44156"])]
     public void Q40_地火喷发 (Event @event, ScriptAccessory accessory)
     {
         var myObject = accessory.Data.MyObject;
@@ -3811,7 +3785,7 @@ public class Pilgrims_Traverse
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "立体魔法阵 转火提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18676"],suppress:1000)]
+    [ScriptMethod(name: "立体魔法阵 转火提示 / Arcane sphere Reminder", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18676"],suppress:1000)]
     public void Q40_立体魔法阵提示(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo("攻击 立体魔法阵", duration: 2000, true);
@@ -3819,7 +3793,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("攻击魔法阵");
     }
     
-    [ScriptMethod(name: "黑暗神圣（AOE）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44164"])]
+    [ScriptMethod(name: "黑暗神圣（AOE）读条提示 / Unholy Darkness", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44164"])]
     public void Q40_黑暗神圣提示(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo("流血AOE", duration: 6000, true);
@@ -3842,7 +3816,7 @@ public class Pilgrims_Traverse
     // 一传同组 → 二传同职能 → 三传同组  [ T & D1 为一组；H & D2 为一组 ]
     // 一传：[辣翅辣尾后] 有毒在[场中右上]光地板里，接毒在旁边 ； 二传：直线分摊后同职能原地传，其它人躲开 ； 三传：黑白配站位直接传
     
-    [ScriptMethod(name: "罪与罚（传毒）读条提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44165"])]
+    [ScriptMethod(name: "罪与罚（传毒）读条提示 / Crime and Punishment Prompt", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44165"])]
     public void Q40_罪与罚提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("传毒阶段: 先吃暗", duration: 5000, true);
@@ -3850,7 +3824,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"吃暗，准备传毒");
     }
     
-    [ScriptMethod(name: "罪积蓄（毒）点名播报", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567", "Param:1"])]
+    [ScriptMethod(name: "罪积蓄（毒）点名播报 / Sin Bearer Calling out names", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567", "Param:1"])]
     public void 罪积蓄点名播报(Event @event, ScriptAccessory accessory)
     {
         string tname = @event["TargetName"]?.ToString() ?? "未知目标";
@@ -3858,7 +3832,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS($"毒点{tname}");
     }
     
-    [ScriptMethod(name: "罪积蓄（毒）绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567"])]
+    [ScriptMethod(name: "罪积蓄（毒）绘制 / Sin Bearer Draw", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567"])]
     public async void 罪积蓄绘制(Event @event, ScriptAccessory accessory)
     {
         uint layerCount = @event.StatusParam;
@@ -3907,7 +3881,7 @@ public class Pilgrims_Traverse
         accessory.Method.RemoveDraw($"罪积蓄.*");
     }
     
-    [ScriptMethod(name: "罪与罚（传毒）驱散死宣提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4594"])]
+    [ScriptMethod(name: "罪与罚（传毒）驱散死宣提示 / Doom Reminder", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4594"])]
     public void Q40_罪与罚驱散死宣提示(Event @event, ScriptAccessory accessory)
     {
         var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
@@ -3920,7 +3894,7 @@ public class Pilgrims_Traverse
     private const uint LightVengeance = 0x11D0;   // 4560 = 0x11D0 光之回音
     private const uint SinBearer = 0x11D7;        // 4567 = 0x11D7 罪积蓄 [毒]
     
-    [ScriptMethod(name: "以太吸取（buff检测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4413[13]$"])]
+    [ScriptMethod(name: "以太吸取（buff检测）/ Drain Aether", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4413[13]$"])]
     public void Q40_以太吸取(Event @event, ScriptAccessory accessory)
     {
         (string firstDrainAether, string secondDrainAether) = @event.ActionId switch
@@ -3953,7 +3927,7 @@ public class Pilgrims_Traverse
     // P4 烈焰缠身 → 深渊爆焰（存储地火）
     // 1合法（田园郡）优点：近战不丢输出  ；2合双X法 优点：近战不丢输出 ；2合单X法 缺点：近战丢输出且对DPS要求更高 ； 3合法 优点：总伤更低
     
-    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170"])]
+    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示 / Fevered Flame TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170"])]
     public void Q40_烈焰缠身提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("火人阶段就位，刷新buff，保持喝药", duration: 3000, true);
@@ -3961,7 +3935,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位，刷新buff");
     }
     
-    [ScriptMethod(name: "自爆（火人爆炸）TTS提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44171"])]
+    [ScriptMethod(name: "自爆（火人爆炸）TTS提示 / Self-destruct TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44171"])]
     public void Q40_火焰分身_自爆(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo("AOE", duration: 1000, true);
@@ -3973,7 +3947,7 @@ public class Pilgrims_Traverse
     
     #region 底裤部分
     
-    [ScriptMethod(name: "—————— 底裤部分（需要对应插件与权限） ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "—————— 底裤部分（需要对应插件与权限） / Hack ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 底裤部分(Event @event, ScriptAccessory accessory) { }
     
     // 这次 BOSS房 不可能变身 不用考虑 ， 由于变身全是烛台给的buff, 也不用考虑过层时触发的 Duration
