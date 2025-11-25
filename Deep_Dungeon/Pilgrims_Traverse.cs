@@ -15,6 +15,7 @@ using FFXIVClientStructs.FFXIV.Client.Game.Object;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 using System.Runtime.CompilerServices;
 using System.Runtime.Intrinsics;
+using System.Collections.Generic;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Client.Game.Control;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
@@ -25,13 +26,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.7",note: noteStr)]
+    version: "0.0.1.8",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.7:
+        v0.0.1.8:
         朝圣交错路 (Pilgrim's Traverse) 基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -186,11 +187,15 @@ public class Pilgrims_Traverse
         public const uint TheFinalVerseQuantum = 1311; // 卓异的悲寂深想战
     }
     
+    private ScriptAccessory _sa = null;
+
     public void Init(ScriptAccessory accessory) {
         PerilousLair = 0; // 80 BOSS 伤痛圆戒 钢铁
         RoaringRing = 0; // 80 BOSS 紫雷环戒 月环
         _blackandwhite = 0; // 卓异的悲寂深想战 黑白配 点名记录
         _spinelash = 0; // 卓异的悲寂深想战 棘刺尾 直线点名次数记录
+        _sa = accessory;
+        accessory.Method.ClearFrameworkUpdateAction(this);
         ResetMechanic(); // 卓异的悲寂 地火晶体重置
     }
     
@@ -3284,27 +3289,59 @@ public class Pilgrims_Traverse
     
     // P1 深渊爆焰（黑白配 + 踩塔 + 地火） → 光耀之剑 + 烈焰锢 / 火球 + 拉线 & 十字火 → 棘刺尾（挡枪分摊） → 集火小怪后职能站位准备进P2
     
+    [ScriptMethod(name: "倒计时续buff提示 / CountDown BuffTip", eventType: EventTypeEnum.Countdown, eventCondition: ["Type:Start"])]
+    public void 倒计时续buff提示(Event @event, ScriptAccessory accessory)
+    {
+        if (IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11CF) || 
+            IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11D0)) return;
+        if (isText)accessory.Method.TextInfo("吃开场buff", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS("吃buff");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("吃buff");
+    }
+    
     [ScriptMethod(name: "血量差提示 / HP gap Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2550"])]
     public void Q40_血量差提示(Event @event, ScriptAccessory accessory)
     {
         string targetName = @event.TargetName();
-    
-        var bossNameMapping = new Dictionary<string, string>
+
+        var validBosses = new HashSet<string>
         {
-            { "卓异的悲寂", "暗" },
-            { "Eminent Grief", "Dark" },
-            { "エミネントグリーフ", "暗" },
-        
-            { "被侵蚀的食罪灵", "光" },
-            { "devoured eater", "Light" },
-            { "侵蝕された罪喰い", "光" }
+            "卓异的悲寂", "Eminent Grief", "エミネントグリーフ",
+            "被侵蚀的食罪灵", "devoured eater", "侵蝕された罪喰い"
         };
+
+        if (!validBosses.Contains(targetName))
+        {
+            if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG] 忽略单位: {targetName}");
+            return;
+        }
+
+        var bossNameMapping = new Dictionary<string, (string displayName, string oppositeColor)>
+        {
+            { "卓异的悲寂", ("暗", "光") },
+            { "Eminent Grief", ("Dark", "Light") },
+            { "エミネントグリーフ", ("暗", "光") },
     
-        string displayName = bossNameMapping.ContainsKey(targetName) ? bossNameMapping[targetName] : targetName;
-    
-        // if (isText) accessory.Method.TextInfo($"血量差,打{displayName}", duration: 2000, true);
-        if (isTTS) accessory.Method.TTS($"血量岔,打{displayName}");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"血量岔,打{displayName}");
+            { "被侵蚀的食罪灵", ("光", "暗") },
+            { "devoured eater", ("Light", "Dark") },
+            { "侵蝕された罪喰い", ("光", "暗") }
+        };
+
+        if (bossNameMapping.TryGetValue(targetName, out var bossInfo))
+        {
+            string displayName = bossInfo.displayName;
+            string trueColor = bossInfo.oppositeColor; // 吃相反的异色
+            
+            uint stackCount = @event.StatusParam;
+        
+            string stackInfo = stackCount >= 1 ? $"{stackCount}" : "";
+
+            if (isText) accessory.Method.TextInfo($"血量差{stackInfo}层,吃{trueColor}打{displayName}", duration: 2000, true);
+            if (isTTS) accessory.Method.TTS($"血量岔{stackInfo}层,吃{trueColor}打{displayName}");
+            if (isEdgeTTS) accessory.Method.EdgeTTS($"血量岔{stackInfo}层,吃{trueColor}打{displayName}");
+            
+            accessory.Method.SendChat($"/e [血量差提示]：吃{trueColor}打{displayName} （{stackCount}层）");
+        }
     }
 
     [ScriptMethod(name: "深渊爆焰（地火）读条提示 / Scourging Blaze Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4407[45]|4479[78])$"])]
@@ -3566,6 +3603,8 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "烈焰链 准备提示 / Searing Chains Preparatory Hint", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
     public void Q40_烈焰链_准备提示(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+
         if (isPotions)
         {
             var isTank = accessory.Data.MyObject?.IsTank() ?? false;
@@ -3593,15 +3632,23 @@ public class Pilgrims_Traverse
     
     uint _spinelash = 0; // 棘刺尾 读条点名直线记录
     
-    [ScriptMethod(name: "棘刺尾（点名分摊提示）/ Spinelash Position", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:020F"])]
+    [ScriptMethod(name: "棘刺尾（点名分摊提示）/ Spinelash Position", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0017"])]
     public void Q40_棘刺尾提示(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != MapIds.TheFinalVerseQuantum) return; // 深想战 - 卓异的悲寂 DataId: 18670
         
         _spinelash++;
         
-        if (isTTS)accessory.Method.TTS("挡枪分摊");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("挡枪分摊");
+        if (@event.TargetId() == accessory.Data.Me)
+        {
+            if (isTTS)accessory.Method.TTS("分摊点名");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("分摊点名");
+        }
+        else
+        {
+            if (isTTS)accessory.Method.TTS("挡枪分摊");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("挡枪分摊");
+        }
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"棘刺尾预兆";
@@ -3649,6 +3696,7 @@ public class Pilgrims_Traverse
     
     // P2 戒律的光链（职能debuff）→ 烈焰领域（引导牢笼连线 +吸引） → 引导三连黄圈 → 尾连击（死刑塔 + 斜线AOE） → 黑暗神圣（AOE+DOT）→ 尾连击（死刑塔 + 斜线AOE）
     // → 深渊爆焰（存储地火）+ 引导三连黄圈 → 净罪之环（抓人牢笼）+黑白配 → 地火判定
+    
     [ScriptMethod(name: "戒律的光链（职能debuff）读条提示 / Shackles of Sanctity Prompt", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44801"])]
     public void Q40_戒律的光链提示(Event @event, ScriptAccessory accessory)
     {
@@ -3935,12 +3983,132 @@ public class Pilgrims_Traverse
         if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位，刷新buff");
     }
     
+    private int checkPoint = 0;
+    [ScriptMethod(name: "火焰分身_危险区高亮", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3913","Param:regex:^92[123]$"])]
+    public void Q40_火焰分身危险区高亮(Event @event, ScriptAccessory accessory)
+    {
+        if (checkPoint == 0)
+        {
+            _ClearFireGuid = accessory.Method.RegistFrameworkUpdateAction(ClearFireClonesFramwork);
+        }
+        checkPoint++;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Owner = @event.TargetId();
+        dp.DestoryAt = 60000;
+        switch (@event.StatusParam)
+        {
+            case 921:
+                //accessory.Method.RemoveDraw($@".*火焰分身高亮\[2\]{@event.TargetId}");
+                //accessory.Method.RemoveDraw($@".*火焰分身高亮\[3\]{@event.TargetId}");
+                accessory.Method.RemoveDraw($@"火焰分身高亮\[[23]\]{@event.TargetId}");
+                dp.Name = $"火焰分身高亮[1]{@event.TargetId}";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(1.5f);
+                dp.Scale = new Vector2(3f);
+                break;
+            case 922:
+                //accessory.Method.RemoveDraw($@".*火焰分身高亮\[1\]{@event.TargetId}");
+                //accessory.Method.RemoveDraw($@".*火焰分身高亮\[3\]{@event.TargetId}");
+                accessory.Method.RemoveDraw($@"火焰分身高亮\[[13]\]{@event.TargetId}");
+                dp.Name = $"火焰分身高亮[2]{@event.TargetId}";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(1.2f);
+                dp.Scale = new Vector2(6f);
+                break;
+            case 923:
+                //accessory.Method.RemoveDraw($@".*火焰分身高亮\[1\]{@event.TargetId}");
+                //accessory.Method.RemoveDraw($@".*火焰分身高亮\[2\]{@event.TargetId}");
+                accessory.Method.RemoveDraw($@"火焰分身高亮\[[12]\]{@event.TargetId}");
+                dp.Name = $"火焰分身高亮[3]{@event.TargetId}";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+                dp.Scale = new Vector2(9f);
+                break;
+            default:
+                break;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    private string _ClearFireGuid = "";
+    private void ClearFireClonesFramwork()
+    {
+        ScriptAccessory sa = _sa;
+
+        foreach (var obj in IbcHelper.GetByDataId(sa, 18675))
+        {
+            if (obj == null) continue;
+
+            if (!ExtensionVisibleMethod.IsCharacterVisible((ICharacter)obj))
+            {
+                sa.Method.RemoveDraw($".*{obj.EntityId}$");
+            }
+        }
+    }
+
+    [ScriptMethod(name: "Framework Clear", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44100"], userControl: false)]
+    public void FrameworkClear(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.ClearFrameworkUpdateAction(this);
+        checkPoint = 0;
+    }
+
+    /*
+    [ScriptMethod(name: "火焰分身_危险区扩大销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3913","Param:regex:^92[123]$"] ,userControl:false)]
+    public void Q40_火焰分身扩大销毁(Event @event, ScriptAccessory accessory)
+    {
+        switch (@event.StatusParam)
+        {
+            case 921:
+                accessory.Method.RemoveDraw($"火焰分身高亮[3]{@event.TargetId}");
+                break;
+            case 922:
+                accessory.Method.RemoveDraw($"火焰分身高亮[1]{@event.TargetId}");
+                break;
+            case 923:
+                accessory.Method.RemoveDraw($"火焰分身高亮[2]{@event.TargetId}");
+                break;
+            default:
+                break;
+        }
+    }
+*/
+    
+    [ScriptMethod(name: "火人危险区读条销毁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44171"],userControl: false)]
+    public void 火人危险区读条销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"火焰分身高亮.*{@event.SourceId}");
+    }
+    
+    /*
+    [ScriptMethod(name: "火人危险区不可选中销毁", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:18675","Targetable:False"],userControl: false)]
+    public void 火人危险区不可选中销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"火焰分身高亮.*{@event.SourceId}");
+    }
+    */
+    
+    [ScriptMethod(name: "火人危险区备用销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:18675"],userControl: false)]
+    public void 火人危险区备用销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"火焰分身高亮.*{@event.SourceId}");
+    }
+    
+    private int _explosionCount = 0;
+    private DateTime lastExplosionTime = DateTime.MinValue;
+
     [ScriptMethod(name: "自爆（火人爆炸）TTS提示 / Self-destruct TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44171"])]
     public void Q40_火焰分身_自爆(Event @event, ScriptAccessory accessory)
     {
-        // if (isText)accessory.Method.TextInfo("AOE", duration: 1000, true);
-        if (isTTS) accessory.Method.TTS($"AOE");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"AOE");
+        if ((DateTime.Now - lastExplosionTime).TotalSeconds > 30)
+        {
+            _explosionCount = 0;
+            if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 爆炸计数器已重置");
+        }
+    
+        _explosionCount++;
+        lastExplosionTime = DateTime.Now;
+        
+        if (isText)accessory.Method.TextInfo($"第{_explosionCount}次炸", duration: 6300, true);
+        if (isTTS)accessory.Method.TTS($"{_explosionCount}炸");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"{_explosionCount}炸");
+        accessory.Method.SendChat($"/e [自爆计数]: [{_explosionCount}]");
     }
     
     #endregion
@@ -4521,3 +4689,44 @@ public static class HelperExtensions
         return AgentMap.Instance()->CurrentTerritoryId; // 额外进行地图ID判断
     }
 }
+
+#region 特殊函数
+public unsafe static class ExtensionVisibleMethod
+{
+    public static bool IsCharacterVisible(this ICharacter chr)
+    {
+        var v = (IntPtr)(((FFXIVClientStructs.FFXIV.Client.Game.Character.Character*)chr.Address)->GameObject.DrawObject);
+        if (v == IntPtr.Zero) return false;
+        return Bitmask.IsBitSet(*(byte*)(v + 136), 0);
+    }
+
+    public static class Bitmask
+    {
+        public static bool IsBitSet(ulong b, int pos)
+        {
+            return (b & (1UL << pos)) != 0;
+        }
+
+        public static void SetBit(ref ulong b, int pos)
+        {
+            b |= 1UL << pos;
+        }
+
+        public static void ResetBit(ref ulong b, int pos)
+        {
+            b &= ~(1UL << pos);
+        }
+
+        public static bool IsBitSet(byte b, int pos)
+        {
+            return (b & (1 << pos)) != 0;
+        }
+
+        public static bool IsBitSet(short b, int pos)
+        {
+            return (b & (1 << pos)) != 0;
+        }
+    }
+}
+#endregion 特殊函数
+
