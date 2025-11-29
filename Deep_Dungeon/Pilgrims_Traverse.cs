@@ -26,13 +26,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.8",note: noteStr)]
+    version: "0.0.1.9",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.8:
+        v0.0.1.9:
         朝圣交错路 (Pilgrim's Traverse) 基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -3875,52 +3875,72 @@ public class Pilgrims_Traverse
     [ScriptMethod(name: "罪积蓄（毒）点名播报 / Sin Bearer Calling out names", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567", "Param:1"])]
     public void 罪积蓄点名播报(Event @event, ScriptAccessory accessory)
     {
-        string tname = @event["TargetName"]?.ToString() ?? "未知目标";
-        if (isTTS)accessory.Method.TTS($"毒点{tname}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"毒点{tname}");
+        try
+        {
+            string tname = @event["TargetName"]?.ToString() ?? "未知目标";
+            if (isTTS && accessory?.Method != null) accessory.Method.TTS($"毒点{tname}");
+            if (isEdgeTTS && accessory?.Method != null) accessory.Method.EdgeTTS($"毒点{tname}");
+        }
+        catch (Exception ex)
+        {
+        }
+    }
+    
+    private async Task SafeExecuteAsync(Func<Task> func, string methodName)
+    {
+        try
+        {
+            await func();
+        }
+        catch (Exception ex)
+        {
+        }
     }
     
     [ScriptMethod(name: "罪积蓄（毒）绘制 / Sin Bearer Draw", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567"])]
     public async void 罪积蓄绘制(Event @event, ScriptAccessory accessory)
     {
-        uint layerCount = @event.StatusParam;
-    
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        var dp1 = accessory.Data.GetDefaultDrawProperties();
-        dp1.Name = dp.Name = $"罪积蓄{layerCount}";
-        dp1.Owner = dp.Owner = @event.TargetId();
-        
-        if (layerCount == 1)
-        {
-            accessory.Method.RemoveDraw($"罪积蓄.*");
-            await Task.Delay(50); 
-            dp.Color = new Vector4(1f, 1f, 1f, 2f);
-            dp1.Color = new Vector4(1f, 1f, 1f, 10f);
-            dp1.Scale = dp.Scale = new Vector2(0.7f); // 描边外径
-            dp1.InnerScale = new Vector2(0.65f);
-            dp1.Radian = float.Pi * 2;
-            dp1.DestoryAt = dp.DestoryAt = 30000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-        else if (layerCount == 12)
-        {
-            accessory.Method.RemoveDraw($"罪积蓄.*");
-            await Task.Delay(50); 
-            dp.Color = new Vector4(1f, 1f, 1f, 0.8f);
-            dp.Scale = new Vector2(4f);
-            dp.DestoryAt = 12000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-        else if (layerCount >= 12 && layerCount <= 15)
-        {
-            if (isTTS) accessory.Method.TTS($"{layerCount}");
-            if (isEdgeTTS) accessory.Method.EdgeTTS($"{layerCount}");
-        }
-        else
-        {
-            return;
-        }
+        await SafeExecuteAsync(async () =>
+            {
+            uint layerCount = @event.StatusParam;
+
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = dp.Name = $"罪积蓄{layerCount}";
+            dp1.Owner = dp.Owner = @event.TargetId();
+
+            if (layerCount == 1)
+            {
+                accessory.Method.RemoveDraw($"罪积蓄.*");
+                await Task.Delay(50);
+                dp.Color = new Vector4(1f, 1f, 1f, 2f);
+                dp1.Color = new Vector4(1f, 1f, 1f, 10f);
+                dp1.Scale = dp.Scale = new Vector2(0.7f); // 描边外径
+                dp1.InnerScale = new Vector2(0.65f);
+                dp1.Radian = float.Pi * 2;
+                dp1.DestoryAt = dp.DestoryAt = 30000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+            else if (layerCount == 12)
+            {
+                accessory.Method.RemoveDraw($"罪积蓄.*");
+                await Task.Delay(50);
+                dp.Color = new Vector4(1f, 1f, 1f, 0.8f);
+                dp.Scale = new Vector2(4f);
+                dp.DestoryAt = 12000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+            else if (layerCount >= 12 && layerCount <= 15)
+            {
+                if (isTTS) accessory.Method.TTS($"{layerCount}");
+                if (isEdgeTTS) accessory.Method.EdgeTTS($"{layerCount}");
+            }
+            else
+            {
+                return;
+            }
+            }, "罪积蓄绘制");
     }
     
     [ScriptMethod(name: "罪积蓄销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4567"],userControl: false)]
