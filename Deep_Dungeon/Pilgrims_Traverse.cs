@@ -3841,7 +3841,7 @@ public class Pilgrims_Traverse
         if (isEdgeTTS)accessory.Method.EdgeTTS("攻击魔法阵");
     }
     
-    [ScriptMethod(name: "黑暗神圣（AOE）读条提示 / Unholy Darkness", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44164"])]
+    [ScriptMethod(name: "黑暗神圣（AOE）读条提示 / Unholy Darkness", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(64|76)$"])]
     public void Q40_黑暗神圣提示(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo("流血AOE", duration: 6000, true);
@@ -3995,7 +3995,7 @@ public class Pilgrims_Traverse
     // P4 烈焰缠身 → 深渊爆焰（存储地火）
     // 1合法（田园郡）优点：近战不丢输出  ；2合双X法 优点：近战不丢输出 ；2合单X法 缺点：近战丢输出且对DPS要求更高 ； 3合法 优点：总伤更低
     
-    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示 / Fevered Flame TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44170"])]
+    [ScriptMethod(name: "烈焰缠身（火人阶段）读条TTS提示 / Fevered Flame TTS", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(69|70)$"])]
     public void Q40_烈焰缠身提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo("火人阶段就位，刷新buff，保持喝药", duration: 3000, true);
