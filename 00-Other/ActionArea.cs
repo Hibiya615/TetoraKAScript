@@ -27,8 +27,17 @@ public class ActionArea
     
     #region 用户控制
     
+    [UserSetting("位移技能预测显示距离圆")]
+    public bool IsMoveActionsCircle { get; set; } = true;
+    
+    [UserSetting("位移技能预测显示时间(ms)")]
+    public int MoveActionsTime { get; set; } = 10000;
+    
+    [UserSetting("位移技能预测颜色")]
+    public ScriptColor MoveActionsColor { get; set; } = new() { V4 = new(0f, 1f, 1f, 1f) };
+    
     [UserSetting("常驻AOE技能绘制一键开关")]
-    public bool isPersistentAoEs { get; set; } = true;
+    public bool IsPersistentAoEs { get; set; } = true;
     
     [UserSetting("常驻AOE技能颜色")]
     public ScriptColor PersistentAoEsColor { get; set; } = new() { V4 = new(0f, 1f, 1f, 2f) };
@@ -37,7 +46,7 @@ public class ActionArea
     public float PersistentOutlineBrightness { get; set; } = 15;
     
     [UserSetting("常驻AOE填充亮度（推荐小于1）")]
-    public double PersistentFillBrightness { get; set; } = 0.3;
+    public float PersistentFillBrightness { get; set; } = 0.2f;
     
     [UserSetting("其它AOE技能颜色")]
     public ScriptColor ActionAoEsColor { get; set; } = new() { V4 = new(0f, 1f, 0f, 1f) };
@@ -48,19 +57,144 @@ public class ActionArea
     [UserSetting("其它AOE填充亮度（推荐小于1）")]
     public float ActionFillBrightness { get; set; } = 0.3f;
     
-    [UserSetting("选择描边绘制类型")]
+    [UserSetting("选择位移预测或范围描边绘制类型")]
     public BlendModeEnum BlendMode { get; set; } = BlendModeEnum.Default;
     
-    private static List<string> _BlendMode = ["VFX", "Imgui"];
+    private static List<string> _blendMode = ["Imgui", "VFX"];
     
     public enum BlendModeEnum
     {
         Default = 0,
-        VFX = 1,
-        Imgui = 2,
+        Imgui = 1,
+        VFX = 2,
     }
     
     #endregion
+
+    [ScriptMethod(name: "位移技能预测圆", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^1[05]m[FB]?$"])]
+    public void 位移技能预测圆 (Event @event, ScriptAccessory accessory)
+    {
+        if (!IsMoveActionsCircle) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        /*
+        switch (@event.)
+        {
+            case "10m":
+                dp.Name = "10m圆";
+                dp.Scale = new Vector2(10f);
+                dp.InnerScale = new Vector2(9.95f);
+                break;
+            case "15m":
+                dp.Name = "15m圆";
+                dp.Scale = new Vector2(15f);
+                dp.InnerScale = new Vector2(14.95f);
+                break;
+        }
+        */
+
+        dp.Name = "15m圆";
+        dp.Scale = new Vector2(15f);
+        dp.InnerScale = new Vector2(14.95f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = MoveActionsColor.V4.WithW(10f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = MoveActionsTime;
+        accessory.Method.SendDraw((DrawModeEnum)BlendMode, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "位移技能预测线 - 前", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^1[05]mF?$"])]
+    public void 位移技能预测线前 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "15m前";
+        dp.Scale = new(0.5f, 15f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = MoveActionsColor.V4.WithW(2f);
+        dp.DestoryAt = MoveActionsTime;
+        dp.Rotation = float.Pi * 2;
+        accessory.Method.SendDraw((DrawModeEnum)BlendMode, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "位移技能预测线 - 后", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^1[05]mB?$"])]
+    public void 位移技能预测线后 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "15m后";
+        dp.Scale = new(0.5f, 15f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = MoveActionsColor.V4.WithW(2f);
+        dp.DestoryAt = MoveActionsTime;
+        dp.Rotation = float.Pi;
+        accessory.Method.SendDraw((DrawModeEnum)BlendMode, DrawTypeEnum.Displacement, dp);
+    }
+    
+    
+    
+    [ScriptMethod(name: "位移技能预测销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(94|2440[12])$"],userControl: false)]
+    public void 位移技能预测销毁 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.SourceId() != accessory.Data.Me) return; 
+        switch (@event.ActionId())
+        {
+            case 94:  // 龙骑 回避跳跃
+                accessory.Method.RemoveDraw($"15m.*");
+                break;
+            case 16010:  // 舞者 前冲步
+                accessory.Method.RemoveDraw($"10m.*");
+                break;
+            case 24401:  // 镰刀 地狱如境
+                accessory.Method.RemoveDraw($"15m.*");
+                break;
+            case 24402:  // 镰刀 地狱出境
+                accessory.Method.RemoveDraw($"15m.*");
+                break;
+            case 34684:  // 画家 速涂
+                accessory.Method.RemoveDraw($"15m.*");
+                break;
+            case 37008:  // 白魔 以太变移
+                accessory.Method.RemoveDraw($"15m.*");
+                break;
+            // 诗人 后跃射击
+            // 盘子 必杀技夜天
+            // 赤魔 移转
+        }
+
+    }
+    
+    [ScriptMethod(name: "[描边] 破阵法", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:17215"])]
+    public void 破阵法描边 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.SourceId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "破阵法描边";
+        dp.Color = PersistentAoEsColor.V4.WithW(PersistentOutlineBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.InnerScale = new Vector2(4.98f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 720000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "[填充] 破阵法", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:17215"])]
+    public void 破阵法填充 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.SourceId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "破阵法填充";
+        dp.Color = PersistentAoEsColor.V4.WithW(PersistentFillBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 720000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "常驻技能销毁", eventType: EventTypeEnum.CombatChanged, eventCondition: ["InCombat:False"],userControl: false)]
+    public void 常驻技能销毁 (Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"破阵法.*");
+    }
     
     [ScriptMethod(name: "[描边] 标准舞步", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1818"])]
     public void 标准舞步描边 (Event @event, ScriptAccessory accessory)
