@@ -55,7 +55,7 @@ public class ActionArea
     public float ActionOutlineBrightness { get; set; } = 15;
     
     [UserSetting("其它AOE填充亮度（推荐小于1）")]
-    public float ActionFillBrightness { get; set; } = 0.3f;
+    public float ActionFillBrightness { get; set; } = 0.2f;
     
     [UserSetting("选择位移预测或范围描边绘制类型")]
     public BlendModeEnum BlendMode { get; set; } = BlendModeEnum.Default;
@@ -128,8 +128,6 @@ public class ActionArea
         dp.Rotation = float.Pi;
         accessory.Method.SendDraw((DrawModeEnum)BlendMode, DrawTypeEnum.Displacement, dp);
     }
-    
-    
     
     [ScriptMethod(name: "位移技能预测销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(94|2440[12])$"],userControl: false)]
     public void 位移技能预测销毁 (Event @event, ScriptAccessory accessory)
@@ -205,7 +203,7 @@ public class ActionArea
         dp.Color = ActionAoEsColor.V4.WithW(ActionOutlineBrightness);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(15f);
-        dp.InnerScale = new Vector2(14.97f);
+        dp.InnerScale = new Vector2(14.96f);
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = 15000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
@@ -224,10 +222,110 @@ public class ActionArea
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "标准舞步销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:1818"],userControl: false)]
-    public void 标准舞步销毁 (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[描边] 结束动作", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3868"])]
+    public void 结束动作描边 (Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"标准舞步.*");
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "结束动作描边";
+        dp.Color = ActionAoEsColor.V4.WithW(ActionOutlineBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.InnerScale = new Vector2(14.96f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "[填充] 结束动作", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3868"])]
+    public void 结束动作填充 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "结束动作填充";
+        dp.Color = ActionAoEsColor.V4.WithW(ActionFillBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "[描边] 技巧舞步", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1819"])]
+    public void 技巧舞步描边 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "技巧舞步描边";
+        dp.Color = ActionAoEsColor.V4.WithW(ActionOutlineBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.InnerScale = new Vector2(14.96f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 15000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "[填充] 技巧舞步", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1819"])]
+    public void 技巧舞步填充 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "技巧舞步填充";
+        dp.Color = ActionAoEsColor.V4.WithW(ActionFillBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 15000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "[描边] 提拉纳", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2698"])]
+    public void 提拉纳描边 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "提拉纳描边";
+        dp.Color = ActionAoEsColor.V4.WithW(ActionOutlineBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.InnerScale = new Vector2(14.96f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "[填充] 提拉纳", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2698"])]
+    public void 提拉纳填充 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "提拉纳填充";
+        dp.Color = ActionAoEsColor.V4.WithW(ActionFillBrightness);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "舞者技能销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:regex:^(181[89]|2698|3868)$"],userControl: false)]
+    public void 舞者技能销毁 (Event @event, ScriptAccessory accessory)
+    {
+        if (@event.SourceId() != accessory.Data.Me) return; 
+        switch (@event.StatusID())
+        {
+            case 1818:
+                accessory.Method.RemoveDraw($"标准舞步.*");
+                break;
+            case 1819: 
+                accessory.Method.RemoveDraw($"技巧舞步.*");
+                break;
+            case 2698: 
+                accessory.Method.RemoveDraw($"提拉纳.*");
+                break;
+            case 3868: 
+                accessory.Method.RemoveDraw($"结束动作.*");
+                break;
+        }
+
     }
 
 }
@@ -330,11 +428,11 @@ public static class EventExtensions
         return ParseHexId(@event["DirectorId"], out var id) ? id : 0;
     }
 
-    public static uint StatusId(this Event @event)
+    public static uint StatusID(this Event @event)
     {
-        return JsonConvert.DeserializeObject<uint>(@event["StatusId"]);
+        return JsonConvert.DeserializeObject<uint>(@event["StatusID"]);
     }
-
+    
     public static uint StackCount(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["StackCount"]);
