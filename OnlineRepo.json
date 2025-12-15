@@ -15,6 +15,19 @@
     ]
   },
   {
+    "Name": "领航明灯天狼星灯塔",
+    "Guid": "8b0c94a9-2d05-4df8-9823-bed2a8d891a5",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "",
+    "DownloadUrl": "",
+    "Note": "v0.0.0.1\r\nLV50 领航明灯天狼星灯塔 初版绘制及部分机制提示",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      160
+    ]
+  },
+  {
     "Name": "邪龙王座龙巢神殿",
     "Guid": "ac6caf4e-5eee-406c-8621-a5f3c5c7e9b0",
     "Version": "0.0.0.2",
