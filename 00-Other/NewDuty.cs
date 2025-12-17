@@ -43,6 +43,8 @@ public class NewDuty
         别人的正式版发了这边就删
         """;
     
+    #region 用户控制
+
     [UserSetting("TTS开关（TTS请二选一开启）")]
     public bool isTTS { get; set; } = false;
     
@@ -52,15 +54,192 @@ public class NewDuty
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
+    [UserSetting("开发者模式")]
+    public bool isDeveloper { get; set; } = false;
+
+    #endregion
     
-    /*
+
     #region  遗忘行路雾之迹
     
     [ScriptMethod(name: "—————— 遗忘行路雾之迹 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 遗忘行路雾之迹(Event @event, ScriptAccessory accessory) { }
     
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 地震 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43327"])]
+    public void 地震(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 暴雷 死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43329"])]
+    public void 特雷诺卡托布莱帕斯_暴雷(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"坦克死刑", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"坦克死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
+    }
+    
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 雷光射线（直线分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44825"])]
+    public void 雷光射线(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"雷光射线";
+        dp.Scale = new (5f, 50f);
+        dp.Owner = @event.SourceId();
+        dp.TargetObject = @event.TargetId();
+        dp.Color = accessory.Data.DefaultSafeColor; 
+        dp.DestoryAt = 5300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 震雷 分散提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43331"])]
+    public void 强化寒冰咆哮(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"分散，避开石头", duration: 2800, true);
+        if (isTTS)accessory.Method.TTS($"分散，避开石头");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散，避开石头");
+    }
+    
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 恶魔之光 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43330"])]
+    public void 恶魔之光(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"躲在石头后", duration: 6300, true);
+        if (isTTS)accessory.Method.TTS($"躲在石头后");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"躲在石头后");
+    }
+        
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 石化吐息（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43335"])]
+    public void 石化吐息(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"石化吐息";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS2_安度西亚斯 猛毒菌 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45345"])]
+    public void 猛毒菌(Event @event, ScriptAccessory accessory)
+    {
+        // 产生毒气团 DataId：19064
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "BOSS2_安度西亚斯 霹雷 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45351"])]
+    public void 霹雷(Event @event, ScriptAccessory accessory)
+    {
+        // 引爆剩余毒气团【45349 飞散】
+        // if (isText)accessory.Method.TextInfo($"AOE，远离剩余雷球", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"AOE,远离剩余雷球");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE，远离剩余雷球");
+    }
+    
+    // 45348 雷电飞驰 直线预兆
+    
+    [ScriptMethod(name: "BOSS2_安度西亚斯 暴雷（连续分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45353"])]
+    public void 安度西亚斯_暴雷(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"暴雷";
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 7200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS2_安度西亚斯 雷电震击 死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45356"])]
+    public void 雷电震击(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"坦克死刑", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"坦克死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
+    }
+    
+    [ScriptMethod(name: "BOSS2_安度西亚斯 惊雷协奏曲（大扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(45337|45342)$"])]
+    public void 惊雷协奏曲(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"惊雷协奏曲";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 310f.DegToRad(); 
+        dp.Rotation = @event.ActionId() == 45337 ? 0f.DegToRad() : 180f.DegToRad();
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS3_雷狮鹫 电光 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45291"])]
+    public void 电光(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "BOSS3_雷狮鹫 黄金爪 死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45305"])]
+    public void 黄金爪(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"坦克死刑", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"坦克死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
+    }
+    
+    [ScriptMethod(name: "BOSS3_雷狮鹫 霹雳 电球直线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4529[78]|4694[34])$"])]
+    public void 霹雳(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "霹雳";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Scale = new (6f, 92f);
+        dp.DestoryAt = 5200;
+        
+        /*
+        switch (@event.ActionId())
+        {
+            case 45297:
+                dp.Scale = new (92f, 6f);
+                dp.DestoryAt = 5200;
+                break;
+            case 45298:
+                dp.Scale = new (92f, 6f);
+                dp.DestoryAt = 5200;
+                break;
+            case 46943:
+                dp.Scale = new (20f, 3f);
+                dp.DestoryAt = 4000;
+                break;
+            case 46944:
+                dp.Scale = new (16f, 3f);
+                dp.DestoryAt = 4000;
+                break;
+        }
+        */
+
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+    }
+
+    [ScriptMethod(name: "BOSS3_雷狮鹫 雷光坠击 直线击退", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45301"])]
+    public void 雷光坠击(Event @event, ScriptAccessory accessory)
+    {
+        // 击退距离为 12m
+        // if (isText)accessory.Method.TextInfo($"中间击退然后躲避直线", duration: 5300, true);
+        if (isTTS)accessory.Method.TTS($"中间击退然后躲避直线");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"中间击退然后躲避直线");
+    }
+    
+    
     #endregion
-    */
+
     
     
     /*
