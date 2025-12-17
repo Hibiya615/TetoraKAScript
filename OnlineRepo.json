@@ -866,12 +866,28 @@
   {
     "Name": "PVP技能绘制",
     "Guid": "070e161a-26e9-4a57-8b19-da8c4201058c",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/PVP/PVPAction.cs",
-    "Note": "v0.0.0.1:\r\nPVP技能绘制，全部地图可用，未做任何区域限制。\r\n推荐先自己过一遍设置把不需要的关闭\r\n【仅适用敌方目标标记】是用于四小的，因为一般都会给四小标头标x",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.2:\r\nPVP技能绘制，全部地图可用，未做任何区域限制。\r\n推荐先自己过一遍设置把不需要的关闭\r\n【仅适用敌方目标标记】是用于四小的，因为一般都会给四小标头标x",
+    "UpdateInfo": "API14",
     "TerritoryIds": []
+  },
+  {
+    "Name": "最新最热临时绘制",
+    "Guid": "80890eac-4730-4708-ad1b-05aba469c2a1",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/NewDuty.cs",
+    "Note": "v0.0.0.1:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1314,
+      1307,
+      1308,
+      1318
+    ]
   }
 ]

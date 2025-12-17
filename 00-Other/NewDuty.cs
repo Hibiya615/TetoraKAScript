@@ -53,22 +53,40 @@ public class NewDuty
     public bool isText { get; set; } = true;
     
     
+    /*
     #region  遗忘行路雾之迹
     
+    [ScriptMethod(name: "—————— 遗忘行路雾之迹 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 遗忘行路雾之迹(Event @event, ScriptAccessory accessory) { }
+    
     #endregion
+    */
     
     
+    /*
     #region  格莱杨拉波尔歼灭战
     
+    [ScriptMethod(name: "—————— 格莱杨拉波尔歼灭战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 格莱杨拉波尔歼灭战(Event @event, ScriptAccessory accessory) { }
+    
     #endregion
+    */
     
     
+    /*
     #region  格莱杨拉波尔歼殛战
     
+    [ScriptMethod(name: "—————— 格莱杨拉波尔歼殛战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 格莱杨拉波尔歼殛战(Event @event, ScriptAccessory accessory) { }
+    
     #endregion
+    */
     
     
     #region  月读幻巧战
+    
+    [ScriptMethod(name: "—————— 月读幻巧战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 月读幻巧战(Event @event, ScriptAccessory accessory) { }
 
     private const uint TsukuyomiDataId = 123456;
     

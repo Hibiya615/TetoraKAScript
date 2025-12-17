@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class PVPTAction
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         【仅适用敌方目标标记】是用于四小的，因为一般都会给四小标头标x
@@ -816,5 +816,5 @@ public static class ActionExt
     }
 
     public static bool IsSpellReady(this uint spellId) => IsReadyWithCanCast(spellId, ActionType.Action);
-    public static bool IsAbilityReady(this uint abilityId) => IsReadyWithCanCast(abilityId, ActionType.Ability);
+    // public static bool IsAbilityReady(this uint abilityId) => IsReadyWithCanCast(abilityId, EventAction.Ability);
 }
