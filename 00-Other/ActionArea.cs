@@ -21,6 +21,7 @@ public class ActionArea
     const string noteStr =
         """
         v0.0.0.1:
+        【测试版】懒得写所以暂时不会更新，凑合用先
         技能范围绘制，全场景可用
         请先自行设置合适亮度并用任意技能测试
         """;
@@ -186,6 +187,12 @@ public class ActionArea
         dp.Scale = new Vector2(5f);
         dp.DestoryAt = 720000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "小仙女消失自动销毁破阵法绘制", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:1008"])]
+    public void 小仙女消失自动销毁破阵法 (Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"破阵法.*");
     }
     
     [ScriptMethod(name: "常驻技能销毁", eventType: EventTypeEnum.CombatChanged, eventCondition: ["InCombat:False"],userControl: false)]

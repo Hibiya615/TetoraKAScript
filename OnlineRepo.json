@@ -889,5 +889,16 @@
       1308,
       1318
     ]
+  },
+  {
+    "Name": "技能范围",
+    "Guid": "f85df3b8-baa4-42b7-8196-bc26c58fa251",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/ActionArea.cs",
+    "Note": "v0.0.0.1:\r\n技能范围绘制，全场景可用\r\n请先自行设置合适亮度并用任意技能测试",
+    "UpdateInfo": "【测试版】懒得写所以暂时不会更新，凑合用先",
+    "TerritoryIds": []
   }
 ]
