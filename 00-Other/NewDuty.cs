@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1314,1307,1308,1318],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1314: 遗忘行路雾之迹
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -252,14 +252,153 @@ public class NewDuty
     */
     
     
-    /*
+
     #region  格莱杨拉波尔歼殛战
     
     [ScriptMethod(name: "—————— 格莱杨拉波尔歼殛战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 格莱杨拉波尔歼殛战(Event @event, ScriptAccessory accessory) { }
     
-    #endregion
+    uint Sperad = 0;
+    uint Stack = 0;
+    
+    public void Init(ScriptAccessory accessory) {
+        Sperad = 0;
+        Stack = 0;
+    }
+    
+    [ScriptMethod(name:"分散分摊备用重置", eventType:EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4566[34]$"], userControl:false)]
+    public void 分散分摊备用重置(Event @event, ScriptAccessory accessory) 
+    {
+         Sperad = 0;
+         Stack  = 0;
+    }
+    
+    [ScriptMethod(name:"分散分摊记录", eventType:EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4566[34]$"], userControl:false)]
+    public void 分散分摊记录(Event @event, ScriptAccessory accessory) 
+    {
+        switch (@event.ActionId())
+        {
+            case 45663:
+                Sperad = 1;
+                if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 已记录【分散】");
+                break;
+            case 45664:
+                Stack  = 1;
+                if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 已记录【分摊】");
+                break;
+        }
+    }
+    
+    [ScriptMethod(name:"超增压 击退/吸引 分散/分摊 播报", eventType:EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4567[07]$"])]
+    public void 超增压(Event @event, ScriptAccessory accessory) 
+    {
+        if (@event.ActionId == 45670)
+        {
+            string knockbackText = "击退";
+            string knockbackTTS = "击退";
+        
+            if (Sperad == 1)
+            {
+                knockbackText += " + 分散";
+                knockbackTTS += " 后分散";
+            }
+            else if (Stack == 1)
+            {
+                knockbackText += " + 分摊";
+                knockbackTTS += " 后分摊";
+            }
+        
+            if (isText) accessory.Method.TextInfo(knockbackText, duration: 9300, true);
+            if (isTTS) accessory.Method.TTS(knockbackTTS);
+            if (isEdgeTTS) accessory.Method.EdgeTTS(knockbackTTS);
+        }
+        else if (@event.ActionId == 45670)
+        {
+            string attractText = "吸引";
+            string attractTTS = "吸引";
+        
+            if (Sperad == 1)
+            {
+                attractText += " + 分散";
+                attractTTS += " 后分散";
+            }
+            else if (Stack == 1)
+            {
+                attractText += " + 分摊";
+                attractTTS += " 后分摊";
+            }
+        
+            if (isText) accessory.Method.TextInfo(attractText, duration: 9300, true);
+            if (isTTS) accessory.Method.TTS(attractTTS);
+            if (isEdgeTTS) accessory.Method.EdgeTTS(attractTTS);
+        }
+        else
+        {
+            if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 超增压播报错误");
+        }
+    }
+    
+    [ScriptMethod(name:"分散分摊重置", eventType:EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4567[07]$"], userControl:false)]
+    public void 分散分摊重置(Event @event, ScriptAccessory accessory) 
+    {
+        // 在 【超增压急行】 或 【超增压抽雾】判定后，重置
+        Sperad = 0;
+        Stack  = 0;
+    }
+    
+    /*
+    
+    [ScriptMethod(name: "前照光 / 雷鸣吐息（上下AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^456(87|90)]$"])]
+    public void 前照光_雷鸣吐息(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.ActionId == 45687)
+        {
+            if (isTTS)accessory.Method.TTS($"上");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"上");
+        }
+        else if (@event.ActionId == 45690)
+        {
+            if (isTTS)accessory.Method.TTS($"下");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"下");
+        }
+        else
+        {
+            if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 上下判断错误");
+        }
+    }
+    
     */
+    
+    [ScriptMethod(name: "护卫炮塔_雷转质射线（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4568[1-3]$"])]
+    public void 护卫炮塔_雷转质射线(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"护卫炮塔_雷转质射线{@event.SourceId}";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 6700;
+        
+        switch (@event.ActionId())
+        {
+            case 45681:
+                dp.Scale = new (5f, 25f);
+                break;
+            case 45682:
+                dp.Scale = new (5f, 10f); // 表格是长25，但是日本人的Spl画的10，先信日本人.jpg
+                break;
+            case 45683:
+                dp.Scale = new (5f, 20f); 
+                break;
+        }
+
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    
+    
+    
+    #endregion
+
     
     
     #region  月读幻巧战
