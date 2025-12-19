@@ -24,8 +24,8 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace NewDuty;
 
-[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1314,1307,1308,1318],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1314,1307,1308,1318,1320,1322,1324,1326],
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1314: 遗忘行路雾之迹
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -251,7 +251,6 @@ public class NewDuty
     #endregion
     */
     
-    
 
     #region  格莱杨拉波尔歼殛战
     
@@ -398,8 +397,6 @@ public class NewDuty
     
     
     #endregion
-
-    
     
     #region  月读幻巧战
     
@@ -506,6 +503,175 @@ public class NewDuty
 
     }
     */
+    
+    #endregion
+    
+    #region M9N
+    
+    [ScriptMethod(name: "—————— M9N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void M9N(Event @event, ScriptAccessory accessory) { }
+    
+    
+    #endregion
+    
+    #region M10N
+    
+    [ScriptMethod(name: "—————— M10N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void M10N(Event @event, ScriptAccessory accessory) { }
+    
+    
+    #endregion
+    
+    #region M11N
+    
+    [ScriptMethod(name: "—————— M11N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void M11N(Event @event, ScriptAccessory accessory) { }
+    
+    
+    #endregion
+    
+    #region M12N
+    
+    [ScriptMethod(name: "—————— M12N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void M12N(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "巨蟒绞缠（缠绕钢铁）判定时间", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46198"])]
+    public void 巨蟒绞缠(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"巨蟒绞缠";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(13f);
+        dp.DestoryAt = 39700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "灾变吐息（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:47547"])]
+    public void 灾变吐息(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"灾变吐息";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (20f, 30f);
+        dp.DestoryAt = 1700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    [ScriptMethod(name: "极饿伸展（扇形）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:46189"])]
+    public void 极饿伸展(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"极饿伸展";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(35f);
+        dp.Radian = 120f.DegToRad();
+        dp.DestoryAt = 10300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "大爆炸（屎块钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46191"])]
+    public void 大爆炸(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"大爆炸";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    /*
+    [ScriptMethod(name: "盛大登场（拆地板蛇出现）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4620[23]$"])]
+    public void 盛大登场(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"盛大登场";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (2.5f, 15f);
+        dp.DestoryAt = 3200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    */
+    
+    [ScriptMethod(name: "震场（拆地板）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46205"])]
+    public void 震场(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"震场";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (10f, 15f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    [ScriptMethod(name: "分裂灾变（蛇头直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46207"])]
+    public void 分裂灾变(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"分裂灾变";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (10f, 30f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    [ScriptMethod(name: "爆风细胞（击退距离预测）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^474[78]$"])]
+    public void 爆风细胞(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = @event.StatusId==4747 ? "爆风细胞前" : "爆风细胞后";
+        dp.Scale = new(1f,15f);
+        dp.Owner = accessory.Data.Me;
+        dp.Rotation = @event.StatusId==4747 ? float.Pi *2 : float.Pi;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+        dp.DestoryAt = 7000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "细胞失控（本体直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:48090"])]
+    public void 细胞失控(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"细胞失控";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (8f, 30f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    [ScriptMethod(name: "细胞失控（直线2）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:48091"])]
+    public void 细胞失控2(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"细胞失控2";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (8f, 30f);
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+    
+    [ScriptMethod(name: "细胞失控（大直线预兆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:48095"])]
+    public void 细胞失控大(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"细胞失控大";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        dp.Scale = new (35f, 0.5f);
+        dp.DestoryAt = 15800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
     
     #endregion
 
