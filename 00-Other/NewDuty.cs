@@ -24,21 +24,20 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace NewDuty;
 
-[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1314,1307,1308,1318,1320,1322,1324,1326],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1314,1307,1308,1320,1322,1324,1326],
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1314: 遗忘行路雾之迹
  * 1307: 格莱杨拉波尔歼灭战
  * 1308: 格莱杨拉波尔歼殛战
- * 1318: 月读幻巧战
  */
 
 public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -288,6 +287,22 @@ public class NewDuty
         }
     }
     
+    [ScriptMethod(name:"超增压 分散/分摊 存储播报", eventType:EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4566[34]$"])]
+    public void 超增压存储(Event @event, ScriptAccessory accessory) 
+    {
+        switch (@event.ActionId())
+        {
+            case 45663:
+                if (isTTS)accessory.Method.TTS($"存储分散");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"存储分散");
+                break;
+            case 45664:
+                if (isTTS)accessory.Method.TTS($"存储分摊");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"存储分摊");
+                break;
+        }
+    }
+    
     [ScriptMethod(name:"超增压 击退/吸引 分散/分摊 播报", eventType:EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4567[07]$"])]
     public void 超增压(Event @event, ScriptAccessory accessory) 
     {
@@ -307,11 +322,11 @@ public class NewDuty
                 knockbackTTS += " 后分摊";
             }
         
-            if (isText) accessory.Method.TextInfo(knockbackText, duration: 9300, true);
+            if (isText) accessory.Method.TextInfo(knockbackText, duration: 10500, true);
             if (isTTS) accessory.Method.TTS(knockbackTTS);
             if (isEdgeTTS) accessory.Method.EdgeTTS(knockbackTTS);
         }
-        else if (@event.ActionId == 45670)
+        else if (@event.ActionId == 45677)
         {
             string attractText = "吸引";
             string attractTTS = "吸引";
@@ -327,7 +342,7 @@ public class NewDuty
                 attractTTS += " 后分摊";
             }
         
-            if (isText) accessory.Method.TextInfo(attractText, duration: 9300, true);
+            if (isText) accessory.Method.TextInfo(attractText, duration: 10500, true);
             if (isTTS) accessory.Method.TTS(attractTTS);
             if (isEdgeTTS) accessory.Method.EdgeTTS(attractTTS);
         }
@@ -393,116 +408,43 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
     
-    
-    
-    
-    #endregion
-    
-    #region  月读幻巧战
-    
-    [ScriptMethod(name: "—————— 月读幻巧战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 月读幻巧战(Event @event, ScriptAccessory accessory) { }
-
-    private const uint TsukuyomiDataId = 123456;
-    
-    [ScriptMethod(name: "月下舞扇（九连环判定动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45370"])]
-    public void 月下舞扇(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "雷光一闪（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45666"])]
+    public void 雷光一闪(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"月下舞扇{@event.SourceId}";
+        dp.Name = "雷光一闪";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 4700;
-        dp.ScaleMode = ScaleMode.ByTime;
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(4f);
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "深宵换装_黄泉的铁尖 分散提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45361"])]
-    public void 深宵换装_黄泉的铁尖(Event @event, ScriptAccessory accessory)
-    {
-        if (isText)accessory.Method.TextInfo("职能分散", duration: 3700, true);
-        if (isTTS)accessory.Method.TTS("职能分散");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("职能分散");
-    }
-    
-    [ScriptMethod(name: "深宵换装_黄泉的铳弹 分摊提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45360"])]
-    public void 深宵换装_黄泉的铳弹(Event @event, ScriptAccessory accessory)
-    {
-        if (isText)accessory.Method.TextInfo("背后集合分摊", duration: 3700, true);
-        if (isTTS)accessory.Method.TTS("集合分摊");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("集合分摊");
-    }
-    
-    [ScriptMethod(name: "月读（鸳鸯锅buff提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^153[89]$", "StackCount:4"])]
-    public void 月读(Event @event, ScriptAccessory accessory)
-    {
-        if (@event.TargetId() != accessory.Data.Me) return; 
-        var color = @event.StatusId == 1538 ? "黑色" : "白色";
-        if (isText) accessory.Method.TextInfo($"吃{color}", duration: 2000, true);
-        if (isTTS) accessory.Method.EdgeTTS($"吃{color}");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"吃{color}");
-    }
-    
-    [ScriptMethod(name: "月刀左/右斩", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4539[01]$"])]
-    public void 月刀左右斩(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "雷光雨（魔法阵钢铁最终位置）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45713"])]
+    public void 雷光雨(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = @event.ActionId == 45390 ? "月刀左斩" : "月刀右斩";
+        dp.Name = "雷光雨";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(60);
-        dp.Radian = 210f.DegToRad();
-        dp.Rotation = @event.ActionId == 45390 ? 270 : 90;
-        dp.DestoryAt = 4700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+        dp.Scale = new Vector2(16f);
+        dp.DestoryAt = 2400;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"雷光雨描边";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(16f);
+        dp1.InnerScale = new Vector2(15.8f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 2400;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
     
-    /*
-    [ScriptMethod(name: "纯白怨念（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4539[01]$"])]
-    public void 纯白怨念(Event @event, ScriptAccessory accessory)
-    {
-        // 满月流 StatusID: 0x5FF
-        var bossObject = accessory.Data.Objects.GetByDataId().FirstOrDefault();;
-        if (bossObject == null) return;
     
-        if (!IbcHelper.HasStatus(accessory, accessory.Data.Objects.GetByDataId().FirstOrDefault(), 0x5FF))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "纯白怨念";
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Owner = @event.SourceId();
-            dp.Scale = new Vector2(10f);
-            dp.DestoryAt = 4700;
-            dp.ScaleMode = ScaleMode.ByTime;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-
-    }
-    
-    [ScriptMethod(name: "漆黑怨念（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4539[01]$"])]
-    public void 漆黑怨念(Event @event, ScriptAccessory accessory)
-    {
-        // 新月流 StatusID: 0x600
-        var bossObject = accessory.Data.Objects.GetByDataId().FirstOrDefault();;
-        if (bossObject == null) return;
-    
-        if (!IbcHelper.HasStatus(accessory, accessory.Data.Objects.GetByDataId().FirstOrDefault(), 0x600))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "漆黑怨念";
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Owner = @event.SourceId();
-            dp.Scale = new Vector2(40f);
-            dp.InnerScale = new Vector2(5f);
-            dp.Radian = float.Pi * 2;
-            dp.DestoryAt = 4700;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
-        }
-
-    }
-    */
     
     #endregion
     
