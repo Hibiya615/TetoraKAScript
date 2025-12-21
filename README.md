@@ -27,6 +27,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 - `LV55 邪龙王座龙巢神殿`
 - `LV70 鏖战红莲阿拉米格` `LV70 疯狂战舰无限回廊` `LV70 污染庭园圣茉夏娜植物园`
 - `LV80 异界遗构希尔科斯孪晶塔`
+- `LV100 遗忘行路雾之迹`
 
 **讨伐歼灭战 / Trials / 討伐・討滅戦**
 

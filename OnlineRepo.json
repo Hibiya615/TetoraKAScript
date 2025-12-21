@@ -93,6 +93,19 @@
     ]
   },
   {
+    "Name": "LV100 7.4 遗忘行路雾之迹",
+    "Guid": "5ecdb3de-a67c-46c1-bac3-20dc015363b6",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Dungeon/Mistwake.cs",
+    "Note": "v0.0.0.1:\r\n遗忘行路雾之迹 / Mistwake / 遺忘行路 ミストウェイク 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1314
+    ]
+  },
+  {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
     "Version": "0.0.0.3",
