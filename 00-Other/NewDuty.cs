@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307,1320,1322,1324,1326],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -36,7 +36,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -74,6 +74,247 @@ public class NewDuty
     [ScriptMethod(name: "—————— M9N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void M9N(Event @event, ScriptAccessory accessory) { }
     
+    [ScriptMethod(name: "魅亡之音 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45921"])]
+    public void 魅亡之音(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "月之半相（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(4590[6-9]|4591[0-3])$"])]
+    public void 月之半相(Event @event, ScriptAccessory accessory)
+    {
+        // 左刀: 45906 [二段右刀: 45907] ; 右刀: 45910 [二段左刀: 45911] ; 强化左刀: 45908 [二段右刀: 45909] ; 强化右刀: 45912 [二段左刀: 45913] ; 
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "月之半相";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.4f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60);
+        dp.Radian = 180f.DegToRad();
+        
+        switch (@event.ActionId())
+        {
+            case 45906:
+                dp.Rotation = 90f.DegToRad();
+                dp.DestoryAt = 4700;
+                break;
+            case 45907:
+                dp.Rotation = 270f.DegToRad();
+                dp.Delay = 4700;
+                dp.DestoryAt = 3500;
+                break;
+            case 45910:
+                dp.Rotation = 270f.DegToRad();
+                dp.DestoryAt = 4700;
+                break;
+            case 45911:
+                dp.Rotation = 90f.DegToRad();
+                dp.Delay = 4700;
+                dp.DestoryAt = 3500;
+                break;
+            case 45908:
+                dp.Offset = new Vector3(4, 0, 0);
+                dp.Rotation = 90f.DegToRad();
+                dp.DestoryAt = 4700;
+                break;
+            case 45909:
+                dp.Offset = new Vector3(-4, 0, 0);
+                dp.Rotation = 270f.DegToRad();
+                dp.Delay = 4700;
+                dp.DestoryAt = 3500;
+                break;
+            case 45912:
+                dp.Offset = new Vector3(-4, 0, 0);
+                dp.Rotation = 270f.DegToRad();
+                dp.DestoryAt = 4700;
+                break;
+            case 45913:
+                dp.Offset = new Vector3(4, 0, 0);
+                dp.Rotation = 90f.DegToRad();
+                dp.Delay = 4700;
+                dp.DestoryAt = 3500;
+                break;
+        }
+        
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
+    }
+    
+    [ScriptMethod(name: "硬核之声 双死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45914"])]
+    public void 硬核之声(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"坦克死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
+    }
+    
+    [ScriptMethod(name: "施虐的尖啸 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45875"])]
+    public void 施虐的尖啸(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "致命刑锯_前进（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45877"])]
+    public void 致命刑锯_前进(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "致命刑锯_前进";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Scale = new(20f, 10f); 
+        dp.Offset = new Vector3(0, 0, 5);
+        dp.DestoryAt = 4700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "致命刑锯_冲出（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^458(7[89]|80)$"])]
+    public void 致命刑锯_冲出(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "致命刑锯_冲出";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f); 
+        dp.Scale = new(5f, 32f);
+        dp.Delay = 2000;
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "尖锐的音调（分组分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45925"])]
+    public void 尖锐的音调(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"分组分摊");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"分组分摊");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"尖锐的音调";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 7000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "全场杀伤 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45886"])]
+    public void 全场杀伤(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "致命的闭幕曲 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4588[89]"])]
+    public void 致命的闭幕曲(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "碎烂脉冲（圆形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45894"])]
+    public void 碎烂脉冲(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "碎烂脉冲";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "以太流失（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45897"])]
+    public void 以太流失(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "以太流失";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f); 
+        dp.Scale = new(6f, 80f); 
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+        
+        for(int i=1;i<=2;++i) {
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight, dp);
+            dp.Rotation+=90f.DegToRad();
+        }
+    }
+    
+    [ScriptMethod(name: "粗暴之雨（连续分摊）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0131"])]
+    public void 粗暴之雨(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1320) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"粗暴之雨";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 9400; // 以太增强后会多一次，第一次分摊其实是8400ms
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "贪欲无厌 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45892"])]
+    public void 贪欲无厌(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "致命轮锯（圆形）高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:19173"])]
+    public void 致命轮锯高亮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"致命轮锯高亮";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(2.5f);
+        dp.DestoryAt = 63300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"致命轮锯高亮描边";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(2.5f);
+        dp1.InnerScale = new Vector2(2.46f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 63300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+    }
+    
+    [ScriptMethod(name: "致命刑锯（直线）高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:19174"])]
+    public void 致命刑锯高亮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "致命刑锯高亮";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f); 
+        dp.Scale = new(5f, 15f);
+        dp.Offset = new Vector3(0f, 0f, 4f);
+        dp.DestoryAt = 63300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "致命刺锤_掉落 踩塔提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45883"])]
+    public void 致命刺锤_掉落(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"踩塔", duration: 6000, false);
+        if (isTTS)accessory.Method.TTS($"踩塔");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"踩塔");
+    }
+    
+    [ScriptMethod(name: "致命刺锤_刚刺发射 攻击提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45885"])]
+    public void 刚刺发射(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"攻击刺锤");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"攻击刺锤");
+    }
+    
+    [ScriptMethod(name: "致命刑具销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^1917[34]$"],userControl: false)]
+    public void 致命刑具销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"致命.*");
+    }
+    
     
     #endregion
     
@@ -81,6 +322,121 @@ public class NewDuty
     
     [ScriptMethod(name: "—————— M10N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void M10N(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "炽焰冲击（分摊死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46464"])]
+    public void 炽焰冲击(Event @event, ScriptAccessory accessory)
+    {
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        
+        if (isTTS)accessory.Method.TTS($"分摊死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"分摊死刑");
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"炽焰冲击";
+        dp.Color = isTank ? accessory.Data.DefaultSafeColor : accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "斗志昂扬 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4646[67]$"])]
+    public void 斗志昂扬(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "破势乘浪（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46483"])]
+    public void 破势乘浪(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "破势乘浪";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Scale = new(15f, 50f); 
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+    }
+    
+    [ScriptMethod(name: "惊涛骇浪（击退预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46481"])]
+    public void 惊涛骇浪(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "惊涛骇浪";
+        dp.Scale = new(1f, 10f);
+        dp.Color = new Vector4(0f, 1f, 1f, 3f);
+        dp.Owner = accessory.Data.Me;
+        dp.Rotation = @event.SourceRotation();
+        dp.FixRotation = true;
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "惊涛骇浪防击退销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^(7548|7559)$"],userControl: false)]
+    public void 惊涛骇浪防击退销毁(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw("惊涛骇浪");
+    }
+    
+    [ScriptMethod(name: "浪尖转体（跳跃顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46488"])]
+    public void 浪尖转体(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"浪尖转体";
+        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 120f.DegToRad();
+        dp.DestoryAt = 6500;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "深海冲击 死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46465"])]
+    public void 深海冲击(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"坦克死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
+    }
+    
+    [ScriptMethod(name: "极限炫技（距离衰减）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46499"])]
+    public void 极限炫技(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"去两侧贴边");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"去两侧贴边");
+    }
+    
+    [ScriptMethod(name: "腾火踏浪（四连踩塔）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46474"])]
+    public void 腾火踏浪(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"四连踩塔");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"四连踩塔");
+    }
+    
+    [ScriptMethod(name: "极限以太_混合爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46507"])]
+    public void 极限以太_混合爆炸(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"极限以太_混合爆炸";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(9f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "旋绕烈火（分摊）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0293"])]
+    public void 旋绕烈火(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1322) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"旋绕烈火";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
     
     
     #endregion
@@ -90,6 +446,249 @@ public class NewDuty
     [ScriptMethod(name: "—————— M11N ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void M11N(Event @event, ScriptAccessory accessory) { }
     
+    [ScriptMethod(name: "铸兵猛攻 - 斧（钢铁预备）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46007"])]
+    public void 铸兵猛攻_斧预备(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"稍后钢铁");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"稍后钢铁");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"铸兵猛攻_斧";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.3f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 8100;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "铸兵猛攻 - 斧（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46011"])]
+    public void 铸兵猛攻_斧(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"远离");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"远离");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"铸兵猛攻_斧";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "铸兵猛攻 - 镰刀（月环预备）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46008"])]
+    public void 铸兵猛攻_镰刀预备(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"稍后月环");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"稍后月环");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"铸兵猛攻_镰刀";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.InnerScale = new Vector2(4.9f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 8100;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "铸兵猛攻 - 镰刀（月环危险区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46013"])]
+    public void 铸兵猛攻_镰刀(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"靠近");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"铸兵猛攻_镰刀";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.InnerScale = new Vector2(5f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "铸兵猛攻 - 剑（十字预备）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46009"])]
+    public void 铸兵猛攻_剑预备(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"稍后十字");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"稍后十字");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "铸兵猛攻_剑";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.15f); 
+        dp.Scale = new(10f, 80f); 
+        dp.DestoryAt = 8100;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+        
+        for(int i=1;i<=2;++i) {
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight, dp);
+            dp.Rotation+=90f.DegToRad();
+        }
+    }
+    
+    [ScriptMethod(name: "铸兵猛攻 - 剑（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46015"])]
+    public void 铸兵猛攻_剑(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"去四角");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"去四角");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "铸兵猛攻_剑";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f); 
+        dp.Scale = new(10f, 80f); 
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+        
+        for(int i=1;i<=2;++i) {
+            accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight, dp);
+            dp.Rotation+=90f.DegToRad();
+        }
+    }
+    
+    [ScriptMethod(name: "彗星雨 分散+连续黄圈", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46024"])]
+    public void 彗星雨(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"分散并连续躲避黄圈");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散并连续躲避黄圈");
+    }
+    
+    [ScriptMethod(name: "彗星风暴 黄圈躲避提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46026"],suppress:500)]
+    public void 彗星风暴(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"快躲开");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"快躲开");
+    }
+    
+    [ScriptMethod(name: "统治的战舞_爆炸（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:47033"])]
+    public void 统治的战舞_爆炸(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "统治的战舞_爆炸";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f); 
+        dp.Scale = new(10f, 60f); 
+        dp.DestoryAt = 6200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+    }
+    
+    [ScriptMethod(name: "铸兵之令：轰击（分散+死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46037"])]
+    public void 铸兵之令_轰击(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"分散加死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散加死刑");
+    }
+    
+    [ScriptMethod(name: "铸兵轰击（分摊死刑）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0258"])]
+    public void 铸兵轰击(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1324) return;
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"铸兵轰击";
+        dp.Color = isTank ? accessory.Data.DefaultSafeColor : accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "霸王大漩涡（清血）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46039"])]
+    public void 霸王大漩涡(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"清一雪");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"清一雪");
+    }
+    
+    [ScriptMethod(name: "举世无双的霸王 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46044"])]
+    public void 举世无双的霸王(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"AOE", duration: 8000, true);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "大漩涡_强风（四向扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46041"])]
+    public void 大漩涡_强风(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"大漩涡_强风";
+        dp.Color = new Vector4(1f, 0f, 0f, 2f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 45f.DegToRad();
+        dp.Delay = 3700;
+        dp.DestoryAt = 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "王者陨石雨（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46059"])] // 也许还有优化空间
+    public void 王者陨石雨(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "王者陨石雨";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.2f); 
+        dp.Scale = new(10f, 60f); 
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "王者陨石（黄圈高亮）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46058"])]
+    public void 王者陨石(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"王者陨石";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.Delay = 2200;
+        dp.DestoryAt = 1500;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "遮天陨石（核爆危险区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46060"])]
+    public void 遮天陨石(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"遮天陨石";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(20f);
+        dp.DestoryAt = 6200;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "登天碎地（拆半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4606[3579]$"])]
+    public void 登天碎地Front(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "登天碎地Front";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor; 
+        dp.Scale = new(40f, 26f); 
+        dp.DestoryAt = 12300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+    }
+    
+    [ScriptMethod(name: "登天碎地（砸半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^460(6[468]|70)$"])]
+    public void 登天碎地Back(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "登天碎地Back";
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f); 
+        dp.Scale = new(40f, 80f);
+        dp.Delay = 4900;
+        dp.DestoryAt = 12300;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+    }
     
     #endregion
     
