@@ -22,15 +22,16 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class PVPTAction
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.3:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
+        改完用户设置的数值记得点保存！保存！
         【仅适用敌方目标标记】是用于四小的，因为一般都会给四小标头标x
         """;
     
@@ -47,6 +48,21 @@ public class PVPTAction
     
     [UserSetting("启用仅适用敌方目标标记 [适用:龙骑冲天绘制]" )]
     public bool isOnlyMark { get; set; } = false;
+    
+    [UserSetting("自身部分技能颜色（如圣盾阵）")]
+    public ScriptColor SelfAOEColor { get; set; } = new() { V4 = new(0f, 1f, 1f, 1f) };
+    
+    [UserSetting("自身部分技能填充亮度（推荐小于1）")]
+    public float SelfAOEFillBrightness { get; set; } = 0.4f;
+    
+    [UserSetting("敌方部分技能颜色（如占星、诗人LB）")]
+    public ScriptColor EnmityAOEColor { get; set; } = new() { V4 = new(1f, 0f, 1f, 1f) };
+    
+    [UserSetting("敌方部分技能填充亮度（推荐小于1）")]
+    public float EnmityAOEFillBrightness { get; set; } = 0.25f;
+    
+    [UserSetting("敌方部分技能显示时间 (ms)")]
+    public long EnmityAOETimer { get; set; } = 3000;
     
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
@@ -69,7 +85,6 @@ public class PVPTAction
     };
     
     #endregion
-    
     
     public bool isPartyMember(ScriptAccessory accessory, uint SourceId)
     {
@@ -100,6 +115,39 @@ public class PVPTAction
         return isInMyAlliance;
     }
     
+    #region 职能技能
+    
+    [ScriptMethod(name: "敌方彗星判定时间绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43252"])]
+    public void CometEnmity(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+        
+        if (!PartyFilter(accessory, obj))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name =  $"敌方彗星{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+            dp.Position = @event.EffectPosition();
+            dp.Scale = new Vector2(10f);
+            dp.ScaleMode = ScaleMode.ByTime;
+            dp.DestoryAt = 2400;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "敌方彗星销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:43252"],userControl: false)]
+    public void 敌方彗星销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"敌方彗星{@event.SourceId()}");
+    }
+    
+    #endregion
+    
+    #region 龙骑
+    
+    [ScriptMethod(name: "———————— 龙骑 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 龙骑(Event @event, ScriptAccessory accessory) { }
 
     [ScriptMethod(name: "自身冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterSelf(Event @event, ScriptAccessory accessory)
@@ -229,6 +277,12 @@ public class PVPTAction
         accessory.Method.RemoveDraw($"敌方.*冲天.*{@event.SourceId()}");
     }
     
+    #endregion
+
+    #region 贤者
+    
+    [ScriptMethod(name: "———————— 贤者 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 贤者 (Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "小队中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
     public void MesotesParty(Event @event, ScriptAccessory accessory)
@@ -295,6 +349,13 @@ public class PVPTAction
         accessory.Method.RemoveDraw($"敌方中庸之道{@event.SourceId()}");
     }
     
+    #endregion
+
+    #region DK
+    
+    [ScriptMethod(name: "———————— DK ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void DK (Event @event, ScriptAccessory accessory) { }
+    
     [ScriptMethod(name: "敌方腐秽大地绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29094"],suppress:3000)]
     public void SaltedEarthEnmity(Event @event, ScriptAccessory accessory)
     {
@@ -319,6 +380,13 @@ public class PVPTAction
         // 腐秽大地 施放者 StatusID：3036 持续10s ；区域自身效果（减伤+持续恢复）StatusID：3037 间隔判定,每次判定持续5s ；区域敌方效果（出血）StatusID：3038 间隔判定,每次判定持续5s 
         accessory.Method.RemoveDraw($"敌方腐秽大地{@event.SourceId()}");
     }
+    
+    #endregion
+
+    #region 机工
+    
+    [ScriptMethod(name: "———————— 机工 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 机工 (Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "小队机工炮塔绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29412"],suppress:3000)]
     public void BishopAutoturretParty(Event @event, ScriptAccessory accessory)
@@ -366,31 +434,13 @@ public class PVPTAction
         // 象式浮空炮塔启动中 施放者 StatusID：3155 持续10s ；区域小队效果（盾）StatusID：3156 每次持续6s ； 以太炮 ActionId: 29413
         accessory.Method.RemoveDraw($"敌方象式浮空炮塔{@event.SourceId()}");
     }
-
-    [ScriptMethod(name: "敌方彗星判定时间绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43252"])]
-    public void CometEnmity(Event @event, ScriptAccessory accessory)
-    {
-        var obj = IbcHelper.GetById(accessory, @event.SourceId);
-        if (obj == null || !obj.IsValid()) return;
-        
-        if (!PartyFilter(accessory, obj))
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name =  $"敌方彗星{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(10f);
-            dp.ScaleMode = ScaleMode.ByTime;
-            dp.DestoryAt = 2400;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-        }
-    }
     
-    [ScriptMethod(name: "敌方彗星销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:43252"],userControl: false)]
-    public void 敌方彗星销毁(Event @event, ScriptAccessory accessory)
-    {
-        accessory.Method.RemoveDraw($"敌方彗星{@event.SourceId()}");
-    }
+    #endregion
+
+    #region 骑士
+    
+    [ScriptMethod(name: "———————— 骑士 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 骑士 (Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "保护连线", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1301"])]
     public void 保护连线(Event @event, ScriptAccessory accessory)
@@ -497,6 +547,123 @@ public class PVPTAction
         accessory.Method.RemoveDraw($"被保护.*{@event.SourceId()}");
     }
     
+    [ScriptMethod(name: "自身圣盾阵（炸盾范围）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3026"])]
+    public void HolySheltronSelf(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"圣盾阵Self";
+        dp.Color = SelfAOEColor.V4;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "圣盾阵炸盾销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3026"],userControl: false)]
+    public void 圣盾阵销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 伤害 ActionId 为 29068
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($"圣盾阵Self");
+    }
+    
+    [ScriptMethod(name: "敌方圣盾阵范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3026"])]
+    public void HolySheltronEnmity(Event @event, ScriptAccessory accessory)
+    {
+        // if (isOnlyMark) return; // 没开启仅标记选项，绘制对方全部
+            var obj = IbcHelper.GetById(accessory, @event.SourceId);
+            if (obj == null || !obj.IsValid()) return;
+
+            if (!PartyFilter(accessory, obj))
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"敌方圣盾阵{@event.SourceId()}";
+                dp.Color = new Vector4(1f, 1f, 0f, 0.6f);
+                dp.Owner = @event.SourceId();
+                dp.Scale = new Vector2(6f);
+                dp.DestoryAt = 4000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+    }
+        
+    [ScriptMethod(name: "敌方圣盾阵销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3026"],userControl: false)]
+    public void 敌方圣盾阵销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"敌方圣盾阵{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "自身开无敌时显示暴怒10m范围描边", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1302"])]
+    public void Rampage(Event @event, ScriptAccessory accessory)
+    {
+        // 列阵 ActionId 29069 ; 神圣领域 StatusID 1302 ; 信念之剑预备 StatusID 3250
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"暴怒";
+        dp.Color = SelfAOEColor.V4.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f);
+        dp.InnerScale = new Vector2(9.9f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 10000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "暴怒销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:43243"],userControl: false)]
+    public void 暴怒销毁(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.SourceId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($"暴怒.*");
+    }
+    
+    #endregion
+    
+    [ScriptMethod(name: "———————— 占星 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 占星 (Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "敌方星河漫天绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"],suppress: 100)]
+    public void CelestialRiverEnmity(Event @event, ScriptAccessory accessory)
+    {
+        // 星河漫天 ActionId 29255 , 神谕预备 StatusID 4332 ; 星河漫天（自身buff）StatusID 3105 满天星光 StatusID 3106
+        // 因为范围内的人都会有 ActionEffect与 Status日志，所以只能冷却一点时间防止画重复
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"敌方星河漫天{@event.SourceId()}";
+            dp.Color = EnmityAOEColor.V4;
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(15f);
+            dp.DestoryAt = EnmityAOETimer;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+
+
+    [ScriptMethod(name: "———————— 诗人 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 诗人 (Event @event, ScriptAccessory accessory) { }
+        
+    [ScriptMethod(name: "敌方英雄的幻想曲绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4312"])]
+    public void FinalFantasiaEnmity(Event @event, ScriptAccessory accessory)
+    {
+        // 英雄的幻想曲 ActionId 29401，在使用后约2.4s生效，会再触发一次ActionEffect日志，所以不能使用。应捕获立即赋予的 英雄的返场余音预备 StatusID 4312
+        // 判定后赋予 GCD缩短 &伤害提高 &移速增加 的 英雄的幻想曲 StatusID 3144; LB持续增长为 英豪的幻想曲 StatusID 3145
+        
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"敌方英雄的幻想曲{@event.SourceId()}";
+            dp.Color = EnmityAOEColor.V4;
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(30f);
+            dp.DestoryAt = EnmityAOETimer;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
 }
 
 public static class EventExtensions
