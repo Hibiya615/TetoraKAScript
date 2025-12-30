@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class PVPTAction
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -597,6 +597,7 @@ public class PVPTAction
     public void Rampage(Event @event, ScriptAccessory accessory)
     {
         // 列阵 ActionId 29069 ; 神圣领域 StatusID 1302 ; 信念之剑预备 StatusID 3250
+        if (@event.TargetId() != accessory.Data.Me) return; 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"暴怒";
         dp.Color = SelfAOEColor.V4.WithW(10f);
@@ -616,6 +617,8 @@ public class PVPTAction
     }
     
     #endregion
+
+    #region 占星
     
     [ScriptMethod(name: "———————— 占星 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 占星 (Event @event, ScriptAccessory accessory) { }
@@ -640,7 +643,10 @@ public class PVPTAction
         }
     }
 
+    #endregion
 
+    #region 诗人
+    
     [ScriptMethod(name: "———————— 诗人 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 诗人 (Event @event, ScriptAccessory accessory) { }
         
@@ -664,6 +670,9 @@ public class PVPTAction
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
     }
+    
+    #endregion
+
 }
 
 public static class EventExtensions
