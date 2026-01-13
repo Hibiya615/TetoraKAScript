@@ -316,11 +316,11 @@
   {
     "Name": "神龙歼灭战",
     "Guid": "da23fd13-2d1f-41d3-b2c9-91fd8d948a98",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Shinryu.cs",
-    "Note": "v0.0.0.2:\r\nLV70 神龙歼灭战 初版绘制",
+    "Note": "v0.0.0.4:\r\nLV70 神龙歼灭战 初版绘制",
     "UpdateInfo": "API12",
     "TerritoryIds": [
       679
