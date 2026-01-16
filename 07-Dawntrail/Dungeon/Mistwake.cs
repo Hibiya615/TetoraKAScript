@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Mistwake;
 
 [ScriptType(guid: "5ecdb3de-a67c-46c1-bac3-20dc015363b6", name: "LV100 7.4 遗忘行路雾之迹", territorys: [1314],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Mistwake
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         遗忘行路雾之迹 / Mistwake / 遺忘行路 ミストウェイク 初版绘制
         """;
     
@@ -61,6 +61,59 @@ public class Mistwake
         if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
     }
     
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 震雷 分散提示 [Thunder II TTS]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43331"])]
+    public void 震雷提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"分散，避开石头", duration: 2800, true);
+        if (isTTS)accessory.Method.TTS($"分散，避开石头");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散，避开石头");
+    }
+
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 震雷 地面 [Thunder II AOE]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43332"])]
+    public void 震雷地面(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"震雷地面";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition;
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 震雷 点名 [Thunder II Player]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43333"])]
+    public void 震雷玩家(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Owner = @event.TargetId();
+        dp.DestoryAt = 4700;
+        
+        if (@event.TargetId() == accessory.Data.Me)
+        {
+            dp.Name = $"震雷描边";
+            dp.Color = new Vector4(1f, 0f, 0f, 10f);
+            dp.InnerScale = new Vector2(4.95f);
+            dp.Radian = float.Pi * 2;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        }
+        else
+        {
+            dp.Name = $"震雷玩家";
+            dp.Color = new Vector4(1f, 0f, 0f, 1f);
+            dp.Scale = new Vector2(5f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+        
+    }
+    
+    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 恶魔之光 提示 [Bedeviling Light]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43330"])]
+    public void 恶魔之光(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"躲在石头后", duration: 6300, true);
+        if (isTTS)accessory.Method.TTS($"躲在石头后");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"躲在石头后");
+    }
+    
     [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 暴雷 死刑 [Thunder III]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43329"])]
     public void 特雷诺卡托布莱帕斯_暴雷(Event @event, ScriptAccessory accessory)
     {
@@ -72,6 +125,10 @@ public class Mistwake
     [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 雷光射线（直线分摊）[Ray of Lightning]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44825"])]
     public void 雷光射线(Event @event, ScriptAccessory accessory)
     {
+        if (isText)accessory.Method.TextInfo($"直线分摊，避开石头", duration: 5300, true);
+        if (isTTS)accessory.Method.TTS($"直线分摊，避开石头");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"直线分摊，避开石头");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"雷光射线";
         dp.Scale = new (5f, 50f);
@@ -80,22 +137,6 @@ public class Mistwake
         dp.Color = accessory.Data.DefaultSafeColor; 
         dp.DestoryAt = 6200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
-    }
-    
-    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 震雷 分散提示 [Thunder II]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43331"])]
-    public void 强化寒冰咆哮(Event @event, ScriptAccessory accessory)
-    {
-        if (isText)accessory.Method.TextInfo($"分散，避开石头", duration: 2800, true);
-        if (isTTS)accessory.Method.TTS($"分散，避开石头");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散，避开石头");
-    }
-    
-    [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 恶魔之光 提示 [Bedeviling Light]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43330"])]
-    public void 恶魔之光(Event @event, ScriptAccessory accessory)
-    {
-        // if (isText)accessory.Method.TextInfo($"躲在石头后", duration: 6300, true);
-        if (isTTS)accessory.Method.TTS($"躲在石头后");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"躲在石头后");
     }
         
     [ScriptMethod(name: "BOSS1_特雷诺卡托布莱帕斯 石化吐息（顺劈）[Petribreath]", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43335"])]
