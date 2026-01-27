@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class PVPTAction
 {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -491,7 +491,7 @@ public class PVPTAction
         
         if (@event.TargetId() != accessory.Data.Me) return; 
         
-        if (isText)accessory.Method.TextInfo("被保护", duration: 7300, false);
+        if (isText)accessory.Method.TextInfo($"被保护（来自<{@event.SourceName()}>）", duration: 7300, false);
         if (isTTS)  accessory.Method.TTS("被保护");
         if (isEdgeTTS)  accessory.Method.EdgeTTS("被保护");
         
@@ -504,6 +504,7 @@ public class PVPTAction
         dp.Scale = new(1);
         dp.DestoryAt = 8000;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        accessory.Method.SendChat($"/e [Kodakku]: <{@event.SourceName()}> 保护了你!");
     }
     
     [ScriptMethod(name: "被保护范围", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1301"])]
