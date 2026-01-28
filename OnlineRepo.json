@@ -879,7 +879,7 @@
   {
     "Name": "PVP技能绘制",
     "Guid": "070e161a-26e9-4a57-8b19-da8c4201058c",
-    "Version": "0.0.0.",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/PVP/PVPAction.cs",
