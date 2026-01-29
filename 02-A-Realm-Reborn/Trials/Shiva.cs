@@ -11,6 +11,16 @@ using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
 using System.Threading.Tasks;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
+using System.Collections.Generic;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace Shiva;
 
@@ -283,8 +293,39 @@ public static class EventExtensions
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
 }
+public static class MathHelpers
+{
+    public static float DegToRad(float degrees)
+    {
+        return degrees * (float)(Math.PI / 180.0);
+    }
+    
+    public static double DegToRad(double degrees)
+    {
+        return degrees * Math.PI / 180.0;
+    }
+    
+    public static float RadToDeg(float radians)
+    {
+        return radians * (float)(180.0 / Math.PI);
+    }
+    
+    public static double RadToDeg(double radians)
+    {
+        return radians * 180.0 / Math.PI;
+    }
+}
 
-#region 计算函数
+public static class EnumExtensions
+{
+    public static string GetDescription(this Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var attribute = field?.GetCustomAttributes(typeof(DescriptionAttribute), false)
+            .FirstOrDefault() as DescriptionAttribute;
+        return attribute?.Description ?? value.ToString();
+    }
+}
 
 public static class MathTools
 {
@@ -390,4 +431,198 @@ public static class MathTools
     }
 }
 
-#endregion 计算函数
+public enum MarkType
+{
+    None = -1,
+    Attack1 = 0,
+    Attack2 = 1,
+    Attack3 = 2,
+    Attack4 = 3,
+    Attack5 = 4,
+    Bind1 = 5,
+    Bind2 = 6,
+    Bind3 = 7,
+    Ignore1 = 8,
+    Ignore2 = 9,
+    Square = 10,
+    Circle = 11,
+    Cross = 12,
+    Triangle = 13,
+    Attack6 = 14,
+    Attack7 = 15,
+    Attack8 = 16,
+    Count = 17
+}
+
+public static class IbcHelper
+{
+    public static IGameObject? GetById(this ScriptAccessory sa, ulong gameObjectId)
+    {
+        return sa.Data.Objects.SearchById(gameObjectId);
+    }
+
+    public static IGameObject? GetMe(this ScriptAccessory sa)
+    {
+        return sa.Data.Objects.LocalPlayer;
+    }
+
+    public static IEnumerable<IGameObject?> GetByDataId(this ScriptAccessory sa, uint dataId)
+    {
+        return sa.Data.Objects.Where(x => x.DataId == dataId);
+    }
+
+    public static string GetPlayerJob(this ScriptAccessory sa, IPlayerCharacter? playerObject, bool fullName = false)
+    {
+        if (playerObject == null) return "None";
+        return fullName ? playerObject.ClassJob.Value.Name.ToString() : playerObject.ClassJob.Value.Abbreviation.ToString();
+    }
+
+    public static float GetStatusRemainingTime(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return 0;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return charaStruct->GetStatusManager()->GetRemainingTime(statusIdx);
+        }
+    }
+
+    public static bool HasStatus(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return false;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return statusIdx != -1;
+        }
+    }
+
+    /// <summary>
+    /// 获取指定标记索引的对象EntityId
+    /// </summary>
+    public static unsafe ulong GetMarkerEntityId(uint markerIndex)
+    {
+        var markingController = MarkingController.Instance();
+        if (markingController == null) return 0;
+        if (markerIndex >= 17) return 0;
+
+        return markingController->Markers[(int)markerIndex];
+    }
+
+    /// <summary>
+    /// 获取对象身上的标记
+    /// </summary>
+    /// <returns>MarkType</returns>
+    public static MarkType GetObjectMarker(IGameObject? obj)
+    {
+        if (obj == null || !obj.IsValid()) return MarkType.None;
+
+        ulong targetEntityId = obj.EntityId;
+            
+        for (uint i = 0; i < 17; i++)
+        {
+            var markerEntityId = GetMarkerEntityId(i);
+            if (markerEntityId == targetEntityId)
+            {
+                return (MarkType)i;
+            }
+        }
+
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 检查对象是否有指定的标记
+    /// </summary>
+    public static bool HasMarker(IGameObject? obj, MarkType markType)
+    {
+        return GetObjectMarker(obj) == markType;
+    }
+
+    /// <summary>
+    /// 检查对象是否有任何标记
+    /// </summary>
+    public static bool HasAnyMarker(IGameObject? obj)
+    {
+        return GetObjectMarker(obj) != MarkType.None;
+    }
+
+    private static ulong GetMarkerForObject(IGameObject? obj)
+    {
+        if (obj == null) return 0;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return markerEntityId;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private static MarkType GetMarkerTypeForObject(IGameObject? obj)
+    {
+        if (obj == null) return MarkType.None;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return (MarkType)i;
+                }
+            }
+        }
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 获取标记的名称
+    /// </summary>
+    public static string GetMarkerName(MarkType markType)
+    {
+        return markType switch
+        {
+            MarkType.Attack1 => "攻击1",
+            MarkType.Attack2 => "攻击2",
+            MarkType.Attack3 => "攻击3",
+            MarkType.Attack4 => "攻击4",
+            MarkType.Attack5 => "攻击5",
+            MarkType.Bind1 => "止步1",
+            MarkType.Bind2 => "止步2",
+            MarkType.Bind3 => "止步3",
+            MarkType.Ignore1 => "禁止1",
+            MarkType.Ignore2 => "禁止2",
+            MarkType.Square => "方块",
+            MarkType.Circle => "圆圈",
+            MarkType.Cross => "十字",
+            MarkType.Triangle => "三角",
+            MarkType.Attack6 => "攻击6",
+            MarkType.Attack7 => "攻击7",
+            MarkType.Attack8 => "攻击8",
+            _ => "无标记"
+        };
+    }
+    
+    public static float GetHitboxRadius(IGameObject obj)
+    {
+        if (obj == null || !obj.IsValid()) return -1;
+        return obj.HitboxRadius;
+    }
+
+}
+
+public static class HelperExtensions
+{
+    public static unsafe uint GetCurrentTerritoryId()
+    {
+        return AgentMap.Instance()->CurrentTerritoryId; // 额外进行地图ID判断
+    }
+}
