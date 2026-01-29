@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 namespace Shiva;
 
 [ScriptType(guid: "cddb93a8-e01e-40fe-989c-5153ad62bfbc", name: "希瓦歼灭战", territorys: [377],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Shiva
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV50 希瓦歼灭战 初版绘制
         """;
     
@@ -92,6 +92,9 @@ public class Shiva
         
         var boss = accessory.Data.Objects.GetByDataId(3100).FirstOrDefault();
         if (boss == null) return;
+        
+        if (isTTS)accessory.Method.TTS("顺劈死刑");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("顺劈死刑");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冰印剑";
