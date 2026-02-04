@@ -41,6 +41,19 @@
     ]
   },
   {
+    "Name": "草木庭园圣茉夏娜植物园",
+    "Guid": "3491ef10-6190-45e6-a3a7-b98fadc11948",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Dungeon/SaintMocianne'sArboretum.cs",
+    "Note": "v0.0.0.1:\r\nLV60 草木庭园圣茉夏娜植物园 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      511
+    ]
+  },
+  {
     "Name": "鏖战红莲阿拉米格",
     "Guid": "aa0ae191-da3f-48f1-9340-46a56cfeeabf",
     "Version": "0.0.0.2",
