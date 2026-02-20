@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace theRoyalMenagerie;
 
 [ScriptType(guid: "da23fd13-2d1f-41d3-b2c9-91fd8d948a98", name: "神龙歼灭战", territorys: [679],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Shinryu
 {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         LV70 神龙歼灭战 初版绘制
         缺少部分机制：如闪电分散.
         若有遇见可通过DC将ARR录像文件私发给我补充
@@ -74,7 +74,7 @@ public class Shinryu
         dp.Scale = new(1f, 35f);
         dp.Color = accessory.Data.DefaultDangerColor.WithW(3f);
         dp.Owner = accessory.Data.Me;
-        dp.Rotation = 180f.DegToRad();
+        dp.Rotation = @event.SourceRotation();
         dp.FixRotation = true;
         dp.DestoryAt = 9700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
