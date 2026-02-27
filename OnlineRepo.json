@@ -28,6 +28,19 @@
     ]
   },
   {
+    "Name": "惨剧灵殿塔姆·塔拉墓园",
+    "Guid": "6d397f5e-20b1-4c7b-9e4f-7a1ecbab2333",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Dungeon/the_Tam-Tara_Deepcroft(Hard).cs",
+    "Note": "v0.0.0.1:\r\nLV50 惨剧灵殿塔姆·塔拉墓园 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      373
+    ]
+  },
+  {
     "Name": "邪龙王座龙巢神殿",
     "Guid": "ac6caf4e-5eee-406c-8621-a5f3c5c7e9b0",
     "Version": "0.0.0.2",
