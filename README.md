@@ -55,7 +55,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 - LV60：亚历山大机神城 / Alexander
 
-  `A3N` `A5N` `A7N` `A10N`
+  `A3N` `A5N` `A7N` `A10N` 
 
 - LV70：欧米茄时空狭缝 / Omega Quests
 
