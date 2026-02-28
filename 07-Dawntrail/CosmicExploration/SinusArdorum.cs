@@ -16,14 +16,14 @@ using System.Threading.Tasks;
 
 namespace SinusArdorum;
 
-[ScriptType(guid: "8f9e094e-2aa2-4dfc-9020-ac9dac53e525", name: "宇宙探索小工具", territorys: [1237, 1291],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "8f9e094e-2aa2-4dfc-9020-ac9dac53e525", name: "宇宙探索小工具", territorys: [1237, 1291, 1310],
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class SinusArdorum
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         宇宙探索小工具
         """;
     

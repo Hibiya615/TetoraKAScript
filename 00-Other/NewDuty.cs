@@ -52,14 +52,36 @@ public class NewDuty
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
+    [UserSetting("下一次AOE预兆颜色")]
+    public ScriptColor Next_AOEs { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
+    
+    [UserSetting("下一次AOE预兆亮度（推荐小于1）")]
+    public float Next_AOEsBrightness { get; set; } = 0.5f;
+    
+    // dp.Color = Next_AOEs.V4.WithW(Next_AOEsBrightness);
+    
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
 
     #endregion
     
-
+    #region 多变迷宫 商客奇谭
     
     
+    
+    #endregion
+    
+    #region 异变迷宫 商客奇谭
+    
+    
+    
+    #endregion
+    
+    #region 异闻迷宫 商客奇谭
+    
+    
+    
+    #endregion
 
     #region  格莱杨拉波尔歼灭战
     
@@ -217,7 +239,6 @@ public class NewDuty
     }
     
     #endregion
-
     
     #region M9N
     
@@ -603,7 +624,7 @@ public class NewDuty
         if (isEdgeTTS)accessory.Method.EdgeTTS($"稍后钢铁");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"铸兵猛攻_斧";
+        dp.Name = $"铸兵猛攻_斧预备";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.3f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8f);
@@ -633,7 +654,7 @@ public class NewDuty
         if (isEdgeTTS)accessory.Method.EdgeTTS($"稍后月环");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"铸兵猛攻_镰刀";
+        dp.Name = $"铸兵猛攻_镰刀预备";
         dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
@@ -667,7 +688,7 @@ public class NewDuty
         if (isEdgeTTS)accessory.Method.EdgeTTS($"稍后十字");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "铸兵猛攻_剑";
+        dp.Name = "铸兵猛攻_剑预备";
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.15f); 
         dp.Scale = new(10f, 80f); 
@@ -699,6 +720,460 @@ public class NewDuty
             dp.Rotation+=90f.DegToRad();
         }
     }
+    
+    private bool UltimateTrophyWeapons_Mode = false;
+    
+    [ScriptMethod(name: "历战之兵武/历战之极武 重置", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(46028|47083)$"], userControl: false)]
+    public void 武器重置(Event @event, ScriptAccessory accessory)
+    {
+        processingOrder.Clear();
+        weaponStateInfos.Clear();
+        currentTarget = null;
+    }
+    
+    private List<uint> processingOrder = new List<uint>(); // 武器处理顺序
+    private uint? currentTarget = null; // 当前正在处理的目标
+
+    private enum WeaponDrawingState
+{
+    Current, 
+    Next,    
+    Later    
+}
+
+    // 武器状态信息
+    private class WeaponStateInfo
+{
+    public string DrawingId { get; set; } = "";
+    public WeaponDrawingState State { get; set; } = WeaponDrawingState.Later;
+    public bool IsFirstLink { get; set; } = false;
+}
+
+    private Dictionary<uint, WeaponStateInfo> weaponStateInfos = new Dictionary<uint, WeaponStateInfo>();
+
+    [ScriptMethod(name: "历战之兵武 连续武器绘制", eventType: EventTypeEnum.Tether, eventCondition: ["Id:00F9"])]
+    public void 历战之兵武绘制(Event @event, ScriptAccessory accessory)
+    {
+        uint sourceId = @event.SourceId();
+        uint targetId = @event.TargetId();
+
+        bool isTargetWeapon = targetId == 0x40002A48 || targetId == 0x40002A4A || targetId == 0x40002A4C;
+        if (!isTargetWeapon) return;
+
+        // 生成绘图ID
+        string drawingId = $"{targetId:X}_{DateTime.Now.Ticks}";
+
+        // 情况1: BOSS → 武器（第一个目标）
+        if (@event.SourceName() == "霸王")
+        {
+            // 重置所有状态
+            processingOrder.Clear();
+            weaponStateInfos.Clear();
+            currentTarget = null;
+
+            // 记录第一个目标
+            processingOrder.Add(targetId);
+            currentTarget = targetId;
+            weaponStateInfos[targetId] = new WeaponStateInfo
+            {
+                DrawingId = drawingId,
+                State = WeaponDrawingState.Current,
+                IsFirstLink = true
+            };
+
+            // 绘制第一个目标
+            绘制武器连线(@event, accessory, true, WeaponDrawingState.Current, drawingId);
+
+            string ttsText = targetId switch
+            {
+                0x40002A48 => "先十字",
+                0x40002A4A => "先月环",
+                0x40002A4C => "先钢铁",
+                _ => "未知错误"
+            };
+            if (isTTS) accessory.Method.TTS(ttsText);
+            if (isEdgeTTS) accessory.Method.EdgeTTS(ttsText);
+        }
+        // 情况2: 武器 → 武器（后续连线）
+        else
+        {
+            bool isSourceWeapon = sourceId == 0x40002A48 || sourceId == 0x40002A4A || sourceId == 0x40002A4C;
+            if (!isSourceWeapon) return;
+
+            // 如果这个武器还没被记录
+            if (!processingOrder.Contains(targetId))
+            {
+                processingOrder.Add(targetId);
+
+                // 确定状态
+                WeaponDrawingState state = WeaponDrawingState.Later;
+
+                // 逻辑修正：
+                // 1. 如果来源是当前目标，目标就是Next
+                if (sourceId == currentTarget)
+                {
+                    state = WeaponDrawingState.Next;
+                }
+                // 2. 如果当前目标为空或已处理完，且这是第一个新目标，应该是Current
+                else if (currentTarget == null || !processingOrder.Contains(currentTarget.Value))
+                {
+                    state = WeaponDrawingState.Current;
+                    currentTarget = targetId; // 更新当前目标
+                }
+                // 3. 如果processingOrder中这个目标是第二个（紧接当前目标后），应该是Next
+                else if (processingOrder.Count >= 2)
+                {
+                    int currentIndex = processingOrder.IndexOf(currentTarget.Value);
+                    int targetIndex = processingOrder.IndexOf(targetId);
+
+                    if (targetIndex == currentIndex + 1)
+                    {
+                        state = WeaponDrawingState.Next;
+                    }
+                }
+
+                weaponStateInfos[targetId] = new WeaponStateInfo
+                {
+                    DrawingId = drawingId,
+                    State = state,
+                    IsFirstLink = false
+                };
+
+                // 绘制武器
+                绘制武器连线(@event, accessory, false, state, drawingId);
+
+                // 如果标记为Current，更新TTS
+                if (state == WeaponDrawingState.Current)
+                {
+                    string weaponName = targetId switch
+                    {
+                        0x40002A48 => "十字",
+                        0x40002A4A => "月环",
+                        0x40002A4C => "钢铁",
+                        _ => "目标"
+                    };
+                    if (isTTS) accessory.Method.TTS($"处理{weaponName}");
+                    if (isEdgeTTS) accessory.Method.EdgeTTS($"处理{weaponName}");
+                }
+            }
+        }
+    } 
+    private void 绘制武器连线(Event @event, ScriptAccessory accessory, bool isFirstLink, WeaponDrawingState state, string drawingId)
+{
+    var dp = accessory.Data.GetDefaultDrawProperties();
+    var outline = accessory.Data.GetDefaultDrawProperties();
+    var goline = accessory.Data.GetDefaultDrawProperties();
+    
+    uint targetId = @event.TargetId();
+    
+    outline.Owner = dp.Owner = targetId;
+    goline.DestoryAt = outline.DestoryAt = dp.DestoryAt = isFirstLink ? 7300 : 15500;
+    
+    // 状态后缀
+    string stateSuffix = state.ToString();
+    
+    switch (targetId)
+    {
+    case 0x40002A48: // 剑十字
+    dp.Name = $"铸兵猛攻_剑_{stateSuffix}_{drawingId}";
+    dp.Color = state == WeaponDrawingState.Current 
+        ? accessory.Data.DefaultDangerColor.WithW(0.5f)
+        : Next_AOEs.V4.WithW(Next_AOEsBrightness * 0.25f);
+    dp.Scale = new(9.8f, 79.8f); 
+    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+
+    for(int i=1;i<=2;++i) {
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+        dp.Rotation += 90f.DegToRad();
+    }
+    break;
+
+    case 0x40002A4A: // 镰月环
+    dp.Name = $"铸兵猛攻_镰刀_{stateSuffix}_{drawingId}";
+    dp.Color = accessory.Data.DefaultSafeColor.WithW(10f); 
+    dp.Scale = new Vector2(5f);
+    dp.InnerScale = new Vector2(4.9f);
+    dp.Radian = float.Pi * 2;
+    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+
+    if (state == WeaponDrawingState.Current)
+    {
+        goline.Name = $"铸兵猛攻_镰刀指路_{stateSuffix}_{drawingId}";
+        goline.Owner = accessory.Data.Me;
+        goline.Color = accessory.Data.DefaultSafeColor;
+        goline.ScaleMode |= ScaleMode.YByDistance;
+        goline.TargetObject = targetId;
+        goline.Scale = new(1);
+        goline.DestoryAt = state == WeaponDrawingState.Current ? 7300 : 15500;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, goline);
+    }
+
+    break;
+
+    case 0x40002A4C: // 斧钢铁
+    if (state == WeaponDrawingState.Current)
+    {
+        outline.Name = $"铸兵猛攻_斧描边_{stateSuffix}_{drawingId}";
+        outline.Color = new Vector4(1f, 0f, 0f, 10f);
+        outline.Scale = new Vector2(8f);
+        outline.InnerScale = new Vector2(7.92f);
+        outline.Radian = float.Pi * 2;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, outline);
+    }
+    
+    dp.Name = $"铸兵猛攻_斧_{stateSuffix}_{drawingId}";
+    dp.Color = state == WeaponDrawingState.Current 
+        ? accessory.Data.DefaultDangerColor
+        : Next_AOEs.V4.WithW(Next_AOEsBrightness);
+    dp.Scale = new Vector2(state == WeaponDrawingState.Current ? 7.92f : 8f);
+    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    break;
+    }
+}
+
+    [ScriptMethod(name: "历战之兵武 连续武器后续绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4603[012]$"])]
+    public void 历战之兵武连续武器后续绘制(Event @event, ScriptAccessory accessory)
+    {
+        switch (@event.ActionId())
+        {
+            case 46030:
+                accessory.Method.RemoveDraw($"铸兵猛攻_斧.*");
+                break;
+            case 46031:
+                accessory.Method.RemoveDraw($"铸兵猛攻_镰刀.*");
+                break;
+            case 46032:
+                accessory.Method.RemoveDraw($"铸兵猛攻_剑.*");
+                break;
+        }
+        
+        // 2. 确定哪个武器完成了
+        uint finishedWeaponId = @event.ActionId() switch
+        {
+            46030 => 0x40002A4C, // 斧
+            46031 => 0x40002A4A, // 镰刀
+            46032 => 0x40002A48, // 剑
+            _ => 0
+        };
+        
+        // 3. 如果这个武器在列表中，移除它
+        if (processingOrder.Contains(finishedWeaponId))
+        {
+            processingOrder.Remove(finishedWeaponId);
+            weaponStateInfos.Remove(finishedWeaponId);
+            
+            // 4. 更新当前目标
+            if (processingOrder.Count > 0)
+            {
+                uint newCurrentTarget = processingOrder[0];
+                currentTarget = newCurrentTarget;
+                
+                // 5. 更新当前目标的状态并重绘
+                if (weaponStateInfos.ContainsKey(newCurrentTarget))
+                {
+                    // 更新状态
+                    weaponStateInfos[newCurrentTarget].State = WeaponDrawingState.Current;
+                    
+                    // 6. 重绘新当前目标（使用新的drawingId）
+                    string newDrawingId = $"{newCurrentTarget:X}_{DateTime.Now.Ticks}";
+                    weaponStateInfos[newCurrentTarget].DrawingId = newDrawingId;
+                    
+                    // 创建虚拟事件用于重绘
+                    var dummyEvent = new Event();
+                    重绘武器为当前目标(accessory, newCurrentTarget, newDrawingId);
+                    
+                    string weaponName = newCurrentTarget switch
+                    {
+                        0x40002A48 => "十字",
+                        0x40002A4A => "月环",
+                        0x40002A4C => "钢铁",
+                        _ => "目标"
+                    };
+                    if (isTTS) accessory.Method.TTS($"{weaponName}");
+                    if (isEdgeTTS) accessory.Method.EdgeTTS($"{weaponName}");
+                }
+            }
+            else
+            {
+                currentTarget = null;
+            }
+        }
+    }
+    private void 重绘武器为当前目标(ScriptAccessory accessory, uint targetId, string drawingId)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        var outline = accessory.Data.GetDefaultDrawProperties();
+        var goline = accessory.Data.GetDefaultDrawProperties();
+        
+        dp.Owner = outline.Owner = targetId;
+        dp.DestoryAt = outline.DestoryAt = goline.DestoryAt = 7300; // 当前目标用短时间
+        
+        string stateSuffix = WeaponDrawingState.Current.ToString();
+        
+        switch (targetId)
+        {
+            case 0x40002A48: // 剑十字
+                dp.Name = $"铸兵猛攻_剑_{stateSuffix}_{drawingId}";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+                dp.Scale = new(10f, 80f);
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+                for(int i=1;i<=2;++i) {
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+                    dp.Rotation += 90f.DegToRad();
+                }
+                break;
+                
+            case 0x40002A4A: // 镰月环
+                dp.Name = $"铸兵猛攻_镰刀_{stateSuffix}_{drawingId}";
+                dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+                dp.Scale = new Vector2(5f);
+                dp.InnerScale = new Vector2(4.9f);
+                dp.Radian = float.Pi * 2;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+                
+                goline.Name = $"铸兵猛攻_镰刀指路_{stateSuffix}_{drawingId}";
+                goline.Owner = accessory.Data.Me;
+                goline.Color = accessory.Data.DefaultSafeColor;
+                goline.ScaleMode |= ScaleMode.YByDistance;
+                goline.TargetObject = targetId;
+                goline.Scale = new(1);
+                goline.DestoryAt = 7300;
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, goline);
+                break;
+                
+            case 0x40002A4C: // 斧钢铁
+                outline.Name = $"铸兵猛攻_斧描边_{stateSuffix}_{drawingId}";
+                outline.Color = new Vector4(1f, 0f, 0f, 10f);
+                outline.Scale = new Vector2(8f);
+                outline.InnerScale = new Vector2(7.92f);
+                outline.Radian = float.Pi * 2;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, outline);
+                
+                dp.Name = $"铸兵猛攻_斧_{stateSuffix}_{drawingId}";
+                dp.Color = accessory.Data.DefaultDangerColor;
+                dp.Scale = new Vector2(7.92f);
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                break;
+        }
+    }
+    
+    [ScriptMethod(name: "历战之极武 模式开关", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(46028|46042|47083)$"], userControl: false)]
+    public void 历战之极武模式开关(Event @event, ScriptAccessory accessory)
+    {
+        switch (@event.ActionId())
+        {
+            case 47083: // 历战之极武
+                UltimateTrophyWeapons_Mode = true;
+                break;
+            
+            case 46028: // 历战之兵武
+            case 46042: // 万劫不朽的统治 历战之极武阶段结束
+                UltimateTrophyWeapons_Mode = false;
+                break;
+        }
+    }
+    
+    private Dictionary<string, DateTime> lastWeaponDraw = new Dictionary<string, DateTime>(); // 处理同一位置重复播报
+    
+    [ScriptMethod(name: "历战之极武 武器绘制", eventType: EventTypeEnum.SetObjPos, eventCondition: ["Id:0197", "SourceDataId:regex:^1918[456]$"])]
+    public void 历战之极武武器绘制(Event @event, ScriptAccessory accessory)
+    {
+        if(!UltimateTrophyWeapons_Mode) return;
+        uint sourceDataId = @event.SourceDataId();
+        Vector3 position = @event.SourcePosition();
+    
+        // 创建唯一标识：武器类型+位置
+        string positionKey = $"{(int)position.X}_{(int)position.Y}_{(int)position.Z}";
+        string weaponKey = $"{sourceDataId}_{positionKey}";
+    
+        // 检查是否是短时间内重复的同一位置武器
+        if (lastWeaponDraw.ContainsKey(weaponKey))
+        {
+            TimeSpan timeSinceLast = DateTime.Now - lastWeaponDraw[weaponKey];
+            if (timeSinceLast.TotalMilliseconds < 9000) // 9秒内重复，忽略
+            {
+                return;
+            }
+        }
+    
+        lastWeaponDraw[weaponKey] = DateTime.Now; // 更新记录
+        
+        CleanOldRecords(); // 清理旧记录（避免字典无限增长）
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Owner = @event.SourceId();
+        dp.DestoryAt = 8800; // 每个武器出现间隔为4s
+        
+        switch (@event.SourceDataId())
+        {
+            case 19184:
+                if (isTTS)accessory.Method.TTS($"钢铁");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"钢铁");
+        
+                dp.Name = $"铸兵猛攻_斧";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(1.4f);
+                dp.Scale = new Vector2(8f);
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                break;
+            
+            case 19185:
+                if (isTTS)accessory.Method.TTS($"月环");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"月环");
+                dp.Name = $"铸兵猛攻_镰刀";
+                dp.Color = accessory.Data.DefaultSafeColor.WithW(15f);
+                dp.Scale = new Vector2(5f);
+                dp.InnerScale = new Vector2(4.9f);
+                dp.Radian = float.Pi * 2;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+                break;
+            
+            case 19186:
+                if (isTTS)accessory.Method.TTS($"十字");
+                if (isEdgeTTS)accessory.Method.EdgeTTS($"十字");
+                
+                dp.Name = "铸兵猛攻_剑";
+                dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f); 
+                dp.Scale = new(10f, 80f); 
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);  
+        
+                for(int i=1;i<=2;++i) {
+                    accessory.Method.SendDraw(DrawModeEnum.Default,DrawTypeEnum.Straight, dp);
+                    dp.Rotation+=90f.DegToRad();
+                }
+                break;
+        }
+    }
+    
+    private void CleanOldRecords()
+    {
+        var now = DateTime.Now;
+        var oldKeys = lastWeaponDraw.Where(kvp => (now - kvp.Value).TotalSeconds > 10)
+            .Select(kvp => kvp.Key)
+            .ToList();
+    
+        foreach (var key in oldKeys)
+        {
+            lastWeaponDraw.Remove(key);
+        }
+    }
+
+    [ScriptMethod(name: "武器绘制销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^4603[012]$"],userControl:false)]
+    public void 武器绘制销毁(Event @event, ScriptAccessory accessory)
+    {
+        switch (@event.ActionId())
+        {
+            case 46030:
+                accessory.Method.RemoveDraw($"铸兵猛攻_斧.*");
+                break;
+            case 46031:
+                accessory.Method.RemoveDraw($"铸兵猛攻_镰刀.*");
+                break;
+            case 46032:
+                accessory.Method.RemoveDraw($"铸兵猛攻_剑.*");
+                break;
+        }
+    }
+    
     
     [ScriptMethod(name: "彗星雨 分散+连续黄圈", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:46024"])]
     public void 彗星雨(Event @event, ScriptAccessory accessory)
