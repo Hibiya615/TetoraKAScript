@@ -6,6 +6,8 @@
 
 Just fun.
 
+---
+
 ## How-to-install  /  使用指南
 - Use this link / 在线库链接： 
 
@@ -18,7 +20,20 @@ Just fun.
 
 Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) and more.
 
-## Scripts List   /  支持副本:
+---
+
+## Support Development / 支持开发
+
+> [!Note]
+> Donations are **gratuitous**, do not confer any special privileges, and do not guarantee any after-sales support or updates.
+>
+> 捐赠为**无偿性质**，没有任何的特殊权益，且不保证任何售后需求与更新
+
+[<img width="200" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png" alt="afdian">](https://afdian.com/a/catt918615)
+
+---
+
+# Scripts List   /  支持副本:
 
 ( CN / EN / JP ) [Text Translator](https://strings.wakingsands.com/) 
 
@@ -86,6 +101,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 `18 - 爆破死斗`
 
+---
 
 ### 【施工中 / Building / 工事中】
 
