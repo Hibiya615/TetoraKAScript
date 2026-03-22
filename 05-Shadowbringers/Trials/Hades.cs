@@ -15,13 +15,13 @@ using KodakkuAssist.Extensions;
 namespace Hades;
 
 [ScriptType(guid: "ebcac22b-8a1d-49c4-ae1f-1470be15f7e3", name: "哈迪斯歼灭战", territorys: [847],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Hades
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV80 哈迪斯歼灭战 初版绘制
         """;
     
@@ -73,22 +73,22 @@ public class Hades
         accessory.Method.RemoveDraw("背信");
     }
     
-    uint AncientDarkness=0;
+    uint MyAncientDarkness=0;
     
     public void Init(ScriptAccessory accessory) {
-        AncientDarkness=0; 
+        MyAncientDarkness=0; 
     }
     
     [ScriptMethod(name: "古代黑暗 分散点名记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:17811"],userControl: false)]
     public void 古代黑暗(Event @event, ScriptAccessory accessory)
     {
-        if (@event.TargetId() == accessory.Data.Me) AncientDarkness=1; 
+        if (@event.TargetId() == accessory.Data.Me) MyAncientDarkness=1; 
     }
     
-    [ScriptMethod(name: "古代黑暗 分散点名重置", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:17811]"],userControl: false)]
+    [ScriptMethod(name: "古代黑暗 分散点名重置", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^1781[12]$"],userControl: false)]
     public void 古代黑暗重置(Event @event, ScriptAccessory accessory)
     {
-        AncientDarkness=0; 
+        MyAncientDarkness=0; 
     }
 
     [ScriptMethod(name: "古代狂水（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:17812"])]
@@ -99,18 +99,18 @@ public class Hades
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "古代狂水";
 
-        if (AncientDarkness == 1)
+        if (MyAncientDarkness == 1)
         {
             if (isText) accessory.Method.TextInfo("散开", duration: 4000, true);
-            // if (isTTS)accessory.Method.TTS("散开");
-            // if (isEdgeTTS)accessory.Method.EdgeTTS("散开");
+            if (isTTS)accessory.Method.TTS("散开");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("散开");
             dp.Color = accessory.Data.DefaultDangerColor;
         }
         else
         {
             if (isText) accessory.Method.TextInfo("分摊", duration: 4000, false);
-            // if (isTTS)accessory.Method.TTS("分摊");
-            // if (isEdgeTTS)accessory.Method.EdgeTTS("分摊");
+            if (isTTS)accessory.Method.TTS("分摊");
+            if (isEdgeTTS)accessory.Method.EdgeTTS("分摊");
             dp.Color = accessory.Data.DefaultSafeColor;
         }
 
