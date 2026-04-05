@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 namespace Susano;
 
 [ScriptType(guid: "2c4b6205-6a77-4c89-b641-2c2359a43f25", name: "须佐之男歼灭战", territorys: [674],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Susano
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV63 须佐之男歼灭战 初版绘制
         支持DR 自动QTE
         """;
@@ -61,7 +61,7 @@ public class Susano
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "破浪斩";
-        dp.Scale = new (8f, 23.5f);
+        dp.Scale = new (4f, 23.5f);
         dp.Owner = @event.SourceId();
         dp.TargetObject = @event.TargetId();
         dp.Color = accessory.Data.DefaultDangerColor;
