@@ -9,28 +9,41 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
+using KodakkuAssist.Extensions;
 using System.Threading.Tasks;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
+using System.Collections.Generic;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace theBowlofEmbers_Hard;
 
-[ScriptType(guid: "d3d532f1-0707-427f-ac04-871a22022c11", name: "伊弗利特歼灭战", territorys: [292],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "d3d532f1-0707-427f-ac04-871a22022c11", name: "伊弗利特歼灭战", territorys: [292, 1045],
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class theBowlofEmbers_Hard
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.4:
         LV50 伊弗利特歼灭战 初版绘制
+        含 LV20 伊弗利特讨伐战 的地火喷发
         """;
     
-    [UserSetting("顺劈死刑预测")]
-    public static bool 烈焰焚烧 { get; set; } = true;
+    [UserSetting("开场顺劈死刑预测")]
+    public static bool Incinerate { get; set; } = true;
     
     [ScriptMethod(name: "烈焰焚烧（仅开场）", eventType: EventTypeEnum.Chat, userControl:false, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^勇猛无比.*", "Sender:伊弗利特"])]
     public void 烈焰焚烧绘制(Event @event, ScriptAccessory accessory)
     {
-        if (!烈焰焚烧) return;
+        if (!Incinerate) return;
+        if (HelperExtensions.GetCurrentTerritoryId() != 1045) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         var ifrits = accessory.Data.Objects.Where(x => x.DataId == 209);
         foreach (var ifrit in ifrits)
@@ -48,13 +61,14 @@ public class theBowlofEmbers_Hard
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
-    [UserSetting("击退预测")]
-    public static bool 火神爆裂 { get; set; } = false;
+    [UserSetting("开场击退预测")]
+    public static bool Vulcan_urst { get; set; } = false;
     
     [ScriptMethod(name: "火神爆裂（仅开场）", eventType: EventTypeEnum.Chat, userControl:false, eventCondition: ["Type:NPCDialogueAnnouncements", "Message:regex:^勇猛无比.*", "Sender:伊弗利特"])]
     public void 火神爆裂绘制(Event @event, ScriptAccessory accessory)
     {
-        if (!火神爆裂) return;
+        if (!Vulcan_urst) return;
+        if (HelperExtensions.GetCurrentTerritoryId() != 1045) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         var ifrits = accessory.Data.Objects.Where(x => x.DataId == 209);
         foreach (var ifrit in ifrits)
@@ -72,7 +86,7 @@ public class theBowlofEmbers_Hard
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "地火喷发", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:1358"])]
+    [ScriptMethod(name: "地火喷发", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(1358|733)$"])]
     public void 地火喷发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -228,6 +242,13 @@ public static class Extensions
     }
 }
 
+public static class HelperExtensions
+{
+    public static unsafe uint GetCurrentTerritoryId()
+    {
+        return AgentMap.Instance()->CurrentTerritoryId; // 额外进行地图ID判断
+    }
+}
 
 
 #region 计算函数

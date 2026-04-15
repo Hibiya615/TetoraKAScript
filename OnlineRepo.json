@@ -134,12 +134,12 @@
   {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ifrit(Hard).cs",
-    "Note": "v0.0.0.1:\r\nLV50 伊弗利特歼灭战 初版绘制",
-    "UpdateInfo": "API12",
+    "Note": "v0.0.0.4:\r\nLV50 伊弗利特歼灭战 初版绘制",
+    "UpdateInfo": "追加假神地火",
     "TerritoryIds": [
       292
     ]
