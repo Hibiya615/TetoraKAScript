@@ -84,7 +84,7 @@ public class Ultimas_Bane_Extreme
         dp.Name = $"寒风之歌";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(25f); // +目标圈
+        dp.Scale = new Vector2(28.4f); // +目标圈 3.4
         dp.Radian = 150f.DegToRad(); 
         dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
@@ -109,7 +109,7 @@ public class Ultimas_Bane_Extreme
         dp.Name = $"深红旋风";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new (12f, 38f); // +目标圈 
+        dp.Scale = new (12f, 43f); // +目标圈 5
         dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
