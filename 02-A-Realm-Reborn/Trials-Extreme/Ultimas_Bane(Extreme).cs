@@ -169,18 +169,31 @@ public class Ultimas_Bane_Extreme
         dp.DestoryAt = 5000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
-    
-    /* 未查询到同组连线日志，撞完一个后同组另一个实体会在场中停留。暂时废弃
+
+    /* 找不到连线对象 没法销毁同组 摆了
     [ScriptMethod(name: "究极炸弹_撞球分摊", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^2324$"])]
     public void Ultimaplasms(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"究极炸弹{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(8f);
-        dp.DestoryAt = 30000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        unsafe
+        {
+            var ball1 = (IBattleChara?)accessory.Data.Objects.SearchByEntityId((uint)@event.SourceId);
+            if (ball1 == null) return;
+        
+            var _ball1 = (FFXIVClientStructs.FFXIV.Client.Game.Character.BattleChara*) & ball1;
+            if (_ball1->Vfx.Tethers.Length < 1) return;
+        
+            var ball2Id = _ball1->Vfx.Tethers[0].TargetId;
+            var groupId = @event.SourceId(); 
+            
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = $"究极炸弹_{@event.SourceId}_{groupId}";
+            dp1.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+            dp1.Owner = groupId;
+            dp1.Scale = new Vector2(8f);
+            dp1.DestoryAt = 30000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+            accessory.Method.SendChat($"/e [DEBUG]: 创建炸弹_{@event.SourceId}_{groupId}");
+        }
     }
     */
     
@@ -232,11 +245,26 @@ public class Ultimas_Bane_Extreme
         accessory.Method.RemoveDraw($"以太炸弹{@event.SourceId}");
     }
     
+    /*
     [ScriptMethod(name: "究极炸弹销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^1512$"],userControl: false)]
     public void UltimaplasmsDelete(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"究极炸弹{@event.SourceId}");
+        unsafe
+        {
+            var ball1 = (IBattleChara?)accessory.Data.Objects.SearchByEntityId((uint)@event.SourceId);
+            if (ball1 == null) return;
+        
+            var _ball1 = (FFXIVClientStructs.FFXIV.Client.Game.Character.BattleChara*) & ball1;
+            if (_ball1->Vfx.Tethers.Length < 1) return;
+        
+            var ball2Id = _ball1->Vfx.Tethers[0].TargetId;
+            var groupId = @event.SourceId(); 
+        
+            if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 销毁SID:{@event.SourceId},销毁组Id:{groupId}");
+            accessory.Method.RemoveDraw($"究极炸弹_.*{groupId}.*");
+        }
     }
+    */
     
     [ScriptMethod(name: "突击加农炮中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
     public void AssaultCannonCancelDelete(Event @event, ScriptAccessory accessory)
