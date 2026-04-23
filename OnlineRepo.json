@@ -485,11 +485,11 @@
   {
     "Name": "LV50 究极神兵假想作战",
     "Guid": "75512951-050c-4627-a3a0-a95768a90e2e",
-    "Version": "0.0.0.1",
+    "Version": "0.0.0.2",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Ultimas_Bane(Extreme).cs",
-    "Note": "v0.0.0.1: Patch2.0 LV50\r\n究极神兵假想作战 / 究極幻想 アルテマウェポン破壊作戦 / the Minstrel's Ballad: Ultima's Bane\r\n初版绘制",
+    "Note": "v0.0.0.2: Patch2.0 LV50\r\n究极神兵假想作战 / 究極幻想 アルテマウェポン破壊作戦 / the Minstrel's Ballad: Ultima's Bane\r\n初版绘制",
     "UpdateInfo": "",
     "TerritoryIds": [
       348

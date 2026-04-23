@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Ultimas_Bane_Extreme;
 
 [ScriptType(guid: "75512951-050c-4627-a3a0-a95768a90e2e", name: "LV50 究极神兵假想作战", territorys: [348],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Ultimas_Bane_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.1: Patch2.0 LV50
+        v0.0.0.2: Patch2.0 LV50
         究极神兵假想作战 / 究極幻想 アルテマウェポン破壊作戦 / the Minstrel's Ballad: Ultima's Bane
         初版绘制
         """;
@@ -169,33 +169,80 @@ public class Ultimas_Bane_Extreme
         dp.DestoryAt = 5000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
-
-    /* 找不到连线对象 没法销毁同组 摆了
-    [ScriptMethod(name: "究极炸弹_撞球分摊", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^2324$"])]
-    public void Ultimaplasms(Event @event, ScriptAccessory accessory)
+    
+    // 来自万能的VV
+        public void DebugMsg(string str, ScriptAccessory accessory)
     {
-        unsafe
+        accessory.Method.SendChat($"/e [DEBUG] {str}");
+    }
+
+    private Dictionary<uint, uint> tetherMap = new(); // orgId -> targetId
+
+    [ScriptMethod(name: "究极炸弹_撞球分摊", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:2324"], suppress: 3000)]
+    public async void Ultimaplasms(Event ev, ScriptAccessory sa)
+    {
+        await Task.Delay(300);
+        sa.Log.Debug($"test");
+        sa.Log.Debug($"Objects count with DataId 2325: {sa.Data.Objects.Count(x => x.DataId == 2324u)}");
+
+        foreach (var v in sa.Data.Objects.Where(x => x.DataId == 2324u))
         {
-            var ball1 = (IBattleChara?)accessory.Data.Objects.SearchByEntityId((uint)@event.SourceId);
-            if (ball1 == null) return;
-        
-            var _ball1 = (FFXIVClientStructs.FFXIV.Client.Game.Character.BattleChara*) & ball1;
-            if (_ball1->Vfx.Tethers.Length < 1) return;
-        
-            var ball2Id = _ball1->Vfx.Tethers[0].TargetId;
-            var groupId = @event.SourceId(); 
-            
-            var dp1 = accessory.Data.GetDefaultDrawProperties();
-            dp1.Name = $"究极炸弹_{@event.SourceId}_{groupId}";
-            dp1.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
-            dp1.Owner = groupId;
-            dp1.Scale = new Vector2(8f);
-            dp1.DestoryAt = 30000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
-            accessory.Method.SendChat($"/e [DEBUG]: 创建炸弹_{@event.SourceId}_{groupId}");
+
+            if (v?.Address == null) continue;
+
+            var orgId = v.EntityId;
+
+            var targetId = GetTetherTargetId(v);
+
+            sa.Log.Debug($"Recorded: {orgId} <-> {targetId}");
+
+            tetherMap[orgId] = targetId;
+            tetherMap[targetId] = orgId;
+
+            sa.Log.Debug($"Recorded: {orgId} <-> {targetId}");
+
+            DrawHelper.DrawCircleObject(sa, orgId, new Vector2(8f), 8000, $"tether_{orgId}", sa.Data.DefaultDangerColor.WithW(0.4f),scaleByTime: false);
+            DrawHelper.DrawCircleObject(sa, targetId, new Vector2(8f), 8000, $"tether_{orgId}", sa.Data.DefaultDangerColor.WithW(0.4f),scaleByTime: false);
+
+        }
+
+    }
+    private unsafe uint GetTetherTargetId(IGameObject v)
+    {
+        return ((BattleChara*)v.Address)->Vfx.Tethers[0].TargetId.ObjectId;
+    }
+
+    [ScriptMethod(name: "究极炸弹销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:2324"],userControl: false)]
+    public void UltimaplasmsRemove(Event ev, ScriptAccessory sa)
+    {
+        var removedId = ev.SourceId;
+
+        if (tetherMap.TryGetValue((uint)removedId, out var pairedId))
+        {
+            sa.Method.RemoveDraw($"tether_{removedId}");
+            sa.Method.RemoveDraw($"tether_{pairedId}");
+
+            tetherMap.Remove((uint)removedId);
+            tetherMap.Remove(pairedId);
+
+            sa.Log.Debug($"Removed draws: tether_{removedId} and tether_{pairedId}");
         }
     }
-    */
+    
+    private unsafe uint[] ScanTether(Event evt, ScriptAccessory sa, uint id)
+    {
+        if (sa?.Data?.Objects == null) return Array.Empty<uint>();
+        List<uint> dataId = [id];
+        List<uint> players = [];
+        foreach (var fire in sa.Data.Objects.Where(x => dataId.Contains(x.DataId)))
+        {
+            if (fire?.Address == null) continue;
+            var targetId = ((BattleChara*)fire.Address)->Vfx.Tethers[0].TargetId.ObjectId;
+            players.Add(targetId);
+        }
+        DebugMsg($"players: {string.Join(", ", players)}", sa);
+        return players.ToArray();
+    }
     
     /* 意义不大，而且有概率绘制角度不一致，仅留念 (?
     [ScriptMethod(name: "魔导浮游炮_突击加农炮（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^1526$"])]
@@ -244,27 +291,6 @@ public class Ultimas_Bane_Extreme
     {
         accessory.Method.RemoveDraw($"以太炸弹{@event.SourceId}");
     }
-    
-    /*
-    [ScriptMethod(name: "究极炸弹销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^1512$"],userControl: false)]
-    public void UltimaplasmsDelete(Event @event, ScriptAccessory accessory)
-    {
-        unsafe
-        {
-            var ball1 = (IBattleChara?)accessory.Data.Objects.SearchByEntityId((uint)@event.SourceId);
-            if (ball1 == null) return;
-        
-            var _ball1 = (FFXIVClientStructs.FFXIV.Client.Game.Character.BattleChara*) & ball1;
-            if (_ball1->Vfx.Tethers.Length < 1) return;
-        
-            var ball2Id = _ball1->Vfx.Tethers[0].TargetId;
-            var groupId = @event.SourceId(); 
-        
-            if(isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 销毁SID:{@event.SourceId},销毁组Id:{groupId}");
-            accessory.Method.RemoveDraw($"究极炸弹_.*{groupId}.*");
-        }
-    }
-    */
     
     [ScriptMethod(name: "突击加农炮中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
     public void AssaultCannonCancelDelete(Event @event, ScriptAccessory accessory)
@@ -753,3 +779,372 @@ public unsafe static class ExtensionVisibleMethod
     }
 }
 #endregion EventExtensions
+public static class DrawHelper
+{
+    public static void DrawBeam(ScriptAccessory accessory, Vector3 sourcePosition, Vector3 targetPosition, string name = "Light's Course", int duration = 6700, Vector4? color = null, int delay = 0)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = sourcePosition;
+        dp.TargetPosition = targetPosition;
+        dp.Scale = new Vector2(10, 50);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawCircle(ScriptAccessory accessory, Vector3 position, Vector2 scale, int duration, string name, Vector4? color = null, bool scaleByTime = true, int delay = 0, DrawModeEnum drawmode = DrawModeEnum.Default, Vector3? offset = null)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Circle, dp);
+    }
+
+    public static void DrawDisplacement(ScriptAccessory accessory, Vector3 targetPos, Vector2 scale, int duration, string name, Vector4? color = null, int delay = 0, DrawModeEnum drawmode = DrawModeEnum.Imgui)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Owner = accessory.Data.Me;
+        dp.Color = color ?? accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetPosition = targetPos;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Displacement, dp);
+    }
+
+    public static void DrawDisplacementby2points(ScriptAccessory accessory, Vector3 origin, Vector3 target, Vector2 scale, int duration, string name, Vector4? color = null, int delay = 0)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Position = origin;
+        dp.Color = color ?? accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetPosition = target;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+
+    public static void DrawDisplacementObject(ScriptAccessory accessory, ulong target, Vector2 scale, int duration, string name, float? rotation = null, Vector4? color = null, int delay = 0, bool fix = false, DrawModeEnum drawmode = DrawModeEnum.Imgui)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Owner = accessory.Data.Me;
+        dp.Color = color ?? accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = target;
+        dp.Scale = scale;
+        if (rotation.HasValue) dp.Rotation = rotation.Value;
+        dp.Delay = delay;
+        dp.FixRotation = fix;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Displacement, dp);
+    }
+
+    public static void DrawRect(ScriptAccessory accessory, Vector3 position, Vector3 targetPos, Vector2 scale, int duration, string name, Vector4? color = null, int delay = 0)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.TargetPosition = targetPos;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawRectObjectNoTarget(ScriptAccessory accessory, ulong owner, Vector2 scale, int duration, string name, Vector4? color = null, int delay = 0, ScaleMode scalemode = ScaleMode.None, Vector3? offset = null)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = owner;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.ScaleMode = scalemode;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawRectObjectNoTargetWithRot(ScriptAccessory accessory, ulong owner, Vector2 scale, float rotation, int duration, string name, Vector4? color = null, int delay = 0, ScaleMode scalemode = ScaleMode.None, Vector3? offset = null)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = owner;
+        dp.Scale = scale;
+        dp.Rotation = rotation;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.ScaleMode = scalemode;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawRectPosNoTarget(ScriptAccessory accessory, Vector3 pos, Vector2 scale, float rotation, int duration, string name, Vector4? color = null, int delay = 0, ScaleMode scalemode = ScaleMode.None, Vector3? offset = null, DrawModeEnum drawMode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = pos;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.Rotation = rotation;
+        dp.DestoryAt = duration;
+        dp.ScaleMode = scalemode;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        accessory.Method.SendDraw(drawMode, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawRectPosTarget(ScriptAccessory accessory, Vector3 pos, Vector3 targetpos, Vector2 scale, int duration, string name, Vector4? color = null, int delay = 0, ScaleMode scalemode = ScaleMode.None, Vector3? offset = null, DrawModeEnum drawMode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = pos;
+        dp.TargetPosition = targetpos;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.ScaleMode = scalemode;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        accessory.Method.SendDraw(drawMode, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawRectObjectTarget(ScriptAccessory accessory, ulong owner, ulong target, Vector2 scale, int duration, string name, Vector4? color = null, int delay = 0, ScaleMode scalemode = ScaleMode.None)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = owner;
+        dp.TargetObject = target;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.ScaleMode = scalemode;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawRectObjectTargetPos(ScriptAccessory accessory, ulong owner, Vector3 targetPos, Vector2 scale, int duration, string name,
+                                                Vector4? color = null, int delay = 0, ScaleMode scalemode = ScaleMode.None)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = owner;
+        dp.TargetPosition = targetPos;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.ScaleMode = scalemode;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
+    public static void DrawFan(ScriptAccessory accessory, Vector3 position, float rotation, Vector2 scale, float angle,
+                                int duration, string name, Vector4? color = null, int delay = 0,
+                                bool fix = false, Vector3? offset = null, DrawModeEnum drawmode = DrawModeEnum.Default, bool scaleByTime = false)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.Rotation = rotation;
+        dp.Scale = scale;
+        dp.Radian = angle * (float.Pi / 180);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.FixRotation = fix;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Fan, dp);
+    }
+
+    public static void DrawFanNoRot(ScriptAccessory accessory, Vector3 position, Vector2 scale, float angle, int duration, string name, Vector4? color = null, int delay = 0, bool fix = false)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.Scale = scale;
+        dp.Radian = angle * (float.Pi / 180);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.FixRotation = fix;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+
+    public static void DrawFanObjectNoRot(ScriptAccessory accessory, ulong owner, Vector2 scale, float angle, int duration, string name, Vector4? color = null, int delay = 0, bool fix = false)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = owner;
+        dp.Scale = scale;
+        dp.Radian = angle * (float.Pi / 180);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.FixRotation = fix;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+
+    public static void DrawFanObject(ScriptAccessory accessory, ulong owner, float rotation,
+        Vector2 scale, float angle, int duration, string name, Vector4? color = null,
+        int delay = 0, bool scaleByTime = true, bool fix = false, Vector3? offset = null, DrawModeEnum drawmode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = owner;
+        dp.Rotation = rotation;
+        dp.Scale = scale;
+        dp.Radian = angle * (float.Pi / 180);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.FixRotation = fix;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Fan, dp);
+    }
+
+    public static void DrawFanPos(ScriptAccessory accessory, Vector3 position, Vector3 targetPosition, float rotation,
+        Vector2 scale, float angle, int duration, string name, Vector4? color = null,
+        int delay = 0, bool scaleByTime = true, bool fix = false, Vector3? offset = null, DrawModeEnum drawmode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.TargetPosition = targetPosition;
+        dp.Rotation = rotation;
+        dp.Scale = scale;
+        dp.Radian = angle * (float.Pi / 180);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        dp.FixRotation = fix;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Fan, dp);
+    }
+
+    public static void DrawLine(ScriptAccessory accessory, Vector3 startPosition, Vector3 endPosition, float width, int duration, string name, Vector4? color = null, int delay = 0)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = startPosition;
+        dp.TargetPosition = endPosition;
+        dp.Scale = new Vector2(width, 1);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Line, dp);
+    }
+
+    public static void DrawArrow(ScriptAccessory accessory, Vector3 startPosition, Vector3 endPosition, float x, float y, int duration, string name, Vector4? color = null, int delay = 0)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = startPosition;
+        dp.TargetPosition = endPosition;
+        dp.Scale = new Vector2(x, y);
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Arrow, dp);
+    }
+
+    public static void DrawCircleObject(ScriptAccessory accessory, ulong? ob, Vector2 scale, int duration, string name, Vector4? color = null, bool scaleByTime = true, int delay = 0)
+    {
+        if (ob == null) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = ob.Value;
+        dp.Scale = scale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+
+    public static void DrawDount(ScriptAccessory accessory, Vector3 position, Vector2 scale, Vector2 innerscale, int duration, string name, Vector4? color = null, bool scaleByTime = true, int delay = 0, DrawModeEnum drawmode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.Radian = 2 * float.Pi;
+        dp.Scale = scale;
+        dp.InnerScale = innerscale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Donut, dp);
+    }
+
+    public static void DrawDountPos(ScriptAccessory accessory, Vector3 position, Vector3 targetPosition, float rotation, Vector2 scale, float radian, Vector2 innerscale,
+        int duration, string name, Vector4? color = null, bool scaleByTime = true, int delay = 0, Vector3? offset = null, DrawModeEnum drawmode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Position = position;
+        dp.TargetPosition = targetPosition;
+        dp.Rotation = rotation;
+        dp.Radian = radian;
+        dp.Scale = scale;
+        dp.InnerScale = innerscale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Donut, dp);
+    }
+
+    public static void DrawDountObjectPos(ScriptAccessory accessory, ulong obj, Vector3 targetPosition, float rotation, Vector2 scale, float radian, Vector2 innerscale,
+        int duration, string name, Vector4? color = null, bool scaleByTime = true, int delay = 0, Vector3? offset = null, DrawModeEnum drawmode = DrawModeEnum.Default)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = obj;
+        dp.TargetPosition = targetPosition;
+        dp.Rotation = rotation;
+        dp.Radian = radian;
+        dp.Scale = scale;
+        dp.InnerScale = innerscale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        dp.Offset = offset ?? new Vector3(0, 0, 0);
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Donut, dp);
+    }
+
+    public static void DrawDountObject(ScriptAccessory accessory, ulong? ob, Vector2 scale, Vector2 innerscale, int duration, string name, Vector4? color = null, bool scaleByTime = true, int delay = 0, DrawModeEnum drawmode = DrawModeEnum.Default)
+    {
+        if (ob == null) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = name;
+        dp.Color = color ?? accessory.Data.DefaultDangerColor;
+        dp.Owner = ob.Value;
+        dp.Radian = 2 * float.Pi;
+        dp.Scale = scale;
+        dp.InnerScale = innerscale;
+        dp.Delay = delay;
+        dp.DestoryAt = duration;
+        if (scaleByTime) dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(drawmode, DrawTypeEnum.Donut, dp);
+    }
+}
