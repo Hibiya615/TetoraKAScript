@@ -225,12 +225,12 @@
   {
     "Name": "死化奇美拉讨伐战",
     "Guid": "e24bb311-704f-4f4c-8188-87eaa8da8b29",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/DhormeChimera.cs",
-    "Note": "v0.0.0.3:\r\nLV50 死化奇美拉讨伐战 初版绘制",
-    "UpdateInfo": "v0.0.0.3: 7.3",
+    "Note": "v0.0.0.5:\r\nLV50 死化奇美拉讨伐战 初版绘制",
+    "UpdateInfo": "v0.0.0.5: 修正寒冰咆哮范围",
     "TerritoryIds": [
       368
     ]

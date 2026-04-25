@@ -25,17 +25,17 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace DhormeChimera;
 
 [ScriptType(guid: "e24bb311-704f-4f4c-8188-87eaa8da8b29", name: "死化奇美拉讨伐战", territorys: [368],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class DhormeChimera
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.5:
         LV50 死化奇美拉讨伐战 初版绘制
         """;
     
-    #region 
+    #region 用户设置
 
     [UserSetting("TTS开关（TTS请二选一开启）")]
     public bool isTTS { get; set; } = false;
@@ -147,8 +147,8 @@ public class DhormeChimera
         dp.Name = $"寒冰咆哮";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(6f);
-        dp.DestoryAt = 2500;
+        dp.Scale = new Vector2(9.7f); // +目标圈 3.7m
+        dp.DestoryAt = 2700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
