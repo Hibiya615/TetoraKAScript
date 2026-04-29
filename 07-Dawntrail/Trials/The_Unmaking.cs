@@ -24,7 +24,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace The_Unmaking;
 
-[ScriptType(guid: "1d876fc3-e0b4-405f-93f7-6892cc1f22e5", name: "恩欧歼灭战", territorys: [1361],
+[ScriptType(guid: "1d876fc3-e0b4-405f-93f7-6892cc1f22e5", name: "LV100 7.5 恩欧歼灭战", territorys: [1361],
     version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
 public class The_Unmaking
@@ -32,7 +32,7 @@ public class The_Unmaking
     const string noteStr =
         """
         v0.0.0.1:
-        恩欧歼灭战 初版绘制
+        LV100 7.5 恩欧歼灭战 初版绘制
         """;
     
     #region 用户控制
