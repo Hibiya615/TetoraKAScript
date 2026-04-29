@@ -22,25 +22,17 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 
-namespace NewDuty;
+namespace The_Unmaking;
 
-[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307],
-    version: "0.0.0.8", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "1d876fc3-e0b4-405f-93f7-6892cc1f22e5", name: "恩欧歼灭战", territorys: [1361],
+    version: "0.0.0.1", author: "Tetora", note: noteStr)]
 
-/* MapID
- * ：恩欧歼殛战 1362
- * ：温达斯：第三巡行 1368
- * ：神龙幻巧战 1372
- * 1307: 格莱杨拉波尔歼灭战
- */
-
-public class NewDuty
+public class The_Unmaking
 {
     const string noteStr =
         """
-        v0.0.0.8:
-        最新最热副本绘制，可能会电，介意请关闭
-        别人的正式版发了这边就删
+        v0.0.0.1:
+        恩欧歼灭战 初版绘制
         """;
     
     #region 用户控制
@@ -54,199 +46,215 @@ public class NewDuty
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    [UserSetting("下一次AOE预兆颜色")]
-    public ScriptColor Next_AOEs { get; set; } = new() { V4 = new(1f, 1f, 0f, 1f) };
-    
-    [UserSetting("下一次AOE预兆亮度（推荐小于1）")]
-    public float Next_AOEsBrightness { get; set; } = 0.5f;
-    
-    // dp.Color = Next_AOEs.V4.WithW(Next_AOEsBrightness);
+    [UserSetting("启用小世界直线随时间绘制")]
+    public bool isLineByTime { get; set; } = false;
     
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
 
     #endregion
     
-    #region 7.5 恩欧歼殛战
+    #region TTS部分
     
-    [ScriptMethod(name: "—————— 7.5 恩欧歼殛战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 恩欧歼殛战(Event @event, ScriptAccessory accessory) { }
-    
-    #endregion
-    
-    #region 7.5 温达斯：第三巡行
-    
-    [ScriptMethod(name: "—————— 7.5 温达斯：第三巡行 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 温达斯第三巡行(Event @event, ScriptAccessory accessory) { }
-    
-    #endregion
-    
-    #region 7.5 神龙幻巧战
-    
-    [ScriptMethod(name: "—————— 7.5 神龙幻巧战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 神龙幻巧战(Event @event, ScriptAccessory accessory) { }
-    
-    #endregion
-    
-    #region  7.4 格莱杨拉波尔歼灭战
-    
-    [ScriptMethod(name: "—————— 7.4 格莱杨拉波尔歼灭战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 格莱杨拉波尔歼灭战(Event @event, ScriptAccessory accessory) { }
-    
-    [ScriptMethod(name: "雷电爆发 双死刑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45660"])]
-    public void 雷电爆发(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "流星雨 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49971$"])]
+    public void 流星雨(Event @event, ScriptAccessory accessory)
     {
-        if (isTTS)accessory.Method.TTS($"双死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"双死刑");
-    }
-    
-    [ScriptMethod(name: "雷光急行 击退提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45618"])]
-    public void 雷光急行(Event @event, ScriptAccessory accessory)
-    {
-        if (isText)accessory.Method.TextInfo($"击退", duration: 5000, true);
-        if (isTTS)accessory.Method.TTS($"击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"击退");
-    }
-    
-    [ScriptMethod(name: "抽雾 吸引提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45625"])]
-    public void 抽雾(Event @event, ScriptAccessory accessory)
-    {
-        if (isText)accessory.Method.TextInfo($"吸引", duration: 5000, true);
-        if (isTTS)accessory.Method.TTS($"吸引");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"吸引");
-    }
-    
-    [ScriptMethod(name: "抽雾 吸引（吸引预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45625"])]
-    public void 抽雾_吸引预测(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "抽雾_吸引预测";
-        dp.Scale = new(1f, 19f);
-        dp.Color = new Vector4(0f, 1f, 1f, 3f);
-        dp.Owner = accessory.Data.Me;
-        dp.Rotation = 180f.DegToRad();
-        dp.FixRotation = true;
-        dp.DestoryAt = 5700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
-    }
-    
-    [ScriptMethod(name: "抽雾吸引防击退销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(160|1209|2663)$"],userControl: false)]
-    public void 抽雾吸引防击退销毁(Event @event, ScriptAccessory accessory)
-    {
-        if ( @event.TargetId() != accessory.Data.Me) return; 
-        accessory.Method.RemoveDraw("抽雾_吸引预测");
-    }
-        
-    [ScriptMethod(name: "排雾 吸引矩形危险区", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45667"])]
-    public void 排雾(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "排雾";
-        dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor; 
-        dp.Scale = new(20f, 20f); 
-        dp.DestoryAt = 6700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
-    }
-    
-    [ScriptMethod(name: "无控急行 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45624"])]
-    public void 无控急行(Event @event, ScriptAccessory accessory)
-    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"AOE");
         if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
     }
     
-    /* 无法判断高低VFX
-    
-    [ScriptMethod(name: "雷光环_雷转质射线（直线）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:18993"])]
-    public void 雷光环_雷转质射线(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "深度冻结 核爆", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49966$"])]
+    public void 深度冻结(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "雷光环_雷转质射线";
-        dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Scale = new(5f, 30f);
-        dp.DestoryAt = 7000;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
-    }
-    */
-    
-    [ScriptMethod(name: "护卫炮塔_雷转质射线（直线危险区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(45629|4563[0-3])$"])]
-    public void 护卫炮塔_雷转质射线Danger(Event @event, ScriptAccessory accessory)
-    {
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "护卫炮塔_雷转质射线";
-        dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor; 
-        dp.Scale = new(5f, 50f); 
-        switch (@event.ActionId())
+        if (@event.TargetId() != accessory.Data.Me)
         {
-            case 45629:
-                dp.Scale = new(5f, 25f); 
-                break;
-            case 45630:
-                dp.Scale = new(5f, 10f); // 实际为25m，但是只有一格高台 不画太多
-                break;
-            case 45631:
-                dp.Scale = new(5f, 20f); 
-                break;
-            case 45632:
-                dp.Scale = new(5f, 15f); 
-                break;
-            case 45633:
-                dp.Scale = new(5f, 10f); 
-                break;
+            // if (isText)accessory.Method.TextInfo($"远离核爆", duration: 5000, false);
+            if (isTTS)accessory.Method.TTS($"远离核爆");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"远离核爆");
         }
-        dp.DestoryAt = 4700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+        else
+        {
+            // if (isText)accessory.Method.TextInfo($"核爆点名", duration: 5000, true);
+            if (isTTS)accessory.Method.TTS($"核爆点名");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"核爆点名");
+        }
     }
     
-    [ScriptMethod(name: "前照光 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45637"])]
-    public void 前照光(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "无之追踪_追尾波动", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^019[45]$"],suppress: 8000)]
+    public void 追尾波动(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"下安全", duration: 6000, false);
-        if (isTTS)accessory.Method.TTS($"下下下");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"下下下");
+        // 无之追踪 49939 ; 无之再追踪 49941 ; 追尾波动 48474
+        if (@event.TargetId() != accessory.Data.Me)
+        {
+            // if (isText)accessory.Method.TextInfo($"远离连线玩家", duration: 5000, false);
+            if (isTTS)accessory.Method.TTS($"远离连线玩家");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"远离连线玩家");
+        }
+        else
+        {
+            if (isText)accessory.Method.TextInfo($"追踪AOE点名", duration: 5000, true);
+            if (isTTS)accessory.Method.TTS($"追踪AOE点名");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"追踪AOE点名");
+        }
     }
     
-    /* 无法判断VFX高低
-    [ScriptMethod(name: "前照光/雷鸣吐息 上下AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4563[57]$"])]
-    public void 上下AOE(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "核心熔毁 引导+分散", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49962$"])]
+    public void 核心熔毁(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"引导黄圈+分散", duration: 3000, true);
+        if (isTTS)accessory.Method.TTS($"引导黄圈+分散");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"引导黄圈+分散");
+    }
+    
+    [ScriptMethod(name: "至高无上 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49928$"])]
+    public void 至高无上(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4000, true);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    #endregion
+    
+    #region 绘制部分
+    
+    [ScriptMethod(name: "无之膨胀（无之巨漩涡）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49933$"])]
+    public void 无之巨漩涡_无之膨胀(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "上下AOE";
+        dp.Name = $"无之巨漩涡_无之膨胀{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor; 
-        dp.Scale = new(20f, 60f); 
+        dp.Scale = new Vector2(40f);
         dp.DestoryAt = 6700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "无之膨胀（BOSS本体）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49934$"])]
+    public void 无之膨胀(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"无之膨胀";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 6700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "混沌激流（大风车）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4995[123]$"])]
+    public void 混沌激流 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"混沌激流{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 45f.DegToRad();
+        dp.Delay = @event.ActionId() == 49953 ? 4200 : 0;
+        dp.DestoryAt = @event.ActionId() == 49953 ? 3500 : 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "暗影神圣（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49968$"])]
+    public void 暗影神圣(Event @event, ScriptAccessory accessory)
+    {
+        string targetName = @event["TargetName"]?.ToString();
+        if (!string.IsNullOrEmpty(targetName))
+        {
+            if (isText)accessory.Method.TextInfo($"靠近{targetName}集合", duration: 4700, true);
+            if (isTTS) accessory.Method.TTS($"靠近{targetName}集合");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近{targetName}集合");
+        }
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"暗影神圣";
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "无之漩涡_奔流（末端钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4994[345]$"])]
+    public void 奔流(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"奔流{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+        dp.Position = @event.EffectPosition();
+        dp.Scale = new Vector2(7f);
+        dp.DestoryAt = 6000;
+        // dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    /* 范围待确定
+    [ScriptMethod(name: "虚无大冲击（转场核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49981$"])]
+    public void 虚无大冲击(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"虚无大冲击";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.DestoryAt = 6700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     */
     
-    [ScriptMethod(name: "雷鸣吐息 提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45635"])]
-    public void 雷鸣吐息(Event @event, ScriptAccessory accessory)
-    {
-        if (isText)accessory.Method.TextInfo($"上安全", duration: 6000, true);
-        if (isTTS)accessory.Method.TTS($"上上上");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"上上上");
-    }
-    
-    [ScriptMethod(name: "雷光雨（魔法阵钢铁最终位置）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45659"])]
-    public void 雷光雨(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "虚无冲击（黄圈动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50667$"])]
+    public void 虚无冲击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"雷光雨";
+        dp.Name = $"虚无冲击{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(16f);
-        dp.DestoryAt = 2900;
+        dp.Scale = new Vector2(10f);
+        dp.DestoryAt = 7700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "无之波动（直线动画）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49958$"])]
+    public void 无之波动(Event @event, ScriptAccessory accessory)
+    {
+        if (!isLineByTime) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"无之波动{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (4f, 100f);
+        dp.DestoryAt = 2700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    
+    #endregion
+
+    #region  绘制销毁
+    
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
     }
     
     #endregion
     
 }
 
+#region EventExtensions
 
 public static class EventExtensions
 {
@@ -346,7 +354,7 @@ public static class EventExtensions
         return ParseHexId(@event["DirectorId"], out var id) ? id : 0;
     }
 
-    public static uint StatusId(this Event @event)
+    public static uint StatusID(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["StatusId"]);
     }
@@ -673,7 +681,6 @@ public static class HelperExtensions
     }
 }
 
-#region 特殊函数
 public unsafe static class ExtensionVisibleMethod
 {
     public static bool IsCharacterVisible(this ICharacter chr)
@@ -711,4 +718,4 @@ public unsafe static class ExtensionVisibleMethod
         }
     }
 }
-#endregion 特殊函数
+#endregion EventExtensions
