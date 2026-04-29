@@ -483,6 +483,19 @@
     ]
   },
   {
+    "Name": "恩欧歼灭战",
+    "Guid": "1d876fc3-e0b4-405f-93f7-6892cc1f22e5",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/The_Unmaking.cs",
+    "Note": "v0.0.0.1:\r\n恩欧歼灭战 初版绘制",
+    "UpdateInfo": "",
+    "TerritoryIds": [
+      1361
+    ]
+  },
+  {
     "Name": "LV50 究极神兵假想作战",
     "Guid": "75512951-050c-4627-a3a0-a95768a90e2e",
     "Version": "0.0.0.2",
