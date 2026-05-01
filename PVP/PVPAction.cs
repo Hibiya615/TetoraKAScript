@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class PVPTAction
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -95,7 +95,7 @@ public class PVPTAction
     {
         if (obj == null || !obj.IsValid()) return false;
         
-        if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Player) return false;
+        if (obj.ObjectKind != Dalamud.Game.ClientState.Objects.Enums.ObjectKind.Pc) return false;
 
         var targetPlayer = obj as IPlayerCharacter;
         if (targetPlayer == null) return false;
