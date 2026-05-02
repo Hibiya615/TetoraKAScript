@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace Nidhogg;
 
-[ScriptType(guid: "dcfdb19e-0357-4214-b64e-205100f55822", name: "尼德霍格征龙战", territorys: [559],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "dcfdb19e-0357-4214-b64e-205100f55822", name: "LV60 尼德霍格征龙战", territorys: [559],
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Nidhogg
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV60 尼德霍格征龙战 初版绘制
         """;
     
@@ -78,7 +78,7 @@ public class Nidhogg
         // 在 烈焰十字爆 读条的前一点点，猩红之珠 会对自身读条 6074，读条结束后尼德霍格会释放 6302 恐惧咆哮
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "烈焰十字爆";
-        dp.Scale = new (18, 50f);
+        dp.Scale = new (17, 50f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
         dp.DestoryAt = 10200;

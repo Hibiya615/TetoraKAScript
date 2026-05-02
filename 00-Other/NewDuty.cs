@@ -28,9 +28,7 @@ namespace NewDuty;
     version: "0.0.0.8", author: "Tetora", note: noteStr)]
 
 /* MapID
- * ：恩欧歼殛战 1362
  * ：温达斯：第三巡行 1368
- * ：神龙幻巧战 1372
  * 1307: 格莱杨拉波尔歼灭战
  */
 
@@ -67,24 +65,10 @@ public class NewDuty
 
     #endregion
     
-    #region 7.5 恩欧歼殛战
-    
-    [ScriptMethod(name: "—————— 7.5 恩欧歼殛战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 恩欧歼殛战(Event @event, ScriptAccessory accessory) { }
-    
-    #endregion
-    
     #region 7.5 温达斯：第三巡行
     
     [ScriptMethod(name: "—————— 7.5 温达斯：第三巡行 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 温达斯第三巡行(Event @event, ScriptAccessory accessory) { }
-    
-    #endregion
-    
-    #region 7.5 神龙幻巧战
-    
-    [ScriptMethod(name: "—————— 7.5 神龙幻巧战 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 神龙幻巧战(Event @event, ScriptAccessory accessory) { }
     
     #endregion
     
