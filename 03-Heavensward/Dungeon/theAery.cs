@@ -14,14 +14,14 @@ using System.Threading.Tasks;
 
 namespace the_Aery;
 
-[ScriptType(guid: "ac6caf4e-5eee-406c-8621-a5f3c5c7e9b0", name: "邪龙王座龙巢神殿", territorys: [1065],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "ac6caf4e-5eee-406c-8621-a5f3c5c7e9b0", name: "LV55 邪龙王座龙巢神殿", territorys: [1065],
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class the_Aery
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV55 邪龙王座龙巢神殿 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
@@ -59,6 +59,7 @@ public class the_Aery
         if (isTTS)accessory.Method.TTS("将连线传给场边柱子");
         if (isEdgeTTS)accessory.Method.EdgeTTS("将连线传给场边柱子");
         
+        /*
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "避雷";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -66,12 +67,25 @@ public class the_Aery
         dp.Scale = new Vector2(2f);
         dp.DestoryAt = 9600;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        */
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Color = accessory.Data.DefaultSafeColor;
+        dp1.Scale = new Vector2(2.4f);
+        dp1.DestoryAt = 9600;
+        foreach (var item in accessory.Data.Objects.GetByDataId(3752))
+        {
+            dp1.Name = $"上古雕像{item.EntityId}";
+            dp1.Owner = item.EntityId;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+        }
     }
     
     [ScriptMethod(name: "避雷销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:2574"],userControl: false)]
     public void 避雷销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw("避雷");
+        accessory.Method.RemoveDraw($"避雷");
+        accessory.Method.RemoveDraw($"上古雕像.*");
     }
     
     [ScriptMethod(name: "BOSS1_琅妲巫龙 感电 击退提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:3890"])]
@@ -102,7 +116,7 @@ public class the_Aery
         dp.Scale = new (5f, 64.9f);
         dp.Owner = @event.SourceId();
         dp.TargetObject = accessory.Data.Me;
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
         dp.DestoryAt = 4300;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }

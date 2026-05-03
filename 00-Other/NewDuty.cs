@@ -28,7 +28,6 @@ namespace NewDuty;
     version: "0.0.0.8", author: "Tetora", note: noteStr)]
 
 /* MapID
- * ：温达斯：第三巡行 1368
  * 1307: 格莱杨拉波尔歼灭战
  */
 
@@ -63,13 +62,6 @@ public class NewDuty
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
 
-    #endregion
-    
-    #region 7.5 温达斯：第三巡行
-    
-    [ScriptMethod(name: "—————— 7.5 温达斯：第三巡行 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 温达斯第三巡行(Event @event, ScriptAccessory accessory) { }
-    
     #endregion
     
     #region  7.4 格莱杨拉波尔歼灭战
