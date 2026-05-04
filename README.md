@@ -1,10 +1,10 @@
 # 南雲鉄虎个人KodakkuAssist绘制脚本
 
-**These are scripts for Kodakku**
+**These are scripts for Kodakku by Tetora**
 
-纯画着玩，更新不保证，质量不保证
+纯画着玩，更新不保证，质量不保证，只适配CN版
 
-Just fun.
+Just fun, only CN ver.
 
 ## How-to-install  /  使用指南
 - Use this link / 在线库链接： 
@@ -69,9 +69,17 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
   `P10N` `P11N`
 
+
+**团队任务 / Alliance Raids / アライアンスレイド**
+
+- LV100: `温达斯：第三巡行`
+
+
 **深层迷宫 / Deep Dungeons / ディープダンジョン**
 
-`死者宫殿` `朝圣交错路`
+- `死者宫殿 / 死者の宮殿 / The Palace of the Dead` 
+
+- `朝圣交错路 / ピルグリム・トラバース / Pilgrim's Traverse`
 
 **临危受命 / Fate**
 
