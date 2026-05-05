@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Windurst_The_Third_Walk;
 
 [ScriptType(guid: "fa374b84-5ce5-405c-a22d-3e7ea1c9591b", name: "LV100 7.5 温达斯：第三巡行", territorys: [1368],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Windurst_The_Third_Walk
 {
     const string noteStr =
         """
-        LV100 7.5 温达斯：第三巡行 v0.0.0.2:
+        LV100 7.5 温达斯：第三巡行 v0.0.0.3:
         初版绘制，不完整，凑合着先用！
         """;
     
@@ -255,7 +255,7 @@ public class Windurst_The_Third_Walk
     public void 展开步法阵_钻环跳圈的火炎(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"钻环跳圈的火炎";
+        dp.Name = $"钻环跳圈的火炎{@event.TargetId}";
         dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
         dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(6f);
@@ -268,6 +268,8 @@ public class Windurst_The_Third_Walk
     [ScriptMethod(name: "靠近乘凉的冰结（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50203$"])]
     public void 靠近乘凉的冰结(Event @event, ScriptAccessory accessory)
     {
+        accessory.Method.RemoveDraw($"钻环跳圈的火炎.*");
+        
         if (isTTS)accessory.Method.TTS($"远离加分散");
         if (isEdgeTTS)accessory.Method.EdgeTTS($"远离加分散");
         
@@ -346,14 +348,23 @@ public class Windurst_The_Third_Walk
     [ScriptMethod(name: "————————  BOSS2_巨神重现 亚历山大  ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void BOSS2_亚历山大(Event @event, ScriptAccessory accessory) { }
     
+    /*
     [ScriptMethod(name: "圣箭（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5012[45]$"])]
     public void 圣箭(Event @event, ScriptAccessory accessory)
     {
+        // 不是左右也不是顺逆那这是啥啊??
         var isR = @event.ActionId == 50125;
 
         if (isR)
         {
-            var dp = accessory.Data.GetDefaultDrawProperties();
+
+        }
+        else
+        {
+
+        }
+        
+        //  画不了 先放着备用
             dp.Name = $"右圣箭";
             dp.Color = accessory.Data.DefaultDangerColor;
             dp.Owner = @event.SourceId();
@@ -362,20 +373,9 @@ public class Windurst_The_Third_Walk
             dp.Rotation = 270f.DegToRad();
             dp.DestoryAt = 9700;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-        }
-        else
-        {
-            var dp1 = accessory.Data.GetDefaultDrawProperties();
-            dp1.Name = $"左圣箭";
-            dp1.Color = accessory.Data.DefaultDangerColor;
-            dp1.Owner = @event.SourceId();
-            dp1.Scale = new Vector2(45f);
-            dp1.Radian = 90f.DegToRad(); 
-            dp1.Rotation = 90f.DegToRad();
-            dp1.DestoryAt = 9700;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
-        }
+    
     }
+    */
     
     [ScriptMethod(name: "审理之光（半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5014[67]$"])]
     public void 审理之光 (Event @event, ScriptAccessory accessory)
@@ -440,6 +440,35 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    private static int _ElectrifyCount = 0;
+
+    [ScriptMethod(name: "戈尔狄系统 支援命令_大放电（连线钢铁）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^01AC$"])]
+    public void 支援命令_大放电 (Event @event, ScriptAccessory accessory)
+    {
+        _ElectrifyCount++;
+    
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"支援命令{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(18f);
+        // dp.ScaleMode = ScaleMode.ByTime;
+    
+        // 连线固定为每两个一组，所以第3、4次延迟绘制，第5、6次（一般见不到但是万一呢）正常，以此类推
+        int groupIndex = (_ElectrifyCount - 1) / 2;  // 0:第1-2次, 1:第3-4次, 2:第5-6次...
+        if (groupIndex % 2 == 1)  // 奇数分组（第3-4次、第7-8次...）延迟
+        {
+            dp.Delay = 5000;
+            dp.DestoryAt = 3000;
+        }
+        else
+        {
+            dp.DestoryAt = 9000;
+        }
+    
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+
     #endregion
     
     #region BOSS3_普罗玛西亚
