@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Windurst_The_Third_Walk;
 
 [ScriptType(guid: "fa374b84-5ce5-405c-a22d-3e7ea1c9591b", name: "LV100 7.5 温达斯：第三巡行", territorys: [1368],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Windurst_The_Third_Walk
 {
     const string noteStr =
         """
-        LV100 7.5 温达斯：第三巡行 v0.0.0.1:
+        LV100 7.5 温达斯：第三巡行 v0.0.0.2:
         初版绘制，不完整，凑合着先用！
         """;
     
@@ -55,7 +55,7 @@ public class Windurst_The_Third_Walk
     
     // 1.5
     
-    [ScriptMethod(name: "————————————  小怪部分  ————————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "———————————  小怪部分  ———————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 小怪部分(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "1.5 阿巴佐恩_一刀两断 中心击退", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50481$"])]
@@ -83,6 +83,27 @@ public class Windurst_The_Third_Walk
         dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
         
+    }
+    
+    [ScriptMethod(name: "1.5 尼米亚猛狮_轰爆 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50092$"])]
+    public void 轰爆(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 3300, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "1.5 尼米亚猛狮_金辉轰爆 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50093$"])]
+    public void 金辉轰爆(Event @event, ScriptAccessory accessory)
+    {
+        var isTank = accessory.Data.MyObject?.IsTank() ?? false;
+        var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
+        
+        if (isTTS && !isHealer)accessory.Method.TTS($"打断<尼米亚猛狮>");
+        if (isTTS && !isHealer)accessory.Method.EdgeTTS($"打断<尼米亚猛狮>");
+        
+        if (isText && isTank)accessory.Method.TextInfo($"打断 <尼米亚猛狮>", duration: 4000, true);
+        // 打断引导线之后再说
     }
     
     [ScriptMethod(name: "1.5 美杜莎_左/右侧影之斩击（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5009[89]$"])]
@@ -131,6 +152,30 @@ public class Windurst_The_Third_Walk
     }
     
     */
+    
+    [ScriptMethod(name: "1.5 美杜莎_嚎叫 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50103$"])]
+    public void 嚎叫(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 3300, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "1.5 美杜莎_蔑视 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50100$"])]
+    public void 蔑视(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 3300, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "1.5 美杜莎_石化 背对", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50102$"])]
+    public void 美杜莎_石化(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4300, false);
+        if (isTTS)accessory.Method.TTS($"背对美杜莎");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"背对美杜莎");
+    }
     
     #endregion
     
@@ -192,8 +237,22 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "展开步法阵_钻环跳圈的火炎（连续月环）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^01(80|7F)$"])]
+    [ScriptMethod(name: "钻环跳圈的火炎（初始月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50201$"])]
     public void 钻环跳圈的火炎(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"钻环跳圈的火炎";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.0f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(70f);
+        dp.InnerScale = new Vector2(6f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "展开步法阵_钻环跳圈的火炎（连续月环位置）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^01(80|7F)$"])]
+    public void 展开步法阵_钻环跳圈的火炎(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"钻环跳圈的火炎";
@@ -214,7 +273,7 @@ public class Windurst_The_Third_Walk
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"靠近乘凉的冰结";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
         dp.DestoryAt = 1900;
@@ -249,7 +308,36 @@ public class Windurst_The_Third_Walk
         if (isEdgeTTS)accessory.Method.EdgeTTS($"大AOE伤害");
     }
     
-
+    [ScriptMethod(name: "吹飞一切的疾风 提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^539[89]$"])]
+    public void 吹飞一切的疾风(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        if (isText)accessory.Method.TextInfo($"击退至墙", duration: 9300, true);
+        if (isTTS)accessory.Method.TTS($"击退至墙");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"击退至墙");
+        
+        // 击退以后再画
+    }
+    
+    [ScriptMethod(name: "期末考试（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50211$"])]
+    public void 期末考试(Event @event, ScriptAccessory accessory)
+    {
+        string targetName = @event["TargetName"]?.ToString();
+        if (!string.IsNullOrEmpty(targetName))
+        {
+            if (isText)accessory.Method.TextInfo($"靠近{targetName}集合", duration: 7100, true);
+            if (isTTS) accessory.Method.TTS($"靠近{targetName}集合");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近{targetName}集合");
+        }
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"期末考试";
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 7800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
     
     #endregion
     
@@ -258,7 +346,7 @@ public class Windurst_The_Third_Walk
     [ScriptMethod(name: "————————  BOSS2_巨神重现 亚历山大  ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void BOSS2_亚历山大(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "BOSS2_亚历山大 圣箭（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5012[45]$"])]
+    [ScriptMethod(name: "圣箭（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5012[45]$"])]
     public void 圣箭(Event @event, ScriptAccessory accessory)
     {
         var isR = @event.ActionId == 50125;
@@ -289,7 +377,7 @@ public class Windurst_The_Third_Walk
         }
     }
     
-    [ScriptMethod(name: "BOSS2_亚历山大 审理之光（半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5014[67]$"])]
+    [ScriptMethod(name: "审理之光（半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5014[67]$"])]
     public void 审理之光 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -303,7 +391,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "BOSS2_亚历山大 圣炎（三角但是先凑合用）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50143$"])]
+    [ScriptMethod(name: "圣炎（三角但是先凑合用）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50143$"])]
     public void 圣炎 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -316,7 +404,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "BOSS2_亚历山大 百万神圣（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50158$"])]
+    [ScriptMethod(name: "百万神圣（分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50158$"])]
     public void 百万神圣(Event @event, ScriptAccessory accessory)
     {
         string targetName = @event["TargetName"]?.ToString();
@@ -336,7 +424,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "BOSS2_戈尔狄系统 反射防壁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50686$"])]
+    [ScriptMethod(name: "戈尔狄系统_反射防壁", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50686$"])]
     public void 反射防壁(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"停止攻击 <反射防壁>", duration: 3300, true);
@@ -359,7 +447,7 @@ public class Windurst_The_Third_Walk
     [ScriptMethod(name: "————————  BOSS3_普罗玛西亚  ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void BOSS3_普罗玛西亚(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "BOSS3_普罗玛西亚 转瞬_爆炸（流动钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50320$"])]
+    [ScriptMethod(name: "转瞬_爆炸（流动钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50320$"])]
     public void 转瞬_爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -373,7 +461,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "BOSS3_普罗玛西亚 虚幻之环（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50321$"])]
+    [ScriptMethod(name: "虚幻之环（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50321$"])]
     public void 虚幻之环(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -386,7 +474,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "BOSS3_普罗玛西亚 黄泉灶食_黄昏乐土（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50331$"])]
+    [ScriptMethod(name: "黄泉灶食_黄昏乐土（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50331$"])]
     public void 黄昏乐土(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"去背后加靠近");
@@ -403,7 +491,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "BOSS3_空虚叹息之物 极光帷幕（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50355$"])]
+    [ScriptMethod(name: "空虚叹息之物_极光帷幕（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50355$"])]
     public void 极光帷幕(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -415,7 +503,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "BOSS3_空虚思考之物 虚无之风（旋转直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50354$"])]
+    [ScriptMethod(name: "空虚思考之物_虚无之风（旋转直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50354$"])]
     public void 虚无之风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -427,7 +515,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "BOSS3_普罗玛西亚 回天挽日（半场刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50329$"])]
+    [ScriptMethod(name: "回天挽日（半场刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50329$"])]
     public void 回天挽日(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -439,7 +527,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "BOSS3_普罗玛西亚的羁绊 黄泉灶食（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50332$"])]
+    [ScriptMethod(name: "黄泉灶食（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50332$"])]
     public void 黄泉灶食(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -451,7 +539,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "BOSS3_普罗玛西亚 诱引（踩塔钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50565$"])]
+    [ScriptMethod(name: "诱引（踩塔钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50565$"])]
     public void 诱引(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"离开原地");
@@ -473,7 +561,7 @@ public class Windurst_The_Third_Walk
     [ScriptMethod(name: "————————  BOSS4_神龙  ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void BOSS4_神龙(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "BOSS4_神龙 宇宙吐息（上半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49107$"])]
+    [ScriptMethod(name: "宇宙吐息（上半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49107$"])]
     public void 宇宙吐息(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"↓ 去下方平台 ↓", duration: 6300, true);
@@ -489,7 +577,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "BOSS4_神龙 宇宙甩尾（下半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49110$"])]
+    [ScriptMethod(name: "宇宙甩尾（下半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49110$"])]
     public void 宇宙甩尾(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"↑ 去上方平台 ↑", duration: 6300, true);
@@ -505,7 +593,7 @@ public class Windurst_The_Third_Walk
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "BOSS4_神龙 黄昏披光_黄昏光辉 debuff提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5352$"])]
+    [ScriptMethod(name: "黄昏披光_黄昏光辉 debuff提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5352$"])]
     public void 黄昏披光_黄昏光辉(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -514,7 +602,7 @@ public class Windurst_The_Third_Walk
         if (isEdgeTTS)accessory.Method.EdgeTTS($"呆在楼上（光）");
     }
     
-    [ScriptMethod(name: "BOSS4_神龙 黄昏披暗_黄昏暗影 debuff提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5353$"])]
+    [ScriptMethod(name: "黄昏披暗_黄昏暗影 debuff提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5353$"])]
     public void 黄昏披暗_黄昏暗影(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -523,7 +611,7 @@ public class Windurst_The_Third_Walk
         if (isEdgeTTS)accessory.Method.EdgeTTS($"呆在楼下（暗）");
     }
     
-    [ScriptMethod(name: "BOSS4_神龙 原子甩尾（下半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49130$"])]
+    [ScriptMethod(name: "原子甩尾（下半场）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49130$"])]
     public void 原子甩尾(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"↑ 去上方平台，平台破坏 ↑", duration: 6300, true);
@@ -540,7 +628,7 @@ public class Windurst_The_Third_Walk
     }
     
     /* 不确定 先放着
-    [ScriptMethod(name: "BOSS4_神龙 灾变涡旋 头标提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^02A(8|9|A|B)$"])]
+    [ScriptMethod(name: "灾变涡旋 头标提示", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^02A(8|9|A|B)$"])]
     public void 灾变涡旋(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"", duration: 3000, true);
@@ -556,7 +644,7 @@ public class Windurst_The_Third_Walk
     [ScriptMethod(name: "————————  BOSS4_虚无之王  ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void BOSS4_虚无之王(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "BOSS4_虚无之王 左/右侧交错剑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4915[3-6]$"])]
+    [ScriptMethod(name: "左/右侧交错剑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4915[3-6]$"])]
     public void 交错剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -591,7 +679,7 @@ public class Windurst_The_Third_Walk
         
     }
     
-    [ScriptMethod(name: "BOSS4_虚无之王 双重吐息（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^491(59|60)$"])]
+    [ScriptMethod(name: "双重吐息（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^491(59|60)$"])]
     public void 双重吐息(Event @event, ScriptAccessory accessory)
     {
         switch (@event.ActionId())
@@ -621,7 +709,7 @@ public class Windurst_The_Third_Walk
         
     }
     
-    [ScriptMethod(name: "BOSS4_虚无之王 灾变之刃（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49162$"])]
+    [ScriptMethod(name: "灾变之刃（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49162$"])]
     public void 灾变之刃 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -681,9 +769,9 @@ public class Windurst_The_Third_Walk
     }
     */
     
-    // BOSS4_虚无之王 宇宙烈焰（步进地火）麻烦的以后再说.jpg
+    // 宇宙烈焰（步进地火）麻烦的以后再说.jpg
     
-    [ScriptMethod(name: "BOSS4_立体魔法阵 原子射线（移动直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49165$"])]
+    [ScriptMethod(name: "原子射线（移动直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49165$"])]
     public void 原子射线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"躲避直线");
