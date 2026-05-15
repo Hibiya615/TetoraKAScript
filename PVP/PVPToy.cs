@@ -141,10 +141,17 @@ public class PVPToy
         if (@event.TargetId() != accessory.Data.Me) return;
         if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE))
         {
+            string sourceName = @event["SourceName"]?.ToString();
             if (isText) accessory.Method.TextInfo("已尝试自动使用《防御》", duration: 1800, true);
             accessory.Method.SendChat($"/pvpac 防御");
-            accessory.Method.SendChat($"/e 侦测到被狙！鸭鸭试着帮你开了盾！<se.1> <se.1>");
+            accessory.Method.SendChat($"/e 侦测到被《{sourceName}》狙了！鸭鸭试着帮你开了盾！<se.1> <se.1>");
         }
+        /*
+        if (!string.IsNullOrEmpty(sourceName))
+        {
+            accessory.Method.SendChat($"/e 就是《{sourceName}》把你狙了！");
+        }
+        */
     }
     
     [ScriptMethod(name: "被战士抓自动防御", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29081"])]
@@ -155,12 +162,21 @@ public class PVPToy
         {
             if (@event.TargetId() != accessory.Data.Me) return;
             if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE))
-            {
+            {    
+                string sourceName = @event["SourceName"]?.ToString();
                 if (isText) accessory.Method.TextInfo("已尝试自动使用《防御》", duration: 1800, true);
                 accessory.Method.SendChat($"/pvpac 防御");
-                accessory.Method.SendChat($"/e 侦测到被战士抓了！鸭鸭试着帮你进行了防御！<se.3> <se.3>");
+                accessory.Method.SendChat($"/e 侦测到被战士《{sourceName}》抓了！鸭鸭试着帮你进行了防御！<se.3> <se.3>");
             }
         }
+    }
+    
+    [ScriptMethod(name: "谁踹的我.jpg", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29485"])]
+    public void WhoMeteorImpactMe(Event @event, ScriptAccessory accessory)
+    {
+           if (@event.TargetId() != accessory.Data.Me) return;
+           string sourceName = @event["SourceName"]?.ToString();
+           accessory.Method.SendChat($"/e 鸭鸭：就是武僧《{sourceName}》踹的你！ <se.2>");
     }
     
     [ScriptMethod(name: "对方诗人LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29401"],suppress:3000)]

@@ -22,17 +22,18 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.6", author: "Tetora", note: noteStr)]
+    version: "0.0.0.7", author: "Tetora", note: noteStr)]
 
 public class PVPTAction
 {
     const string noteStr =
         """
-        v0.0.0.6:
+        v0.0.0.7:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
         【仅适用敌方目标标记】是用于四小的，因为一般都会给四小标头标x
+        【瞬发技能范围预测】需要手动使用宏触发
         """;
     
     #region 基础控制
@@ -50,10 +51,19 @@ public class PVPTAction
     public bool isOnlyMark { get; set; } = false;
     
     [UserSetting("自身部分技能颜色（如圣盾阵）")]
-    public ScriptColor SelfAOEColor { get; set; } = new() { V4 = new(0f, 1f, 1f, 1f) };
+    public ScriptColor SelfAOEColor { get; set; } = new() { V4 = new(1f, 0f, 1f, 1f) };
     
     [UserSetting("自身部分技能填充亮度（推荐小于1）")]
     public float SelfAOEFillBrightness { get; set; } = 0.4f;
+    
+    [UserSetting("自身控制技能预测颜色（如行列舞）")]
+    public ScriptColor SelfCompulsoryControlColor { get; set; } = new() { V4 = new(1f, 0f, 0f, 10f) };
+    
+    [UserSetting("自身控制技能预测填充亮度（推荐小于1）")]
+    public float SelfCompulsoryControlFillBrightness { get; set; } = 0f;
+    
+    [UserSetting("自身控制技能预测显示时间(ms)")]
+    public int MoveActionsTime { get; set; } = 10000;
     
     [UserSetting("敌方部分技能颜色（如占星、诗人LB）")]
     public ScriptColor EnmityAOEColor { get; set; } = new() { V4 = new(1f, 0f, 1f, 1f) };
@@ -674,6 +684,89 @@ public class PVPTAction
     
     #endregion
 
+    #region 舞者
+    
+    [ScriptMethod(name: "———————— 舞者 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 舞者 (Event @event, ScriptAccessory accessory) { }
+
+    [ScriptMethod(name: "行列舞预测描边 [ 触发宏: /e 15mCompulsoryControl ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^15mCompulsoryControl$"])]
+    public void 行列舞预测描边 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        dp.Name = "行列舞预测描边";
+        dp.Scale = new Vector2(15f);
+        dp.InnerScale = new Vector2(14.9f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = SelfCompulsoryControlColor.V4.WithW(10f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = MoveActionsTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "行列舞预测填充 [ 填充亮度在用户设置 ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^15mCompulsoryControl$"])]
+    public void 行列舞预测填充 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        dp.Name = "行列舞预测填充";
+        dp.Scale = new Vector2(15f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = SelfCompulsoryControlColor.V4.WithW(SelfCompulsoryControlFillBrightness);
+        dp.DestoryAt = MoveActionsTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "行列舞触发销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],userControl: false)]
+    public void 行列舞销毁(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($"行列舞预测.*");
+    }
+
+    #endregion
+    
+    #region 镰刀
+    
+    [ScriptMethod(name: "———————— 镰刀 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 镰刀 (Event @event, ScriptAccessory accessory) { }
+
+    [ScriptMethod(name: "暗夜游魂预测描边 [ 触发宏: /e 10mCompulsoryControl ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^10mCompulsoryControl$"])]
+    public void 暗夜游魂预测描边 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        dp.Name = "暗夜游魂预测描边";
+        dp.Scale = new Vector2(10f);
+        dp.InnerScale = new Vector2(9.94f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = SelfCompulsoryControlColor.V4.WithW(10f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = MoveActionsTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "暗夜游魂预测填充 [ 填充亮度在用户设置 ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^10mCompulsoryControl$"])]
+    public void 暗夜游魂预测填充 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        
+        dp.Name = "暗夜游魂预测填充";
+        dp.Scale = new Vector2(10f);
+        dp.Owner = accessory.Data.Me; 
+        dp.Color = SelfCompulsoryControlColor.V4.WithW(SelfCompulsoryControlFillBrightness);
+        dp.DestoryAt = MoveActionsTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "暗夜游魂触发销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29553$"],userControl: false)]
+    public void 暗夜游魂销毁(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($"暗夜游魂预测.*");
+    }
+
+    #endregion
 }
 
 public static class EventExtensions
