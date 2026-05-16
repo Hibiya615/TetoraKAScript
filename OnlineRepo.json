@@ -771,12 +771,12 @@
   {
     "Name": "LV100 7.5 温达斯：第三巡行",
     "Guid": "fa374b84-5ce5-405c-a22d-3e7ea1c9591b",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Alliance_Raids/Windurst_The_Third_Walk.cs",
-    "Note": "LV100 7.5 温达斯：第三巡行 v0.0.0.3:\r\n初版绘制",
-    "UpdateInfo": "0.0.0.4:先行版",
+    "Note": "LV100 7.5 温达斯：第三巡行 v0.0.0.5:\r\n初版绘制",
+    "UpdateInfo": "0.0.0.5:先行版",
     "TerritoryIds": [
       1368
     ]
