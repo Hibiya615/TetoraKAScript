@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.7", author: "Tetora", note: noteStr)]
+    version: "0.0.0.8", author: "Tetora", note: noteStr)]
 
-public class PVPTAction
+public class PVPAction
 {
     const string noteStr =
         """
-        v0.0.0.7:
+        v0.0.0.8:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -56,7 +56,7 @@ public class PVPTAction
     [UserSetting("自身部分技能填充亮度（推荐小于1）")]
     public float SelfAOEFillBrightness { get; set; } = 0.4f;
     
-    [UserSetting("自身控制技能预测颜色（如行列舞）")]
+    [UserSetting("自身控制技能预测颜色（如行列舞、暗夜游魂）")]
     public ScriptColor SelfCompulsoryControlColor { get; set; } = new() { V4 = new(1f, 0f, 0f, 10f) };
     
     [UserSetting("自身控制技能预测填充亮度（推荐小于1）")]
@@ -629,6 +629,101 @@ public class PVPTAction
     
     #endregion
 
+    #region 蝰蛇
+    
+    [ScriptMethod(name: "———————— 蝰蛇 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 蝰蛇 (Event @event, ScriptAccessory accessory) { }
+
+   [ScriptMethod(name: "自身蛇鳞击", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^409[78]$"])]
+    public void ArmoredScales_Backlash_Self(Event @event, ScriptAccessory accessory)
+    {
+        // StatusID: 4096 蛇鳞 ; 4097 蛇鳞甲 ; 4098 蛇血
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        switch (@event.StatusID())
+        {
+            case 4097:
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"蛇鳞击Self";
+                dp.Color = new Vector4(0f, 1f, 1f, 1f);
+                dp.Owner = @event.SourceId();
+                dp.Scale = new Vector2(6f);
+                dp.DestoryAt = 4000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                break;
+            case 4098:
+                var dp1 = accessory.Data.GetDefaultDrawProperties();
+                dp1.Name = $"血气蛇鳞击Self";
+                dp1.Color = new Vector4(0f, 1f, 1f, 0.6f);
+                dp1.Owner = @event.SourceId();
+                dp1.Scale = new Vector2(15f);
+                dp1.DestoryAt = 4000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                break;
+        }
+    }
+    
+    [ScriptMethod(name: "[←启用是隐藏] 自身附加蛇血时隐藏6m内圈", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^4098$"])]
+    public void SnakesBaneRemoveSelf(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($"蛇鳞击Self");
+    }
+    
+    [ScriptMethod(name: "蛇鳞击销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^3918[78]$"],userControl: false)]
+    public void ArmoredScales_Backlash_RemoveSelf(Event @event, ScriptAccessory accessory)
+    {
+        // 伤害 ActionId 为 蛇鳞击 39187、血气蛇鳞击 39188
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($".*蛇鳞击Self");
+    }
+    
+    [ScriptMethod(name: "敌方蛇鳞击范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^409[78]$"])]
+    public void ArmoredScales_Backlash_Enmity(Event @event, ScriptAccessory accessory)
+    {
+        // if (isOnlyMark) return; // 没开启仅标记选项，绘制对方全部
+            var obj = IbcHelper.GetById(accessory, @event.SourceId);
+            if (obj == null || !obj.IsValid()) return;
+
+            if (!PartyFilter(accessory, obj))
+            {
+                switch (@event.StatusID())
+                {
+                    case 4097:
+                        var dp = accessory.Data.GetDefaultDrawProperties();
+                        dp.Name = $"蛇鳞击敌方{@event.SourceId}";
+                        dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
+                        dp.Owner = @event.SourceId();
+                        dp.Scale = new Vector2(6f);
+                        dp.DestoryAt = 4000;
+                        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+                        break;
+                    case 4098:
+                        var dp1 = accessory.Data.GetDefaultDrawProperties();
+                        dp1.Name = $"血气蛇鳞击敌方{@event.SourceId}";
+                        dp1.Color = new Vector4(1f, 0f, 0f, 0.8f);
+                        dp1.Owner = @event.SourceId();
+                        dp1.Scale = new Vector2(15f);
+                        dp1.DestoryAt = 4000;
+                        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                        break;
+                }
+            }
+    }
+    
+    [ScriptMethod(name: "[←启用是隐藏] 敌方附加蛇血时隐藏6m内圈", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^4098$"])]
+    public void SnakesBaneRemoveEnmity(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"蛇鳞击敌方{@event.SourceId}");
+    }
+        
+    [ScriptMethod(name: "敌方蛇鳞击销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^3918[78]$"],userControl: false)]
+    public void ArmoredScales_Backlash_RemoveEnmity(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*蛇鳞击敌方{@event.SourceId()}");
+    }
+
+    #endregion
+
     #region 占星
     
     [ScriptMethod(name: "———————— 占星 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
@@ -689,11 +784,12 @@ public class PVPTAction
     [ScriptMethod(name: "———————— 舞者 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 舞者 (Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "行列舞预测描边 [ 触发宏: /e 15mCompulsoryControl ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^15mCompulsoryControl$"])]
+    [ScriptMethod(name: "行列舞预测描边 [ 触发宏: /e CompulsoryControl ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^CompulsoryControl$"])]
     public void 行列舞预测描边 (Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
+        if (IbcHelper.GetPlayerJob(accessory,accessory.Data.MyObject,false) != "DNC") return;
         
+        var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "行列舞预测描边";
         dp.Scale = new Vector2(15f);
         dp.InnerScale = new Vector2(14.9f);
@@ -704,11 +800,15 @@ public class PVPTAction
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "行列舞预测填充 [ 填充亮度在用户设置 ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^15mCompulsoryControl$"])]
+    [ScriptMethod(name: "行列舞预测填充 [ 填充亮度在用户设置 ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^CompulsoryControl$"])]
     public void 行列舞预测填充 (Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
+        var myObject = accessory.Data.MyObject;
+        if (myObject == null) return;
+        var myJob = IbcHelper.GetPlayerJob(accessory, myObject, true);
+        if (myJob != "舞者") return;
         
+        var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "行列舞预测填充";
         dp.Scale = new Vector2(15f);
         dp.Owner = accessory.Data.Me; 
@@ -731,26 +831,31 @@ public class PVPTAction
     [ScriptMethod(name: "———————— 镰刀 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 镰刀 (Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "暗夜游魂预测描边 [ 触发宏: /e 10mCompulsoryControl ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^10mCompulsoryControl$"])]
-    public void 暗夜游魂预测描边 (Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "暗夜游魂预测描边 [ 触发宏: /e CompulsoryControl ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^CompulsoryControl$"])]
+    public void 暗夜游魂预测描边(Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
+        var myObject = accessory.Data.MyObject;
+        if (myObject == null) return;
+        var myJob = IbcHelper.GetPlayerJob(accessory, myObject, true);
+        if (myJob != "钐镰客") return;
         
+        var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "暗夜游魂预测描边";
         dp.Scale = new Vector2(10f);
         dp.InnerScale = new Vector2(9.94f);
-        dp.Owner = accessory.Data.Me; 
+        dp.Owner = accessory.Data.Me;
         dp.Color = SelfCompulsoryControlColor.V4.WithW(10f);
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = MoveActionsTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
-    }
+}
     
-    [ScriptMethod(name: "暗夜游魂预测填充 [ 填充亮度在用户设置 ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^10mCompulsoryControl$"])]
+    [ScriptMethod(name: "暗夜游魂预测填充 [ 填充亮度在用户设置 ]", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^CompulsoryControl$"])]
     public void 暗夜游魂预测填充 (Event @event, ScriptAccessory accessory)
     {
-        var dp = accessory.Data.GetDefaultDrawProperties();
+        if (IbcHelper.GetPlayerJob(accessory,accessory.Data.MyObject,false) != "RPR") return;
         
+        var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "暗夜游魂预测填充";
         dp.Scale = new Vector2(10f);
         dp.Owner = accessory.Data.Me; 
@@ -771,6 +876,7 @@ public class PVPTAction
 
 public static class EventExtensions
 {
+
     private static bool ParseHexId(string? idStr, out uint id)
     {
         id = 0;
@@ -867,9 +973,9 @@ public static class EventExtensions
         return ParseHexId(@event["DirectorId"], out var id) ? id : 0;
     }
 
-    public static uint StatusId(this Event @event)
+    public static uint StatusID(this Event @event)
     {
-        return JsonConvert.DeserializeObject<uint>(@event["StatusId"]);
+        return JsonConvert.DeserializeObject<uint>(@event["StatusID"]);
     }
 
     public static uint StackCount(this Event @event)
@@ -908,6 +1014,28 @@ public enum MarkType
 
 public static class IbcHelper
 {
+    public static string GetPlayerJob(this ScriptAccessory accessory, IPlayerCharacter? playerObject, bool fullName = false)
+    {
+        if (playerObject == null) return "None";
+        return fullName ? playerObject.ClassJob.Value.Name.ToString() : playerObject.ClassJob.Value.Abbreviation.ToString();
+    }
+
+    /// <summary>
+    /// 获取玩家的职能
+    /// Return: "Tank"(坦克) / "Healer"(治疗) / "Melee DPS"(近战) / "Ranged DPS"(远程) / "Unknown" / "None"
+    /// </summary>
+    public static string GetPlayerRole(this ScriptAccessory sa, IPlayerCharacter? playerObject)
+    {
+        if (playerObject == null) return "None";
+        return playerObject.ClassJob.Value.Role switch
+        {
+            1 => "Tank",        // 坦克
+            4 => "Healer",      // 治疗
+            2 => "Melee DPS",   // 近战DPS
+            3 => "Ranged DPS",  // 远程DPS
+            _ => "Unknown"
+        };
+    }
     public static IGameObject? GetById(this ScriptAccessory sa, ulong gameObjectId)
     {
         return sa.Data.Objects.SearchById(gameObjectId);
@@ -921,12 +1049,6 @@ public static class IbcHelper
     public static IEnumerable<IGameObject?> GetByDataId(this ScriptAccessory sa, uint dataId)
     {
         return sa.Data.Objects.Where(x => x.DataId == dataId);
-    }
-
-    public static string GetPlayerJob(this ScriptAccessory sa, IPlayerCharacter? playerObject, bool fullName = false)
-    {
-        if (playerObject == null) return "None";
-        return fullName ? playerObject.ClassJob.Value.Name.ToString() : playerObject.ClassJob.Value.Abbreviation.ToString();
     }
 
     public static float GetStatusRemainingTime(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
@@ -1088,3 +1210,5 @@ public static class ActionExt
     public static bool IsSpellReady(this uint spellId) => IsReadyWithCanCast(spellId, ActionType.Action);
     // public static bool IsAbilityReady(this uint abilityId) => IsReadyWithCanCast(abilityId, EventAction.Ability);
 }
+
+
