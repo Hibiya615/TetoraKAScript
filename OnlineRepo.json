@@ -985,12 +985,12 @@
   {
     "Name": "技能范围",
     "Guid": "f85df3b8-baa4-42b7-8196-bc26c58fa251",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/ActionArea.cs",
-    "Note": "v0.0.0.2:\r\n技能范围绘制，全场景可用\r\n请先自行设置合适亮度并用任意技能测试",
-    "UpdateInfo": "v0.0.0.2: 补完位移技能",
+    "Note": "v0.0.0.3:\r\n技能范围绘制，全场景可用\r\n请先自行设置合适亮度并用任意技能测试",
+    "UpdateInfo": "v0.0.0.3: 【重要】修复部分绘制残留问题",
     "TerritoryIds": []
   }
 ]

@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace TetoraKodakkuScript._00_Other;
 
 [ScriptType(guid: "f85df3b8-baa4-42b7-8196-bc26c58fa251", name: "技能范围", territorys: [],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class ActionArea
 {
     const string noteStr =
         """
-        v0.0.0.2: 技能范围绘制，全场景可用
+        v0.0.0.3: 技能范围绘制，全场景可用
         【先行版】主要用于位移技能预测，其它技能范围再说，短时间内不会更新
         （除了位移技能外不含PVP，PVP技能绘制的在另一个脚本里）
         请先自行设置合适亮度并用任意技能测试
@@ -86,7 +86,9 @@ public class ActionArea
     public bool isDeveloper { get; set; } = false;
     
     #endregion
-    public void 龙骑(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "————————  位移技能  ————————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
+    public void 位移技能(Event @event, ScriptAccessory accessory) { }
 
     [ScriptMethod(name: "位移技能预测圆", eventType: EventTypeEnum.Chat, eventCondition: ["Type:Echo", "Message:regex:^(Front|Back)?DisplacementPrediction$"])]
     public void 位移技能预测圆 (Event @event, ScriptAccessory accessory)
@@ -198,6 +200,9 @@ public class ActionArea
         accessory.Method.RemoveDraw($"位移预测.*");
     }
     
+    [ScriptMethod(name: "————————  学者  ————————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
+    public void 学者(Event @event, ScriptAccessory accessory) { }
+    
     [ScriptMethod(name: "[描边] 破阵法", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:17215"])]
     public void 破阵法描边 (Event @event, ScriptAccessory accessory)
     {
@@ -237,6 +242,9 @@ public class ActionArea
     {
         accessory.Method.RemoveDraw($"破阵法.*");
     }
+    
+    [ScriptMethod(name: "————————  舞者  ————————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
+    public void 舞者(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "[描边] 标准舞步", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1818"])]
     public void 标准舞步描边 (Event @event, ScriptAccessory accessory)
@@ -476,7 +484,7 @@ public static class EventExtensions
 
     public static uint StatusID(this Event @event)
     {
-        return JsonConvert.DeserializeObject<uint>(@event["StatusId"]);
+        return JsonConvert.DeserializeObject<uint>(@event["StatusID"]);
     }
 
     public static uint StackCount(this Event @event)
