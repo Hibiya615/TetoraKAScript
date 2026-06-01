@@ -3,8 +3,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
-// using Dalamud.Game.ClientState.Objects.Subkinds;
-// using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
 using Dalamud.Utility.Numerics;
 using KodakkuAssist.Script;
@@ -13,6 +11,16 @@ using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
 using System.Threading.Tasks;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
+using System.Collections.Generic;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.FFXIV.Client.UI.Agent;
+using FFXIVClientStructs.FFXIV.Component.GUI;
 
 
 namespace Eureka_Orthos;
@@ -28,7 +36,7 @@ public class Eureka_Orthos {
         正统优雷卡绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         现支持层数：1~20、71~100
-        严重错误：暂未支持【缓速】，遇到没特效的技能可能会比判定提早消失
+        严重错误：暂未支持【缓速】，遇到没特效的技能可能会比判定提早消失,预防万一可同时开启我的Splatoon预设
         """;
 
     // 缓速[3493] 需要额外注意没有omen的技能
@@ -68,11 +76,60 @@ public class Eureka_Orthos {
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
+    [UserSetting("启用小工具（已确认设置完毕）")]
+    public bool isMiniTools { get; set; } = false;
+    
+    [UserSetting(note: "选择自动苏生之炎对象")]
+    public RekindleEnum Rekindle { get; set; } = RekindleEnum.TargetsTarget;
+    
+    [UserSetting("设置传送装置查找颜色")]
+    public ScriptColor teleporter { get; set; } = new() { V4 = new(0f, 1f, 0f, 2f) };
+    
     [UserSetting("启用底裤（需要对应插件与权限）")]
     public bool isHack { get; set; } = false;
     
+    [UserSetting(note: "选择默认遁地深度")]
+    public DepthsEnum Depths { get; set; } = DepthsEnum.Default;
+    
+    public enum DepthsEnum
+    {
+        [Description("0")]
+        Default = 0,
+        [Description("2")]
+        Depths2 = 1,
+        [Description("3")]
+        Depths3 = 2,
+        [Description("5")]
+        Depths5 = 3,
+        [Description("7")]
+        Depths7 = 4,
+        [Description("20")]
+        Depths20 = 5,
+        [Description("50")]
+        Depths50 = 6,
+    }
+    
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
+    
+    public enum AutoAntiKnockbackEnum
+    {
+        None = -1,
+        亲疏自行 = 0,
+        沉稳咏唱 = 1,
+        DR = 2,
+        IChing = 3,
+    }
+    
+    public enum RekindleEnum
+    {
+        [Description("<tt>")]
+        TargetsTarget = 0,
+        [Description("<2>")]
+        PartyList2 = 1,
+        [Description("<me>")]
+        Me = 2,
+    }
     
     #endregion
     
@@ -147,7 +204,51 @@ public class Eureka_Orthos {
     
     #endregion
     
-    // 通用内容
+    #region 小工具部分
+    
+    [ScriptMethod(name: "—————— 小工具部分（先自行关闭不需要的功能） / Tools ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 小工具部分(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "传送装置查找 / Teleportation Construct Finder", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["DataId:2013287", "Operate:Add"])]
+    public void 传送装置查找(Event @event, ScriptAccessory accessory)
+    {
+        if(!isMiniTools) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"传送装置查找";
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Scale = new (1f);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.Color = teleporter.V4;
+        dp.DestoryAt = 3000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp); 
+    }
+    
+    [ScriptMethod(name: "自动取消二段火神冲（防止遁地打不到导致自动循环卡死）/ AutoRemove CrimsonStrike", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4403"])]
+    public void AutoRemoveCrimsonStrike(Event @event, ScriptAccessory accessory)
+    {
+        if(!isMiniTools || @event.TargetId() != accessory.Data.Me) return;
+        accessory.Method.SendChat($"/statusoff 深红强袭预备");
+        if (isDeveloper) accessory.Method.SendChat($"/e 鸭鸭：已取消《深红强袭预备》");
+    }
+    
+    [ScriptMethod(name: "自动尝试挂不死鸟热水（遁地了也很team）/ TryAutoUse Rekindle", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1868"])]
+    public void AutoUseRekindle(Event @event, ScriptAccessory accessory)
+    {
+        string rekindleValue = Rekindle.GetDescription();
+        
+        if(!isMiniTools ||  @event.SourceId() != accessory.Data.Me || @event.TargetId() != accessory.Data.Me) return;
+        accessory.Method.SendChat($"/ac 星极超流 {rekindleValue}");
+        accessory.Method.SendChat($"/e 鸭鸭：已尝试自动给《{rekindleValue}》挂上不死鸟热水");
+    }
+    
+    #endregion
+    
+    #region 特殊怪物
+    
+    [ScriptMethod(name: "—————— 特殊怪物 ——————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
+    public void 特殊怪物(Event @event, ScriptAccessory accessory) { }
+    
     [ScriptMethod(name: "拟态怪_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32798"])]
     public void 拟态怪_怨念(Event @event, ScriptAccessory accessory)
     {
@@ -156,7 +257,6 @@ public class Eureka_Orthos {
         if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
     
-    #region 精英怪
     [ScriptMethod(name: "★ 美拉西迪亚复制体 亚拉戈陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(1[89]|20)$"])]
     public void 美拉西迪亚复制体_亚拉戈陨石(Event @event, ScriptAccessory accessory)
     {
@@ -414,8 +514,139 @@ public class Eureka_Orthos {
     [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
     #endregion
+    
+    [ScriptMethod(name: "51~59 正统尤弥尔 带冰（读条反弹）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33180"])]
+    public void 正统尤弥尔_带冰(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS("停止攻击<正统尤弥尔>");
+        if (isEdgeTTS)accessory.Method.EdgeTTS("停止攻击<正统尤弥尔>");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"正统尤弥尔_带冰{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(2.2f);
+        dp.InnerScale = new Vector2(2f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 3000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "51~59 正统尤弥尔 冰棘屏障（反弹）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:198"])]
+    public void 正统尤弥尔_冰棘屏障(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"正统尤弥尔_冰棘屏障{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(2.2f);
+        dp.InnerScale = new Vector2(2f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 6000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
 
+    [ScriptMethod(name: "51~59 正统冰元精 冰碎（死后自爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32496"])]
+    public void 正统冰元精_冰碎 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"正统冰元精_冰碎{@event.SourceId()}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 3700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"正统冰元精_冰碎描边{@event.SourceId()}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(8f);
+        dp1.InnerScale = new Vector2(7.96f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+    }
+    
+    
     #region 60 BOSS 自控化弥诺陶洛斯
+    
+    [ScriptMethod(name: "60 自控化弥诺陶洛斯16 八重横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31872"])]
+    public void 自控化弥诺陶洛斯16_八重横扫(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"自控化弥诺陶洛斯16_八重横扫";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 26000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "60 自控化弥诺陶洛斯16 吼叫 击退预测", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31876"])]
+    public void 自控化弥诺陶洛斯16_吼叫 (Event @event, ScriptAccessory accessory)
+    {
+        if(isText) accessory.Method.TextInfo("击退", duration: 3000, true);
+        if(isTTS) accessory.Method.TTS("击退");
+        if(isEdgeTTS) accessory.Method.EdgeTTS("击退");
+
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "自控化弥诺陶洛斯16_吼叫";
+        dp.Scale = new(1.5f, 15);
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Rotation = float.Pi;
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "吼叫防击退销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(160|1209|2663)$"],userControl: false)]
+    public void 吼叫防击退销毁(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw("自控化弥诺陶洛斯16_吼叫");
+    }
+    
+    [ScriptMethod(name: "60 自控化弥诺陶洛斯16 牛魔横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(31877|32795)$"])]
+    public void 自控化弥诺陶洛斯16_牛魔横扫(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"自控化弥诺陶洛斯16_牛魔横扫";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "60 自控化弥诺陶洛斯16 牛魔回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:31875"])]
+    public void 自控化弥诺陶洛斯16_牛魔回转 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"自控化弥诺陶洛斯16_牛魔回转";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(13f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "60 雷球_放电（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:15778"])]
+    public void 雷球_放电 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"雷球_放电{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 13500;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     #endregion
 
     #region 61~70层 小怪
@@ -1054,7 +1285,6 @@ public class Eureka_Orthos {
     [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
     
-    
     [ScriptMethod(name: "正统系统γ 高压电流（打断钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:32878"])]
     public void 正统系统γ_高压电流(Event @event, ScriptAccessory accessory)
     {
@@ -1565,6 +1795,34 @@ public class Eureka_Orthos {
         if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至1倍");
     }
     
+    [ScriptMethod(name: "[IC] 变身爆弹之母时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55"])]
+    public void AddProgenitrixDepths(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.SendChat($"/i-ching-commander y_adjust 0");
+        accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
+        if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
+        // if (isTTS)accessory.Method.TTS("已取消遁地");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
+    }
+    
+    [ScriptMethod(name: "[IC] 爆弹之母取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55"])]
+    public void RemoveProgenitrixDepths(Event @event, ScriptAccessory accessory)
+    {
+        if(!isHack) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+    
+        // 获取深度的描述值
+        string depthValue = Depths.GetDescription();
+        
+        accessory.Method.SendChat($"/i-ching-commander y_adjust -{depthValue}");
+        accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
+        if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
+        // if (isTTS)accessory.Method.TTS("已自动遁地");
+        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
+    }
+    
     #endregion
     
 }
@@ -1684,10 +1942,16 @@ public static class EventExtensions
     }
 }
 
-
-
-
-#region 计算函数
+public static class EnumExtensions
+{
+    public static string GetDescription(this Enum value)
+    {
+        var field = value.GetType().GetField(value.ToString());
+        var attribute = field?.GetCustomAttributes(typeof(DescriptionAttribute), false)
+            .FirstOrDefault() as DescriptionAttribute;
+        return attribute?.Description ?? value.ToString();
+    }
+}
 
 public static class MathTools
 {
@@ -1793,4 +2057,238 @@ public static class MathTools
     }
 }
 
-#endregion 计算函数
+public enum MarkType
+{
+    None = -1,
+    Attack1 = 0,
+    Attack2 = 1,
+    Attack3 = 2,
+    Attack4 = 3,
+    Attack5 = 4,
+    Bind1 = 5,
+    Bind2 = 6,
+    Bind3 = 7,
+    Ignore1 = 8,
+    Ignore2 = 9,
+    Square = 10,
+    Circle = 11,
+    Cross = 12,
+    Triangle = 13,
+    Attack6 = 14,
+    Attack7 = 15,
+    Attack8 = 16,
+    Count = 17
+}
+
+public static class IbcHelper
+{
+    public static IGameObject? GetById(this ScriptAccessory sa, ulong gameObjectId)
+    {
+        return sa.Data.Objects.SearchById(gameObjectId);
+    }
+
+    public static IGameObject? GetMe(this ScriptAccessory sa)
+    {
+        return sa.Data.Objects.LocalPlayer;
+    }
+
+    public static IEnumerable<IGameObject?> GetByDataId(this ScriptAccessory sa, uint dataId)
+    {
+        return sa.Data.Objects.Where(x => x.DataId == dataId);
+    }
+
+    public static string GetPlayerJob(this ScriptAccessory sa, IPlayerCharacter? playerObject, bool fullName = false)
+    {
+        if (playerObject == null) return "None";
+        return fullName ? playerObject.ClassJob.Value.Name.ToString() : playerObject.ClassJob.Value.Abbreviation.ToString();
+    }
+
+    public static float GetStatusRemainingTime(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return 0;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return charaStruct->GetStatusManager()->GetRemainingTime(statusIdx);
+        }
+    }
+
+    public static bool HasStatus(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return false;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return statusIdx != -1;
+        }
+    }
+
+    /// <summary>
+    /// 获取指定标记索引的对象EntityId
+    /// </summary>
+    public static unsafe ulong GetMarkerEntityId(uint markerIndex)
+    {
+        var markingController = MarkingController.Instance();
+        if (markingController == null) return 0;
+        if (markerIndex >= 17) return 0;
+
+        return markingController->Markers[(int)markerIndex];
+    }
+
+    /// <summary>
+    /// 获取对象身上的标记
+    /// </summary>
+    /// <returns>MarkType</returns>
+    public static MarkType GetObjectMarker(IGameObject? obj)
+    {
+        if (obj == null || !obj.IsValid()) return MarkType.None;
+
+        ulong targetEntityId = obj.EntityId;
+            
+        for (uint i = 0; i < 17; i++)
+        {
+            var markerEntityId = GetMarkerEntityId(i);
+            if (markerEntityId == targetEntityId)
+            {
+                return (MarkType)i;
+            }
+        }
+
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 检查对象是否有指定的标记
+    /// </summary>
+    public static bool HasMarker(IGameObject? obj, MarkType markType)
+    {
+        return GetObjectMarker(obj) == markType;
+    }
+
+    /// <summary>
+    /// 检查对象是否有任何标记
+    /// </summary>
+    public static bool HasAnyMarker(IGameObject? obj)
+    {
+        return GetObjectMarker(obj) != MarkType.None;
+    }
+
+    private static ulong GetMarkerForObject(IGameObject? obj)
+    {
+        if (obj == null) return 0;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return markerEntityId;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private static MarkType GetMarkerTypeForObject(IGameObject? obj)
+    {
+        if (obj == null) return MarkType.None;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return (MarkType)i;
+                }
+            }
+        }
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 获取标记的名称
+    /// </summary>
+    public static string GetMarkerName(MarkType markType)
+    {
+        return markType switch
+        {
+            MarkType.Attack1 => "攻击1",
+            MarkType.Attack2 => "攻击2",
+            MarkType.Attack3 => "攻击3",
+            MarkType.Attack4 => "攻击4",
+            MarkType.Attack5 => "攻击5",
+            MarkType.Bind1 => "止步1",
+            MarkType.Bind2 => "止步2",
+            MarkType.Bind3 => "止步3",
+            MarkType.Ignore1 => "禁止1",
+            MarkType.Ignore2 => "禁止2",
+            MarkType.Square => "方块",
+            MarkType.Circle => "圆圈",
+            MarkType.Cross => "十字",
+            MarkType.Triangle => "三角",
+            MarkType.Attack6 => "攻击6",
+            MarkType.Attack7 => "攻击7",
+            MarkType.Attack8 => "攻击8",
+            _ => "无标记"
+        };
+    }
+    
+    public static float GetHitboxRadius(IGameObject obj)
+    {
+        if (obj == null || !obj.IsValid()) return -1;
+        return obj.HitboxRadius;
+    }
+
+}
+
+public static class HelperExtensions
+{
+    public static unsafe uint GetCurrentTerritoryId()
+    {
+        return AgentMap.Instance()->CurrentTerritoryId; // 额外进行地图ID判断
+    }
+}
+
+#region 特殊函数
+public unsafe static class ExtensionVisibleMethod
+{
+    public static bool IsCharacterVisible(this ICharacter chr)
+    {
+        var v = (IntPtr)(((FFXIVClientStructs.FFXIV.Client.Game.Character.Character*)chr.Address)->GameObject.DrawObject);
+        if (v == IntPtr.Zero) return false;
+        return Bitmask.IsBitSet(*(byte*)(v + 136), 0);
+    }
+
+    public static class Bitmask
+    {
+        public static bool IsBitSet(ulong b, int pos)
+        {
+            return (b & (1UL << pos)) != 0;
+        }
+
+        public static void SetBit(ref ulong b, int pos)
+        {
+            b |= 1UL << pos;
+        }
+
+        public static void ResetBit(ref ulong b, int pos)
+        {
+            b &= ~(1UL << pos);
+        }
+
+        public static bool IsBitSet(byte b, int pos)
+        {
+            return (b & (1 << pos)) != 0;
+        }
+
+        public static bool IsBitSet(short b, int pos)
+        {
+            return (b & (1 << pos)) != 0;
+        }
+    }
+}
+#endregion 特殊函数
