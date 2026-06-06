@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPToy;
 
 [ScriptType(guid: "2312052e-6575-4a91-9e3d-b84699dca8fe", name: "PVP小玩具", territorys: [250, 431, 554, 888, 1273],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class PVPToy
 {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         PVP小玩具，仅纷争前线可用，可在狼狱进行测试
         推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
         标记一般是防四小，所以启用仅标记选项的话就是防四小的播报
@@ -139,19 +139,13 @@ public class PVPToy
     public void MarksmansTarget(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return;
-        if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE))
+        if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE)) // 检测对应技能是否在CD
         {
             string sourceName = @event["SourceName"]?.ToString();
             if (isText) accessory.Method.TextInfo("已尝试自动使用《防御》", duration: 1800, true);
-            accessory.Method.SendChat($"/pvpac 防御");
+            accessory.Method.UseAction(accessory.Data.Me,29054);
             accessory.Method.SendChat($"/e 侦测到被《{sourceName}》狙了！鸭鸭试着帮你开了盾！<se.1> <se.1>");
         }
-        /*
-        if (!string.IsNullOrEmpty(sourceName))
-        {
-            accessory.Method.SendChat($"/e 就是《{sourceName}》把你狙了！");
-        }
-        */
     }
     
     [ScriptMethod(name: "被战士抓自动防御", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29081"])]
@@ -161,11 +155,11 @@ public class PVPToy
         if (isAutoGuard)
         {
             if (@event.TargetId() != accessory.Data.Me) return;
-            if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE))
+            if (ActionExt.IsSpellReady(29054) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xBEE)) // 检测对应技能是否在CD
             {    
                 string sourceName = @event["SourceName"]?.ToString();
                 if (isText) accessory.Method.TextInfo("已尝试自动使用《防御》", duration: 1800, true);
-                accessory.Method.SendChat($"/pvpac 防御");
+                accessory.Method.UseAction(accessory.Data.Me,29054);
                 accessory.Method.SendChat($"/e 侦测到被战士《{sourceName}》抓了！鸭鸭试着帮你进行了防御！<se.3> <se.3>");
             }
         }
@@ -282,16 +276,16 @@ public class PVPToy
     [ScriptMethod(name: "被蛮荒崩裂自动诗人净化", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29084"])]
     public void PrimalRendAutoWarden(Event @event, ScriptAccessory accessory)
     {
-        if (IbcHelper.GetPlayerJob(accessory,accessory.Data.MyObject,false) != "BRD") return;
+        if (IbcHelper.GetPlayerJob(accessory,accessory.Data.MyObject,false) != "BRD") return; // 检测职业
         
         // 蛮荒崩裂 技能ID 29084 ； 附加眩晕 StatusID 1343 ； 生效间隔 约1s
         if (isAutoWarden)
         {
             if (@event.TargetId() != accessory.Data.Me) return;
-            if (ActionExt.IsSpellReady(29400) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC47))
+            if (ActionExt.IsSpellReady(29400) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC47)) // 检测对应技能是否在CD
             {
                 if (isText) accessory.Method.TextInfo("已尝试自动使用《光阴神净化》", duration: 1800, true);
-                accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
+                accessory.Method.UseAction(accessory.Data.Me,29400);
                 accessory.Method.SendChat($"/e 侦测到成为蛮荒崩裂目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
             }
         }
@@ -308,15 +302,15 @@ public class PVPToy
     public void AfflatusPurgationAutoWarden(Event @event, ScriptAccessory accessory)
     {
         // 涤罪之心 技能ID 29230 ； 附加眩晕 StatusID 1343 ； 生效间隔 约0.8s
-        if (IbcHelper.GetPlayerJob(accessory,accessory.Data.MyObject,false) != "BRD") return;
+        if (IbcHelper.GetPlayerJob(accessory,accessory.Data.MyObject,false) != "BRD") return; // 检测职业
         
         if (isAutoWarden)
         {
             if (@event.TargetId() != accessory.Data.Me) return;
-            if (ActionExt.IsSpellReady(29400) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC47))
+            if (ActionExt.IsSpellReady(29400) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC47)) // 检测对应技能是否在CD
             {
                 if (isText) accessory.Method.TextInfo("已尝试自动使用《光阴神净化》", duration: 1800, true);
-                accessory.Method.SendChat($"/pvpac 光阴神的礼赞凯歌");
+                accessory.Method.UseAction(accessory.Data.Me,29400);
                 accessory.Method.SendChat($"/e 侦测到成为涤罪之心目标！鸭鸭试着帮你开了光阴神净化！<se.3> <se.3>");
             }
         }
