@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 namespace A7N;
 
 [ScriptType(guid: "48d652cd-16c4-413f-a08c-49a308ccb98f", name: "A7N", territorys: [522],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class A7N
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         LV60 亚历山大机神城 律动之章3（万事通 奎克辛克斯） 初版绘制
         """;
     
@@ -40,9 +40,9 @@ public class A7N
     public void 哥布式波动炮(Event @event, ScriptAccessory accessory)
     {        
         if (@event.TargetId() != accessory.Data.Me) {
-            if (isText)accessory.Method.TextInfo("远离点名玩家", duration: 5300, true);
-            if (isTTS)accessory.Method.TTS("远离点名玩家");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("远离点名玩家");
+            // if (isText)accessory.Method.TextInfo("远离点名玩家", duration: 5300, true);
+            // if (isTTS)accessory.Method.TTS("远离点名玩家");
+            // if (isEdgeTTS)accessory.Method.EdgeTTS("远离点名玩家");
         } 
         else {
             if (isText)accessory.Method.TextInfo("直线点名", duration: 5300, true);
@@ -132,8 +132,15 @@ public class A7N
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "真心销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:5384"],userControl: false)]
+    [ScriptMethod(name: "真心销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:5384"],userControl: false)]
     public void 真心销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw("真心");
+    }
+
+    
+    [ScriptMethod(name: "真心销毁备用", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:5384"],userControl: false)]
+    public void 真心销毁备用(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw("真心");
     }
