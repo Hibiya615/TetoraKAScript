@@ -17,13 +17,13 @@ using System.Threading.Tasks;
 namespace The_Borderland_Ruins;
 
 [ScriptType(guid: "ec9c9f7d-be48-4974-82cf-396b0fc29261", name: "周边遗迹群（阵地战）", territorys: [1273],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class The_Borderland_Ruins
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         周边遗迹群（阵地战）部分绘制
         """;
     
@@ -43,12 +43,28 @@ public class The_Borderland_Ruins
     
     #endregion
     
+    #region 全局销毁
+    
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+    
+    #endregion
+    
     [ScriptMethod(name: "对地炮击（地面黄圈）填充动画", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:42935"])]
     public void 对地炮击(Event @event, ScriptAccessory accessory)
     {
         // 请求对地炮击 42933
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "对地炮击";
+        dp.Name = $"对地炮击";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(10f);
@@ -66,7 +82,7 @@ public class The_Borderland_Ruins
         {
             if (isText) accessory.Method.TextInfo("分摊", duration: 4300, false);
             var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = "集中炮击";
+            dp.Name = $"集中炮击{@event.TargetId}";
             dp.Color = accessory.Data.DefaultDangerColor;
             dp.Owner = @event.TargetId();
             dp.Scale = new Vector2(6f);
@@ -79,7 +95,7 @@ public class The_Borderland_Ruins
             if (isTTS)accessory.Method.TTS("分摊点名");
             if (isEdgeTTS)accessory.Method.EdgeTTS("分摊点名");
             var dp1 = accessory.Data.GetDefaultDrawProperties();
-            dp1.Name = "集中炮击点名";
+            dp1.Name = $"集中炮击点名";
             dp1.Color = accessory.Data.DefaultSafeColor;
             dp1.Owner = @event.TargetId();
             dp1.Scale = new Vector2(6f);
@@ -94,7 +110,7 @@ public class The_Borderland_Ruins
         // 请求精密炮击 43159
         // TargetIcon: 00C5
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "对地炮击";
+        dp.Name = $"对地炮击";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(5f);
@@ -117,7 +133,7 @@ public class The_Borderland_Ruins
         
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "物体130";
+        dp.Name = $"物体130";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(38.4f);

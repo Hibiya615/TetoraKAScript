@@ -21,14 +21,14 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace PVPToy;
 
-[ScriptType(guid: "2312052e-6575-4a91-9e3d-b84699dca8fe", name: "PVP小玩具", territorys: [250, 431, 554, 888, 1273],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "2312052e-6575-4a91-9e3d-b84699dca8fe", name: "PVP小玩具", territorys: [250, 431, 554, 888, 1273, 1313],
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class PVPToy
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         PVP小玩具，仅纷争前线可用，可在狼狱进行测试
         推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
         标记一般是防四小，所以启用仅标记选项的话就是防四小的播报

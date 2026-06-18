@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.8", author: "Tetora", note: noteStr)]
+    version: "0.0.0.9", author: "Tetora", note: noteStr)]
 
 public class PVPAction
 {
     const string noteStr =
         """
-        v0.0.0.8:
+        v0.0.0.9:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -69,10 +69,10 @@ public class PVPAction
     public ScriptColor EnmityAOEColor { get; set; } = new() { V4 = new(1f, 0f, 1f, 1f) };
     
     [UserSetting("敌方部分技能填充亮度（推荐小于1）")]
-    public float EnmityAOEFillBrightness { get; set; } = 0.25f;
+    public float EnmityAOEFillBrightness { get; set; } = 0.1f;
     
     [UserSetting("敌方部分技能显示时间 (ms)")]
-    public long EnmityAOETimer { get; set; } = 3000;
+    public long EnmityAOETimer { get; set; } = 1000;
     
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
@@ -154,6 +154,22 @@ public class PVPAction
     
     #endregion
     
+    #region 全局销毁
+    
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+    
+    #endregion
+    
     #region 龙骑
     
     [ScriptMethod(name: "———————— 龙骑 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
@@ -165,7 +181,7 @@ public class PVPAction
         if (@event.TargetId() != accessory.Data.Me) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冲天Self内圈";
-        dp.Color = new Vector4(0f, 1f, 1f, 0.8f);
+        dp.Color = new Vector4(0f, 1f, 1f, 0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
         dp.DestoryAt = 5000;
@@ -173,7 +189,7 @@ public class PVPAction
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "冲天Self外圈";
-        dp1.Color = new Vector4(0f, 1f, 1f, 0.5f);
+        dp1.Color = new Vector4(0f, 1f, 1f, 0.4f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(10f);
         dp1.DestoryAt = 5000;
@@ -221,12 +237,13 @@ public class PVPAction
         if (isOnlyMark) return; // 没开启选项，绘制对方全部
             var obj = IbcHelper.GetById(accessory, @event.SourceId);
             if (obj == null || !obj.IsValid()) return;
+            if (obj == accessory.Data.MyObject) return;
 
             if (!PartyFilter(accessory, obj))
             {
                 var dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = $"敌方冲天内圈{@event.SourceId()}";
-                dp.Color = new Vector4(1f, 0f, 0f, 1f);
+                dp.Color = new Vector4(1f, 0f, 0f, 0.65f);
                 dp.Owner = @event.SourceId();
                 dp.Scale = new Vector2(5f);
                 dp.DestoryAt = 5000;
@@ -234,7 +251,7 @@ public class PVPAction
 
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
                 dp1.Name = $"敌方冲天外圈{@event.SourceId()}";
-                dp1.Color = new Vector4(1, 0f, 0f, 0.5f);
+                dp1.Color = new Vector4(1, 0f, 0f, 0.35f);
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(10f);
                 dp1.DestoryAt = 5000;
@@ -340,6 +357,7 @@ public class PVPAction
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
 
         if (!PartyFilter(accessory, obj))
         {
@@ -371,6 +389,7 @@ public class PVPAction
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
 
         if (!PartyFilter(accessory, obj))
         {
@@ -425,6 +444,7 @@ public class PVPAction
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
 
         if (!PartyFilter(accessory, obj))
         {
@@ -571,13 +591,21 @@ public class PVPAction
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "圣盾阵炸盾销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3026"],userControl: false)]
-    public void 圣盾阵销毁(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "圣盾阵炸盾状态销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3026"],userControl: false)]
+    public void 圣盾阵状态销毁(Event @event, ScriptAccessory accessory)
     {
-        // 伤害 ActionId 为 29068
         if (@event.TargetId() != accessory.Data.Me) return; 
         accessory.Method.RemoveDraw($"圣盾阵Self");
     }
+    
+    /*
+    [ScriptMethod(name: "圣盾阵炸盾伤害销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29068"],userControl: false)]
+    public void 圣盾阵伤害销毁(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($"圣盾阵Self");
+    }
+    */
     
     [ScriptMethod(name: "敌方圣盾阵范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3026"])]
     public void HolySheltronEnmity(Event @event, ScriptAccessory accessory)
@@ -585,6 +613,7 @@ public class PVPAction
         // if (isOnlyMark) return; // 没开启仅标记选项，绘制对方全部
             var obj = IbcHelper.GetById(accessory, @event.SourceId);
             if (obj == null || !obj.IsValid()) return;
+            if (obj == accessory.Data.MyObject) return;
 
             if (!PartyFilter(accessory, obj))
             {
@@ -598,11 +627,19 @@ public class PVPAction
             }
     }
         
-    [ScriptMethod(name: "敌方圣盾阵销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3026"],userControl: false)]
-    public void 敌方圣盾阵销毁(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "敌方圣盾阵状态销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3026"],userControl: false)]
+    public void 敌方圣盾阵状态销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"敌方圣盾阵{@event.SourceId()}");
     }
+    
+    /*
+    [ScriptMethod(name: "敌方圣盾阵炸盾伤害销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29068"],userControl: false)]
+    public void 敌方圣盾阵伤害销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"敌方圣盾阵{@event.SourceId()}");
+    }
+    */
     
     [ScriptMethod(name: "自身开无敌时显示暴怒10m范围描边", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1302"])]
     public void Rampage(Event @event, ScriptAccessory accessory)
@@ -683,6 +720,7 @@ public class PVPAction
         // if (isOnlyMark) return; // 没开启仅标记选项，绘制对方全部
             var obj = IbcHelper.GetById(accessory, @event.SourceId);
             if (obj == null || !obj.IsValid()) return;
+            if (obj == accessory.Data.MyObject) return;
 
             if (!PartyFilter(accessory, obj))
             {
@@ -691,7 +729,7 @@ public class PVPAction
                     case 4097:
                         var dp = accessory.Data.GetDefaultDrawProperties();
                         dp.Name = $"蛇鳞击敌方{@event.SourceId}";
-                        dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
+                        dp.Color = new Vector4(1f, 0f, 0f, 0.5f);
                         dp.Owner = @event.SourceId();
                         dp.Scale = new Vector2(6f);
                         dp.DestoryAt = 4000;
@@ -700,7 +738,7 @@ public class PVPAction
                     case 4098:
                         var dp1 = accessory.Data.GetDefaultDrawProperties();
                         dp1.Name = $"血气蛇鳞击敌方{@event.SourceId}";
-                        dp1.Color = new Vector4(1f, 0f, 0f, 0.8f);
+                        dp1.Color = new Vector4(1f, 0f, 0f, 0.4f);
                         dp1.Owner = @event.SourceId();
                         dp1.Scale = new Vector2(15f);
                         dp1.DestoryAt = 4000;
@@ -736,6 +774,7 @@ public class PVPAction
         // 因为范围内的人都会有 ActionEffect与 Status日志，所以只能冷却一点时间防止画重复
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
 
         if (!PartyFilter(accessory, obj))
         {
@@ -764,6 +803,7 @@ public class PVPAction
         
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
         if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
 
         if (!PartyFilter(accessory, obj))
         {
