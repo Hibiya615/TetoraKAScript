@@ -15,13 +15,13 @@ using KodakkuAssist.Extensions;
 namespace Tsukuyomi;
 
 [ScriptType(guid: "97415dc8-cd16-4c9b-87be-026a297c3451", name: "月读歼灭战", territorys: [778],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class Tsukuyomi
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         LV70 月读歼灭战 初版绘制
         """;
     
@@ -46,6 +46,7 @@ public class Tsukuyomi
         var boss = accessory.Data.Objects.GetByDataId(8720).FirstOrDefault();
         if (boss == null) return;
         dp.Owner = boss.GameObjectId;
+        dp.TargetObject = @event.TargetId;
         dp.Scale = new Vector2(18.2f);
         dp.Radian = 90f.DegToRad();
         dp.DestoryAt = 4000;
