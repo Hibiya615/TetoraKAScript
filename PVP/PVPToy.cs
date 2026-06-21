@@ -22,70 +22,22 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPToy;
 
 [ScriptType(guid: "2312052e-6575-4a91-9e3d-b84699dca8fe", name: "PVP小玩具", territorys: [250, 431, 554, 888, 1273, 1313],
-    version: "0.0.0.6", author: "Tetora", note: noteStr)]
+    version: "0.0.0.7", author: "Tetora", note: noteStr)]
 
 public class PVPToy
 {
     const string noteStr =
         """
-        v0.0.0.6:
+        v0.0.0.7:
         PVP小玩具，仅纷争前线可用，可在狼狱进行测试
         推荐先自行过一遍设置关闭不需要的功能，底裤功能使用后果自行承担
         标记一般是防四小，所以启用仅标记选项的话就是防四小的播报
         """;
-    
-    #region 基础控制
-    
-    [UserSetting("EdgeTTS开关")]
-    public bool isEdgeTTS { get; set; } = true;
-    
-    [UserSetting("弹窗文本提示开关")]
-    public bool isText { get; set; } = true;
-    
-    [UserSetting("启用目标标记播报及连线")]
-    public bool isTargetBroadcast { get; set; } = false;
-    
-    [UserSetting("启用自动选中目标标记")]
-    public bool isAutoTarget { get; set; } = false;
-    
-    [UserSetting("启用仅适用敌方目标标记 [适用:占星诗人LB播报]" )]
-    public bool isOnlyMark { get; set; } = false;
-    
-    [UserSetting("启用自动诗人光阴神净化")]
-    public bool isAutoWarden { get; set; } = false;
-    
-    [UserSetting("启用被抓自动防御")]
-    public bool isAutoGuard { get; set; } = false;
-    
-    [UserSetting("请确认你已经有相关插件与对应权限")]
-    public bool isHack { get; set; } = false;
-    
-    [UserSetting("开发者模式")]
-    public bool isDeveloper { get; set; } = false;
-    
-    [UserSetting(note: "请选择冲天时的移速")]
-    public SkySpeedEnum SkySpeed { get; set; } = SkySpeedEnum.Default;
-    
-    public enum SkySpeedEnum
-    {
-        Default = 0,
-        AddPoint1 = 1,
-        AddPoint2 = 2,
-        AddPoint3 = 3,
-        AddPoint4 = 4,
-        AddPoint5 = 5,
-    }
-    
-    [UserSetting(note: "请选择复原时的移速")]
-    public RemoveSpeedEnum RemoveSpeed { get; set; } = RemoveSpeedEnum.Speed1;
-    
-    public enum RemoveSpeedEnum
-    {
-        Default = 0,
-        Speed1 = 1,
-    }
-    
+
+    #region 基础函数
+
     private List<MarkType> checkMark = new List<MarkType>()
+    
     {
         MarkType.Attack1,
         MarkType.Attack2,
@@ -101,10 +53,6 @@ public class PVPToy
         MarkType.Attack7,
         MarkType.Attack8,
     };
-    
-    #endregion
-    
-    #region 自动播报/执行
     
     public bool isPartyMember(ScriptAccessory accessory, uint SourceId)
     {
@@ -134,6 +82,200 @@ public class PVPToy
 
         return isInMyAlliance;
     }
+
+    #endregion
+    
+    #region 全局销毁
+    
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+    
+    #endregion
+    
+    #region 基础控制
+    
+    [UserSetting("EdgeTTS开关")]
+    public bool isEdgeTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    [UserSetting("启用四小模式")]
+    public bool isLightParty { get; set; } = false;
+    
+    [UserSetting("小队吸&控技能颜色（如腐秽大地、行列舞）")]
+    public ScriptColor LightPartyControlAOEColor { get; set; } = new() { V4 = new(1f, 1f, 1f, 1f) };
+    
+    [UserSetting("小队吸&控技能填充亮度（推荐小于1）")]
+    public float LightPartyControlAOEFillBrightness { get; set; } = 0.4f;
+    
+    [UserSetting("启用目标标记播报及连线")]
+    public bool isTargetBroadcast { get; set; } = false;
+    
+    [UserSetting("启用自动选中目标标记")]
+    public bool isAutoTarget { get; set; } = false;
+    
+    [UserSetting("启用仅适用敌方目标标记 [适用:占星诗人LB播报]" )]
+    public bool isOnlyMark { get; set; } = false;
+    
+    [UserSetting("启用自动诗人光阴神净化")]
+    public bool isAutoWarden { get; set; } = false;
+    
+    [UserSetting("启用被抓自动防御")]
+    public bool isAutoGuard { get; set; } = false;
+    
+    [UserSetting("请确认你已经有相关插件与对应权限")]
+    public bool isHack { get; set; } = false;
+    
+    [UserSetting(note: "请选择龙骑冲天时的移速")]
+    public SkySpeedEnum SkySpeed { get; set; } = SkySpeedEnum.Default;
+    
+    public enum SkySpeedEnum
+    {
+        Default = 0,
+        AddPoint1 = 1,
+        AddPoint2 = 2,
+        AddPoint3 = 3,
+        AddPoint4 = 4,
+        AddPoint5 = 5,
+    }
+    
+    [UserSetting(note: "请选择复原时的移速")]
+    public RemoveSpeedEnum RemoveSpeed { get; set; } = RemoveSpeedEnum.Speed1;
+    
+    public enum RemoveSpeedEnum
+    {
+        Default = 0,
+        Speed1 = 1,
+    }
+    
+    [UserSetting("[DR测试码] 龙骑冲天自动开启免控")]
+    public bool isDRAutoImmunize { get; set; } = false;
+    
+    [UserSetting("[IC] 龙骑冲天自动开启免控")]
+    public bool isIChysteria { get; set; } = false;
+    
+    [UserSetting("开发者模式")]
+    public bool isDeveloper { get; set; } = false;
+    
+    #endregion
+    
+    #region 四小模式
+    
+    [ScriptMethod(name: "—————— 四小模式选项 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 四小模式选项(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "小队DK腐秽大地范围描边", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
+    public void 小队DK腐秽大地范围描边(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队DK腐秽大地范围描边{@event.SourceId}";
+            dp.Color = LightPartyControlAOEColor.V4.WithW(20f);
+            dp.Position = @event.EffectPosition;
+            dp.Scale = new Vector2(5f); // 吸的范围是10m，但是腐秽大地二段止步的范围是5m
+            dp.InnerScale = new Vector2(4.94f);
+            dp.Radian = float.Pi * 2;
+            dp.DestoryAt = 3000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队DK腐秽大地范围填充", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
+    public void 小队DK腐秽大地范围填充(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队DK腐秽大地范围填充{@event.SourceId}";
+            dp.Color = LightPartyControlAOEColor.V4.WithW(LightPartyControlAOEFillBrightness);
+            dp.Position = @event.EffectPosition;
+            dp.Scale = new Vector2(5f); // 吸的范围是10m，但是腐秽大地二段止步的范围是5m
+            dp.DestoryAt = 1500;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队DK腐秽大地查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
+    public void 小队DK腐秽大地查找连线(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队DK腐秽大地连线{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetPosition = @event.EffectPosition();
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.Scale = new(1);
+            dp.DestoryAt = 500;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队舞者行列舞范围描边", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
+    public void 小队舞者行列舞范围描边(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队舞者行列舞范围描边{@event.SourceId}";
+            dp.Color = LightPartyControlAOEColor.V4.WithW(20f);
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(15f);
+            dp.InnerScale = new Vector2(14.9f);
+            dp.Radian = float.Pi * 2;
+            dp.DestoryAt = 4500;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队舞者行列舞范围填充", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
+    public void 小队舞者行列舞范围填充(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队舞者行列舞范围填充{@event.SourceId}";
+            dp.Color = LightPartyControlAOEColor.V4.WithW(LightPartyControlAOEFillBrightness);
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(15f);
+            dp.DestoryAt = 2500;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+
+    [ScriptMethod(name: "小队舞者行列舞查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
+    public void 小队舞者行列舞查找连线(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"小队舞者行列舞连线{@event.SourceId()}";
+            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+            dp.Owner = accessory.Data.Me;
+            dp.TargetObject = @event.SourceId;
+            dp.ScaleMode |= ScaleMode.YByDistance;
+            dp.Scale = new(1);
+            dp.DestoryAt = 500;
+            accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        }
+    }
+    
+    #endregion
+    
+    #region 自动播报/执行
+
     
     [ScriptMethod(name: "被狙自动开盾", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29415"])]
     public void MarksmansTarget(Event @event, ScriptAccessory accessory)
@@ -164,6 +306,9 @@ public class PVPToy
             }
         }
     }
+    
+    [ScriptMethod(name: "—————— 自动播报 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 自动播报(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "谁踹的我.jpg", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29485"])]
     public void WhoMeteorImpactMe(Event @event, ScriptAccessory accessory)
@@ -463,7 +608,7 @@ public class PVPToy
     public void 底裤功能(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "[DR] 冲天时更改移速（不与敏捷共存）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
-    public void 冲天Add(Event @event, ScriptAccessory accessory)
+    public void SkyHighAddSpeed(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (SkySpeed == SkySpeedEnum.Default)
@@ -498,8 +643,8 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "[DR] 恢复冲天移速", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:0", "Targetable:True"])]
-    public void SpeedRestore1(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "[DR] 落地恢复冲天移速", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:0", "Targetable:True"])]
+    public void SkyHighSpeedRestore(Event @event, ScriptAccessory accessory)
     {
         // 考虑到可能会在空中死亡 没法正常判定 ActionEffect，所以使用自己的 Targetable 代替
         if (@event.SourceId() != accessory.Data.Me) return; 
@@ -515,6 +660,45 @@ public class PVPToy
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已恢复为1");
         }
         
+    }
+    
+    [ScriptMethod(name: "冲天时自动开启免控（根据用户设置决定使用插件）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
+    public void SkyHighAddImmunize(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return;
+        if(!isHack) return;
+        if (isDRAutoImmunize)
+        {
+            accessory.Method.SendChat($"/pdr load AutoImmunizeForceMove");
+            accessory.Method.SendChat($"/pdr load AutoImmunizeInputDisable");
+        }
+
+        if (isIChysteria)
+        {
+            accessory.Method.SendChat($"/i-ching-commander anti_hysteria enable");
+            accessory.Method.SendChat($"/i-ching-commander forced_move enable");
+            accessory.Method.SendChat($"/e 已开启IC临时免控");
+        }
+    }
+    
+    [ScriptMethod(name: "落地时自动关闭免控", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:0", "Targetable:True"])]
+    public void SkyHighRemovmeImmunize(Event @event, ScriptAccessory accessory)
+    {
+        // 考虑到可能会在空中死亡 没法正常判定 ActionEffect，所以使用自己的 Targetable 代替
+        if (@event.SourceId() != accessory.Data.Me) return; 
+        if(!isHack) return;
+        if (isDRAutoImmunize)
+        {
+            accessory.Method.SendChat($"/pdr unload AutoImmunizeForceMove");
+            accessory.Method.SendChat($"/pdr unload AutoImmunizeInputDisable");
+        }
+
+        if (isIChysteria)
+        {
+            accessory.Method.SendChat($"/i-ching-commander anti_hysteria dispose");
+            accessory.Method.SendChat($"/i-ching-commander forced_move dispose");
+            accessory.Method.SendChat($"/e 已关闭IC临时免控");
+        }
     }
     
     #endregion

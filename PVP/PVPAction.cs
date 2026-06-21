@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.0.9", author: "Tetora", note: noteStr)]
+    version: "0.0.1.0", author: "Tetora", note: noteStr)]
 
 public class PVPAction
 {
     const string noteStr =
         """
-        v0.0.0.9:
+        v0.0.1.0:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -69,7 +69,7 @@ public class PVPAction
     public ScriptColor EnmityAOEColor { get; set; } = new() { V4 = new(1f, 0f, 1f, 1f) };
     
     [UserSetting("敌方部分技能填充亮度（推荐小于1）")]
-    public float EnmityAOEFillBrightness { get; set; } = 0.1f;
+    public float EnmityAOEFillBrightness { get; set; } = 0.2f;
     
     [UserSetting("敌方部分技能显示时间 (ms)")]
     public long EnmityAOETimer { get; set; } = 1000;
@@ -181,7 +181,7 @@ public class PVPAction
         if (@event.TargetId() != accessory.Data.Me) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冲天Self内圈";
-        dp.Color = new Vector4(0f, 1f, 1f, 0.6f);
+        dp.Color = new Vector4(0f, 1f, 1f, 0.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
         dp.DestoryAt = 5000;
@@ -189,11 +189,21 @@ public class PVPAction
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "冲天Self外圈";
-        dp1.Color = new Vector4(0f, 1f, 1f, 0.4f);
+        dp1.Color = new Vector4(0f, 1f, 1f, 0.3f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(10f);
         dp1.DestoryAt = 5000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+        
+        var dp2 = accessory.Data.GetDefaultDrawProperties();
+        dp2.Name = $"冲天Self内圈描边";
+        dp2.Color = new Vector4(0f, 1f, 1f, 10f);
+        dp2.Owner = @event.SourceId();
+        dp2.Scale = new Vector2(5f);
+        dp2.InnerScale = new Vector2(4.95f);
+        dp2.Radian = float.Pi * 2;
+        dp2.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
     }
     
     [ScriptMethod(name: "自身冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
@@ -584,7 +594,7 @@ public class PVPAction
         if (@event.TargetId() != accessory.Data.Me) return; 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"圣盾阵Self";
-        dp.Color = SelfAOEColor.V4;
+        dp.Color = SelfAOEColor.V4.WithW(SelfAOEFillBrightness);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 4000;
@@ -780,7 +790,7 @@ public class PVPAction
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"敌方星河漫天{@event.SourceId()}";
-            dp.Color = EnmityAOEColor.V4;
+            dp.Color = EnmityAOEColor.V4.WithW(EnmityAOEFillBrightness);
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(15f);
             dp.DestoryAt = EnmityAOETimer;
@@ -809,7 +819,7 @@ public class PVPAction
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"敌方英雄的幻想曲{@event.SourceId()}";
-            dp.Color = EnmityAOEColor.V4;
+            dp.Color = EnmityAOEColor.V4.WithW(EnmityAOEFillBrightness);
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(30f);
             dp.DestoryAt = EnmityAOETimer;

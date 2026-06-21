@@ -15,13 +15,13 @@ using KodakkuAssist.Extensions;
 namespace Tsukuyomi;
 
 [ScriptType(guid: "97415dc8-cd16-4c9b-87be-026a297c3451", name: "月读歼灭战", territorys: [778],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Tsukuyomi
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV70 月读歼灭战 初版绘制
         """;
     
@@ -37,7 +37,7 @@ public class Tsukuyomi
         Maiogi=0; 
     }
     
-    [ScriptMethod(name: "折磨（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11235"])]
+    [ScriptMethod(name: "折磨（顺劈死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(11235|11955)$"])]
     public void 折磨(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -52,6 +52,7 @@ public class Tsukuyomi
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
+    /*
     [ScriptMethod(name: "宴会游乐（九连环预备）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:8769"])]
     public void 宴会游乐(Event @event, ScriptAccessory accessory)
     {
@@ -82,6 +83,7 @@ public class Tsukuyomi
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    */
     
     [ScriptMethod(name: "黄泉之弹（直线分摊）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:11238"])]
     public void 黄泉之弹(Event @event, ScriptAccessory accessory)
