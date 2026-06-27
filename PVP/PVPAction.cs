@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.1.0", author: "Tetora", note: noteStr)]
+    version: "0.0.1.1", author: "Tetora", note: noteStr)]
 
 public class PVPAction
 {
     const string noteStr =
         """
-        v0.0.1.0:
+        v0.0.1.1:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -213,7 +213,6 @@ public class PVPAction
         if (@event.TargetId() != accessory.Data.Me) return;
         accessory.Method.RemoveDraw($"冲天Self.*");
     }
-    
 
     [ScriptMethod(name: "队友冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterAlliance(Event @event, ScriptAccessory accessory)
@@ -233,13 +232,11 @@ public class PVPAction
         }
     }
     
-        
     [ScriptMethod(name: "队友冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
     public void 队友冲天销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"队友冲天{@event.SourceId()}");
     }
-
     
     [ScriptMethod(name: "敌方冲天范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3180"])]
     public void SkyShatterEnmity(Event @event, ScriptAccessory accessory)
@@ -253,7 +250,7 @@ public class PVPAction
             {
                 var dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = $"敌方冲天内圈{@event.SourceId()}";
-                dp.Color = new Vector4(1f, 0f, 0f, 0.65f);
+                dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
                 dp.Owner = @event.SourceId();
                 dp.Scale = new Vector2(5f);
                 dp.DestoryAt = 5000;
@@ -261,11 +258,21 @@ public class PVPAction
 
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
                 dp1.Name = $"敌方冲天外圈{@event.SourceId()}";
-                dp1.Color = new Vector4(1, 0f, 0f, 0.35f);
+                dp1.Color = new Vector4(1, 0f, 0f, 0.5f);
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(10f);
                 dp1.DestoryAt = 5000;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                
+                var dp2 = accessory.Data.GetDefaultDrawProperties();
+                dp2.Name = $"敌方冲天内圈描边{@event.SourceId()}";
+                dp2.Color = new Vector4(1f, 0f, 0f, 8f);
+                dp2.Owner = @event.SourceId();
+                dp2.Scale = new Vector2(5f);
+                dp2.InnerScale = new Vector2(4.94f);
+                dp2.Radian = float.Pi * 2;
+                dp2.DestoryAt = 5000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
             }
     }
     
@@ -303,6 +310,16 @@ public class PVPAction
                     dp1.Scale = new Vector2(10f);
                     dp1.DestoryAt = 5000;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+                    
+                    var dp2 = accessory.Data.GetDefaultDrawProperties();
+                    dp2.Name = $"敌方标记冲天内圈描边{@event.SourceId()}";
+                    dp2.Color = new Vector4(1f, 0f, 0f, 10f);
+                    dp2.Owner = @event.SourceId();
+                    dp2.Scale = new Vector2(5f);
+                    dp2.InnerScale = new Vector2(4.94f);
+                    dp2.Radian = float.Pi * 2;
+                    dp2.DestoryAt = 5000;
+                    accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
                 }
             }
         }
@@ -691,7 +708,7 @@ public class PVPAction
             case 4097:
                 var dp = accessory.Data.GetDefaultDrawProperties();
                 dp.Name = $"蛇鳞击Self";
-                dp.Color = new Vector4(0f, 1f, 1f, 1f);
+                dp.Color = new Vector4(0f, 1f, 1f, 0.6f);
                 dp.Owner = @event.SourceId();
                 dp.Scale = new Vector2(6f);
                 dp.DestoryAt = 4000;
@@ -700,7 +717,7 @@ public class PVPAction
             case 4098:
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
                 dp1.Name = $"血气蛇鳞击Self";
-                dp1.Color = new Vector4(0f, 1f, 1f, 0.6f);
+                dp1.Color = new Vector4(0f, 1f, 1f, 0.4f);
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(15f);
                 dp1.DestoryAt = 4000;
@@ -739,7 +756,7 @@ public class PVPAction
                     case 4097:
                         var dp = accessory.Data.GetDefaultDrawProperties();
                         dp.Name = $"蛇鳞击敌方{@event.SourceId}";
-                        dp.Color = new Vector4(1f, 0f, 0f, 0.5f);
+                        dp.Color = new Vector4(1f, 0f, 0f, 0.55f);
                         dp.Owner = @event.SourceId();
                         dp.Scale = new Vector2(6f);
                         dp.DestoryAt = 4000;
@@ -748,7 +765,7 @@ public class PVPAction
                     case 4098:
                         var dp1 = accessory.Data.GetDefaultDrawProperties();
                         dp1.Name = $"血气蛇鳞击敌方{@event.SourceId}";
-                        dp1.Color = new Vector4(1f, 0f, 0f, 0.4f);
+                        dp1.Color = new Vector4(1f, 0f, 0f, 0.35f);
                         dp1.Owner = @event.SourceId();
                         dp1.Scale = new Vector2(15f);
                         dp1.DestoryAt = 4000;

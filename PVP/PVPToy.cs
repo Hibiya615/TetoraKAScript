@@ -101,7 +101,7 @@ public class PVPToy
     
     #endregion
     
-    #region 基础控制
+    #region 用户设置
     
     [UserSetting("EdgeTTS开关")]
     public bool isEdgeTTS { get; set; } = true;
@@ -117,6 +117,12 @@ public class PVPToy
     
     [UserSetting("小队吸&控技能填充亮度（推荐小于1）")]
     public float LightPartyControlAOEFillBrightness { get; set; } = 0.4f;
+    
+    [UserSetting("小队吸&控技能连线颜色")]
+    public ScriptColor LightPartyControlAOETetherColor { get; set; } = new() { V4 = new(0f, 1f, 1f, 1f) };
+    
+    [UserSetting("小队吸&控技能连线显示时间(ms)")]
+    public int LightPartyMoveActionsTetherTime { get; set; } = 2500;
     
     [UserSetting("启用目标标记播报及连线")]
     public bool isTargetBroadcast { get; set; } = false;
@@ -137,9 +143,9 @@ public class PVPToy
     public bool isHack { get; set; } = false;
     
     [UserSetting(note: "请选择龙骑冲天时的移速")]
-    public SkySpeedEnum SkySpeed { get; set; } = SkySpeedEnum.Default;
+    public SkyHighSpeedEnum SkyHighSpeed { get; set; } = SkyHighSpeedEnum.Default;
     
-    public enum SkySpeedEnum
+    public enum SkyHighSpeedEnum
     {
         Default = 0,
         AddPoint1 = 1,
@@ -162,7 +168,7 @@ public class PVPToy
     public bool isDRAutoImmunize { get; set; } = false;
     
     [UserSetting("[IC] 龙骑冲天自动开启免控")]
-    public bool isIChysteria { get; set; } = false;
+    public bool isICAutohysteria { get; set; } = false;
     
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
@@ -206,19 +212,19 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "小队DK腐秽大地查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
+    [ScriptMethod(name: "小队DK腐秽大地查找连线", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
     public void 小队DK腐秽大地查找连线(Event @event, ScriptAccessory accessory)
     {
         if (isPartyMember(accessory, @event.SourceId()))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队DK腐秽大地连线{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+            dp.Color = LightPartyControlAOETetherColor.V4.WithW(4f);
             dp.Owner = accessory.Data.Me;
             dp.TargetPosition = @event.EffectPosition();
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Scale = new(1);
-            dp.DestoryAt = 500;
+            dp.DestoryAt = LightPartyMoveActionsTetherTime;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
@@ -233,7 +239,7 @@ public class PVPToy
             dp.Color = LightPartyControlAOEColor.V4.WithW(20f);
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(15f);
-            dp.InnerScale = new Vector2(14.9f);
+            dp.InnerScale = new Vector2(14.94f);
             dp.Radian = float.Pi * 2;
             dp.DestoryAt = 4500;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
@@ -250,24 +256,38 @@ public class PVPToy
             dp.Color = LightPartyControlAOEColor.V4.WithW(LightPartyControlAOEFillBrightness);
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(15f);
-            dp.DestoryAt = 2500;
+            dp.DestoryAt = 2100;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
     }
+    
+    /* // 不知道为什么感觉延迟好高 算了 正常应该就2s
 
-    [ScriptMethod(name: "小队舞者行列舞查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
+    [ScriptMethod(name: "小队舞者诱惑成功提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^3024$"],suppress:5000)]
+    public void 小队舞者诱惑成功提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            if (isText)accessory.Method.TextInfo($"魅惑", duration: 1300, true);
+            accessory.Method.EdgeTTS($"魅惑");
+        }
+    }
+    
+    */
+    
+    [ScriptMethod(name: "小队舞者行列舞查找连线", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
     public void 小队舞者行列舞查找连线(Event @event, ScriptAccessory accessory)
     {
         if (isPartyMember(accessory, @event.SourceId()))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队舞者行列舞连线{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+            dp.Color = LightPartyControlAOETetherColor.V4.WithW(2f);
             dp.Owner = accessory.Data.Me;
             dp.TargetObject = @event.SourceId;
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Scale = new(1);
-            dp.DestoryAt = 500;
+            dp.DestoryAt = LightPartyMoveActionsTetherTime;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
@@ -611,32 +631,32 @@ public class PVPToy
     public void SkyHighAddSpeed(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
-        if (SkySpeed == SkySpeedEnum.Default)
+        if (SkyHighSpeed == SkyHighSpeedEnum.Default)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed -1");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已恢复为默认值");
         }
-        else if (SkySpeed == SkySpeedEnum.AddPoint1)
+        else if (SkyHighSpeed == SkyHighSpeedEnum.AddPoint1)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.1");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.1");
         }
-        else if (SkySpeed == SkySpeedEnum.AddPoint2)
+        else if (SkyHighSpeed == SkyHighSpeedEnum.AddPoint2)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.2");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.2");
         }
-        else if (SkySpeed == SkySpeedEnum.AddPoint3)
+        else if (SkyHighSpeed == SkyHighSpeedEnum.AddPoint3)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.3");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.3");
         }
-        else if (SkySpeed == SkySpeedEnum.AddPoint4)
+        else if (SkyHighSpeed == SkyHighSpeedEnum.AddPoint4)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.4");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.4");
         }
-        else if (SkySpeed == SkySpeedEnum.AddPoint5)
+        else if (SkyHighSpeed == SkyHighSpeedEnum.AddPoint5)
         {
             if(isHack) accessory.Method.SendChat($"/pdrspeed 1.5");
             if(isHack && isDeveloper) accessory.Method.SendChat($"/e 冲天移速已设置为1.5");
@@ -673,7 +693,7 @@ public class PVPToy
             accessory.Method.SendChat($"/pdr load AutoImmunizeInputDisable");
         }
 
-        if (isIChysteria)
+        if (isICAutohysteria)
         {
             accessory.Method.SendChat($"/i-ching-commander anti_hysteria enable");
             accessory.Method.SendChat($"/i-ching-commander forced_move enable");
@@ -693,7 +713,7 @@ public class PVPToy
             accessory.Method.SendChat($"/pdr unload AutoImmunizeInputDisable");
         }
 
-        if (isIChysteria)
+        if (isICAutohysteria)
         {
             accessory.Method.SendChat($"/i-ching-commander anti_hysteria dispose");
             accessory.Method.SendChat($"/i-ching-commander forced_move dispose");
