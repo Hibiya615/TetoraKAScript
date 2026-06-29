@@ -25,16 +25,14 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace theRoyalMenagerie;
 
 [ScriptType(guid: "da23fd13-2d1f-41d3-b2c9-91fd8d948a98", name: "神龙歼灭战", territorys: [679],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class Shinryu
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         LV70 神龙歼灭战 初版绘制
-        缺少部分机制：如闪电分散。
-        若有遇见可通过DC将ARR录像文件私发给我补充
         """;
     
     
@@ -126,12 +124,38 @@ public class Shinryu
         }
     }
     
-    [ScriptMethod(name: "右翼_闪电 分散", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:8091"])]
+    [ScriptMethod(name: "右翼_闪电 分散", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0018"])]
     public void 闪电(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo("分散，离开水圈", duration: 5700, true);
-        if (isTTS)accessory.Method.TTS($"分散，离开水圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散，离开水圈");
+        if (@event.TargetId() == accessory.Data.Me)
+        {
+            if (isText) accessory.Method.TextInfo("分散，离开水圈", duration: 3500, true);
+            if (isTTS) accessory.Method.TTS($"分散，离开水圈");
+            if (isEdgeTTS) accessory.Method.EdgeTTS($"分散，离开水圈");
+        }
+
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"闪电分散{@event.TargetId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 4200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "右翼_闪电 水圈绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:8091"])]
+    public void 闪电水圈(Event @event, ScriptAccessory accessory)
+    {
+        foreach (var item in accessory.Data.Objects.GetByDataId(2004237))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Color = new Vector4(1f, 0f, 0f, 4f);
+            dp.Scale = new Vector2(5f);
+            dp.DestoryAt = 5700;
+            dp.Name = "水圈";
+            dp.Owner = item.EntityId;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
     }
     
     [ScriptMethod(name: "陨石冲击", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:9291"])]
