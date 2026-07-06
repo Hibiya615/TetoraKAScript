@@ -745,12 +745,12 @@
   {
     "Name": "P10N",
     "Guid": "f28cc2f2-6ce2-4526-a303-56fe1c02dea8",
-    "Version": "0.0.0.3",
+    "Version": "0.0.0.4",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P10n.cs",
-    "Note": "v0.0.0.2:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
-    "UpdateInfo": "API12",
+    "Note": "v0.0.0.4:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
+    "UpdateInfo": "",
     "TerritoryIds": [
       1149
     ]

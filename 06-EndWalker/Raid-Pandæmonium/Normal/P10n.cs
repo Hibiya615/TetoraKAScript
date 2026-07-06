@@ -15,13 +15,13 @@ using System.Threading.Tasks;
 namespace Pandæmonium.Normal;
 
 [ScriptType(guid: "f28cc2f2-6ce2-4526-a303-56fe1c02dea8", name: "P10N", territorys: [1149],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class P10n
 {
     const string noteStr =
         """
-        v0.0.0.2:
+        v0.0.0.4:
         LV90 万魔殿 荒天之狱2（万魔殿）初版绘制
         """;
     
@@ -131,11 +131,24 @@ public class P10n
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
     }
     
+    [ScriptMethod(name: "分割之羽（中间预兆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33392"])]
+    public void 分割之羽预兆(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "分割之羽预兆";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Offset = new Vector3(0, 0, -35);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 4000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "分割之羽（大风车）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33393"])]
     public void 分割之羽(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "分割之羽";
+        dp.Name = $"分割之羽{@event.SourceId}";
         dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(20f);
