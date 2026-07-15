@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 namespace O11n;
 
 [ScriptType(guid: "2232ae84-c1e7-4382-88b4-d691887f27cf", name: "O11N", territorys: [800],
-    version: "0.0.0.4" , author: "Tetora", note: noteStr)]
+    version: "0.0.0.5" , author: "Tetora", note: noteStr)]
 
 public class O11n
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.5:
         LV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制
         支持DR 自动在雷力投射点上使用任务指令
         （默认为打开状态，使用前请确保你已正确安装1.4.9.0及以上版本`DailyRoutines`插件）
@@ -156,7 +156,7 @@ public class O11n
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冲击波";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(15f);
         dp.DestoryAt = 8400;
