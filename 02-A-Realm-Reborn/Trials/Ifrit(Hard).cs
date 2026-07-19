@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace theBowlofEmbers_Hard;
 
 [ScriptType(guid: "d3d532f1-0707-427f-ac04-871a22022c11", name: "伊弗利特歼灭战", territorys: [292, 1045],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class theBowlofEmbers_Hard
 {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         LV50 伊弗利特歼灭战 初版绘制
         含 LV20 伊弗利特讨伐战 的地火喷发
         """;
@@ -43,7 +43,7 @@ public class theBowlofEmbers_Hard
     public void 烈焰焚烧绘制(Event @event, ScriptAccessory accessory)
     {
         if (!Incinerate) return;
-        if (HelperExtensions.GetCurrentTerritoryId() != 1045) return;
+        if (HelperExtensions.GetCurrentTerritoryId() == 1045) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         var ifrits = accessory.Data.Objects.Where(x => x.DataId == 209);
         foreach (var ifrit in ifrits)
