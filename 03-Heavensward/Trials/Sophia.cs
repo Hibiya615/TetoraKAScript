@@ -15,17 +15,19 @@ using System.Threading.Tasks;
 namespace Sophia;
 
 [ScriptType(guid: "0909b7dc-2079-449a-97ca-f46204180bc0", name: "索菲娅歼灭战", territorys: [576],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Sophia
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV60 索菲娅歼灭战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
     
+    #region 用户控制
+
     [UserSetting("TTS开关（TTS请二选一开启）")]
     public bool isTTS { get; set; } = false;
     
@@ -35,12 +37,16 @@ public class Sophia
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
+    [UserSetting("开发者模式")]
+    public bool isDeveloper { get; set; } = false;
+
+    #endregion
     
     [ScriptMethod(name: "类星体（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6792"])]
     public void 类星体_核爆(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "类星体_核爆";
+        dp.Name = $"类星体_核爆";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(15f);
@@ -55,8 +61,8 @@ public class Sophia
     {
         // 存在问题：其他时候瞬移时也会触发，如俯冲完恢复位置、转场瞬移至北侧时
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "突袭";
-        dp.Scale = new (16f, 55f); // 特效像宽9m，待实证
+        dp.Name = $"突袭";
+        dp.Scale = new (164f, 50f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.DestoryAt = 3100;
@@ -64,6 +70,19 @@ public class Sophia
     }
     */
     
+
+    [ScriptMethod(name: "突袭（俯冲）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6533"])]
+    public void 突袭(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"突袭";
+        dp.Scale = new (16f, 50f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.DestoryAt = 700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+    }
+
     [ScriptMethod(name: "信徒其一_反射提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^652[56]$"])]
     public void 反射(Event @event, ScriptAccessory accessory)
     {
@@ -80,7 +99,7 @@ public class Sophia
         if (isEdgeTTS)accessory.Method.EdgeTTS("背对信徒其二");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "灼热射线";
+        dp.Name = $"灼热射线";
         dp.Color = new Vector4(1f, 0f, 1f, 1f).WithW(2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(1.8f);
@@ -96,6 +115,32 @@ public class Sophia
     
     // 转场天平击退 两次均为19m
     // 类星体 差1条击退19m，差2条击退25m
+
+    uint LightDew = 0;
+    
+    [ScriptMethod(name: "女儿台词记录", eventType: EventTypeEnum.Chat, userControl:false, eventCondition: ["Type:NPCDialogueAnnouncements", 
+        "Message:regex:^(女儿，接受我的睿智吧……|女兒，接受我的睿智吧……|我が娘よ、叡智を伝えるのです。|Daughter, be the bearer of my wisdom.)$"])]
+    public void 女儿台词记录(Event @event, ScriptAccessory accessory)
+    {
+        LightDew = 1;
+    }
+    
+    [ScriptMethod(name: "光露（女儿直线激光）", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["SourceDataId:6027", "Id:4572"])]
+    public void 光露(Event @event, ScriptAccessory accessory)
+    {
+        // ActionId: 6530, SourceName: 芭碧萝, SourceDataId: 6027, PlayActionTimeline Id:4572, MorlogId: 106, SetObjPos Id:0197
+        if (LightDew!=1) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"光露";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Scale = new (18f, 50f);
+        dp.Owner = @event.SourceId();
+        dp.DestoryAt = 3000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+
+        LightDew = 0;
+    }
     
     [ScriptMethod(name: "类星体 击退", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:6511"])]
     public void 类星体_击退(Event @event, ScriptAccessory accessory)
