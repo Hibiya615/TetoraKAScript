@@ -24,14 +24,14 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace DhormeChimera;
 
-[ScriptType(guid: "e24bb311-704f-4f4c-8188-87eaa8da8b29", name: "死化奇美拉讨伐战", territorys: [368],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "e24bb311-704f-4f4c-8188-87eaa8da8b29", name: "LV50 死化奇美拉讨伐战", territorys: [368],
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class DhormeChimera
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         LV50 死化奇美拉讨伐战 初版绘制
         """;
     
@@ -78,7 +78,7 @@ public class DhormeChimera
         accessory.Method.RemoveDraw($"(寒冰|雷电)咆哮");
     }
     
-    [ScriptMethod(name: "寒冰&雷电咆哮 打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:regex:^(1104|1338|1442)$"], userControl: false)]
+    [ScriptMethod(name: "寒冰&雷电咆哮 打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:regex:^(1104|1105|1338|1442)$"], userControl: false)]
     public void 寒冰雷电咆哮销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"(寒冰|雷电)咆哮");
@@ -160,7 +160,7 @@ public class DhormeChimera
         if (isEdgeTTS)accessory.Method.EdgeTTS($"打断或眩晕BOSS");
     }
     
-    [ScriptMethod(name: "雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(1338|1442)$"])]
+    [ScriptMethod(name: "雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(1105|1338|1442)$"])]
     public void 雷电咆哮(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
