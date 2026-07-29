@@ -25,17 +25,18 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346],
-    version: "0.0.0.9", author: "Tetora", note: noteStr)]
+    version: "0.0.1.0", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
+ * 1346：新月岛北征
  */
 
 public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.0.9:
+        v0.0.1.0:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -64,6 +65,22 @@ public class NewDuty
 
     #endregion
     
+    #region 全局销毁
+    
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "死亡销毁", eventType: EventTypeEnum.Death, eventCondition: [], userControl: false)]
+    public void 死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.TargetId()}");
+    }
+    
+    #endregion
+    
     #region 蜃景幻界新月岛 北征之章
 
     [ScriptMethod(name: "—————— 蜃景幻界新月岛 北征之章 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
@@ -81,7 +98,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "[FATE] 忍耐基路伯_环形魔法剑", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5012[01]$"])]
+    [ScriptMethod(name: "[FATE] 忍耐基路伯_环形魔法剑（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5012[01]$"])]
     public void 环形魔法剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -92,6 +109,20 @@ public class NewDuty
         dp.InnerScale = new Vector2(12f);
         dp.Radian = float.Pi * 2;
         dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "[FATE] 邪瞳_诅咒目光（背对范围）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47152$"])]
+    public void 邪瞳_诅咒目光(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"邪瞳_诅咒目光{@event.SourceId}";
+        dp.Color = new Vector4(1f, 0f, 0f, 10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(50f);
+        dp.InnerScale = new Vector2(49.8f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
@@ -120,7 +151,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "[CE 诅咒的继承者——惨白魔人 咒力的替身_平原震裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49779$"])]
+    [ScriptMethod(name: "[CE 诅咒的继承者——惨白魔人] 咒力的替身_平原震裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49779$"])]
     public void 咒力的替身_平原震裂(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -179,7 +210,7 @@ public class NewDuty
     public void 魔力书写_草书(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"魔力书写_草书";
+        dp.Name = $"魔力书写_草书{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new (6f, 50f);
@@ -191,7 +222,7 @@ public class NewDuty
     public void 元素冲击波(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"元素冲击波";
+        dp.Name = $"元素冲击波{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(8f);
@@ -203,7 +234,7 @@ public class NewDuty
     public void 称誉 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"称誉";
+        dp.Name = $"称誉{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40f);
@@ -428,7 +459,7 @@ public class NewDuty
     public void 撕裂之风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"撕裂之风";
+        dp.Name = $"撕裂之风{@event.SourceId}";
         dp.Scale = new (8f, 120f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
@@ -448,7 +479,7 @@ public class NewDuty
     public void 撕裂之风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"撕裂之风";
+        dp.Name = $"撕裂之风{@event.SourceId}";
         dp.Scale = new (8f, 120f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
@@ -463,6 +494,160 @@ public class NewDuty
         }
     }
 
+    
+    #endregion
+    
+    #region 两岐塔：魔之塔
+    
+    [ScriptMethod(name: "—————— 两岐塔：超魔之塔 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 两岐塔超魔之塔(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "BOSS1 蓝头_冰柱赋格（面前钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47641$"])]
+    public void 蓝头_冰柱赋格(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"蓝头_冰柱赋格";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition;
+        dp.Scale = new Vector2(20f);
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1 蓝头_剧毒吐息（中心钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47639$"])]
+    public void 蓝头_剧毒吐息(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"蓝头_剧毒吐息";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition;
+        dp.Scale = new Vector2(18f);
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1 绿头_风暴吐息（中心击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48245$"])]
+    public void 绿头_风暴吐息(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"击退至安全区", duration: 8000, true);
+        if (isTTS)accessory.Method.TTS($"中间击退");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"中间击退");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = "绿头_风暴吐息击退预测";
+        dp.Scale = new(1f, 14f);
+        dp.Color = new Vector4(0f, 1f, 1f, 4f);
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Rotation = float.Pi;
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1 绿头_雷电赋格（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47640$"])]
+    public void 绿头_雷电赋格(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"月环靠近", duration: 8000, true);
+        if (isTTS)accessory.Method.TTS($"靠近");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"绿头_雷电赋格";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.InnerScale = new Vector2(18f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1 双头怪鸟_雷霜暴风雨 AOE", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47739$"])]
+    public void 提示(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4000, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "BOSS1 绿头_冰焰凝环（月环安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47686$"])]
+    public void 绿头_冰焰凝环(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        
+        dp.Name = $"绿头_冰焰凝环安全区描边";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5f);
+        dp.InnerScale = new Vector2(4.9f);
+        dp.Radian = float.Pi * 2;
+        dp1.DestoryAt = dp.DestoryAt = 1700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+        
+        dp1.Name = "绿头_冰焰凝环连线";
+        dp1.Owner = accessory.Data.Me;
+        dp1.Color = accessory.Data.DefaultSafeColor;
+        dp1.ScaleMode |= ScaleMode.YByDistance;
+        dp1.TargetObject = @event.SourceId();
+        dp1.Scale = new(1f);
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp1);
+    }
+    
+    [ScriptMethod(name: "BOSS1 蓝头_冰焰交错（十字)", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47685$"])]
+    public void 蓝头_冰焰交错(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"蓝头_冰焰交错";
+        dp.Scale = new (10f, 70f);
+        dp.Owner = @event.SourceId();
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.DestoryAt = 1700;
+        
+        float[] rotations = { 0f, 90f };
+    
+        foreach (float rotation in rotations)
+        {
+            dp.Rotation = rotation.DegToRad();
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "BOSS1 立体魔法阵_魔阵光（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4772[12]$"])]
+    public void 立体魔法阵_魔阵光(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"立体魔法阵_魔阵光";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (5f, 60f);
+        dp.DestoryAt = 700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+    }
+    
+    [ScriptMethod(name: "BOSS1 绿头_冰雷簇（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50(699|700)$"])]
+    public void 冰雷簇(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"冰雷簇{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 17000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "BOSS1 绿头_冰雷簇2（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5070[12]$"])]
+    public void 冰雷簇2(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"冰雷簇2{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 1000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
     
     #endregion
     
