@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346],
-    version: "0.0.1.0", author: "Tetora", note: noteStr)]
+    version: "0.0.1.1", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -36,7 +36,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.1.0:
+        v0.0.1.1:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -230,6 +230,66 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "[CE 四颚斧花——提蔛] 中央鞭打（辣尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47220$"])]
+    public void 中央鞭打(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"中央鞭打";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (10f, 52f);
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+    }
+    
+    [ScriptMethod(name: "[CE 四颚斧花——提蔛] 侧方鞭打（辣翅）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(47221|49729)$"])]
+    public void 侧方鞭打(Event @event, ScriptAccessory accessory)
+    {
+        var isR = @event.ActionId == 47221;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"侧方鞭打{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(26f);
+        dp.Radian = 180f.DegToRad(); 
+        dp.Offset = isR ? new Vector3(5f, 0f, 0f) : new Vector3(-5f, 0f, 0f);
+        dp.Rotation = isR ? 270f.DegToRad() : 90f.DegToRad();
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+        
+    }
+    
+    [ScriptMethod(name: "[CE 四颚斧花——提蔛] 毒雾喷射（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(47228|5054[789])$"])]
+    public void 毒雾喷射(Event @event, ScriptAccessory accessory)
+    {
+        // 猜测：50547 左 ; 50548 下
+        // 已验证：47228 正 ; 50549 右
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"毒雾喷射{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f);
+        dp.Radian = 90f.DegToRad(); 
+        switch (@event.ActionId())
+        {
+            case 47228:
+                dp.Rotation = 0f.DegToRad();
+                break;
+            case 50547:
+                dp.Rotation = 90f.DegToRad();
+                break;
+            case 50548:
+                dp.Rotation = 180f.DegToRad();
+                break;
+            case 50549:
+                dp.Rotation = 270f.DegToRad();
+                break;
+        }
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
     [ScriptMethod(name: "[CE 纯白守护者——雪石膏之剑] 称誉（四连攻击命令_顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47158$"])]
     public void 称誉 (Event @event, ScriptAccessory accessory)
     {
@@ -319,6 +379,69 @@ public class NewDuty
         dp.Scale = new (6f, 50f);
         dp.DestoryAt = 1700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+    }
+    
+    [ScriptMethod(name: "[CE 魔女复制体——卡洛菲斯提莉二重身] 双重魔发斩（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5069[12]$"])]
+    public void 双重魔发斩(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"双重魔发斩{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 180f.DegToRad(); 
+        dp.Delay = @event.ActionId() == 50691 ? 0 : 2500;
+        dp.DestoryAt = @event.ActionId() == 50691 ? 2500 : 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "[CE 魔女复制体——卡洛菲斯提莉二重身] 发牢（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^47072$"])]
+    public void 发牢(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"发牢{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "[CE 魔女复制体——卡洛菲斯提莉二重身] 剪发（冰花）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4707[67]$"])]
+    public void 剪发(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.ActionId() == 47076)
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"剪发钢铁 {@event.SourceId}";
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(10f);
+            dp.DestoryAt = 4700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+        else if  (@event.ActionId() == 47077)
+        {
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = $"剪发冰花{@event.SourceId}";
+            dp1.Scale = new (4f, 120f);
+            dp1.Owner = @event.SourceId();
+            dp1.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+            dp1.DestoryAt = 4700;
+        
+            float[] rotations = { 0f, 90f };
+    
+            foreach (float rotation in rotations)
+            {
+                dp1.Rotation = rotation.DegToRad();
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp1);
+            }
+        }
+        else
+        {
+            
+        }
+
     }
     
     [ScriptMethod(name: "[CE 叛逆使魔——负隅宝石兽] 利爪凶尾（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48294$"])]
