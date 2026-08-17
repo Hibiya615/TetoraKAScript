@@ -22,13 +22,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace PVPAction;
 
 [ScriptType(guid: "070e161a-26e9-4a57-8b19-da8c4201058c", name: "PVP技能绘制", territorys: [],
-    version: "0.0.1.1", author: "Tetora", note: noteStr)]
+    version: "0.0.1.2", author: "Tetora", note: noteStr)]
 
 public class PVPAction
 {
     const string noteStr =
         """
-        v0.0.1.1:
+        v0.0.1.2:
         PVP技能绘制，全部地图可用，未做任何区域限制。
         推荐先自己过一遍设置把不需要的关闭
         改完用户设置的数值记得点保存！保存！
@@ -338,23 +338,40 @@ public class PVPAction
     [ScriptMethod(name: "———————— 贤者 ————————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 贤者 (Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "小队中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
-    public void MesotesParty(Event @event, ScriptAccessory accessory)
+
+    [ScriptMethod(name: "小队中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^2926[67]$"],suppress:1200)]
+    public void 小队中庸之道绘制(Event @event, ScriptAccessory accessory)
     {
-        // 中庸之道 施放者 StatusID：3118 持续15s ； 无敌效果 StatusID：3119 间隔判定,每次判定持续5s
+        // 中庸之道 施放者 StatusID：3118 持续15s ； 无敌效果 StatusID：3119 间隔判定,每次判定持续5s ; 初次释放ActionId为29266, 转换位置为26267
         if (isPartyMember(accessory, @event.SourceId()))
         {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"小队中庸之道{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 15000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            if (@event.ActionId() == 29266)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"小队中庸之道A{@event.SourceId()}";
+                dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+                dp.Position = @event.EffectPosition();
+                dp.Scale = new Vector2(5f);
+                dp.DestoryAt = 15000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+
+            else if (@event.ActionId() == 29267)
+            {
+                accessory.Method.RemoveDraw($"小队中庸之道A{@event.SourceId()}");
+                
+                var dp1 = accessory.Data.GetDefaultDrawProperties();
+                dp1.Name = $"小队中庸之道B{@event.SourceId()}";
+                dp1.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+                dp1.Position = @event.EffectPosition();
+                dp1.Scale = new Vector2(5f);
+                dp1.DestoryAt = 15000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+            }
         }
     }
-    
-    [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"],suppress:3000)]
+
+    [ScriptMethod(name: "小队中庸之道查找连线半秒", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^2926[67]"],suppress:1200)]
     public void MesotesPartyConnected(Event @event, ScriptAccessory accessory)
     {
         if (isPartyMember(accessory, @event.SourceId()))
@@ -371,15 +388,30 @@ public class PVPAction
         }
     }
     
-        
-    [ScriptMethod(name: "小队中庸之道销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
-    public void 小队中庸之道销毁(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "小队中庸之道结束TTS", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"])]
+    public void 小队中庸之道结束TTS(Event @event, ScriptAccessory accessory)
     {
-        // 考虑到提前死亡，所以在持有者buff消失时就应销毁绘制
-        accessory.Method.RemoveDraw($"小队中庸之道{@event.SourceId()}");
+        if (IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xC2F)) // 检测自身是否在无敌圈内（以自身仍持有无敌buff判断）
+        {
+            if (isText)accessory.Method.TextInfo($"贤者LB无敌结束", duration: 1300, true);
+            if (isTTS)accessory.Method.TTS($"无敌结束");
+            if (isEdgeTTS)accessory.Method.EdgeTTS($"无敌结束");
+        }
     }
     
-    [ScriptMethod(name: "敌方中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29266"])]
+
+    [ScriptMethod(name: "小队中庸之道绘制销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
+    public void 小队中庸之道绘制销毁(Event @event, ScriptAccessory accessory)
+    {
+        // 考虑到提前死亡，所以在持有者buff消失时就应销毁绘制
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            accessory.Method.RemoveDraw($"小队中庸之道(A|B){@event.SourceId()}");
+        }
+    }
+
+
+    [ScriptMethod(name: "敌方中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^2926[67]"])]
     public void MesotesEnmity(Event @event, ScriptAccessory accessory)
     {
         var obj = IbcHelper.GetById(accessory, @event.SourceId);
@@ -388,20 +420,41 @@ public class PVPAction
 
         if (!PartyFilter(accessory, obj))
         {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"敌方中庸之道{@event.SourceId()}";
-            dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
-            dp.Position = @event.EffectPosition();
-            dp.Scale = new Vector2(5f);
-            dp.DestoryAt = 15000;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            if (@event.ActionId() == 29266)
+            {
+                var dp = accessory.Data.GetDefaultDrawProperties();
+                dp.Name = $"敌方中庸之道A{@event.SourceId()}";
+                dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
+                dp.Position = @event.EffectPosition();
+                dp.Scale = new Vector2(5f);
+                dp.DestoryAt = 15000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            }
+            else if (@event.ActionId() == 29267)
+            {
+                accessory.Method.RemoveDraw($"敌方中庸之道A{@event.SourceId()}");
+                var dp1 = accessory.Data.GetDefaultDrawProperties();
+                dp1.Name = $"敌方中庸之道B{@event.SourceId()}";
+                dp1.Color = accessory.Data.DefaultSafeColor.WithW(0.6f);
+                dp1.Position = @event.EffectPosition();
+                dp1.Scale = new Vector2(5f);
+                dp1.DestoryAt = 15000;
+                accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
+            }
         }
     }
     
     [ScriptMethod(name: "敌方中庸之道销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
     public void 敌方中庸之道销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"敌方中庸之道{@event.SourceId()}");
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            accessory.Method.RemoveDraw($"敌方中庸之道(A|B){@event.SourceId()}");
+        }
     }
     
     #endregion
