@@ -179,7 +179,7 @@ public class PVPToy
     
     [ScriptMethod(name: "—————— 四小模式选项 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 四小模式选项(Event @event, ScriptAccessory accessory) { }
-    
+
     [ScriptMethod(name: "小队DK腐秽大地范围描边", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
     public void 小队DK腐秽大地范围描边(Event @event, ScriptAccessory accessory)
     {
@@ -193,6 +193,8 @@ public class PVPToy
             dp.InnerScale = new Vector2(4.94f);
             dp.Radian = float.Pi * 2;
             dp.DestoryAt = 3000;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
         }
     }
@@ -208,7 +210,21 @@ public class PVPToy
             dp.Position = @event.EffectPosition;
             dp.Scale = new Vector2(5f); // 吸的范围是10m，但是腐秽大地二段止步的范围是5m
             dp.DestoryAt = 1500;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队DK腐秽大地范围Omen", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29094$"],suppress:3000)]
+    public void 小队DK腐秽大地范围Omen(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(528, new Vector3(10f), // Omen 590 是边缘吸入Omen
+                @event.EffectPosition(), @event.SourceRotation(), new Vector4(0f,1f,0f,1.2f), 1500);
+            // accessory.Method.VfxMethod.SetVfxColorRGBA(omenHandle,new Vector4(0f,1f,0f,1f));
+            accessory.Method.VfxMethod.SetVfxSpeed(omenHandle,1.5f);
         }
     }
     
@@ -219,29 +235,34 @@ public class PVPToy
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队DK腐秽大地连线{@event.SourceId()}";
-            dp.Color = LightPartyControlAOETetherColor.V4.WithW(4f);
+            dp.Color = LightPartyControlAOETetherColor.V4.WithW(2f);
+            // dp.Color = new Vector4(1f, 0f, 1f, 1f);
             dp.Owner = accessory.Data.Me;
             dp.TargetPosition = @event.EffectPosition();
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Scale = new(1);
             dp.DestoryAt = LightPartyMoveActionsTetherTime;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
     
-    [ScriptMethod(name: "小队舞者行列舞范围描边", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
+    [ScriptMethod(name: "小队舞者行列舞范围描边", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5500)]
     public void 小队舞者行列舞范围描边(Event @event, ScriptAccessory accessory)
     {
         if (isPartyMember(accessory, @event.SourceId()))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队舞者行列舞范围描边{@event.SourceId}";
-            dp.Color = LightPartyControlAOEColor.V4.WithW(20f);
+            dp.Color = LightPartyControlAOEColor.V4.WithW(30f);
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(15f);
-            dp.InnerScale = new Vector2(14.94f);
+            dp.InnerScale = new Vector2(14.92f);
             dp.Radian = float.Pi * 2;
             dp.DestoryAt = 4500;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
         }
     }
@@ -257,13 +278,26 @@ public class PVPToy
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(15f);
             dp.DestoryAt = 2100;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "小队舞者行列舞范围Omen", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5500)]
+    public void 小队舞者行列舞范围Omen(Event @event, ScriptAccessory accessory)
+    {
+        if (isPartyMember(accessory, @event.SourceId()))
+        {
+            IntPtr ContradanceomenHandle = accessory.Method.VfxMethod.CreateOmen(590, new Vector3(15f), // Omen 528 是正常吸入Omen
+                @event.TargetPosition(), @event.SourceRotation(), new Vector4(0f,1f,0f,0.8f), 4500);
+            accessory.Method.VfxMethod.SetVfxSpeed(ContradanceomenHandle,1.5f);
         }
     }
     
     /* // 不知道为什么感觉延迟好高 算了 正常应该就2s
 
-    [ScriptMethod(name: "小队舞者诱惑成功提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^3024$"],suppress:5000)]
+    [ScriptMethod(name: "小队舞者诱惑成功提示", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^3024$"],suppress:5500)]
     public void 小队舞者诱惑成功提示(Event @event, ScriptAccessory accessory)
     {
         if (isPartyMember(accessory, @event.SourceId()))
@@ -275,7 +309,7 @@ public class PVPToy
     
     */
     
-    [ScriptMethod(name: "小队舞者行列舞查找连线", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5000)]
+    [ScriptMethod(name: "小队舞者行列舞查找连线", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5500)]
     public void 小队舞者行列舞查找连线(Event @event, ScriptAccessory accessory)
     {
         if (isPartyMember(accessory, @event.SourceId()))
@@ -288,6 +322,8 @@ public class PVPToy
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Scale = new(1);
             dp.DestoryAt = LightPartyMoveActionsTetherTime;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
@@ -386,7 +422,7 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"],suppress:3000)]
+    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"],suppress:14000)]
     public void CelestialRiverTTS(Event @event, ScriptAccessory accessory)
     {
         // 星河漫天 ActionId:29255 ； 星河漫天（队友buff） StatusID:3105； 星河漫天（敌方debuff） StatusID:3106 
@@ -510,6 +546,8 @@ public class PVPToy
         dp.TargetObject = @event.TargetId();
         dp.Scale = new(1);
         dp.DestoryAt = 500;
+        dp.FadeDistance = 80f;
+        dp.FadeCentreObject = accessory.Data.Me;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
@@ -532,6 +570,8 @@ public class PVPToy
         dp.TargetObject = @event.TargetId();
         dp.Scale = new(1);
         dp.DestoryAt = 500;
+        dp.FadeDistance = 80f;
+        dp.FadeCentreObject = accessory.Data.Me;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
@@ -554,6 +594,8 @@ public class PVPToy
         dp.TargetObject = @event.TargetId();
         dp.Scale = new(1);
         dp.DestoryAt = 500;
+        dp.FadeDistance = 80f;
+        dp.FadeCentreObject = accessory.Data.Me;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
@@ -576,6 +618,8 @@ public class PVPToy
         dp.TargetObject = @event.TargetId();
         dp.Scale = new(1);
         dp.DestoryAt = 500;
+        dp.FadeDistance = 60f;
+        dp.FadeCentreObject = accessory.Data.Me;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
@@ -689,14 +733,16 @@ public class PVPToy
         if(!isHack) return;
         if (isDRAutoImmunize)
         {
-            accessory.Method.SendChat($"/pdr load AutoImmunizeForceMove");
-            accessory.Method.SendChat($"/pdr load AutoImmunizeInputDisable");
+            accessory.Method.SendChat($"/pdr load AutoImmunizeForceMove"); // 自动免疫强制移动，防止恐慌乱走
+            accessory.Method.SendChat($"/pdr load AutoImmunizeInputDisable"); // 自动免疫输入禁用，防止强控类无法自由移动
+            accessory.Method.SendChat($"/pdr load AutoAntiKnockback"); // 自动防击退，防止诗人爆破箭
         }
 
         if (isICAutohysteria)
         {
-            accessory.Method.SendChat($"/i-ching-commander anti_hysteria enable");
-            accessory.Method.SendChat($"/i-ching-commander forced_move enable");
+            accessory.Method.SendChat($"/i-ching-commander anti_hysteria enable"); // 无视魅惑恐惧
+            accessory.Method.SendChat($"/i-ching-commander forced_move enable"); // 强制移动
+            accessory.Method.SendChat($"/i-ching-commander anti_knock 0 0"); // 防击退
             accessory.Method.SendChat($"/e 已开启IC临时免控");
         }
     }
@@ -711,12 +757,17 @@ public class PVPToy
         {
             accessory.Method.SendChat($"/pdr unload AutoImmunizeForceMove");
             accessory.Method.SendChat($"/pdr unload AutoImmunizeInputDisable");
+            accessory.Method.SendChat($"/pdr unload AutoAntiKnockback");
+            accessory.Method.SendChat($"/pdr unload NoClipMode"); // 无碰撞模式
+
         }
 
         if (isICAutohysteria)
         {
             accessory.Method.SendChat($"/i-ching-commander anti_hysteria dispose");
             accessory.Method.SendChat($"/i-ching-commander forced_move dispose");
+            accessory.Method.SendChat($"/i-ching-commander anti_knock dispose");
+            accessory.Method.SendChat($"/i-ching-commander anti_fallen dispose"); // 无掉落
             accessory.Method.SendChat($"/e 已关闭IC临时免控");
         }
     }

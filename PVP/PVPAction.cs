@@ -181,7 +181,7 @@ public class PVPAction
         if (@event.TargetId() != accessory.Data.Me) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冲天Self内圈";
-        dp.Color = new Vector4(0f, 1f, 1f, 0.5f);
+        dp.Color = new Vector4(0f, 1f, 1f, 0.8f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
         dp.DestoryAt = 5000;
@@ -189,7 +189,7 @@ public class PVPAction
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "冲天Self外圈";
-        dp1.Color = new Vector4(0f, 1f, 1f, 0.3f);
+        dp1.Color = new Vector4(0f, 1f, 1f, 0.8f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(10f);
         dp1.DestoryAt = 5000;
@@ -200,10 +200,20 @@ public class PVPAction
         dp2.Color = new Vector4(0f, 1f, 1f, 10f);
         dp2.Owner = @event.SourceId();
         dp2.Scale = new Vector2(5f);
-        dp2.InnerScale = new Vector2(4.95f);
+        dp2.InnerScale = new Vector2(4.9f);
         dp2.Radian = float.Pi * 2;
         dp2.DestoryAt = 5000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
+        
+        var dp3 = accessory.Data.GetDefaultDrawProperties();
+        dp3.Name = $"冲天Self外圈描边";
+        dp3.Color = new Vector4(0f, 1f, 1f, 5f);
+        dp3.Owner = @event.SourceId();
+        dp3.Scale = new Vector2(10f);
+        dp3.InnerScale = new Vector2(9.94f);
+        dp3.Radian = float.Pi * 2;
+        dp3.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp3);
     }
     
     [ScriptMethod(name: "自身冲天销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3180"],userControl: false)]
@@ -228,6 +238,8 @@ public class PVPAction
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
         dp.DestoryAt = 5000;
+        dp.FadeDistance = 40f;
+        dp.FadeCentreObject = accessory.Data.Me;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
     }
@@ -254,6 +266,8 @@ public class PVPAction
                 dp.Owner = @event.SourceId();
                 dp.Scale = new Vector2(5f);
                 dp.DestoryAt = 5000;
+                dp.FadeDistance = 30f;
+                dp.FadeCentreObject = accessory.Data.Me;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
 
                 var dp1 = accessory.Data.GetDefaultDrawProperties();
@@ -262,6 +276,8 @@ public class PVPAction
                 dp1.Owner = @event.SourceId();
                 dp1.Scale = new Vector2(10f);
                 dp1.DestoryAt = 5000;
+                dp1.FadeDistance = 40f;
+                dp1.FadeCentreObject = accessory.Data.Me;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
                 
                 var dp2 = accessory.Data.GetDefaultDrawProperties();
@@ -272,6 +288,8 @@ public class PVPAction
                 dp2.InnerScale = new Vector2(4.94f);
                 dp2.Radian = float.Pi * 2;
                 dp2.DestoryAt = 5000;
+                dp2.FadeDistance = 30f;
+                dp2.FadeCentreObject = accessory.Data.Me;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
             }
     }
@@ -301,6 +319,8 @@ public class PVPAction
                     dp.Owner = @event.SourceId();
                     dp.Scale = new Vector2(5f);
                     dp.DestoryAt = 5000;
+                    dp.FadeDistance = 40f;
+                    dp.FadeCentreObject = accessory.Data.Me;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
 
                     var dp1 = accessory.Data.GetDefaultDrawProperties();
@@ -309,6 +329,8 @@ public class PVPAction
                     dp1.Owner = @event.SourceId();
                     dp1.Scale = new Vector2(10f);
                     dp1.DestoryAt = 5000;
+                    dp1.FadeDistance = 50f;
+                    dp1.FadeCentreObject = accessory.Data.Me;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
                     
                     var dp2 = accessory.Data.GetDefaultDrawProperties();
@@ -319,6 +341,8 @@ public class PVPAction
                     dp2.InnerScale = new Vector2(4.94f);
                     dp2.Radian = float.Pi * 2;
                     dp2.DestoryAt = 5000;
+                    dp2.FadeDistance = 40f;
+                    dp2.FadeCentreObject = accessory.Data.Me;
                     accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp2);
                 }
             }
@@ -384,6 +408,8 @@ public class PVPAction
             dp.ScaleMode |= ScaleMode.YByDistance;
             dp.Scale = new(1);
             dp.DestoryAt = 500;
+            dp.FadeDistance = 50f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
         }
     }
@@ -399,7 +425,6 @@ public class PVPAction
         }
     }
     
-
     [ScriptMethod(name: "小队中庸之道绘制销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:3118"],userControl: false)]
     public void 小队中庸之道绘制销毁(Event @event, ScriptAccessory accessory)
     {
@@ -409,7 +434,6 @@ public class PVPAction
             accessory.Method.RemoveDraw($"小队中庸之道(A|B){@event.SourceId()}");
         }
     }
-
 
     [ScriptMethod(name: "敌方中庸之道绘制", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^2926[67]"])]
     public void MesotesEnmity(Event @event, ScriptAccessory accessory)
@@ -505,7 +529,7 @@ public class PVPAction
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"小队象式浮空炮塔{@event.SourceId()}";
-            dp.Color = accessory.Data.DefaultSafeColor.WithW(0.6f);
+            dp.Color = accessory.Data.DefaultSafeColor.WithW(0.25f);
             dp.Position = @event.EffectPosition();
             dp.Scale = new Vector2(5f);
             dp.DestoryAt = 10000;
@@ -530,7 +554,7 @@ public class PVPAction
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"敌方象式浮空炮塔{@event.SourceId()}";
-            dp.Color = new Vector4(1f, 0f, 0f, 0.6f);
+            dp.Color = new Vector4(1f, 0f, 0f, 0.25f);
             dp.Position = @event.EffectPosition();
             dp.Scale = new Vector2(5f);
             dp.DestoryAt = 10000;
@@ -690,7 +714,7 @@ public class PVPAction
     [ScriptMethod(name: "敌方圣盾阵范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3026"])]
     public void HolySheltronEnmity(Event @event, ScriptAccessory accessory)
     {
-        // if (isOnlyMark) return; // 没开启仅标记选项，绘制对方全部
+         // if (isOnlyMark) return; // 没开启仅标记选项，绘制对方全部
             var obj = IbcHelper.GetById(accessory, @event.SourceId);
             if (obj == null || !obj.IsValid()) return;
             if (obj == accessory.Data.MyObject) return;
@@ -703,6 +727,8 @@ public class PVPAction
                 dp.Owner = @event.SourceId();
                 dp.Scale = new Vector2(6f);
                 dp.DestoryAt = 4000;
+                dp.FadeDistance = 50f;
+                dp.FadeCentreObject = accessory.Data.Me;
                 accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
             }
     }
@@ -754,7 +780,7 @@ public class PVPAction
    [ScriptMethod(name: "自身蛇鳞击", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^409[78]$"])]
     public void ArmoredScales_Backlash_Self(Event @event, ScriptAccessory accessory)
     {
-        // StatusID: 4096 蛇鳞 ; 4097 蛇鳞甲 ; 4098 蛇血
+        // StatusID: 4096 蛇鳞 ; 4097 蛇鳞甲 ; 4098 蛇血 , 蛇鳞为减伤与免控buff，蛇鳞甲为血盾，蛇血为破盾后的蛇鳞击技能加成
         if (@event.TargetId() != accessory.Data.Me) return; 
         switch (@event.StatusID())
         {
@@ -794,6 +820,13 @@ public class PVPAction
         accessory.Method.RemoveDraw($".*蛇鳞击Self");
     }
     
+    [ScriptMethod(name: "蛇血销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:regex:^4098$"],userControl: false)]
+    public void ArmoredScales_SnakesBane_RemoveSelf(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw($".*蛇鳞击Self");
+    }
+    
     [ScriptMethod(name: "敌方蛇鳞击范围绘制", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^409[78]$"])]
     public void ArmoredScales_Backlash_Enmity(Event @event, ScriptAccessory accessory)
     {
@@ -809,19 +842,23 @@ public class PVPAction
                     case 4097:
                         var dp = accessory.Data.GetDefaultDrawProperties();
                         dp.Name = $"蛇鳞击敌方{@event.SourceId}";
-                        dp.Color = new Vector4(1f, 0f, 0f, 0.55f);
+                        dp.Color = new Vector4(1f, 0f, 0f, 0.5f);
                         dp.Owner = @event.SourceId();
                         dp.Scale = new Vector2(6f);
                         dp.DestoryAt = 4000;
+                        dp.FadeDistance = 30f;
+                        dp.FadeCentreObject = accessory.Data.Me;
                         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
                         break;
                     case 4098:
                         var dp1 = accessory.Data.GetDefaultDrawProperties();
                         dp1.Name = $"血气蛇鳞击敌方{@event.SourceId}";
-                        dp1.Color = new Vector4(1f, 0f, 0f, 0.35f);
+                        dp1.Color = new Vector4(1f, 0f, 0f, 0.3f);
                         dp1.Owner = @event.SourceId();
                         dp1.Scale = new Vector2(15f);
-                        dp1.DestoryAt = 4000;
+                        dp1.DestoryAt = 4000;     
+                        dp1.FadeDistance = 40f;
+                        dp1.FadeCentreObject = accessory.Data.Me;
                         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp1);
                         break;
                 }
@@ -838,6 +875,12 @@ public class PVPAction
     public void ArmoredScales_Backlash_RemoveEnmity(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($".*蛇鳞击敌方{@event.SourceId()}");
+    }
+    
+    [ScriptMethod(name: "敌方蛇血销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:regex:^4098$"],userControl: false)]
+    public void ArmoredScales_SnakesBane_RemoveEnmity(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*蛇鳞击敌方{@event.TargetId()}");
     }
 
     #endregion
@@ -864,6 +907,8 @@ public class PVPAction
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(15f);
             dp.DestoryAt = EnmityAOETimer;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
     }
@@ -893,6 +938,8 @@ public class PVPAction
             dp.Owner = @event.SourceId();
             dp.Scale = new Vector2(30f);
             dp.DestoryAt = EnmityAOETimer;
+            dp.FadeDistance = 60f;
+            dp.FadeCentreObject = accessory.Data.Me;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         }
     }
@@ -942,6 +989,21 @@ public class PVPAction
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
         accessory.Method.RemoveDraw($"行列舞预测.*");
+    }
+    
+    [ScriptMethod(name: "敌方舞者行列舞范围Omen", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^29432$"],suppress:5500)]
+    public void 敌方舞者行列舞范围Omen(Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null || !obj.IsValid()) return;
+        if (obj == accessory.Data.MyObject) return;
+
+        if (!PartyFilter(accessory, obj))
+        {
+            IntPtr ContradanceomenHandle = accessory.Method.VfxMethod.CreateOmen(528, new Vector3(15f), // Omen 590 是边缘吸入Omen
+                @event.TargetPosition(), @event.SourceRotation(), new Vector4(1f,0f,0f,1f), 2000);
+            accessory.Method.VfxMethod.SetVfxSpeed(ContradanceomenHandle,1.5f);
+        }
     }
 
     #endregion

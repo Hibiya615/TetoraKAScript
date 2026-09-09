@@ -24,19 +24,20 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 
 namespace NewDuty;
 
-[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346],
-    version: "0.0.1.5", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
+    version: "0.0.1.6", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
  * 1346：新月岛北征
+ * 1339~1343 斗兽奇弈
  */
 
 public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.1.5:
+        v0.0.1.6:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -78,6 +79,132 @@ public class NewDuty
     {
         accessory.Method.RemoveDraw($".*{@event.TargetId()}");
     }
+    
+    #endregion
+    
+    #region 斗兽奇弈
+    
+    [ScriptMethod(name: "—————— 斗兽奇弈 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 斗兽奇弈(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "奇子·主教_死亡螺旋（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46868$"])]
+    public void 主教_死亡螺旋(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"靠近主教月环", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"靠近主教月环");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近主教月环");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"死亡螺旋{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.InnerScale = new Vector2(4f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·骑士_骨化（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46871$"])]
+    public void 骑士_骨化(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"打断骑士伤害提高（控制或借用-咒具碎魂）", duration: 7000, false);
+        if (isTTS)accessory.Method.TTS($"打断骑士");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"打断骑士");
+    }
+    
+    [ScriptMethod(name: "奇子·骑士_物理伤害提高（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2074$","TargetName:regex:^奇子·骑士$"])]
+    public void 骑士_物理伤害提高(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"驱散骑士（借用-水栖波）", duration: 5000, false);
+        if (isTTS)accessory.Method.TTS($"驱散骑士");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"驱散骑士");
+    }
+    
+    [ScriptMethod(name: "奇子·主教_古代疾风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46870$"])]
+    public void 主教_古代疾风(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"古代疾风{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (8f, 40f);
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "奇子·骑士_前线护卫（魔兽吸引注意提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46864$"])]
+    public void 骑士_前线护卫(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"使用魔兽技 [吸引注意]", duration: 4000, true);
+        if (isTTS)accessory.Method.TTS($"使用魔兽吸引注意");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"使用魔兽吸引注意");
+    }
+    
+    [ScriptMethod(name: "奇子·骑士_古墓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46866$"])]
+    public void 骑士_古墓(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"远离骑士");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"远离骑士");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"古墓{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "魅惑女妖 帕德索_血雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46926$"])]
+    public void 帕德索_血雨钢铁(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"远离", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"远离");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"远离");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"血雨钢铁{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "魅惑女妖 帕德索_血雨（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46924$"])]
+    public void 帕德索_血雨(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"靠近月环", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"靠近月环");
+        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近月环");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"血雨月环{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.InnerScale = new Vector2(8f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "魅惑女妖 帕德索_虚空烈风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46932$"])]
+    public void 帕德索_虚空烈风(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"虚空烈风{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (8f, 60f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    // 46935 寒毒接触 上毒
+    // 46928 奇子·梦魔法师 > BOSS 盲信（伤害提高 1225
+    // 46936 欺瞒雾 附加噩梦？ 召唤两个连线爱心[信息素 DataId:19347] 随后释放 24m钢铁[46938 碎裂]
     
     #endregion
     
@@ -911,7 +1038,6 @@ public class NewDuty
     
     
     #endregion
-
     
     #region  7.4 格莱杨拉波尔歼灭战
     
