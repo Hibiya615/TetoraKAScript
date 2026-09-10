@@ -404,6 +404,8 @@ public class NewDuty
         }
     }
     
+    /*
+    
     [ScriptMethod(name: "奇子·曼提克_猛冲重锤（冲锋左右刀）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2056|2193)$"],suppress:9700)]
     public void 曼提克_猛冲重锤(Event @event, ScriptAccessory accessory)
     {
@@ -435,6 +437,8 @@ public class NewDuty
         dp1.DestoryAt = 2000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
     }
+    
+    */
     
     [ScriptMethod(name: "奇子·双足飞龙_台风（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48168$"])]
     public void 双足飞龙_台风(Event @event, ScriptAccessory accessory)
