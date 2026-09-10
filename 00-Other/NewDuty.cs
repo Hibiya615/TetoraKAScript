@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.1.8", author: "Tetora", note: noteStr)]
+    version: "0.0.1.9", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -37,7 +37,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.1.8:
+        v0.0.1.9:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -108,9 +108,10 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"打断骑士");
     }
     
-    [ScriptMethod(name: "奇子·骑士_物理伤害提高（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2074$","TargetName:regex:^奇子·骑士$"])]
+    [ScriptMethod(name: "奇子·骑士_物理伤害提高（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2074$"])]
     public void 骑士_物理伤害提高(Event @event, ScriptAccessory accessory)
     {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1339) return;
         if (isText)accessory.Method.TextInfo($"驱散骑士（借用-水栖波）", duration: 5000, false);
         if (isTTS)accessory.Method.TTS($"驱散骑士");
     }
@@ -173,6 +174,38 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
+    [ScriptMethod(name: "奇子·夺灵魔_澄澈之心（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^1225$"])]
+    public void 夺灵魔_澄澈之心(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1339) return;
+        if (isText)accessory.Method.TextInfo($"驱散伤害提高（借用-水栖波）", duration: 5000, false);
+        if (isTTS)accessory.Method.TTS($"驱散");
+    }
+    
+    [ScriptMethod(name: "奇子·夺灵魔_魔力冲击（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46899$"])]
+    public void 夺灵魔_魔力冲击(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"驱散伤害提高（借用-水栖波）", duration: 7000, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "奇子·夺灵魔_虚空暴风（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46897$"])]
+    public void 夺灵魔_虚空暴风(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"靠近月环", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"靠近月环");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"虚空暴风{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.InnerScale = new Vector2(5f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
     [ScriptMethod(name: "奇子·祸蛛蝎_地面隆起（地震钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46902$"])]
     public void 祸蛛蝎_地面隆起(Event @event, ScriptAccessory accessory)
     {
@@ -184,6 +217,22 @@ public class NewDuty
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·夺灵魔_虚无耀星（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46895$"])]
+    public void 夺灵魔_虚无耀星(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"远离核爆", duration: 5000, false);
+        if (isTTS)accessory.Method.TTS($"远离核爆");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"虚无耀星{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f);
+        dp.DestoryAt = 5700;
+        dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -205,7 +254,7 @@ public class NewDuty
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(40f);
         dp.Radian = 120f.DegToRad(); 
-        dp.DestoryAt = @event.ActionId() == 49688 ? 5700 : 9000;
+        dp.DestoryAt = @event.ActionId() == 46912 ? 5700 : 9000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
