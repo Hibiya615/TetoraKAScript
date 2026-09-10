@@ -387,14 +387,14 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·曼提克_猛冲重锤（连续冲锋+左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^481(28|32|34)$"])]
-    public void 曼提克_猛冲重锤(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "奇子·曼提克_狂野冲锋（连续冲锋）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48128$"])]
+    public void 曼提克_狂野冲锋(Event @event, ScriptAccessory accessory)
     {
         if (@event.ActionId == 48128)
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = $"狂野冲锋{@event.SourceId}";
-            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
             dp.Owner = @event.SourceId();
             dp.TargetPosition = @event.EffectPosition;
             dp.ScaleMode = ScaleMode.YByDistance;
@@ -402,30 +402,38 @@ public class NewDuty
             dp.DestoryAt = 8800;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
         }
-        else if (@event.ActionId == 48132) // 待优化
-        {
-            var dp = accessory.Data.GetDefaultDrawProperties();
-            dp.Name = $"臂锤_右{@event.SourceId}";
-            dp.Color = accessory.Data.DefaultDangerColor;
-            dp.Owner = @event.SourceId();
-            dp.Scale = new Vector2(30);
-            dp.Radian = 180f.DegToRad(); 
-            dp.Rotation = 270f.DegToRad();
-            dp.DestoryAt = 300;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
-        }
-        else if (@event.ActionId == 48134)
-        {
-            var dp1 = accessory.Data.GetDefaultDrawProperties();
-            dp1.Name = $"臂锤_左{@event.SourceId}";
-            dp1.Color = accessory.Data.DefaultDangerColor;
-            dp1.Owner = @event.SourceId();
-            dp1.Scale = new Vector2(30f);
-            dp1.Radian = 180f.DegToRad(); 
-            dp1.Rotation = 90f.DegToRad();
-            dp1.DestoryAt = 300;
-            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
-        }
+    }
+    
+    [ScriptMethod(name: "奇子·曼提克_猛冲重锤（冲锋左右刀）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2056|2193)$"],suppress:9700)]
+    public void 曼提克_猛冲重锤(Event @event, ScriptAccessory accessory)
+    {
+        var isR = @event.StatusId == 2056; // Param分别为: 2056:1044 ; 2193:1043
+        // 右刀 ActionId 48132, 左刀 48134, 固定为反方向二连
+        
+        if (isText) accessory.Method.TextInfo (isR? $"最后：左 > 右" : "最后：右 > 左", duration: 20300, true);
+        if (isTTS) accessory.Method.TTS (isR? $"最后：左穿右" : "最后：右穿左");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = isR ? $"臂锤_右{@event.SourceId}" : $"臂锤_左{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(30f);
+        dp.Radian = 180f.DegToRad(); 
+        dp.Rotation = isR ? 270f.DegToRad() : 90f.DegToRad();
+        dp.Delay = 16600;
+        dp.DestoryAt = 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = isR ? $"臂锤_左{@event.SourceId}" : $"臂锤_右{@event.SourceId}";
+        dp1.Color = accessory.Data.DefaultDangerColor;
+        dp1.Owner = @event.TargetId();
+        dp1.Scale = new Vector2(30f);
+        dp1.Radian = 180f.DegToRad(); 
+        dp1.Rotation = isR ? 90f.DegToRad() : 270f.DegToRad();
+        dp1.Delay = 18600;
+        dp1.DestoryAt = 2000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
     }
     
     [ScriptMethod(name: "奇子·双足飞龙_台风（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48168$"])]
@@ -531,6 +539,24 @@ public class NewDuty
                 break;
         }
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+
+    [ScriptMethod(name: "奇子·牛头魔_暗黑射线（点名放球）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^00EA$"])]
+    public void 牛头魔_暗黑射线(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() == 1340 && @event.TargetId() == accessory.Data.Me)
+        {
+            // if (isText)accessory.Method.TextInfo($"放球点名", duration: 4000, true);
+            if (isTTS) accessory.Method.TTS($"放球点名");
+
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"暗黑射线{@event.SourceId}";
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+            dp.Owner = @event.TargetId();
+            dp.Scale = new Vector2(6f);
+            dp.DestoryAt = 6000;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
     }
     
     [ScriptMethod(name: "奇子·牛头魔_以太波（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48150$"])]
