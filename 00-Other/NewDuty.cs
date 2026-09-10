@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.1.6", author: "Tetora", note: noteStr)]
+    version: "0.0.1.7", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -37,18 +37,15 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.1.6:
+        v0.0.1.7:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
     
     #region 用户控制
 
-    [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -92,7 +89,6 @@ public class NewDuty
     {
         // if (isText)accessory.Method.TextInfo($"靠近主教月环", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"靠近主教月环");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近主教月环");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"死亡螺旋{@event.SourceId}";
@@ -110,7 +106,6 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"打断骑士伤害提高（控制或借用-咒具碎魂）", duration: 7000, false);
         if (isTTS)accessory.Method.TTS($"打断骑士");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"打断骑士");
     }
     
     [ScriptMethod(name: "奇子·骑士_物理伤害提高（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2074$","TargetName:regex:^奇子·骑士$"])]
@@ -118,7 +113,6 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"驱散骑士（借用-水栖波）", duration: 5000, false);
         if (isTTS)accessory.Method.TTS($"驱散骑士");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"驱散骑士");
     }
     
     [ScriptMethod(name: "奇子·主教_古代疾风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46870$"])]
@@ -138,14 +132,12 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"使用魔兽技 [吸引注意]", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"使用魔兽吸引注意");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"使用魔兽吸引注意");
     }
     
     [ScriptMethod(name: "奇子·骑士_古墓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46866$"])]
     public void 骑士_古墓(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"远离骑士");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"远离骑士");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"古墓{@event.SourceId}";
@@ -156,12 +148,79 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "奇子·上级恶魔_深渊贯穿（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4688(2|4)$"])]
+    public void 上级恶魔_深渊贯穿(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"深渊贯穿{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = @event.ActionId() == 46882 ? new Vector2(6f) : new Vector2(3f);
+        dp.DestoryAt = @event.ActionId() == 46882 ? 3400 : 3200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·上级恶魔_深渊回转（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46886$"])]
+    public void 上级恶魔_深渊回转 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"深渊回转{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 180f.DegToRad(); 
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·祸蛛蝎_地面隆起（地震钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46902$"])]
+    public void 祸蛛蝎_地面隆起(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"扩散地震");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"地面隆起{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·祸蛛蝎_毒蛛网（九连环TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46907$"])]
+    public void 祸蛛蝎_毒蛛网(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"九连环", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS($"九连环");
+    }
+    
+    [ScriptMethod(name: "奇子·食人魔_燃烧猛击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(46912|49688)$"])]
+    public void 食人魔_燃烧猛击 (Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS & @event.ActionId() == 49688) accessory.Method.TTS($"去对侧");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"燃烧猛击{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = @event.ActionId() == 49688 ? 5700 : 9000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·食人魔_火球生成（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46921$"])]
+    public void 食人魔_火球生成(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"躲避连线火球", duration: 3000, true);
+        if (isTTS)accessory.Method.TTS($"躲避连线火球");
+    }
+    
     [ScriptMethod(name: "魅惑女妖 帕德索_血雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46926$"])]
     public void 帕德索_血雨钢铁(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"远离", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"远离");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"远离");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"血雨钢铁{@event.SourceId}";
@@ -177,7 +236,6 @@ public class NewDuty
     {
         // if (isText)accessory.Method.TextInfo($"靠近月环", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"靠近月环");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近月环");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"血雨月环{@event.SourceId}";
@@ -940,7 +998,6 @@ public class NewDuty
     public void 天降(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"远离");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"远离");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"天降";
@@ -956,7 +1013,6 @@ public class NewDuty
     public void 诱拐魔_旋风环(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"靠近");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"靠近");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"诱拐魔_旋风环";
@@ -1048,7 +1104,6 @@ public class NewDuty
     public void 雷电爆发(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"双死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"双死刑");
     }
     
     [ScriptMethod(name: "雷光急行 击退提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45618"])]
@@ -1056,7 +1111,6 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"击退", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"击退");
     }
     
     [ScriptMethod(name: "抽雾 吸引提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45625"])]
@@ -1064,7 +1118,6 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"吸引", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"吸引");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"吸引");
     }
     
     [ScriptMethod(name: "抽雾 吸引（吸引预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45625"])]
@@ -1104,7 +1157,6 @@ public class NewDuty
     public void 无控急行(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"AOE");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
     }
     
     /* 无法判断高低VFX
@@ -1157,7 +1209,6 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"下安全", duration: 6000, false);
         if (isTTS)accessory.Method.TTS($"下下下");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"下下下");
     }
     
     /* 无法判断VFX高低
@@ -1179,7 +1230,6 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"上安全", duration: 6000, true);
         if (isTTS)accessory.Method.TTS($"上上上");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"上上上");
     }
     
     [ScriptMethod(name: "雷光雨（魔法阵钢铁最终位置）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:45659"])]
