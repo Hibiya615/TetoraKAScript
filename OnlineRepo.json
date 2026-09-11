@@ -972,8 +972,8 @@
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/NewDuty.cs",
-    "Note": "v0.0.1.9:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
-    "UpdateInfo": "0.0.1.9: 添加斗兽奇弈部分绘制，修复部分绘制错误",
+    "Note": "v0.0.2.0:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
+    "UpdateInfo": "0.0.2.0: 添加斗兽奇弈部分绘制",
     "TerritoryIds": [
       1307,
       1346, 

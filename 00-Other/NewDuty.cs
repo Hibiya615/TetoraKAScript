@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.1.9", author: "Tetora", note: noteStr)]
+    version: "0.0.2.0", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -37,7 +37,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.1.9:
+        v0.0.2.0:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -79,7 +79,20 @@ public class NewDuty
     
     #endregion
     
+    uint WildSpeed = 0;
+    
+    public void Init(ScriptAccessory accessory) {
+        WildSpeed = 0; // 曼提克-猛冲重锤
+    }
+    
     #region 斗兽奇弈
+    
+    [ScriptMethod(name: "百虫肤防击退销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^4620$"],userControl: false)]
+    public void 百虫肤防击退销毁(Event @event, ScriptAccessory accessory)
+    {
+        if ( @event.TargetId() != accessory.Data.Me) return; 
+        accessory.Method.RemoveDraw(".*击退.*");
+    }
     
     [ScriptMethod(name: "—————— 斗兽奇弈 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 斗兽奇弈(Event @event, ScriptAccessory accessory) { }
@@ -313,6 +326,8 @@ public class NewDuty
     // 46928 奇子·梦魔法师 > BOSS 盲信（伤害提高 1225
     // 46936 欺瞒雾 附加噩梦？ 召唤两个连线爱心[信息素 DataId:19347] 随后释放 24m钢铁[46938 碎裂]
     
+    // 第二盘
+    
     [ScriptMethod(name: "奇子·曼提克_臂锤（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4812(3|5)$"])]
     public void 曼提克_臂锤(Event @event, ScriptAccessory accessory)
     {
@@ -451,15 +466,17 @@ public class NewDuty
             dp.DestoryAt = 8800;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
         }
+
+        WildSpeed = 1;
     }
-    
-    /*
     
     [ScriptMethod(name: "奇子·曼提克_猛冲重锤（冲锋左右刀）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2056|2193)$"],suppress:9700)]
     public void 曼提克_猛冲重锤(Event @event, ScriptAccessory accessory)
     {
         var isR = @event.StatusId == 2056; // Param分别为: 2056:1044 ; 2193:1043
         // 右刀 ActionId 48132, 左刀 48134, 固定为反方向二连
+        
+        if (WildSpeed != 1) return;
         
         if (isText) accessory.Method.TextInfo (isR? $"最后：左 > 右" : "最后：右 > 左", duration: 20300, true);
         if (isTTS) accessory.Method.TTS (isR? $"最后：左穿右" : "最后：右穿左");
@@ -485,9 +502,9 @@ public class NewDuty
         dp1.Delay = 18600;
         dp1.DestoryAt = 2000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp1);
+
+        WildSpeed = 0;
     }
-    
-    */
     
     [ScriptMethod(name: "奇子·双足飞龙_台风（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48168$"])]
     public void 双足飞龙_台风(Event @event, ScriptAccessory accessory)
@@ -625,6 +642,19 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
+    [ScriptMethod(name: "奇子·虚灵法师_死亡驱动（地板圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48182$"])]
+    public void 虚灵法师_死亡驱动(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"死亡驱动{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+        dp.Position = @event.EffectPosition;
+        dp.Scale = new Vector2(10f);
+        dp.DestoryAt = 3700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "奇子·虚灵法师_暗天球（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48186$"])]
     public void 虚灵法师_暗天球(Event @event, ScriptAccessory accessory)
     {
@@ -750,6 +780,115 @@ public class NewDuty
         if (isText)accessory.Method.TextInfo($"[软狂暴] 大AOE伤害", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"大AOE伤害");
     }
+    
+    // 第三盘
+    
+    [ScriptMethod(name: "奇子·游侠骑士_钢铁裂斩（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48473$"])]
+    public void 游侠骑士_钢铁裂斩 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"钢铁裂斩{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 130f.DegToRad(); 
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·游侠骑士的幻影_收割者的恐吓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48464$"])]
+    public void 游侠骑士的幻影_收割者的恐吓(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"收割者的恐吓{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(20f);
+        dp.DestoryAt = 5700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"收割者的恐吓描边{@event.SourceId}";
+        dp1.Color = new Vector4(1f, 1f, 0f, 10f);
+        dp1.Scale = new(20f);
+        dp1.InnerScale = new(19.95f);
+        dp1.Radian = float.Pi * 2;
+        dp1.Owner = @event.SourceId();
+        dp1.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+    }
+    
+    [ScriptMethod(name: "奇子·游侠骑士的幻影_残杀（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48462$"])]
+    public void 游侠骑士的幻影_残杀(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"残杀{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (8f, 60f);
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "奇子·游侠骑士_粉碎剑（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48471$"])]
+    public void 游侠骑士_粉碎剑(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"粉碎剑击退预测{@event.SourceId}";
+        dp.Scale = new(1f, 15);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Rotation = float.Pi;
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·鱼人_麻痹尖刺（反击提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50532$"])]
+    public void 鱼人_麻痹尖刺(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"停止攻击 <鱼人> 或准备水栖波驱散反伤", duration: 6000, true);
+        if (isTTS)accessory.Method.TTS($"停止攻击鱼人");
+    }
+    
+    [ScriptMethod(name: "奇子·鱼人_恐慌洗礼（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48485$"])]
+    public void 鱼人_恐慌洗礼(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"使用 <咒具碎魂> 打断鱼人", duration: 7000, true);
+        if (isTTS)accessory.Method.TTS($"打断鱼人");
+    }
+    
+    [ScriptMethod(name: "奇子·鱼人_大海啸（击退安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48481$"])]
+    public void 鱼人_大海啸(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"大海啸击退安全区{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (40f, 7f); // 击退距离为35m，场地宽40m，电网2m
+        dp.DestoryAt = 8000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "奇子·尤弥尔_万雷（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48479$"])]
+    public void 提示(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 4000, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "奇子·卡托布莱帕斯_魔兽咆哮（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48504$"])]
+    public void 卡托布莱帕斯_魔兽咆哮(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"AOE", duration: 2000, false);
+        if (isTTS)accessory.Method.TTS($"AOE");
+    }
+    
+    // 钢铁球 DataId 19612, 读条48506 ; 月环球 DataId 19613 , 读条48508。 钢铁+月环22飞的情况按开始飞动顺序沿固定直线飞行到场边后释放
+    // 魔眼移植 StatusID 2056 , Param 174; 带背对的情况固定一个个轮流来
+    // [Tether 00C3] [VFX Channeling 195] vfx/channeling/eff/chn_ice_mouth01x.avfx / vfx/common/eff/mon_status01et.avfx
+    
     
     #endregion
     
