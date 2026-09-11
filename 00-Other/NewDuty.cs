@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.2.1", author: "Tetora", note: noteStr)]
+    version: "0.0.2.2", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -37,7 +37,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.2.1:
+        v0.0.2.2:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -959,7 +959,7 @@ public class NewDuty
     [ScriptMethod(name: "奇子·鱼人_麻痹尖刺（反击提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50532$"])]
     public void 鱼人_麻痹尖刺(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"停止攻击 <鱼人> 或准备水栖波驱散反伤", duration: 6000, true);
+        if (isText)accessory.Method.TextInfo($"停止攻击 <鱼人>", duration: 6000, true);
         if (isTTS)accessory.Method.TTS($"停止攻击鱼人");
     }
     
@@ -1000,6 +1000,43 @@ public class NewDuty
     // 魔眼移植 StatusID 2056 , Param 174; 带背对的情况固定一个个轮流来
     // [Tether 00C3] [VFX Channeling 195] vfx/channeling/eff/chn_ice_mouth01x.avfx / vfx/common/eff/mon_status01et.avfx
     
+    [ScriptMethod(name: "奇子·祖_十字风（指路）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48491$"])]
+    public void 祖_十字风(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"十字风指路{@event.SourceId}";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetPosition = new Vector3(120f, 0f, -420f);
+        dp.Scale = new(0.5f);
+        dp.DestoryAt = 10000;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·巨像_岩石崩溃（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48555$"])]
+    public void 巨像_岩石崩溃(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"岩石崩溃{@event.SourceId}";
+        dp.Color = new Vector4(1f, 0f, 0f, 2f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (10f, 45f);
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "沙球_爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48562$"])]
+    public void 沙球_爆炸(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"沙球_爆炸{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
     
     #endregion
     
