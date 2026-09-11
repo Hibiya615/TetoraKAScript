@@ -25,7 +25,7 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制", territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.2.0", author: "Tetora", note: noteStr)]
+    version: "0.0.2.1", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -37,7 +37,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.2.0:
+        v0.0.2.1:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -233,6 +233,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
+    [ScriptMethod(name: "奇子·祸蛛蝎_致命尾刺（带毒死刑TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46906$"])]
+    public void 祸蛛蝎_致命尾刺(Event @event, ScriptAccessory accessory)
+    {
+        // 回头得再看看毒耐的StatusID!
+        if (isText)accessory.Method.TextInfo($"带毒死刑，可用 <死尸净化> 驱散", duration: 4000, false);
+        if (isTTS)accessory.Method.TTS($"带毒死刑");
+    }
+    
+    [ScriptMethod(name: "奇子·夺灵魔_虚空冰封（步进地火TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46887$"])]
+    public void 夺灵魔_虚空冰封(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"步进地火，二穿一", duration: 2000, true);
+        if (isTTS)accessory.Method.TTS($"准备穿地火");
+    }
+    
     [ScriptMethod(name: "奇子·夺灵魔_虚无耀星（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46895$"])]
     public void 夺灵魔_虚无耀星(Event @event, ScriptAccessory accessory)
     {
@@ -276,6 +291,30 @@ public class NewDuty
     {
         if (isText)accessory.Method.TextInfo($"躲避连线火球", duration: 3000, true);
         if (isTTS)accessory.Method.TTS($"躲避连线火球");
+    } 
+    
+    [ScriptMethod(name: "奇子·食人魔_火球（追踪钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19343$"])]
+    public void 食人魔_火球(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"火球延烧{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(10f);
+        dp.DestoryAt = 30000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    } 
+    
+    [ScriptMethod(name: "火球延烧触发销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^46922$"],userControl: false)]
+    public void 火球延烧销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"火球延烧.*");
+    }
+    
+    [ScriptMethod(name: "火球消失销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^19343$"],userControl: false)]
+    public void 火球消失销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"火球延烧.*");
     }
     
     [ScriptMethod(name: "魅惑女妖 帕德索_血雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46926$"])]
@@ -322,8 +361,22 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    // 46935 寒毒接触 上毒
-    // 46928 奇子·梦魔法师 > BOSS 盲信（伤害提高 1225
+    [ScriptMethod(name: "魅惑女妖 帕德索_寒毒接触（带毒死刑TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46935$"])]
+    public void 帕德索_寒毒接触(Event @event, ScriptAccessory accessory)
+    {
+        // 回头得再看看毒耐的StatusID!
+        if (isText)accessory.Method.TextInfo($"带毒死刑，可用 <死尸净化> 驱散", duration: 4000, false);
+        if (isTTS)accessory.Method.TTS($"带毒死刑");
+    }
+    
+    [ScriptMethod(name: "奇子·梦魔法师_盲信（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46928$"])]
+    public void 梦魔法师_盲信(Event @event, ScriptAccessory accessory)
+    {
+        // 赋予BOSS 伤害提高 StatusID 1225
+        if (isText)accessory.Method.TextInfo($"打断 <梦魔法师> 伤害提高（借用-咒具碎魂）", duration: 5000, false);
+        if (isTTS)accessory.Method.TTS($"打断梦魔法师");
+    }
+    
     // 46936 欺瞒雾 附加噩梦？ 召唤两个连线爱心[信息素 DataId:19347] 随后释放 24m钢铁[46938 碎裂]
     
     // 第二盘
@@ -708,7 +761,65 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    // 48206 无尽回转 哞哞——！兄弟同心！ 是一起释放钢铁？ 压掉了不确定再看看.jpg
+    [ScriptMethod(name: "奇子·牛魔兄弟_十吨重踏 冲击波（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48(199|202)$"])]
+    public void 牛魔兄弟_十吨重踏_冲击波(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = @event.ActionId == 48199 ? $"冲击波击退Fast{@event.SourceId}" : $"冲击波击退Slow{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(4f);
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Rotation = float.Pi;
+        dp.Scale = new Vector2(1f, 20f);
+        dp.Delay = @event.ActionId == 48199 ? 0 : 6700;
+        dp.DestoryAt = @event.ActionId == 48199 ? 6700 : 3500;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+
+        if (@event.ActionId == 48199) 
+        {        
+            IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(203, new Vector3(60f),
+                @event.SourcePosition(), @event.SourceRotation(), new Vector4(1f,1f,0f,0.4f), 6700);
+            accessory.Method.VfxMethod.SetVfxSpeed(omenHandle,1f);
+        }
+
+    }
+    
+    [ScriptMethod(name: "奇子·牛魔老弟_声援（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48203$"])]
+    public void 牛魔老弟_声援(Event @event, ScriptAccessory accessory)
+    {
+        // 伤害提高 StatusID 1225
+        if (isText)accessory.Method.TextInfo($"打断 <牛魔老弟> 伤害提高（借用-咒具碎魂）", duration: 6000, false);
+        if (isTTS)accessory.Method.TTS($"打断牛魔老弟");
+    }
+
+    [ScriptMethod(name: "奇子·牛魔老哥_百吨挥打（直线死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48204$"])]
+    public void 牛魔老哥_百吨挥打(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"百吨挥打{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.TargetObject = @event.TargetId;
+        dp.Scale = new (8f, 65f);
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    // 48206 无尽回转 读条完变成不可选中状态，持续追踪玩家释放8m钢铁 48207
+    // 48210 无尽横扫 持续顺/逆时针顺劈 组合技，共约24.7s，转向后会有0.2s的读条，需要提前判断顺逆时针绘制，目前仅为模板
+    
+    [ScriptMethod(name: "奇子·牛魔老弟_无尽横扫（大风车）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48210$"])]
+    public void 牛魔老弟_无尽横扫 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"无尽横扫{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 60f.DegToRad(); 
+        dp.DestoryAt = 24700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
     
     [ScriptMethod(name: "奇子·牛魔兄弟_无尽挥打（软狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48214$"])]
     public void 牛魔兄弟_无尽挥打(Event @event, ScriptAccessory accessory)
