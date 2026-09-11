@@ -181,7 +181,7 @@ public class PVPAction
         if (@event.TargetId() != accessory.Data.Me) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "冲天Self内圈";
-        dp.Color = new Vector4(0f, 1f, 1f, 0.8f);
+        dp.Color = new Vector4(0f, 1f, 1f, 0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(5f);
         dp.DestoryAt = 5000;
@@ -189,7 +189,7 @@ public class PVPAction
         
         var dp1 = accessory.Data.GetDefaultDrawProperties();
         dp1.Name = "冲天Self外圈";
-        dp1.Color = new Vector4(0f, 1f, 1f, 0.8f);
+        dp1.Color = new Vector4(0f, 1f, 1f, 0.6f);
         dp1.Owner = @event.SourceId();
         dp1.Scale = new Vector2(10f);
         dp1.DestoryAt = 5000;
