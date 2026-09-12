@@ -39,11 +39,8 @@ public class Bozja
     
     #region 用户控制
 
-    [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -103,14 +100,12 @@ public class Bozja
     {
         if (isText && @event.TargetId() == accessory.Data.Me) accessory.Method.TextInfo($"坦克死刑点名", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"坦克死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
     }
     
     [ScriptMethod(name: "[高原CE-赫德提特] 碎片打击（分散）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^24086$"])]
     public void 碎片打击(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"分散");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"分散");
     }
     
     private float[] _HailfiredestroyTimes = new float[] { 8.4f, 10.6f, 12.8f, 15.1f }; // 对应冰雹发射每个麻将的销毁时间
@@ -173,7 +168,6 @@ public class Bozja
     {
         if (isText) accessory.Method.TextInfo($"躲在白色水晶后", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"躲在白色水晶后");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"躲在白色水晶后");
         foreach (var item in accessory.Data.Objects.GetByDataId(12749))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
@@ -191,7 +185,6 @@ public class Bozja
     {
         if (isText) accessory.Method.TextInfo($"躲在黄色水晶后", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"躲在黄色水晶后");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"躲在黄色水晶后");
         foreach (var item in accessory.Data.Objects.GetByDataId(12750))
         {
             var dp = accessory.Data.GetDefaultDrawProperties();
@@ -217,6 +210,23 @@ public class Bozja
     }
     
     #endregion
+    
+    #region 高原单挑 - 兽王莱昂
+
+    [ScriptMethod(name: "[高原单挑-兽王莱昂] 炎帝热波冲（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^23865$"])]
+    public void 炎帝热波冲(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "[高原单挑-兽王莱昂] 炎帝热气烧（驱散提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^23864$"])]
+    public void 炎帝热气烧(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"准备驱魔", duration: 3000, true);
+        if (isTTS)accessory.Method.TTS($"准备驱魔");
+    }
+
+    #endregion
 
     #region 48 - 旗舰达尔里阿达号攻略战
 
@@ -227,7 +237,6 @@ public class Bozja
     public void 火动(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"AOE");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
     }
     
     [ScriptMethod(name: "[BOSS1 上_铁胆狱火 萨托瓦尔] 时空地火喷发", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^2417[4-7]$"])]
@@ -277,7 +286,6 @@ public class Bozja
     {
         if (isText && @event.TargetId() == accessory.Data.Me) accessory.Method.TextInfo($"坦克死刑点名", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"坦克死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
     }
 
     [ScriptMethod(name: "[BOSS1 上_铁胆狱火 萨托瓦尔] 曼托瓦之炎（AOE+引导）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^24200$"])]
@@ -285,7 +293,6 @@ public class Bozja
     {
         if (isText)accessory.Method.TextInfo($"AOE，集合诱导", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"AOE，集合诱导");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE，集合诱导");
     }
 
     [ScriptMethod(name: "[BOSS1 上_铁胆狱火 萨托瓦尔] 曼托瓦之炎（钢铁+直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^2420[12]$"])]
@@ -361,14 +368,12 @@ public class Bozja
         {
             if (isText) accessory.Method.TextInfo("散开", duration: 7000, true);
             if (isTTS)accessory.Method.TTS("散开");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("散开");
             dp.Color = accessory.Data.DefaultDangerColor;
         }
         else
         {
             if (isText) accessory.Method.TextInfo("分摊", duration: 7000, false);
             if (isTTS)accessory.Method.TTS("分摊");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("分摊");
             dp.Color = accessory.Data.DefaultSafeColor;
         }
 
@@ -382,7 +387,6 @@ public class Bozja
     public void 污染波(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"AOE");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"AOE");
     }
     
     [ScriptMethod(name: "[BOSS2 丘库雷因] 恐惧波动_移动命令 位置预测", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^216[1-4]$"])]
@@ -402,25 +406,21 @@ public class Bozja
                 dp.Rotation = 0f.DegToRad();
                 if(isText) accessory.Method.TextInfo("强制移动：前", duration: 3000, true);
                 if(isTTS) accessory.Method.TTS("向前移动到安全区");
-                if(isEdgeTTS) accessory.Method.EdgeTTS("向前移动到安全区");
                 break;
             case "2162":
                 dp.Rotation = 180f.DegToRad();
                 if(isText) accessory.Method.TextInfo("强制移动：后", duration: 3000, true);
                 if(isTTS) accessory.Method.TTS("向后移动到安全区");
-                if(isEdgeTTS) accessory.Method.EdgeTTS("向后移动到安全区");
                 break;
             case "2163":
                 dp.Rotation = 90f.DegToRad();
                 if(isText) accessory.Method.TextInfo("强制移动：左", duration: 3000, true);
                 if(isTTS) accessory.Method.TTS("向左移动到安全区");
-                if(isEdgeTTS) accessory.Method.EdgeTTS("向左移动到安全区");
                 break;
             case "2164":
                 dp.Rotation = 270f.DegToRad();
                 if(isText) accessory.Method.TextInfo("强制移动：右", duration: 3000, true);
                 if(isTTS) accessory.Method.TTS("向右移动到安全区");
-                if(isEdgeTTS) accessory.Method.EdgeTTS("向右移动到安全区");
                 break;
         }
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
@@ -431,7 +431,6 @@ public class Bozja
     {
         if (isText)accessory.Method.TextInfo($"进入绿圈", duration: 7000, true);
         if (isTTS)accessory.Method.TTS($"进入绿圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"进入绿圈");
     }
 
     [ScriptMethod(name: "[BOSS2 丘库雷因] 腐朽烧杀（引导黄圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^23686$"])]
@@ -439,7 +438,6 @@ public class Bozja
     {
         // if (isText)accessory.Method.TextInfo($"诱导三连黄圈", duration: 4000, false);
         if (isTTS)accessory.Method.TTS($"诱导三连黄圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"诱导三连黄圈");
     }
     
     [ScriptMethod(name: "[BOSS2 丘库雷因] 魔脉瘤（三穿一）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^23693$"])]
@@ -447,7 +445,6 @@ public class Bozja
     {
         // if (isText)accessory.Method.TextInfo($"三穿一", duration: 4000, false);
         if (isTTS)accessory.Method.TTS($"三穿一");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"三穿一");
     }
     
     [ScriptMethod(name: "[BOSS2 丘库雷因] 重踢击（死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^23698$"])]
@@ -455,7 +452,6 @@ public class Bozja
     {
         if (isText && @event.TargetId() == accessory.Data.Me) accessory.Method.TextInfo($"坦克死刑点名", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"坦克死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"坦克死刑");
     }
     
     [ScriptMethod(name: "[BOSS2 丘库雷因] 丧失波动（AOE+目押）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^24910$"])]
@@ -463,7 +459,6 @@ public class Bozja
     {
         if (isText) accessory.Method.TextInfo($"目押，靠近绿圈", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"目押，靠近绿圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"目押，靠近绿圈");
     }
     
     [ScriptMethod(name: "[BOSS2 丘库雷因] 污浊奔流（大地摇动点名）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^0028$"])]
@@ -472,7 +467,6 @@ public class Bozja
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText) accessory.Method.TextInfo($"大地摇动点名", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"大地摇动点名");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"大地摇动点名");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
 
@@ -576,7 +570,7 @@ public class Bozja
     {
         _jumpCount++;
         
-        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 第{_jumpCount}次跳跃触发，当前记录数：{_objectEffectRecords.Count}");
+        if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 服从第{_jumpCount}次跳跃触发，当前记录数：{_objectEffectRecords.Count}");
         
         // 第一次4|8：立即绘制第一个技能
         if (_jumpCount == 1 && _objectEffectRecords.Count > 0)
