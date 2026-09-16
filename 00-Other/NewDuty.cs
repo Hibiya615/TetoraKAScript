@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.2.7", author: "Tetora", note: noteStr)]
+    version: "0.0.2.8", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.2.7:
+        v0.0.2.8:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -2542,6 +2542,20 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"快躲开");
     }
     
+    [ScriptMethod(name: "魔斧之主 劳妲_支配魔刃（直线预兆）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^0001$"])]
+    public void 劳妲_支配魔刃预兆(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"支配魔刃预兆{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.2f);
+        dp.Owner = @event.SourceId();
+        dp.TargetObject = @event.TargetId;
+        dp.Scale = new (6f,60f);
+        dp.DestoryAt = 5200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
     [ScriptMethod(name: "魔斧之主 劳妲_垂直驱动（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49451$"])]
     public void 劳妲_垂直驱动(Event @event, ScriptAccessory accessory)
     {
@@ -2559,8 +2573,8 @@ public class NewDuty
     [ScriptMethod(name: "魔斧之主 劳妲_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49449$"])]
     public void 劳妲_贪食啮噬(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"去对侧角落（注意击退）", duration: 12600, true);
-        if (isTTS)accessory.Method.TTS($"去对侧角落（注意击退）");
+        if (isText)accessory.Method.TextInfo($"对侧角落安全（注意击退）", duration: 12600, true);
+        if (isTTS)accessory.Method.TTS($"对侧角落安全（注意击退）");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"贪食啮噬{@event.SourceId}";
@@ -2574,8 +2588,8 @@ public class NewDuty
     [ScriptMethod(name: "魔斧之主 劳妲_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49446$"])]
     public void 劳妲_贪食裂膛(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"去BOSS背后（注意击退）", duration: 12600, true);
-        if (isTTS)accessory.Method.TTS($"去BOSS背后（注意击退）");
+        if (isText)accessory.Method.TextInfo($"BOSS背后安全（注意击退）", duration: 12600, true);
+        if (isTTS)accessory.Method.TTS($"BOSS背后安全（注意击退）");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"贪食裂膛{@event.SourceId}";
@@ -2586,7 +2600,15 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    // [Status 5341]消失魔刃·冲波 49484 本体无意义读条，49485 瞬移？，49487 打正面 ， 49488没遇到 应该是打背，打正面是向后击退40m
+    [ScriptMethod(name: "魔斧之主 劳妲_消失魔刃·冲波（提醒）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49484$"])]
+    public void 劳妲_消失魔刃冲波(Event @event, ScriptAccessory accessory)
+    {
+        // [Status 5341] 49485 瞬移？，打正打背怎么都是49487 ， 49488没遇到，击退距离40m
+        if (isText)accessory.Method.TextInfo($"观察稍后击退方向", duration: 6000, true);
+        if (isTTS)accessory.Method.TTS($"观察击退方向");
+    }
+    
+    // [Status 5341]消失魔刃·冲波 49484 本体无意义读条，49485 瞬移？，打正打背怎么都是49487 ， 49488没遇到，击退距离40m
     
     [ScriptMethod(name: "高段诱爆魔刃_魔力爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49443$"])]
     public void 高段诱爆魔刃_魔力爆炸(Event @event, ScriptAccessory accessory)
