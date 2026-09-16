@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.2.8", author: "Tetora", note: noteStr)]
+    version: "0.0.2.9", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.2.8:
+        v0.0.2.9:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -2207,8 +2207,51 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    // 19697 火球 49258 延烧 4m钢铁
-    // 19699 火焰旋风 49259 火焰旋风 月环
+    [ScriptMethod(name: "火球_延烧（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19697$"])]
+    public void 火球_延烧(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"火球_延烧{@event.SourceId}"; // ActionId 49258
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(4f);
+        dp.DestoryAt = 55200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "火球_延烧销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^19697$"],userControl: false)]
+    public void 火球_延烧销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"火球_延烧.*");
+    }
+    
+    [ScriptMethod(name: "火焰旋风（月环连线）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:19699"])]
+    public void 火焰旋风连线(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"火焰旋风连线{@event.SourceId}";
+        dp.Owner = accessory.Data.Me;
+        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.ScaleMode |= ScaleMode.YByDistance;
+        dp.TargetObject = @event.SourceId();
+        dp.Scale = new(1);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "火焰旋风_火焰旋风（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49259$"])]
+    public void 火焰旋风_火焰旋风(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"火焰旋风{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(50f);
+        dp.InnerScale = new Vector2(3.5f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
     
     [ScriptMethod(name: "奇子·火蛟_火棘屏障（读条驱散提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49253$"])]
     public void 火蛟_火棘屏障(Event @event, ScriptAccessory accessory)
@@ -2622,7 +2665,6 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // 火焰魔刃 [2015453] 火拘束 [49458]，火焰魔刃·牢狱 [49460] 
     [ScriptMethod(name: "魔斧之主 劳妲_拘束（结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^20154(28|53)$"])]
     public void 劳妲_拘束(Event @event, ScriptAccessory accessory)
     {
