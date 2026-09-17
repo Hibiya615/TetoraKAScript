@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.3.0", author: "Tetora", note: noteStr)]
+    version: "0.0.3.1", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.3.0:
+        v0.0.3.1:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -75,16 +75,43 @@ public class NewDuty
 
     #endregion
 
+    #region 记录与转换
+    
+    public enum Beasts_Phase
+    {
+        Init, // 初始
+        Lauda // 高二尾王 魔斧之主 劳妲
+    }
+    Beasts_Phase phase = Beasts_Phase.Init;
+    
+    [ScriptMethod(name: "高二尾王 劳妲", userControl: false, eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19742$"])]
+    public void 劳妲转换(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+        phase = phase switch
+        { 
+            Beasts_Phase.Init => Beasts_Phase.Lauda,
+        };
+        if(isDeveloper) accessory.Method.SendChat($"/e [Debug]：战斗进度：尾王劳妲");
+    }
+
     uint WildSpeed = 0; // 普二 曼提克-猛冲重锤
     uint Plaincracker = 0; // 高一 巨像 平原震裂
     uint EarthenRing = 0; // 高一 巨像 核心环光
+    private int _chimeraRingType = 0; // 高二 奇美拉 0未知 1钢铁 2月环
+    private int _chimeraFanType = 0;  // 高二 奇美拉 0未知 1寒冰 2雷鸣 3火焰
 
     public void Init(ScriptAccessory accessory)
     {
+        phase = Beasts_Phase.Init;
         WildSpeed = 0;
         Plaincracker = 0;
         EarthenRing = 0;
+        _chimeraRingType = 0;
+        _chimeraFanType = 0;
     }
+    
+    #endregion
 
     [ScriptMethod(name: "百虫肤防击退销毁", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^4620$"], userControl: false)]
     public void 百虫肤防击退销毁(Event @event, ScriptAccessory accessory)
@@ -1894,18 +1921,32 @@ public class NewDuty
     {
         IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(203, new Vector3(60f),
             @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f,0.4f,0f,0.6f), 5000);
-        /* Todo . 还没测到击退距离
+
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"破魔震{@event.SourceId}";
-        dp.Scale = new(1f, 20f);
+        dp.Scale = new(1f, 17f);
         dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
         dp.Owner = accessory.Data.Me;
         dp.TargetObject = @event.SourceId();
         dp.Rotation = float.Pi;
         dp.DestoryAt = 4700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
-        */
     }
+    
+    [ScriptMethod(name: "奇子·爆弹之母_烈火怒骂（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48799$"])]
+    public void 爆弹之母_烈火怒骂 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"烈火怒骂{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 180f.DegToRad(); 
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    // 48801 奇子·爆弹之母_熔毁（击退直线死刑）
     
     [ScriptMethod(name: "怨毒龙 博尔格尼_猛毒吐息（后跳顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48807$"])]
     public void 博尔格尼_猛毒吐息 (Event @event, ScriptAccessory accessory)
@@ -2439,6 +2480,215 @@ public class NewDuty
         accessory.Method.RemoveDraw($"奇子连线.*");
     }
     
+    [ScriptMethod(name: "奇子·奇美拉_毒性爆发（毒AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49332$"])]
+    public void 奇美拉_毒性爆发(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"AOE+毒（可死尸净化）", duration: 4000, false);
+        if (isTTS)accessory.Method.TTS($"AOE+毒");
+    }
+    
+    // 绘制钢铁月环扇形，留存
+    
+    /*
+    
+    [ScriptMethod(name: "奇子·奇美拉_冰结大咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49315$"])]
+    public void 奇美拉_冰结大咆哮(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"远离");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"冰结大咆哮{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 6700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"冰结大咆哮描边{@event.SourceId}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(12f);
+        dp1.InnerScale = new Vector2(11.95f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+    }
+    
+    [ScriptMethod(name: "奇子·奇美拉_雷电大咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49316$"])]
+    public void 奇美拉_雷电大咆哮(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"靠近");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"雷电大咆哮{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.InnerScale = new Vector2(8f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·奇美拉_寒冰/雷鸣/火焰吐息（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4930(0|2|4)$"])]
+    public void 奇美拉_寒冰雷鸣火焰吐息 (Event @event, ScriptAccessory accessory)
+    { 
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        switch (@event.ActionId())
+        {
+            case 49300:  // 寒冰吐息 右下方向
+                dp.Name = $"奇美拉_寒冰吐息{@event.SourceId}";
+                dp.Rotation = 240f.DegToRad();
+                break;
+            case 49302:  // 雷鸣吐息 左下方向
+                dp.Name = $"奇美拉_雷鸣吐息{@event.SourceId}";
+                dp.Rotation = 120f.DegToRad();
+                break;
+            case 49304:  // 火焰吐息 面前方向
+                dp.Name = $"奇美拉_火焰吐息{@event.SourceId}";
+                dp.Rotation = 0f.DegToRad();
+                break;
+        }
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 240f.DegToRad(); 
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    */
+    
+    [ScriptMethod(name: "奇子·奇美拉_冰结/雷冰大咆哮（扇形安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^493(0[024]|1[56])$"])]
+    public void 奇美拉_大咆哮 (Event @event, ScriptAccessory accessory)
+    { 
+        switch (@event.ActionId())
+        {
+            // 大咆哮 钢铁 / 月环
+            case 49315: _chimeraRingType = 1; break; // 冰结大咆哮 钢铁
+            case 49316: _chimeraRingType = 2; break; // 雷电大咆哮 月环
+
+            // 扇形吐息
+            case 49300: _chimeraFanType = 1; break;  // 寒冰吐息 右下
+            case 49302: _chimeraFanType = 2; break;  // 雷鸣吐息 左下
+            case 49304: _chimeraFanType = 3; break;  // 火焰吐息 面前
+        }
+        
+        if (_chimeraRingType == 0 || _chimeraFanType == 0) return;
+        
+        string ringSafe = _chimeraRingType == 1 ? "远离" : "靠近";
+        string fanSafeDir = _chimeraFanType switch
+        {
+            1 => "左上",   // 寒冰
+            2 => "右上",   // 雷鸣
+            3 => "背后",   // 火焰
+            _ => "未知"
+        };
+        
+        if (isText)accessory.Method.TextInfo($"{ringSafe}，{fanSafeDir}安全", duration: 6300, true);
+        if (isTTS)accessory.Method.TTS($"{ringSafe}加{fanSafeDir}安全");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        switch (_chimeraFanType)
+        {
+            case 1: dp.Rotation = 60f.DegToRad(); break;   // 寒冰 左上安全
+            case 2: dp.Rotation = 300f.DegToRad(); break;  // 雷鸣 右上安全
+            case 3: dp.Rotation = 180f.DegToRad(); break;  // 火焰 背后安全
+        }
+
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 6700;
+        
+        if (_chimeraRingType == 1)
+        {
+            dp.Scale = new Vector2(23.7f);
+            dp.InnerScale = new Vector2(12f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+            _chimeraRingType = 0;
+            _chimeraFanType = 0;
+        }
+        else if (_chimeraRingType == 2)
+        {
+            dp.Scale = new Vector2(8f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+            _chimeraRingType = 0;
+            _chimeraFanType = 0;
+        }
+    }
+
+    [ScriptMethod(name: "奇子·奇美拉_强袭吐息（冲锋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4932[345]$"])]
+    public void 奇美拉_强袭吐息 (Event @event, ScriptAccessory accessory)
+    { 
+        // 读条约6.2s后 [49322]冲锋伤害 判定，冲锋后约3.6s扇形判定
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        switch (@event.ActionId())
+        {
+            case 49323:  // 寒冰吐息 右下方向
+                if (isText)accessory.Method.TextInfo($"远离扯线，然后去左上", duration: 9100, true);
+                if (isTTS)accessory.Method.TTS($"远离扯线，然后去左上");
+                dp.Name = $"强袭寒冰吐息{@event.SourceId}";
+                dp.Rotation = 240f.DegToRad();
+                break;
+            case 49324:  // 雷鸣吐息 左下方向
+                if (isText)accessory.Method.TextInfo($"远离扯线，然后去右上", duration: 9100, true);
+                if (isTTS)accessory.Method.TTS($"远离扯线，然后去右上");
+                dp.Name = $"强袭雷鸣吐息{@event.SourceId}";
+                dp.Rotation = 120f.DegToRad();
+                break;
+            case 49325:  // 火焰吐息 面前方向
+                if (isText)accessory.Method.TextInfo($"远离扯线，然后去背后", duration: 9100, true);
+                if (isTTS)accessory.Method.TTS($"远离扯线，然后去背后");
+                dp.Name = $"强袭火焰吐息{@event.SourceId}";
+                dp.Rotation = 0f.DegToRad();
+                break;
+        }
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 240f.DegToRad();
+        dp.Delay = 5900;
+        dp.DestoryAt = 3900;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "奇子·奇美拉_寒冰眼（点名放置提示）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^029D$"])]
+    public void 奇美拉_寒冰眼(Event @event, ScriptAccessory accessory)
+    {
+        // 放置 49320 寒冰眼
+        if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        if (isText)accessory.Method.TextInfo($"放置冰圈", duration: 3500, false);
+        if (isTTS)accessory.Method.TTS($"放置冰圈");
+    }
+    
+    [ScriptMethod(name: "闪电球_无序的和声（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19709$"])]
+    public void 闪电球_无序的和声(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"远离球");
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"无序的和声{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 9000;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"无序的和声描边{@event.SourceId}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(6f);
+        dp1.InnerScale = new Vector2(5.95f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+    }
+    
     [ScriptMethod(name: "奇子·巨人_巨躯狂怒（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4936(1|3)$"])]
     public void 巨人_巨躯狂怒 (Event @event, ScriptAccessory accessory)
     {
@@ -2533,6 +2783,25 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
+    // 49420 死亡轮盘转转转
+    // 50940 怪光线 直线死刑 [TargetIcon 01D7]
+    
+    [ScriptMethod(name: "奇子·冥鬼之眼王_双重视线（鸳鸯锅）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^553[67]$"])]
+    public void 冥鬼之眼王_双重视线(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        var color = @event.StatusId == 5536 ? "红色" : "白色";
+        if (isText)accessory.Method.TextInfo($"去{color}半场", duration: 4500, true);
+        if (isTTS)accessory.Method.TTS($"去{color}半场");
+    }
+    
+    [ScriptMethod(name: "奇子·肮脏之眼_死亡视线（背对提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49434$"])]
+    public void 肮脏之眼_死亡视线(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"背对 <肮脏之眼>", duration: 3000, true);
+        if (isTTS)accessory.Method.TTS($"背对肮脏之眼");
+    }
+    
     [ScriptMethod(name: "魔斧之主 劳妲_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49470$"])]
     public void 劳妲_霹雳(Event @event, ScriptAccessory accessory)
     {
@@ -2591,6 +2860,7 @@ public class NewDuty
     public void 劳妲_支配魔刃预兆(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+        if (phase != Beasts_Phase.Lauda) return;
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"支配魔刃预兆{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.2f);
