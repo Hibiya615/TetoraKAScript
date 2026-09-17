@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.3.1", author: "Tetora", note: noteStr)]
+    version: "0.0.3.2", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.3.1:
+        v0.0.3.2:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -2066,6 +2066,20 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
+    [ScriptMethod(name: "奇子·毒性魔菇（拉水圈提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19678$"],suppress:1000)]
+    public void 毒性魔菇提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"在水圈内击杀 <毒性魔菇>", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"在水圈内击杀魔菇");
+    }
+    
+    [ScriptMethod(name: "奇子·夺心魔_虚空暴雷（死刑提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49205$"],suppress:1000)]
+    public void 夺心魔_虚空暴雷提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"范围死刑，离开水圈", duration: 4000, true);
+        if (isTTS)accessory.Method.TTS($"范围死刑，离开水圈");
+    }
+    
     [ScriptMethod(name: "奇子·夺心魔_虚空暴雷（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49207$"])]
     public void 夺心魔_虚空暴雷(Event @event, ScriptAccessory accessory)
     {
@@ -2089,8 +2103,8 @@ public class NewDuty
     [ScriptMethod(name: "奇子·夺心魔_虚空强麻痹（麻痹AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49208$"])]
     public void 夺心魔_虚空强麻痹(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"[雷] 麻痹AOE（可死尸净化）", duration: 6000, false);
-        if (isTTS)accessory.Method.TTS($"麻痹AOE");
+        if (isText)accessory.Method.TextInfo($"[雷,离开水圈] 麻痹AOE（可死尸净化）", duration: 6000, false);
+        if (isTTS)accessory.Method.TTS($"麻痹AOE，离开水圈");
     }
     
     [ScriptMethod(name: "立体魔法阵_黑暗奔流（小直线）", eventType: EventTypeEnum.SetObjPos, eventCondition: ["SourceDataId:regex:^19681$","Id:0197"])]
@@ -2359,6 +2373,56 @@ public class NewDuty
         dp.Scale = new Vector2(30f);
         dp.Radian = 120f.DegToRad(); 
         dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    // 奇子·美杜莎 Tether 0001 > 连线位置释放扇形 49278 石化光照射 用于石化小怪
+    
+    [ScriptMethod(name: "奇子·美杜莎_圆环/环圆连斩（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^492(89|91|93|95)$"])]
+    public void 美杜莎_圆环环圆连斩(Event @event, ScriptAccessory accessory)
+    {
+        var (name, scale, inner, delay, destroyAt, text) = @event.ActionId switch
+        {
+            49289 => ("圆环连斩钢铁", 6f,  0f,   0L,    6700L, "先远离，再靠近"),
+            49291 => ("圆环连斩月环", 60f, 5f,   6700L, 2000L, (string)null),
+            49293 => ("环圆连斩月环", 60f, 5f,   0L,    6700L, "先靠近，再远离"),
+            49295 => ("环圆连斩钢铁", 6f,  0f,   6700L, 2000L, (string)null),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        if (isTTS && text != null)  accessory.Method.TTS($"{text}");
+        if (isText && text != null) accessory.Method.TextInfo($"{text}", duration: 9000, true);
+
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Name = $"{name}{@event.SourceId()}";
+        dp.Scale = new Vector2(scale);
+        dp.Delay = delay;
+        dp.DestoryAt = destroyAt;
+
+        var isDonut = inner > 0;
+        if (isDonut)
+        {
+            dp.InnerScale = new Vector2(inner);
+            dp.Radian = float.Pi * 2;
+        }
+        accessory.Method.SendDraw(DrawModeEnum.Default, isDonut ? DrawTypeEnum.Donut : DrawTypeEnum.Circle, dp);
+    }
+    
+    // Todo. 需要再优化
+    
+    [ScriptMethod(name: "奇子·美杜莎_冲击波（四向扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:49296$"])]
+    public void 美杜莎_冲击波(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"美杜莎_冲击波{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 45f.DegToRad(); 
+        dp.Delay = 4700;
+        dp.DestoryAt = 2000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
@@ -2650,8 +2714,8 @@ public class NewDuty
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(60f);
         dp.Radian = 240f.DegToRad();
-        dp.Delay = 5900;
-        dp.DestoryAt = 3900;
+        dp.Delay = 6200;
+        dp.DestoryAt = 3600;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
@@ -2749,6 +2813,30 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"打断史莱姆");
     }
     
+    [ScriptMethod(name: "奇子·巨人_追炎（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49366$"])]
+    public void 巨人_追炎(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"快躲开");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"追炎{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"追炎描边{@event.SourceId}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(6f);
+        dp1.InnerScale = new Vector2(5.95f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+    }
+    
     [ScriptMethod(name: "奇子·巨人_追雷（踩塔）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49364$"])]
     public void 巨人_追雷(Event @event, ScriptAccessory accessory)
     {
@@ -2771,7 +2859,7 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"打断小怪");
     }
     
-    [ScriptMethod(name: "奇子·独眼巨人_怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49367$"])]
+    [ScriptMethod(name: "奇子·独眼巨人_怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^493(67|70)$"])]
     public void 独眼巨人_怒视(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2781,7 +2869,21 @@ public class NewDuty
         dp.Scale = new (3f, 40f);
         dp.DestoryAt = 3700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    } // 在 随机#3：奇子·美杜莎 的战斗中，也有同名小怪与同名技能
+    
+    [ScriptMethod(name: "奇子·莫古小猛_莫古暴风雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49383$"])]
+    public void 莫古小猛_莫古暴风雨(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"巨躯狂怒钢铁{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(22f);
+        dp.DestoryAt = 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    
+    // 49387 奇子·莫古小医_绒绒神圣（三角）
     
     // 49420 死亡轮盘转转转
     // 50940 怪光线 直线死刑 [TargetIcon 01D7]
