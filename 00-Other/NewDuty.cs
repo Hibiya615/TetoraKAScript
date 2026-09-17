@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.2.9", author: "Tetora", note: noteStr)]
+    version: "0.0.3.0", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.2.9:
+        v0.0.3.0:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -1126,6 +1126,8 @@ public class NewDuty
         dp.DestoryAt = 700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
+    
+    // Todo. 奇子·祖_后方乱流（扫尾 ）ActionId:regex:^48499$ 实体面向未确定
 
     [ScriptMethod(name: "奇子·巨像_岩石崩溃（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48555$"])]
     public void 巨像_岩石崩溃(Event @event, ScriptAccessory accessory)
@@ -1400,14 +1402,14 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"站在浮空圈");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_狂水之章（河童提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48659$"])]
+    [ScriptMethod(name: "奇子·博学林鸮_狂水之章（河童提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48658$"])]
     public void 博学林鸮_狂水之章(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"站在河童圈", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"站在河童圈");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_魔法锤之章（史莱姆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48658$"])]
+    [ScriptMethod(name: "奇子·博学林鸮_魔法锤之章（史莱姆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48659$"])]
     public void 博学林鸮_魔法锤之章(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"站在粘液怪圈", duration: 7000, true);
