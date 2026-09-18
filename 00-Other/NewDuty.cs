@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.3.2", author: "Tetora", note: noteStr)]
+    version: "0.0.3.3", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.3.2:
+        v0.0.3.3:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -120,7 +120,7 @@ public class NewDuty
         accessory.Method.RemoveDraw(".*击退.*");
     }
 
-    [ScriptMethod(name: "—————— 斗兽奇弈 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "——————  斗兽奇弈  ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 斗兽奇弈(Event @event, ScriptAccessory accessory) { }
     
     #region 斗兽奇弈 第一盘
@@ -128,7 +128,7 @@ public class NewDuty
     [ScriptMethod(name: "—————— 第一盘 ——————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
     public void 第一盘(Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "奇子·主教_死亡螺旋（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46868$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·主教_死亡螺旋（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46868$"])]
     public void 主教_死亡螺旋(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"靠近主教月环", duration: 5000, true);
@@ -145,14 +145,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "奇子·骑士_骨化（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46871$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·骑士_骨化（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46871$"])]
     public void 骑士_骨化(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"打断骑士伤害提高（控制或借用-咒具碎魂）", duration: 7000, false);
         if (isTTS) accessory.Method.TTS($"打断骑士");
     }
 
-    [ScriptMethod(name: "奇子·骑士_物理伤害提高（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2074$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·骑士_物理伤害提高（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2074$"])]
     public void 骑士_物理伤害提高(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1339) return;
@@ -160,7 +160,7 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"驱散骑士");
     }
 
-    [ScriptMethod(name: "奇子·主教_古代疾风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46870$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·主教_古代疾风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46870$"])]
     public void 主教_古代疾风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -172,14 +172,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·骑士_前线护卫（魔兽吸引注意提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46864$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·骑士_前线护卫（魔兽吸引注意提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46864$"])]
     public void 骑士_前线护卫(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"使用魔兽技 [吸引注意]", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"使用魔兽吸引注意");
     }
 
-    [ScriptMethod(name: "奇子·骑士_古墓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46866$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·骑士_古墓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46866$"])]
     public void 骑士_古墓(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"远离骑士");
@@ -193,7 +193,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "奇子·上级恶魔_深渊贯穿（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4688(2|4)$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·上级恶魔_深渊贯穿（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4688(2|4)$"])]
     public void 上级恶魔_深渊贯穿(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -205,7 +205,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "奇子·上级恶魔_深渊回转（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46886$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·上级恶魔_深渊回转（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46886$"])]
     public void 上级恶魔_深渊回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -218,7 +218,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·夺灵魔_澄澈之心（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^1225$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·夺灵魔_澄澈之心（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^1225$"])]
     public void 夺灵魔_澄澈之心(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1339) return;
@@ -226,14 +226,14 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"驱散");
     }
 
-    [ScriptMethod(name: "奇子·夺灵魔_魔力冲击（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46899$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·夺灵魔_魔力冲击（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46899$"])]
     public void 夺灵魔_魔力冲击(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"驱散伤害提高（借用-水栖波）", duration: 7000, false);
         if (isTTS) accessory.Method.TTS($"AOE");
     }
 
-    [ScriptMethod(name: "奇子·夺灵魔_虚空暴风（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46897$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·夺灵魔_虚空暴风（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46897$"])]
     public void 夺灵魔_虚空暴风(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"靠近月环", duration: 5000, true);
@@ -250,36 +250,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "奇子·祸蛛蝎_地面隆起（地震钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46902$"])]
-    public void 祸蛛蝎_地面隆起(Event @event, ScriptAccessory accessory)
-    {
-        if (isTTS) accessory.Method.TTS($"扩散地震");
-
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"地面隆起{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(6f);
-        dp.DestoryAt = 4700;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-    }
-
-    [ScriptMethod(name: "奇子·祸蛛蝎_致命尾刺（带毒死刑TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46906$"])]
-    public void 祸蛛蝎_致命尾刺(Event @event, ScriptAccessory accessory)
-    {
-        // 回头得再看看毒耐的StatusID!
-        if (isText) accessory.Method.TextInfo($"带毒死刑，可用 <死尸净化> 驱散", duration: 4000, false);
-        if (isTTS) accessory.Method.TTS($"带毒死刑");
-    }
-
-    [ScriptMethod(name: "奇子·夺灵魔_虚空冰封（步进地火TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46887$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·夺灵魔_虚空冰封（步进地火TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46887$"])]
     public void 夺灵魔_虚空冰封(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"步进地火，二穿一", duration: 2000, true);
         if (isTTS) accessory.Method.TTS($"准备穿地火");
     }
 
-    [ScriptMethod(name: "奇子·夺灵魔_虚无耀星（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46895$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·夺灵魔_虚无耀星（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46895$"])]
     public void 夺灵魔_虚无耀星(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"远离核爆", duration: 5000, false);
@@ -294,15 +272,37 @@ public class NewDuty
         dp.ScaleMode = ScaleMode.ByTime;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
+    
+    [ScriptMethod(name: "敌人#4: 奇子·祸蛛蝎_地面隆起（地震钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46902$"])]
+    public void 祸蛛蝎_地面隆起(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS) accessory.Method.TTS($"扩散地震");
 
-    [ScriptMethod(name: "奇子·祸蛛蝎_毒蛛网（九连环TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46907$"])]
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"地面隆起{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+
+    [ScriptMethod(name: "敌人#4: 奇子·祸蛛蝎_致命尾刺（带毒死刑TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46906$"])]
+    public void 祸蛛蝎_致命尾刺(Event @event, ScriptAccessory accessory)
+    {
+        // 回头得再看看毒耐的StatusID!
+        if (isText) accessory.Method.TextInfo($"带毒死刑，可用 <死尸净化> 驱散", duration: 4000, false);
+        if (isTTS) accessory.Method.TTS($"带毒死刑");
+    }
+
+    [ScriptMethod(name: "敌人#4: 奇子·祸蛛蝎_毒蛛网（九连环TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46907$"])]
     public void 祸蛛蝎_毒蛛网(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"九连环", duration: 2000, true);
         if (isTTS) accessory.Method.TTS($"九连环");
     }
 
-    [ScriptMethod(name: "奇子·食人魔_燃烧猛击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(46912|49688)$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·食人魔_燃烧猛击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^(46912|49688)$"])]
     public void 食人魔_燃烧猛击(Event @event, ScriptAccessory accessory)
     {
         if (isTTS & @event.ActionId() == 49688) accessory.Method.TTS($"去对侧");
@@ -317,14 +317,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·食人魔_火球生成（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46921$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·食人魔_火球生成（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46921$"])]
     public void 食人魔_火球生成(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"躲避连线火球", duration: 3000, true);
         if (isTTS) accessory.Method.TTS($"躲避连线火球");
     }
 
-    [ScriptMethod(name: "奇子·食人魔_火球（追踪钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19343$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·食人魔_火球（追踪钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19343$"])]
     public void 食人魔_火球(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -336,19 +336,19 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "火球延烧触发销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^46922$"], userControl: false)]
+    [ScriptMethod(name: "强敌#1: 火球延烧触发销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^46922$"], userControl: false)]
     public void 火球延烧销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"火球延烧.*");
     }
 
-    [ScriptMethod(name: "火球消失销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^19343$"], userControl: false)]
+    [ScriptMethod(name: "强敌#1: 火球消失销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^19343$"], userControl: false)]
     public void 火球消失销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"火球延烧.*");
     }
 
-    [ScriptMethod(name: "魅惑女妖 帕德索_血雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46926$"])]
+    [ScriptMethod(name: "头目: 魅惑女妖 帕德索_血雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46926$"])]
     public void 帕德索_血雨钢铁(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"远离", duration: 5000, true);
@@ -363,7 +363,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "魅惑女妖 帕德索_血雨（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46924$"])]
+    [ScriptMethod(name: "头目: 魅惑女妖 帕德索_血雨（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46924$"])]
     public void 帕德索_血雨(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"靠近月环", duration: 5000, true);
@@ -380,7 +380,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "魅惑女妖 帕德索_虚空烈风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46932$"])]
+    [ScriptMethod(name: "头目: 魅惑女妖 帕德索_虚空烈风（面前直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46932$"])]
     public void 帕德索_虚空烈风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -392,7 +392,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "魅惑女妖 帕德索_寒毒接触（带毒死刑TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46935$"])]
+    [ScriptMethod(name: "头目: 魅惑女妖 帕德索_寒毒接触（带毒死刑TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46935$"])]
     public void 帕德索_寒毒接触(Event @event, ScriptAccessory accessory)
     {
         // 回头得再看看毒耐的StatusID!
@@ -400,7 +400,7 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"带毒死刑");
     }
 
-    [ScriptMethod(name: "奇子·梦魔法师_盲信（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46928$"])]
+    [ScriptMethod(name: "头目: 奇子·梦魔法师_盲信（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46928$"])]
     public void 梦魔法师_盲信(Event @event, ScriptAccessory accessory)
     {
         // 赋予BOSS 伤害提高 StatusID 1225
@@ -417,7 +417,7 @@ public class NewDuty
     [ScriptMethod(name: "—————— 第二盘 ——————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
     public void 第二盘(Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "奇子·曼提克_臂锤（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4812(3|5)$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·曼提克_臂锤（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4812(3|5)$"])]
     public void 曼提克_臂锤(Event @event, ScriptAccessory accessory)
     {
         var isR = @event.ActionId == 48123;
@@ -448,7 +448,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·曼提克_重锤跃击（跳跃钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48137$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·曼提克_重锤跃击（跳跃钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48137$"])]
     public void 曼提克_重锤跃击(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"远离跳跃落点");
@@ -473,7 +473,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
-    [ScriptMethod(name: "奇子·曼提克_利爪凶尾（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4814(0|2)$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·曼提克_利爪凶尾（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4814(0|2)$"])]
     public void 曼提克_利爪凶尾(Event @event, ScriptAccessory accessory)
     {
         var isF = @event.ActionId == 48140;
@@ -507,7 +507,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·曼提克_凶尾利爪（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5041(1|3)$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·曼提克_凶尾利爪（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^5041(1|3)$"])]
     public void 曼提克_凶尾利爪(Event @event, ScriptAccessory accessory)
     {
         var isF = @event.ActionId == 50413;
@@ -540,7 +540,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·曼提克_狂野冲锋（连续冲锋）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48128$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·曼提克_狂野冲锋（连续冲锋）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48128$"])]
     public void 曼提克_狂野冲锋(Event @event, ScriptAccessory accessory)
     {
         if (@event.ActionId == 48128)
@@ -559,7 +559,7 @@ public class NewDuty
         WildSpeed = 1;
     }
 
-    [ScriptMethod(name: "奇子·曼提克_猛冲重锤（冲锋左右刀）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2056|2193)$"], suppress: 9700)]
+    [ScriptMethod(name: "敌人#1: 奇子·曼提克_猛冲重锤（冲锋左右刀）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^(2056|2193)$"], suppress: 9700)]
     public void 曼提克_猛冲重锤(Event @event, ScriptAccessory accessory)
     {
         var isR = @event.StatusId == 2056; // Param分别为: 2056:1044 ; 2193:1043
@@ -595,7 +595,7 @@ public class NewDuty
         WildSpeed = 0;
     }
 
-    [ScriptMethod(name: "奇子·双足飞龙_台风（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48168$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·双足飞龙_台风（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48168$"])]
     public void 双足飞龙_台风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -609,7 +609,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
 
-    [ScriptMethod(name: "奇子·双足飞龙_炽热弥漫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48175$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·双足飞龙_炽热弥漫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48175$"])]
     public void 双足飞龙_炽热弥漫(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"去背后");
@@ -624,7 +624,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·双足飞龙_风暴轨迹（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48178$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·双足飞龙_风暴轨迹（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48178$"])]
     public void 双足飞龙_风暴轨迹(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -637,7 +637,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·牛头魔_致命射线（死宣提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48143$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·牛头魔_致命射线（死宣提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48143$"])]
     public void 牛头魔_致命射线(Event @event, ScriptAccessory accessory)
     {
         // EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5421$"]
@@ -646,7 +646,7 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"踩地板");
     }
 
-    [ScriptMethod(name: "奇子·牛头魔_中心破灭（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^481(55|59|65)$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·牛头魔_中心破灭（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^481(55|59|65)$"])]
     public void 牛头魔_中心破灭(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -673,7 +673,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "奇子·牛头魔_外环破灭（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^481(57|61|63)$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·牛头魔_外环破灭（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^481(57|61|63)$"])]
     public void 牛头魔_外环破灭(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -702,7 +702,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "奇子·牛头魔_暗黑射线（点名放球）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^00EA$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·牛头魔_暗黑射线（点名放球）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^00EA$"])]
     public void 牛头魔_暗黑射线(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() == 1340 && @event.TargetId() == accessory.Data.Me)
@@ -720,7 +720,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·牛头魔_以太波（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48150$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·牛头魔_以太波（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48150$"])]
     public void 牛头魔_以太波(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -733,7 +733,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·虚灵法师_死亡驱动（复活提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48181$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·虚灵法师_死亡驱动（复活提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48181$"])]
     public void 虚灵法师_死亡驱动(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"尽可能避开小怪放圈", duration: 6000, false);
@@ -751,7 +751,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·虚灵法师_死亡驱动（地板圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48182$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·虚灵法师_死亡驱动（地板圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48182$"])]
     public void 虚灵法师_死亡驱动绘制(Event @event, ScriptAccessory accessory)
     {
 
@@ -765,7 +765,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "奇子·虚灵法师_暗天球（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48186$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·虚灵法师_暗天球（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48186$"])]
     public void 虚灵法师_暗天球(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"远离", duration: 5000, true);
@@ -791,7 +791,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
-    [ScriptMethod(name: "奇子·牛魔兄弟_千百一十吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4819(4|6)$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔兄弟_千百一十吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4819(4|6)$"])]
     public void 牛魔哥弟_千百一十吨回转(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -805,7 +805,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "奇子·牛魔兄弟_千吨横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4819(0|2)$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔兄弟_千吨横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4819(0|2)$"])]
     public void 牛魔哥弟_千吨横扫(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -818,7 +818,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·牛魔兄弟_十吨重踏 冲击波（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48(199|202)$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔兄弟_十吨重踏 冲击波（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48(199|202)$"])]
     public void 牛魔兄弟_十吨重踏_冲击波(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -841,7 +841,7 @@ public class NewDuty
 
     }
 
-    [ScriptMethod(name: "奇子·牛魔老弟_声援（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48203$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔老弟_声援（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48203$"])]
     public void 牛魔老弟_声援(Event @event, ScriptAccessory accessory)
     {
         // 伤害提高 StatusID 1225
@@ -849,7 +849,7 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"打断牛魔老弟");
     }
 
-    [ScriptMethod(name: "奇子·牛魔老哥_百吨挥打（直线死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48204$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔老哥_百吨挥打（直线死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48204$"])]
     public void 牛魔老哥_百吨挥打(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -865,7 +865,7 @@ public class NewDuty
     // 48206 无尽回转 读条完变成不可选中状态，持续追踪玩家释放8m钢铁 48207
     // Todo. 48210 无尽横扫 持续顺/逆时针顺劈 组合技，共约24.7s，转向后会有0.2s的读条，需要提前判断顺逆时针绘制，目前仅为模板
 
-    [ScriptMethod(name: "奇子·牛魔老弟_无尽横扫（大风车）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48210$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔老弟_无尽横扫（大风车）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48210$"])]
     public void 牛魔老弟_无尽横扫(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -878,7 +878,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·牛魔兄弟_无尽挥打（软狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48214$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·牛魔兄弟_无尽挥打（软狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48214$"])]
     public void 牛魔兄弟_无尽挥打(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"[软狂暴] 大AOE伤害", duration: 7000, true);
@@ -893,7 +893,7 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"优先击杀连线目标");
     }
 
-    [ScriptMethod(name: "小地豆_黄沙吐息（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48227$"])]
+    [ScriptMethod(name: "头目: 小地豆_黄沙吐息（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48227$"])]
     public void 小地豆_黄沙吐息(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -906,7 +906,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "路斯福洛克斯_哥布流回旋剑（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48229$"])]
+    [ScriptMethod(name: "头目: 路斯福洛克斯_哥布流回旋剑（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48229$"])]
     public void 路斯福洛克斯_哥布流回旋剑钢铁(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -919,21 +919,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "路斯福洛克斯_小地豆肤（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5423$"])]
+    [ScriptMethod(name: "头目: 路斯福洛克斯_小地豆肤（驱散提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5423$"])]
     public void 路斯福洛克斯_小地豆肤(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"驱散BOSS（借用-水栖波）", duration: 5000, false);
         if (isTTS) accessory.Method.TTS($"驱散BOSS");
     }
 
-    [ScriptMethod(name: "路斯福洛克斯_哥布炸弹（提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19561$"], suppress: 1000)]
+    [ScriptMethod(name: "头目: 路斯福洛克斯_哥布炸弹（提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19561$"], suppress: 1000)]
     public void 路斯福洛克斯_哥布炸弹(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"将 <哥布炸弹> 推进小地豆在的流沙", duration: 5000, true);
         if (isTTS) accessory.Method.TTS($"将炸弹推进小地豆在的流沙");
     }
 
-    [ScriptMethod(name: "路斯福洛克斯_哥布流回旋剑（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48231$"])]
+    [ScriptMethod(name: "头目: 路斯福洛克斯_哥布流回旋剑（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48231$"])]
     public void 路斯福洛克斯_哥布流回旋剑月环(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"靠近月环", duration: 5000, true);
@@ -950,7 +950,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "小地豆_地震（软狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48239$"])]
+    [ScriptMethod(name: "头目: 小地豆_地震（软狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48239$"])]
     public void 小地豆_地震(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"[软狂暴] 大AOE伤害", duration: 4000, true);
@@ -964,7 +964,7 @@ public class NewDuty
     [ScriptMethod(name: "—————— 第三盘 ——————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
     public void 第三盘(Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "奇子·游侠骑士_钢铁裂斩（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48473$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·游侠骑士_钢铁裂斩（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48473$"])]
     public void 游侠骑士_钢铁裂斩(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -977,7 +977,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·游侠骑士的幻影_收割者的恐吓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48464$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·游侠骑士的幻影_收割者的恐吓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48464$"])]
     public void 游侠骑士的幻影_收割者的恐吓(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1000,7 +1000,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
-    [ScriptMethod(name: "奇子·游侠骑士的幻影_残杀（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48462$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·游侠骑士的幻影_残杀（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48462$"])]
     public void 游侠骑士的幻影_残杀(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1012,7 +1012,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·游侠骑士_粉碎剑（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48471$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·游侠骑士_粉碎剑（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48471$"])]
     public void 游侠骑士_粉碎剑(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1026,21 +1026,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
 
-    [ScriptMethod(name: "奇子·鱼人_麻痹尖刺（反击提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50532$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·鱼人_麻痹尖刺（反击提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50532$"])]
     public void 鱼人_麻痹尖刺(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"停止攻击 <鱼人>", duration: 6000, true);
         if (isTTS) accessory.Method.TTS($"停止攻击鱼人");
     }
 
-    [ScriptMethod(name: "奇子·鱼人_恐慌洗礼（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48485$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·鱼人_恐慌洗礼（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48485$"])]
     public void 鱼人_恐慌洗礼(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"使用 <咒具碎魂> 打断鱼人", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"打断鱼人");
     }
 
-    [ScriptMethod(name: "奇子·鱼人_大海啸（击退安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48481$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·鱼人_大海啸（击退安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48481$"])]
     public void 鱼人_大海啸(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"击退（可被壳阻挡）", duration: 7000, true);
@@ -1055,21 +1055,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·尤弥尔_万雷（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48479$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·尤弥尔_万雷（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48479$"])]
     public void 尤弥尔_万雷(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"AOE", duration: 4000, false);
         if (isTTS) accessory.Method.TTS($"AOE");
     }
 
-    [ScriptMethod(name: "奇子·尤弥尔之壳 击杀止步提示", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^19604$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·尤弥尔之壳 击杀止步提示", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^19604$"])]
     public void 尤弥尔_击杀止步提示(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"看时机止步 <尤弥尔>", duration: 5000, false);
         if (isTTS) accessory.Method.TTS($"止步尤弥尔");
     }
 
-    [ScriptMethod(name: "奇子·卡托布莱帕斯_魔兽咆哮（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48504$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·卡托布莱帕斯_魔兽咆哮（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48504$"])]
     public void 卡托布莱帕斯_魔兽咆哮(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"AOE", duration: 2000, false);
@@ -1080,7 +1080,7 @@ public class NewDuty
     // 魔眼移植 StatusID 2056 , Param 174; 带背对的情况固定一个个轮流来
     // [Tether 00C3] [VFX Channeling 195] vfx/channeling/eff/chn_ice_mouth01x.avfx / vfx/common/eff/mon_status01et.avfx
 
-    [ScriptMethod(name: "奇子·祖的蛋_孵化（击杀提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48487$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖的蛋_孵化（击杀提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48487$"])]
     public void 祖的蛋_孵化(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"击杀孵化鸟蛋（别用突进）", duration: 5000, true);
@@ -1097,13 +1097,13 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
 
-    [ScriptMethod(name: "奇子·祖的蛋_孵化销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:regex:^48487$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖的蛋_孵化销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:regex:^48487$"])]
     public void 祖的蛋_孵化销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"孵化连线{@event.SourceId}");
     }
 
-    [ScriptMethod(name: "奇子·祖_十字风（指路）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48491$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖_十字风（指路）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48491$"])]
     public void 祖_十字风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1117,7 +1117,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
 
-    [ScriptMethod(name: "奇子·祖_前/后方猛袭乱流（拉线提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4849[34]$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖_前/后方猛袭乱流（拉线提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4849[34]$"])]
     public void 祖_前后方猛袭方乱流(Event @event, ScriptAccessory accessory)
     {
         var dir = @event.ActionId == 48493 ? "背后" : "正面";
@@ -1125,7 +1125,7 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"远离扯线，然后去{dir}");
     }
 
-    [ScriptMethod(name: "奇子·祖_强袭滑空（拉线范围）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^0039$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖_强袭滑空（拉线范围）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^0039$"])]
     public void 祖_强袭滑空(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1341) return;
@@ -1141,7 +1141,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·祖_前方乱流（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48497$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖_前方乱流（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48497$"])]
     public void 祖_前方乱流(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1154,9 +1154,9 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    // Todo. 奇子·祖_后方乱流（扫尾 ）ActionId:regex:^48499$ 实体面向未确定
+    // Todo. 强敌#1: 奇子·祖_后方乱流（扫尾 ）ActionId:regex:^48499$ 实体面向未确定
 
-    [ScriptMethod(name: "奇子·巨像_岩石崩溃（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48555$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·巨像_岩石崩溃（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48555$"])]
     public void 巨像_岩石崩溃(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1168,7 +1168,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "沙球_爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48562$"])]
+    [ScriptMethod(name: "敌人#4: 沙球_爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48562$"])]
     public void 沙球_爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1180,7 +1180,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "奇子·拉哈穆_大地摇动（扇形点名）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0028"])]
+    [ScriptMethod(name: "敌人#4: 奇子·拉哈穆_大地摇动（扇形点名）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0028"])]
     public void 拉哈穆_大地摇动(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1198,7 +1198,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·塞壬_混乱之歌（顺劈）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48565$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·塞壬_混乱之歌（顺劈）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48565$"])]
     public void 塞壬_混乱之歌(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1211,7 +1211,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·塞壬_急袭（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48570$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·塞壬_急袭（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48570$"])]
     public void 塞壬_急袭(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1223,7 +1223,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·塞壬_亡者之歌（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48573$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·塞壬_亡者之歌（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48573$"])]
     public void 塞壬_亡者之歌钢铁(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1246,7 +1246,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
-    [ScriptMethod(name: "奇子·塞壬_亡者之歌（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48575$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·塞壬_亡者之歌（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48575$"])]
     public void 塞壬_亡者之歌月环(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"靠近月环");
@@ -1262,9 +1262,9 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    // Todo. 远音 三穿一水炮 ActionId 48577
+    // Todo. 强敌#2: 远音 三穿一水炮 ActionId 48577
 
-    [ScriptMethod(name: "贪食无厌 加特勒_垂直驱动（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48605$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_垂直驱动（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48605$"])]
     public void 加特勒_垂直驱动(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"去两侧");
@@ -1278,7 +1278,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48603$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48603$"])]
     public void 加特勒_贪食啮噬(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"去对侧角落", duration: 10600, true);
@@ -1293,7 +1293,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48600$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48600$"])]
     public void 加特勒_贪食裂膛(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"去BOSS背后", duration: 10600, true);
@@ -1308,7 +1308,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "诱爆魔刃_魔力爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48597$"])]
+    [ScriptMethod(name: "头目: 诱爆魔刃_魔力爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48597$"])]
     public void 诱爆魔刃_魔力爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1320,7 +1320,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48607$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48607$"])]
     public void 加特勒_大奔流(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"向南北击退", duration: 6000, true);
@@ -1330,7 +1330,7 @@ public class NewDuty
         accessory.Method.VfxMethod.SetVfxSpeed(omenHandle, 0.8f);
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48620$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48620$"])]
     public void 加特勒_霹雳(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"麻痹死刑", duration: 4000, true);
@@ -1346,13 +1346,13 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_支配魔刃（躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48614$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_支配魔刃（躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48614$"])]
     public void 加特勒_支配魔刃(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"快躲开");
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_拘束（结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add", "DataId:regex:^2015427$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_拘束（结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add", "DataId:regex:^2015427$"])]
     public void 加特勒_拘束(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1341) return;
@@ -1366,7 +1366,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
 
-    [ScriptMethod(name: "魔刃结界_剧毒魔刃（十字）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add", "DataId:regex:^2015427$"])]
+    [ScriptMethod(name: "头目: 魔刃结界_剧毒魔刃（十字）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add", "DataId:regex:^2015427$"])]
     public void 魔刃结界_剧毒魔刃(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1341) return;
@@ -1388,14 +1388,14 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "贪食无厌 加特勒_火焰魔刃（放置核爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48615$"])]
+    [ScriptMethod(name: "头目: 贪食无厌 加特勒_火焰魔刃（放置核爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48615$"])]
     public void 加特勒_火焰魔刃(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"放置核爆", duration: 5200, true);
         if (isTTS) accessory.Method.TTS($"放置核爆");
     }
 
-    [ScriptMethod(name: "火焰魔刃_魔刃爆焰（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48619$"])]
+    [ScriptMethod(name: "头目: 火焰魔刃_魔刃爆焰（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48619$"])]
     public void 火焰魔刃_魔刃爆焰(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1415,35 +1415,35 @@ public class NewDuty
     [ScriptMethod(name: "—————— 高段 第一盘 ——————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
     public void 高段一(Event @event, ScriptAccessory accessory) { }
 
-    [ScriptMethod(name: "奇子·博学林鸮_掉落（三穿一提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48654$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_掉落（三穿一提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48654$"])]
     public void 博学林鸮_掉落提示(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"三穿一", duration: 2000, false);
         if (isTTS) accessory.Method.TTS($"三穿一");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_爆震之章（浮空提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48657$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_爆震之章（浮空提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48657$"])]
     public void 博学林鸮_爆震之章(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"站在浮空圈", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"站在浮空圈");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_狂水之章（河童提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48658$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_狂水之章（河童提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48658$"])]
     public void 博学林鸮_狂水之章(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"站在河童圈", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"站在河童圈");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_魔法锤之章（史莱姆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48659$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_魔法锤之章（史莱姆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48659$"])]
     public void 博学林鸮_魔法锤之章(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"站在粘液怪圈", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"站在粘液怪圈");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_精神集中（驱散提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48668$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_精神集中（驱散提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48668$"])]
     public void 博学林鸮_精神集中(Event @event, ScriptAccessory accessory)
     {
         // 赋予 StatusID 5020 魔法伤害提高
@@ -1451,14 +1451,14 @@ public class NewDuty
         if (isTTS) accessory.Method.TTS($"准备驱散");
     }
 
-    [ScriptMethod(name: "奇子·博学林鸮_昏暗之章（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48669$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_昏暗之章（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48669$"])]
     public void 博学林鸮_昏暗之章(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"大AOE", duration: 7000, false);
         if (isTTS) accessory.Method.TTS($"大AOE");
     }
 
-    [ScriptMethod(name: "奇子·魔界花_恶臭气（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4867(3|5)$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·魔界花_恶臭气（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4867(3|5)$"])]
     public void 魔界花_恶臭气(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1471,7 +1471,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·魔界花_地震（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50758$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·魔界花_地震（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50758$"])]
     public void 魔界花_地震(Event @event, ScriptAccessory accessory)
     {
         IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(203, new Vector3(35f),
@@ -1502,7 +1502,7 @@ public class NewDuty
             @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f, 0.4f, 0f, 0.8f), 15000);
     }
 
-    [ScriptMethod(name: "奇子·冰龙_冰寒折磨（辣翅辣尾直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4869(7|9)$"])]
+    [ScriptMethod(name: "随机#2: 奇子·冰龙_冰寒折磨（辣翅辣尾直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4869(7|9)$"])]
     public void 冰龙_冰寒折磨(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1514,14 +1514,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp);
     }
 
-    [ScriptMethod(name: "奇子·冰龙_白霜环绕（AOE+DOT）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48709$"])]
+    [ScriptMethod(name: "随机#2: 奇子·冰龙_白霜环绕（AOE+DOT）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48709$"])]
     public void 冰龙_白霜环绕(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"AOE+DOT（可用 <死尸净化> 驱散冻伤）", duration: 4000, false);
         if (isTTS) accessory.Method.TTS($"AOE+DOT");
     }
 
-    [ScriptMethod(name: "奇子·冰龙_寒冰覆盖（诱导提示）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48707$"], suppress: 300000)]
+    [ScriptMethod(name: "随机#2: 奇子·冰龙_寒冰覆盖（诱导提示）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48707$"], suppress: 300000)]
     public void 冰龙_寒冰覆盖(Event @event, ScriptAccessory accessory)
     {
         // 从 [48710 寒冰覆盖] 开始读条，到最后一个黄圈出现，共11s，但还是需要提早播报一下所以采用 [48707 无终的枯朽] 的判定，注意横幅入场动画需占0.7s
@@ -1542,7 +1542,7 @@ public class NewDuty
 
     /*
 
-    [ScriptMethod(name: "奇子·冰龙_低温俯冲（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48701$"])]
+    [ScriptMethod(name: "随机#2: 奇子·冰龙_低温俯冲（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48701$"])]
     public void 冰龙_低温俯冲(Event @event, ScriptAccessory accessory)
     {
         // 这玩意第一次俯冲怎么Z轴高2m的
@@ -1557,7 +1557,7 @@ public class NewDuty
 
     */
 
-    [ScriptMethod(name: "奇子·冰龙_空降（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48702$"])]
+    [ScriptMethod(name: "随机#2: 奇子·冰龙_空降（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48702$"])]
     public async void 冰龙_空降(Event @event, ScriptAccessory accessory)
     {
         await Task.Delay(19300);
@@ -1588,7 +1588,7 @@ public class NewDuty
         */
     }
 
-    [ScriptMethod(name: "奇子·石像鬼_圆环连斩（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4872[01]$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·石像鬼_圆环连斩（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4872[01]$"])]
     public void 石像鬼_圆环连斩(Event @event, ScriptAccessory accessory)
     {
         // 48719 无意义读条钢铁月环，48720 短钢铁，48721 长月环，为什么他没有环圆连斩？
@@ -1619,7 +1619,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·石像鬼_突进连斩（远离提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48717$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·石像鬼_突进连斩（远离提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48717$"])]
     public void 石像鬼_突进连斩(Event @event, ScriptAccessory accessory)
     {
         // 48717 无意义本体读条，48718 二连顺劈
@@ -1637,14 +1637,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·石像鬼_瘴腐气（吃球提示）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48713$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·石像鬼_瘴腐气（吃球提示）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48713$"])]
     public void 石像鬼_瘴腐气(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"每轮吃4个球", duration: 5000, false);
         if (isTTS) accessory.Method.TTS($"吃4个球");
     }
 
-    [ScriptMethod(name: "瘴腐气_渐渐恐慌（等待提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5178$", "StackCount:4"])]
+    [ScriptMethod(name: "强敌#1: 瘴腐气_渐渐恐慌（等待提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^5178$", "StackCount:4"])]
     public void 瘴腐气_渐渐恐慌(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"等待Debuff结束");
@@ -1662,14 +1662,14 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·石像鬼_冲波五连斩（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50696$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·石像鬼_冲波五连斩（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50696$"])]
     public void 石像鬼_冲波五连斩(Event @event, ScriptAccessory accessory)
     {
         // if (isText)accessory.Method.TextInfo($"AOE", duration: 2000, false);
         if (isTTS) accessory.Method.TTS($"AOE");
     }
 
-    [ScriptMethod(name: "奇子·石像鬼_冲波五连斩（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48725$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·石像鬼_冲波五连斩（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48725$"])]
     public void 石像鬼_冲波五连斩击退(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1683,7 +1683,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
 
-    [ScriptMethod(name: "奇子·石像鬼_荒芜新星（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48727$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·石像鬼_荒芜新星（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48727$"])]
     public void 石像鬼_荒芜新星(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1695,7 +1695,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
     }
 
-    [ScriptMethod(name: "奇子·树精_簌簌轻风（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^487(78|79|80)$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·树精_簌簌轻风（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^487(78|79|80)$"])]
     public void 树精_簌簌轻风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1723,7 +1723,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
 
-    [ScriptMethod(name: "奇子·树精_巨木龙卷（步进地震）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4877[1-5]$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·树精_巨木龙卷（步进地震）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4877[1-5]$"])]
     public void 树精_巨木龙卷(Event @event, ScriptAccessory accessory)
     {
         // 48771 为可见的18m钢铁，之后48772~48775为轮流的步进地震
@@ -1764,21 +1764,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "奇子·树精_橡果炸弹（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50518$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·树精_橡果炸弹（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50518$"])]
     public void 树精_橡果炸弹(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"睡眠点名", duration: 4000, false);
         if (isTTS) accessory.Method.TTS($"睡眠点名");
     }
 
-    [ScriptMethod(name: "奇子·比洛克_治疗之水（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48782$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·比洛克_治疗之水（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48782$"])]
     public void 比洛克_治疗之水(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo($"打断 <比洛克> （借用-咒具碎魂）", duration: 8000, false);
         if (isTTS) accessory.Method.TTS($"打断比洛克");
     }
 
-    [ScriptMethod(name: "奇子·巨像_平原震裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48755$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_平原震裂（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48755$"])]
     public void 巨像_平原震裂(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1801,7 +1801,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
-    [ScriptMethod(name: "奇子·巨像_核心环光（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48753$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_核心环光（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48753$"])]
     public void 巨像_核心环光(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1815,7 +1815,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    [ScriptMethod(name: "奇子·巨像_钢铁月环记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^487(59|60)$"], userControl: false)]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_钢铁月环记录", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^487(59|60)$"], userControl: false)]
     public void 巨像_钢铁月环记录(Event @event, ScriptAccessory accessory)
     {
         if (@event.ActionId == 48759)
@@ -1824,7 +1824,7 @@ public class NewDuty
             Plaincracker = 1;
     }
 
-    [ScriptMethod(name: "奇子·巨像_连线钢铁月环", eventType: EventTypeEnum.Tether, eventCondition: ["Id:01AF"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_连线钢铁月环", eventType: EventTypeEnum.Tether, eventCondition: ["Id:01AF"])]
     public void 巨像_连线钢铁月环(Event @event, ScriptAccessory accessory)
     {
         if (Plaincracker == 1)
@@ -1853,14 +1853,14 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·巨像_岩壁（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48748$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_岩壁（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48748$"])]
     public void 巨像_岩壁(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"去两侧石堆旁边", duration: 2000, true);
         if (isTTS)accessory.Method.TTS($"去两侧石堆旁边");
     }
     
-    [ScriptMethod(name: "奇子·巨像_冲击波（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48750$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_冲击波（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48750$"])]
     public void 巨像_冲击波(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1873,7 +1873,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
-    [ScriptMethod(name: "奇子·巨像_岩雨（钢铁月环）", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:regex:^(1|64)$","Id2:regex:^(2|128)$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_岩雨（钢铁月环）", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:regex:^(1|64)$","Id2:regex:^(2|128)$"])]
     public void 巨像_岩雨钢铁月环(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1342) return;
@@ -1903,7 +1903,7 @@ public class NewDuty
         }
     }
     
-    [ScriptMethod(name: "奇子·巨像_岩突（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48768$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_岩突（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48768$"])]
     public void 巨像_岩突 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1916,7 +1916,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "奇子·巨像_破魔震（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50649$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_破魔震（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50649$"])]
     public void 巨像_破魔震(Event @event, ScriptAccessory accessory)
     {
         IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(203, new Vector3(60f),
@@ -1933,7 +1933,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "奇子·爆弹之母_烈火怒骂（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48799$"])]
+    [ScriptMethod(name: "随机#4: 奇子·爆弹之母_烈火怒骂（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48799$"])]
     public void 爆弹之母_烈火怒骂 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1948,7 +1948,7 @@ public class NewDuty
     
     // 48801 奇子·爆弹之母_熔毁（击退直线死刑）
     
-    [ScriptMethod(name: "怨毒龙 博尔格尼_猛毒吐息（后跳顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48807$"])]
+    [ScriptMethod(name: "头目: 怨毒龙 博尔格尼_猛毒吐息（后跳顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48807$"])]
     public void 博尔格尼_猛毒吐息 (Event @event, ScriptAccessory accessory)
     {
         // 实际上是读条5.4s后判定,但是实体飞走了.jpg
@@ -1977,21 +1977,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "怨毒龙 博尔格尼_猛毒粘液（放圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48809$"])]
+    [ScriptMethod(name: "头目: 怨毒龙 博尔格尼_猛毒粘液（放圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48809$"])]
     public void 博尔格尼_猛毒粘液(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"四连放圈点名", duration: 12300, false);
         if (isTTS)accessory.Method.TTS($"四连放圈点名");
     }
     
-    [ScriptMethod(name: "怨毒龙 博尔格尼_蠕动的痰（放小怪提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4881(7|9)$"])]
+    [ScriptMethod(name: "头目: 怨毒龙 博尔格尼_蠕动的痰（放小怪提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4881(7|9)$"])]
     public void 博尔格尼_蠕动的痰(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo  (@event.ActionId == 48817 ? $"放置小怪点名" : "快躲开", duration: 6900, true);
         if (isTTS)accessory.Method.TTS (@event.ActionId == 48817 ? $"放置小怪点名" : $"快躲开");
     }
     
-    [ScriptMethod(name: "怨毒龙 博尔格尼_低温俯冲（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48814$"])]
+    [ScriptMethod(name: "头目: 怨毒龙 博尔格尼_低温俯冲（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48814$"])]
     public void 博尔格尼_低温俯冲(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2003,7 +2003,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "怨毒龙 博尔格尼_空降（蓝圈击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48828$"])]
+    [ScriptMethod(name: "头目: 怨毒龙 博尔格尼_空降（蓝圈击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48828$"])]
     public void 博尔格尼_空降(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2024,7 +2024,7 @@ public class NewDuty
     [ScriptMethod(name: "—————— 高段 第二盘 ——————", eventType: EventTypeEnum.StatusAdd, eventCondition: ["ActionId:"])]
     public void 高段二(Event @event, ScriptAccessory accessory) { }
     
-    [ScriptMethod(name: "奇子·佛劳洛斯_蓄电雷击（前半场刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49193$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·佛劳洛斯_蓄电雷击（前半场刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49193$"])]
     public void 佛劳洛斯_蓄电雷击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2036,14 +2036,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
         
-    [ScriptMethod(name: "奇子·佛劳洛斯_飘忽爆破（麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49189$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·佛劳洛斯_飘忽爆破（麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49189$"])]
     public void 佛劳洛斯_飘忽爆破(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"麻痹死刑", duration: 6000, true);
         if (isTTS)accessory.Method.TTS($"麻痹死刑");
     }
     
-    [ScriptMethod(name: "奇子·佛劳洛斯_电流冲击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49191$"])]
+    [ScriptMethod(name: "敌人#1: 奇子·佛劳洛斯_电流冲击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49191$"])]
     public void 佛劳洛斯_电流冲击(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2066,21 +2066,21 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "奇子·毒性魔菇（拉水圈提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19678$"],suppress:1000)]
+    [ScriptMethod(name: "强敌#1: 奇子·毒性魔菇（拉水圈提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19678$"],suppress:1000)]
     public void 毒性魔菇提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"在水圈内击杀 <毒性魔菇>", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"在水圈内击杀魔菇");
     }
     
-    [ScriptMethod(name: "奇子·夺心魔_虚空暴雷（死刑提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49205$"],suppress:1000)]
+    [ScriptMethod(name: "强敌#1: 奇子·夺心魔_虚空暴雷（死刑提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49205$"],suppress:1000)]
     public void 夺心魔_虚空暴雷提示(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"范围死刑，离开水圈", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"范围死刑，离开水圈");
     }
     
-    [ScriptMethod(name: "奇子·夺心魔_虚空暴雷（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49207$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·夺心魔_虚空暴雷（十字）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49207$"])]
     public void 夺心魔_虚空暴雷(Event @event, ScriptAccessory accessory)
     {
         // Omen的 ActionId是 [50939]
@@ -2100,14 +2100,14 @@ public class NewDuty
         }
     }
     
-    [ScriptMethod(name: "奇子·夺心魔_虚空强麻痹（麻痹AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49208$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·夺心魔_虚空强麻痹（麻痹AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49208$"])]
     public void 夺心魔_虚空强麻痹(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"[雷,离开水圈] 麻痹AOE（可死尸净化）", duration: 6000, false);
         if (isTTS)accessory.Method.TTS($"麻痹AOE，离开水圈");
     }
     
-    [ScriptMethod(name: "立体魔法阵_黑暗奔流（小直线）", eventType: EventTypeEnum.SetObjPos, eventCondition: ["SourceDataId:regex:^19681$","Id:0197"])]
+    [ScriptMethod(name: "强敌#1: 立体魔法阵_黑暗奔流（小直线）", eventType: EventTypeEnum.SetObjPos, eventCondition: ["SourceDataId:regex:^19681$","Id:0197"])]
     public void 立体魔法阵_黑暗奔流小(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
@@ -2121,7 +2121,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
-    [ScriptMethod(name: "立体魔法阵_黑暗奔流（大直线）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^01AA$"])]
+    [ScriptMethod(name: "强敌#1: 立体魔法阵_黑暗奔流（大直线）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^01AA$"])]
     public void 立体魔法阵_黑暗奔流大(Event @event, ScriptAccessory accessory)
     {
         // 或者用 EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^3795$"] , dp.Owner = @event.TargetId(); dp.DestoryAt = 4200;
@@ -2136,7 +2136,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
-    [ScriptMethod(name: "奇子·夜魔人_突击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^492(19|20)"])]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_突击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^492(19|20)"])]
     public void 夜魔人_突击(Event @event, ScriptAccessory accessory)
     {
         // 49219 突击钢铁，49220 突击顺劈
@@ -2152,9 +2152,10 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "奇子·夜魔人_回转击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49222$"])]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_回转击（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49222$"])]
     public void 夜魔人_回转击(Event @event, ScriptAccessory accessory)
     {
+        // 49216 调配补给 棍棒 打钢铁，突击 49220
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"回转击{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -2164,11 +2165,10 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // 49215 调配补给 长刀 打顺劈，突击 49220 ， 49216 调配补给 棍棒
-    
-    [ScriptMethod(name: "奇子·夜魔人_横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49224$"])]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49224$"])]
     public void 夜魔人_横扫 (Event @event, ScriptAccessory accessory)
     {
+        // 49215 调配补给 长刀 打顺劈，突击 49220
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"横扫{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
@@ -2179,14 +2179,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "奇子·夜魔人_黑暗帷幕（解除提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19685$"],suppress:1000)]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_黑暗帷幕（解除提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19685$"],suppress:1000)]
     public void 夜魔人_黑暗帷幕(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"使用光元精的扇形亡语对准BOSS", duration: 5000, true);
         if (isTTS)accessory.Method.TTS($"使用光元精的扇形亡语对准BOSS");
     }
     
-    [ScriptMethod(name: "奇子·爆弹怪_爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49210$"])]
+    [ScriptMethod(name: "随机#1: 奇子·爆弹怪_爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49210$"])]
     public void 爆弹怪_爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2198,9 +2198,9 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // Todo.49211 奇子·爆弹怪_自爆（狂暴）
+    // Todo.49211 随机#1: 奇子·爆弹怪_自爆（狂暴）
     
-    [ScriptMethod(name: "奇子·光元精_光散射（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49212$"])]
+    [ScriptMethod(name: "随机#1: 奇子·光元精_光散射（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49212$"])]
     public void 光元精_光散射 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2214,9 +2214,9 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    // Todo.49214 奇子·深瞳_石化视线（背对）
+    // Todo.49214 随机#1: 奇子·深瞳_石化视线（背对）
     
-    [ScriptMethod(name: "奇子·夜魔人_挥舞（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49226$"])]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_挥舞（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49226$"])]
     public void 夜魔人_挥舞击退(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2233,7 +2233,7 @@ public class NewDuty
             @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f,0.4f,0f,0.8f), 4700);
     }
     
-    [ScriptMethod(name: "奇子·夜魔人_挥舞（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49228$"])]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_挥舞（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49228$"])]
     public void 夜魔人_挥舞钢铁(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2245,13 +2245,103 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "奇子·夜魔人_暗黑冲击（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49231$"])]
+    [ScriptMethod(name: "随机#1: 奇子·夜魔人_暗黑冲击（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49231$"])]
     public void 夜魔人_暗黑冲击(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"AOE");
     }
     
-    [ScriptMethod(name: "奇子·火蛟_火龙卷（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49256$"])]
+    [ScriptMethod(name: "随机#2: 奇子·阿托莫斯_震荡波（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49238$"])]
+    public void 阿托莫斯_震荡波(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"中间击退");
+        IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(203, new Vector3(40f),
+            @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f,0.4f,0f,0.8f), 5700);
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"阿托莫斯_震荡波击退安全区{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(10f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(4f);  // 场地20m，击退距离16m
+        dp.InnerScale = new Vector2(3.94f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "随机#2: 奇子·奶冻怪_狂水（击退预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49242$"])]
+    public void 奶冻怪_狂水(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"奶冻怪_狂水击退预测{@event.SourceId}";
+        dp.Scale = new(1f, 20f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(2f);
+        dp.Owner = accessory.Data.Me;
+        dp.TargetObject = @event.SourceId();
+        dp.Rotation = float.Pi;
+        dp.DestoryAt = 1700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "随机#2: 奇子·软糊怪_爆炎（水圈分摊提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49243$"])]
+    public void 提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"水圈分摊", duration: 6000, true);
+        if (isTTS)accessory.Method.TTS($"水圈分摊");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"软糊怪_爆炎{@event.TargetId}";
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.6f);
+        dp.Owner = @event.TargetId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "随机#2: 奇子·甜羹怪_暴雷（避开水圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49244$"])]
+    public void 甜羹怪_暴雷提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"离开水圈", duration: 7000, true);
+        if (isTTS)accessory.Method.TTS($"离开水圈");
+        
+        foreach (var item in accessory.Data.Objects.GetByDataId(2010154))
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Owner = item.EntityId;
+            dp.Name = $"水圈{item}";
+            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Scale = new Vector2(5f);
+            dp.DestoryAt = 7700;                
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        }
+    }
+    
+    [ScriptMethod(name: "随机#2: 奇子·甜羹怪_暴雷（地面绘制）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49245$"])]
+    public void 甜羹怪_暴雷(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"甜羹怪_暴雷{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Position = @event.EffectPosition;
+        dp.Scale = new Vector2(5f);
+        dp.DestoryAt = 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "随机#2: 奇子·阿托莫斯_昏暗（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49240$"])]
+    public void 阿托莫斯_昏暗 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"阿托莫斯_昏暗{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "敌人#2: 奇子·火蛟_火龙卷（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49256$"])]
     public void 火蛟_火龙卷 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2264,7 +2354,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "火球_延烧（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19697$"])]
+    [ScriptMethod(name: "敌人#2: 火球_延烧（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19697$"])]
     public void 火球_延烧(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2276,13 +2366,13 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "火球_延烧销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^19697$"],userControl: false)]
+    [ScriptMethod(name: "敌人#2: 火球_延烧销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^19697$"],userControl: false)]
     public void 火球_延烧销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"火球_延烧.*");
     }
     
-    [ScriptMethod(name: "火焰旋风（月环连线）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:19699"])]
+    [ScriptMethod(name: "敌人#2: 火焰旋风（月环连线）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:19699"])]
     public void 火焰旋风连线(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2296,7 +2386,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "火焰旋风_火焰旋风（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49259$"])]
+    [ScriptMethod(name: "敌人#2: 火焰旋风_火焰旋风（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49259$"])]
     public void 火焰旋风_火焰旋风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2310,14 +2400,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "奇子·火蛟_火棘屏障（读条驱散提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49253$"])]
+    [ScriptMethod(name: "敌人#2: 奇子·火蛟_火棘屏障（读条驱散提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49253$"])]
     public void 火蛟_火棘屏障(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"准备驱散 <火蛟>（借用-水栖波）", duration: 5000, false);
         if (isTTS)accessory.Method.TTS($"准备驱散火蛟");
     }
     
-    [ScriptMethod(name: "奇子·杜尔迦_雷气释放（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4926[56]$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·杜尔迦_雷气释放（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4926[56]$"])]
     public void 杜尔迦_雷气释放(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2329,27 +2419,27 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "导弹_突击（直线躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50688$"],suppress:1000)]
+    [ScriptMethod(name: "强敌#2: 导弹_突击（直线躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50688$"],suppress:1000)]
     public void 导弹_突击(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"快躲开");
     }
     
-    [ScriptMethod(name: "奇子·杜尔迦_原子射线（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49272$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·杜尔迦_原子射线（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49272$"])]
     public void 杜尔迦_原子射线(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"[火] 大AOE", duration: 12000, true);
         if (isTTS)accessory.Method.TTS($"大AOE");
     }
     
-    [ScriptMethod(name: "奇子·杜尔迦_气化炸弹（放击退提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49273$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·杜尔迦_气化炸弹（放击退提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49273$"])]
     public void 杜尔迦_气化炸弹(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"放置击退源", duration: 3200, true);
         if (isTTS)accessory.Method.TTS($"放置击退源");
     }
     
-    [ScriptMethod(name: "奇子·杜尔迦_气化炸弹（击退预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49274$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·杜尔迦_气化炸弹（击退预测）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49274$"])]
     public void 杜尔迦_气化炸弹击退预测(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2363,7 +2453,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "奇子·杜尔迦_扩散射线（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:49276$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·杜尔迦_扩散射线（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:49276$"])]
     public void 杜尔迦_扩散射线 (Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2376,9 +2466,9 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    // 奇子·美杜莎 Tether 0001 > 连线位置释放扇形 49278 石化光照射 用于石化小怪
+    // 随机#3: 奇子·美杜莎 Tether 0001 > 连线位置释放扇形 49278 石化光照射 用于石化小怪
     
-    [ScriptMethod(name: "奇子·美杜莎_圆环/环圆连斩（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^492(89|91|93|95)$"])]
+    [ScriptMethod(name: "随机#3: 奇子·美杜莎_圆环/环圆连斩（钢铁月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^492(89|91|93|95)$"])]
     public void 美杜莎_圆环环圆连斩(Event @event, ScriptAccessory accessory)
     {
         var (name, scale, inner, delay, destroyAt, text) = @event.ActionId switch
@@ -2412,7 +2502,7 @@ public class NewDuty
     
     // Todo. 需要再优化
     
-    [ScriptMethod(name: "奇子·美杜莎_冲击波（四向扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:49296$"])]
+    [ScriptMethod(name: "随机#3: 奇子·美杜莎_冲击波（四向扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:49296$"])]
     public void 美杜莎_冲击波(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2426,7 +2516,9 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "奇子·斯芬克斯_放逐（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:493(39|41)$"])]
+    // 随机#3: 里的独眼巨人也有怒视，和下面敌人#4: 巨人 的合一起了
+    
+    [ScriptMethod(name: "敌人#3: 奇子·斯芬克斯_放逐（左右刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:493(39|41)$"])]
     public void 斯芬克斯_放逐 (Event @event, ScriptAccessory accessory)
     {
         var isR = @event.ActionId == 49341;
@@ -2442,7 +2534,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "奇子·斯芬克斯_放逐（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49337$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·斯芬克斯_放逐（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49337$"])]
     public void 斯芬克斯_放逐钢铁(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2464,7 +2556,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "奇子·斯芬克斯_放逐（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49335$"])]
+    [ScriptMethod(name: "敌人#3: 奇子·斯芬克斯_放逐（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49335$"])]
     public void 斯芬克斯_放逐月环(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2478,7 +2570,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "奇子·斯芬克斯_记忆的谜题（指路）", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements",
+    [ScriptMethod(name: "敌人#3: 奇子·斯芬克斯_记忆的谜题（指路）", eventType: EventTypeEnum.Chat, eventCondition: ["Type:NPCDialogueAnnouncements",
         "Message:regex:^(试问……\n哪一个是(有翼|甲鳞|百兽|水栖)纲的魔物？|問おう……\n「(有翼|甲鱗|百獣|水棲)綱」の魔物はいずれなりや？|Riddle me this─which child is kin of (cloud|scale|beast|wave)?)$"])]
     public async void 记忆的谜题指路连线(Event @event, ScriptAccessory accessory)
     {
@@ -2538,24 +2630,22 @@ public class NewDuty
         }
     }
     
-    [ScriptMethod(name: "奇子·斯芬克斯_记忆的谜题销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:regex:^1433$"],userControl: false)]
+    [ScriptMethod(name: "敌人#3: 奇子·斯芬克斯_记忆的谜题销毁", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:regex:^1433$"],userControl: false)]
     public void 记忆的谜题销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"奇子连线.*");
     }
     
-    [ScriptMethod(name: "奇子·奇美拉_毒性爆发（毒AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49332$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_毒性爆发（毒AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49332$"])]
     public void 奇美拉_毒性爆发(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"AOE+毒（可死尸净化）", duration: 4000, false);
         if (isTTS)accessory.Method.TTS($"AOE+毒");
     }
+
+    /* 绘制钢铁月环扇形，留存
     
-    // 绘制钢铁月环扇形，留存
-    
-    /*
-    
-    [ScriptMethod(name: "奇子·奇美拉_冰结大咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49315$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_冰结大咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49315$"])]
     public void 奇美拉_冰结大咆哮(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"远离");
@@ -2580,7 +2670,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "奇子·奇美拉_雷电大咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49316$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_雷电大咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49316$"])]
     public void 奇美拉_雷电大咆哮(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"靠近");
@@ -2596,7 +2686,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
     
-    [ScriptMethod(name: "奇子·奇美拉_寒冰/雷鸣/火焰吐息（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4930(0|2|4)$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_寒冰/雷鸣/火焰吐息（扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4930(0|2|4)$"])]
     public void 奇美拉_寒冰雷鸣火焰吐息 (Event @event, ScriptAccessory accessory)
     { 
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2625,7 +2715,7 @@ public class NewDuty
     
     */
     
-    [ScriptMethod(name: "奇子·奇美拉_冰结/雷冰大咆哮（扇形安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^493(0[024]|1[56])$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_冰结/雷冰大咆哮（扇形安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^493(0[024]|1[56])$"])]
     public void 奇美拉_大咆哮 (Event @event, ScriptAccessory accessory)
     { 
         switch (@event.ActionId())
@@ -2684,7 +2774,7 @@ public class NewDuty
         }
     }
 
-    [ScriptMethod(name: "奇子·奇美拉_强袭吐息（冲锋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4932[345]$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_强袭吐息（冲锋扇形）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4932[345]$"])]
     public void 奇美拉_强袭吐息 (Event @event, ScriptAccessory accessory)
     { 
         // 读条约6.2s后 [49322]冲锋伤害 判定，冲锋后约3.6s扇形判定
@@ -2719,7 +2809,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "奇子·奇美拉_寒冰眼（点名放置提示）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^029D$"])]
+    [ScriptMethod(name: "强敌#3: 奇子·奇美拉_寒冰眼（点名放置提示）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^029D$"])]
     public void 奇美拉_寒冰眼(Event @event, ScriptAccessory accessory)
     {
         // 放置 49320 寒冰眼
@@ -2729,7 +2819,7 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"放置冰圈");
     }
     
-    [ScriptMethod(name: "闪电球_无序的和声（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19709$"])]
+    [ScriptMethod(name: "强敌#3: 闪电球_无序的和声（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19709$"])]
     public void 闪电球_无序的和声(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"远离球");
@@ -2753,7 +2843,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "奇子·巨人_巨躯狂怒（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4936(1|3)$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·巨人_巨躯狂怒（前后刀）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:4936(1|3)$"])]
     public void 巨人_巨躯狂怒 (Event @event, ScriptAccessory accessory)
     {
         var isF = @event.ActionId == 49361;
@@ -2768,7 +2858,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    [ScriptMethod(name: "奇子·巨人_巨躯狂怒（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49359$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·巨人_巨躯狂怒（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49359$"])]
     public void 巨人_巨躯狂怒钢铁(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2791,7 +2881,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "奇子·巨人_粉碎重踏（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49378$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·巨人_粉碎重踏（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49378$"])]
     public void 巨人_粉碎重踏(Event @event, ScriptAccessory accessory)
     {
         // 使用 TargetIcon 00EA 对准异色史莱姆释放的直线
@@ -2807,13 +2897,13 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "凝胶化火焰/雷电_炸裂（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4937(3|5)$"])]
+    [ScriptMethod(name: "敌人#4: 凝胶化火焰/雷电_炸裂（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4937(3|5)$"])]
     public void 凝胶化_炸裂(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"打断史莱姆");
     }
     
-    [ScriptMethod(name: "奇子·巨人_追炎（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49366$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·巨人_追炎（旋风）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49366$"])]
     public void 巨人_追炎(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"快躲开");
@@ -2837,7 +2927,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
-    [ScriptMethod(name: "奇子·巨人_追雷（踩塔）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49364$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·巨人_追雷（踩塔）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49364$"])]
     public void 巨人_追雷(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"踩塔");
@@ -2853,13 +2943,13 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
     }
     
-    [ScriptMethod(name: "奇子·独眼巨人_激励鼓舞（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49368$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·独眼巨人_激励鼓舞（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49368$"])]
     public void 独眼巨人_激励鼓舞(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"打断小怪");
     }
     
-    [ScriptMethod(name: "奇子·独眼巨人_怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^493(67|70)$"])]
+    [ScriptMethod(name: "敌人#4: 奇子·独眼巨人_怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^493(67|70)$"])]
     public void 独眼巨人_怒视(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2871,7 +2961,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     } // 在 随机#3：奇子·美杜莎 的战斗中，也有同名小怪与同名技能
     
-    [ScriptMethod(name: "奇子·莫古小猛_莫古暴风雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49383$"])]
+    [ScriptMethod(name: "随机#4: 奇子·莫古小猛_莫古暴风雨（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49383$"])]
     public void 莫古小猛_莫古暴风雨(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -2883,12 +2973,12 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // 49387 奇子·莫古小医_绒绒神圣（三角）
+    // Todo. 49381 百库啵横扫 ； 49387 奇子·莫古小医_绒绒神圣（三角）
     
     // 49420 死亡轮盘转转转
     // 50940 怪光线 直线死刑 [TargetIcon 01D7]
     
-    [ScriptMethod(name: "奇子·冥鬼之眼王_双重视线（鸳鸯锅）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^553[67]$"])]
+    [ScriptMethod(name: "强敌#4: 奇子·冥鬼之眼王_双重视线（鸳鸯锅）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^553[67]$"])]
     public void 冥鬼之眼王_双重视线(Event @event, ScriptAccessory accessory)
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
@@ -2897,14 +2987,21 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"去{color}半场");
     }
     
-    [ScriptMethod(name: "奇子·肮脏之眼_死亡视线（背对提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49434$"])]
+    [ScriptMethod(name: "强敌#4: 奇子·肮脏之眼_死亡视线（背对提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49434$"])]
     public void 肮脏之眼_死亡视线(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"背对 <肮脏之眼>", duration: 3000, true);
         if (isTTS)accessory.Method.TTS($"背对肮脏之眼");
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49470$"])]
+    [ScriptMethod(name: "强敌#4: 奇子·冥鬼之眼王_5兽级即死（引爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49429$"])]
+    public void 冥鬼之眼王_5兽级即死(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"引爆宝宝（只需引爆5倍数等级）", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"引爆宝宝");
+    }
+    
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49470$"])]
     public void 劳妲_霹雳(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"麻痹死刑", duration: 4000, true);
@@ -2920,7 +3017,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "隐蔽魔刃_突进（直线）", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:regex:^4576$","SourceDataId:19745"])]
+    [ScriptMethod(name: "头目: 隐蔽魔刃_突进（直线）", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:regex:^4576$","SourceDataId:19745"])]
     public void 隐蔽魔刃_突进(Event @event, ScriptAccessory accessory)
     {
         // PlayActionTimeline 4562是出现，4576是隐藏
@@ -2934,7 +3031,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
 
-    [ScriptMethod(name: "魔斧之主 劳妲_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49453$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49453$"])]
     public void 劳妲_大奔流(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"向南北击退", duration: 6000, true);
@@ -2944,7 +3041,7 @@ public class NewDuty
         accessory.Method.VfxMethod.SetVfxSpeed(omenHandle,0.8f);
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_支配魔刃（引导提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49462$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_支配魔刃（引导提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49462$"])]
     public void 劳妲_支配魔刃引导(Event @event, ScriptAccessory accessory)
     {
         // 另一个读条是 50846，引导预测再看需不需要画
@@ -2952,13 +3049,13 @@ public class NewDuty
         if (isTTS)accessory.Method.TTS($"向南北引导直线（避开人偶）");
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_支配魔刃（躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49464$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_支配魔刃（躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49464$"])]
     public void 劳妲_支配魔刃躲避(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"快躲开");
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_支配魔刃（直线预兆）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^0001$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_支配魔刃（直线预兆）", eventType: EventTypeEnum.Tether, eventCondition: ["Id:regex:^0001$"])]
     public void 劳妲_支配魔刃预兆(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
@@ -2973,7 +3070,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_垂直驱动（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49451$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_垂直驱动（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49451$"])]
     public void 劳妲_垂直驱动(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS($"去两侧");
@@ -2987,7 +3084,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49449$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49449$"])]
     public void 劳妲_贪食啮噬(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"对侧角落安全（注意击退）", duration: 12600, true);
@@ -3002,7 +3099,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49446$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49446$"])]
     public void 劳妲_贪食裂膛(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"BOSS背后安全（注意击退）", duration: 12600, true);
@@ -3017,7 +3114,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_消失魔刃·冲波（提醒）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49484$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_消失魔刃·冲波（提醒）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49484$"])]
     public void 劳妲_消失魔刃冲波(Event @event, ScriptAccessory accessory)
     {
         // [Status 5341] 49485 瞬移？，打正打背怎么都是49487 ， 49488没遇到，击退距离40m
@@ -3027,7 +3124,7 @@ public class NewDuty
     
     // [Status 5341]消失魔刃·冲波 49484 本体无意义读条，49485 瞬移？，打正打背怎么都是49487 ， 49488没遇到，击退距离40m
     
-    [ScriptMethod(name: "高段诱爆魔刃_魔力爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49443$"])]
+    [ScriptMethod(name: "头目: 高段诱爆魔刃_魔力爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49443$"])]
     public void 高段诱爆魔刃_魔力爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3039,7 +3136,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_拘束（结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^20154(28|53)$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_拘束（结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^20154(28|53)$"])]
     public void 劳妲_拘束(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
@@ -3053,7 +3150,7 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
-    [ScriptMethod(name: "高段魔刃结界_剧毒魔刃（十字）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^2015428$"])]
+    [ScriptMethod(name: "头目: 高段魔刃结界_剧毒魔刃（十字）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^2015428$"])]
     public void 高段魔刃结界_剧毒魔刃(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
@@ -3075,7 +3172,7 @@ public class NewDuty
         }
     }
     
-    [ScriptMethod(name: "火焰魔刃·牢狱（钢铁）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^2015453$"])]
+    [ScriptMethod(name: "头目: 火焰魔刃·牢狱（钢铁）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^2015453$"])]
     public void 火焰魔刃牢狱(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3087,14 +3184,14 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "魔斧之主 劳妲_火焰魔刃（放置核爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4946(5|8)$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_火焰魔刃（放置核爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4946(5|8)$"])]
     public void 劳妲_火焰魔刃(Event @event, ScriptAccessory accessory)
     {
         if (isText && @event.ActionId== 49465) accessory.Method.TextInfo ($"放置核爆点名", duration: 7000, true);
         if (isTTS)accessory.Method.TTS (@event.ActionId== 49465 ? $"放置核爆点名" : $"快躲开");
     }
     
-    [ScriptMethod(name: "高段火焰魔刃_魔刃爆焰（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49469$"])]
+    [ScriptMethod(name: "头目: 高段火焰魔刃_魔刃爆焰（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49469$"])]
     public void 高段火焰魔刃_魔刃爆焰(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
