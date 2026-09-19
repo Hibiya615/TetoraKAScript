@@ -26,7 +26,7 @@ namespace NewDuty;
 
 [ScriptType(guid: "80890eac-4730-4708-ad1b-05aba469c2a1", name: "最新最热临时绘制",
     territorys: [1307, 1346, 1339, 1340, 1341, 1342, 1343],
-    version: "0.0.3.3", author: "Tetora", note: noteStr)]
+    version: "0.0.3.4", author: "Tetora", note: noteStr)]
 
 /* MapID
  * 1307: 格莱杨拉波尔歼灭战
@@ -38,7 +38,7 @@ public class NewDuty
 {
     const string noteStr =
         """
-        v0.0.3.3:
+        v0.0.3.4:
         最新最热副本绘制，可能会电，介意请关闭
         别人的正式版发了这边就删
         """;
@@ -2973,7 +2973,82 @@ public class NewDuty
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // Todo. 49381 百库啵横扫 ； 49387 奇子·莫古小医_绒绒神圣（三角）
+    [ScriptMethod(name: "随机#4: 奇子·莫古小猛_百库啵横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49381$"])]
+    public void 莫古小猛_百库啵横扫 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"百库啵横扫{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(60f);
+        dp.Radian = 60f.DegToRad(); 
+        dp.DestoryAt = 7700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "随机#4: 奇子·莫古小术_绒绒陨石雨（步进扩大地火）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49389$"])]
+    public void 莫古小术_绒绒陨石雨(Event @event, ScriptAccessory accessory)
+    {
+        // 后续依次为 50944 8m / 50945 10m / 50946 12m / 50947 14m，每次步进距离均为8m
+        if (isTTS)accessory.Method.TTS($"步进扩大地火");
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"绒绒陨石雨{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "随机#4: 奇子·莫古小医_绒绒神圣（三角）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49387$"])]
+    public void 莫古小医_绒绒神圣 (Event @event, ScriptAccessory accessory)
+    {
+        // 实际攻击范围是三角 懒得抠了先画个扇形将就下！
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"莫古小医_绒绒神圣{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 8700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "随机#5: 奇子·贝希摩斯_陨石冲击（提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49402$"])]
+    public void 贝希摩斯_陨石冲击(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"连续放置5个陨石，不要重叠", duration: 5000, true);
+        if (isTTS)accessory.Method.TTS($"连续放陨石，不要重叠");
+    }
+    
+    [ScriptMethod(name: "随机#5: 奇子·贝希摩斯_引雷（提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2574$"])]
+    public void 贝希摩斯_广域落雷_引雷(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"传雷雷塔", duration: 3000, true);
+        if (isTTS)accessory.Method.TTS($"传雷雷塔");
+    }
+    
+    [ScriptMethod(name: "随机#5: 奇子·贝希摩斯_黄道陨石（提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49410$"])]
+    public void 贝希摩斯_黄道陨石(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"躲在陨石后");
+    }
+    
+    [ScriptMethod(name: "随机#5: 奇子·贝希摩斯_大漩涡（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49413"])]
+    public void 贝希摩斯_大漩涡(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"靠近BOSS");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"贝希摩斯_大漩涡{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(40f);
+        dp.InnerScale = new Vector2(8f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
     
     // 49420 死亡轮盘转转转
     // 50940 怪光线 直线死刑 [TargetIcon 01D7]
