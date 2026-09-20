@@ -8,6 +8,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Dungeon/MainScenario_Roulette.cs",
     "Note": "v0.0.0.2:\r\nLV50 随机任务：主线任务 初版绘制\r\n选项中的DR辅助需要你正确安装Daily Routines插件才可使用",
     "UpdateInfo": "v0.0.0.2: 7.3",
+    "UpdateTime": "",
     "TerritoryIds": [
       1043,
       1044,
@@ -23,6 +24,7 @@
     "DownloadUrl": "",
     "Note": "v0.0.0.1\r\nLV50 领航明灯天狼星灯塔 初版绘制及部分机制提示",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       160
     ]
@@ -36,6 +38,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Dungeon/the_Tam-Tara_Deepcroft(Hard).cs",
     "Note": "v0.0.0.1:\r\nLV50 惨剧灵殿塔姆·塔拉墓园 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       373
     ]
@@ -49,6 +52,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Dungeon/theAery.cs",
     "Note": "v0.0.0.3:\r\nLV55 邪龙王座龙巢神殿 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1065
     ]
@@ -62,6 +66,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Dungeon/SaintMocianne'sArboretum.cs",
     "Note": "v0.0.0.1:\r\nLV60 草木庭园圣茉夏娜植物园 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       511
     ]
@@ -75,6 +80,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/AlaMhigo.cs",
     "Note": "v0.0.0.1:\r\nLV70 鏖战红莲阿拉米格 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1146
     ]
@@ -88,6 +94,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/theFractalContinuum-Hard.cs",
     "Note": "v0.0.0.2:\r\n疯狂战舰无限回廊 副本绘制\r\n注意：BOSS2三斗神与尾王光柱地火未经实战测试，若有误请带ARR反馈",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       743
     ]
@@ -101,6 +108,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Dungeon/SaintMocianne'sArboretum%20(Hard).cs",
     "Note": "v0.0.0.3:\r\nLV70 污染庭园圣茉夏娜植物园 初版绘制",
     "UpdateInfo": "v0.0.0.3: 修复捕食绘制，增加设置项",
+    "UpdateTime": "",
     "TerritoryIds": [
       788
     ]
@@ -114,6 +122,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Dungeon/theTwinning.cs",
     "Note": "v0.0.0.2:\r\nLV80 异界遗构希尔科斯孪晶塔 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       840
     ]
@@ -127,6 +136,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Dungeon/Mistwake.cs",
     "Note": "v0.0.0.2:\r\n遗忘行路雾之迹 / Mistwake / 遺忘行路 ミストウェイク 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1314
     ]
@@ -140,6 +150,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ifrit(Hard).cs",
     "Note": "v0.0.0.5:\r\nLV50 伊弗利特歼灭战 初版绘制",
     "UpdateInfo": "写反地图ID了.jpg",
+    "UpdateTime": "",
     "TerritoryIds": [
       292
     ]
@@ -153,6 +164,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Garuda(Hard).cs",
     "Note": "v0.0.0.1:\r\nLV50 迦楼罗歼灭战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       294
     ]
@@ -166,6 +178,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ramuh(Hard).cs",
     "Note": "v0.0.0.2:\r\nLV50 拉姆歼灭战 初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       374
     ]
@@ -179,6 +192,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Shiva.cs",
     "Note": "v0.0.0.3:\r\nLV50 希瓦歼灭战 初版绘制",
     "UpdateInfo": "0.0.0.3",
+    "UpdateTime": "",
     "TerritoryIds": [
       377
     ]
@@ -192,6 +206,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Good_King_Moggle-Hard.cs",
     "Note": "v0.0.0.2:\r\nLV50 莫古力贤王歼灭战\r\n纯整活无意义，不喜欢可以不用\r\n台词暂时适用于CN版，暂未适配其他语言端",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       1067
     ]
@@ -205,6 +220,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Nabriales.cs",
     "Note": "v0.0.0.3:\r\nLV50 那布里亚勒斯讨伐战 初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       426
     ]
@@ -218,6 +234,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Hydra.cs",
     "Note": "v0.0.0.2:\nLV50 海德拉讨伐战 初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       369
     ]
@@ -231,6 +248,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/DhormeChimera.csg",
     "Note": "v0.0.0.6:\r\nLV50 死化奇美拉讨伐战 初版绘制",
     "UpdateInfo": "v0.0.0.6: 补充雷电咆哮技能ID",
+    "UpdateTime": "",
     "TerritoryIds": [
       368
     ]
@@ -244,6 +262,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Odin.cs",
     "Note": "v0.0.0.2:\r\nLV50 奥丁歼灭战 初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       394
     ]
@@ -257,6 +276,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleOnTheBigBridge.cs",
     "Note": "v0.0.0.3:\r\nLV50 大桥上的决斗 初版绘制",
     "UpdateInfo": "增加部分机制职能限制",
+    "UpdateTime": "",
     "TerritoryIds": [
       366
     ]
@@ -270,6 +290,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/BattleInTheBigKeep.cs",
     "Note": "v0.0.0.2:\r\nLV50 无限城的死斗 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       396
     ]
@@ -283,6 +304,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Nidhogg.cs",
     "Note": "v0.0.0.3:\r\nLV60 尼德霍格征龙战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       559
     ]
@@ -296,6 +318,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Sephirot.cs",
     "Note": "v0.0.0.1:\r\nLV60 萨菲洛特歼灭战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       517
     ]
@@ -309,6 +332,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Sophia.cs",
     "Note": "v0.0.0.3:\r\nLV60 索菲娅歼灭战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       576
     ]
@@ -322,6 +346,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials/Zurvan.cs",
     "Note": "v0.0.0.4:\r\nLV60 祖尔宛歼灭战 初版绘制",
     "UpdateInfo": "增加小怪出现位置预测，自身为T时不再提示攻击智慧信徒",
+    "UpdateTime": "",
     "TerritoryIds": [
       637
     ]
@@ -335,6 +360,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Susano.cs",
     "Note": "v0.0.0.1:\r\nLV63 须佐之男歼灭战 初版绘制\r\n支持DR 自动QTE",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       674
     ]
@@ -348,6 +374,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Lakshmi.cs",
     "Note": "v0.0.0.3:\r\nLV70 吉祥天女歼灭战 初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       719
     ]
@@ -361,6 +388,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Shinryu.cs",
     "Note": "v0.0.0.6:\r\nLV70 神龙歼灭战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       679
     ]
@@ -374,6 +402,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Tsukuyomi.cs",
     "Note": "v0.0.0.4:\r\nLV70 月读歼灭战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       778
     ]
@@ -387,6 +416,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Byakko.cs",
     "Note": "v0.0.0.11:\r\nLV70 白虎镇魂战 初版绘制",
     "UpdateInfo": "v0.0.0.11: 修改无间地狱时荒弹绘制范围",
+    "UpdateTime": "",
     "TerritoryIds": [
       746
     ]
@@ -400,6 +430,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Suzaku.cs",
     "Note": "v0.0.0.1:\r\nLV70 朱雀镇魂战 初版绘制\r\n跳楼机问就是不会，希望有人帮我画了",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       810
     ]
@@ -413,6 +444,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Trial/Yojimbo.cs",
     "Note": "v0.0.0.2:\r\nLV70 保镖歼灭战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       806
     ]
@@ -426,6 +458,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Trials/Titania.cs",
     "Note": "v0.0.0.1:\r\nLV73 缇坦妮雅歼灭战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       845
     ]
@@ -439,6 +472,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Trials/Hades.cs",
     "Note": "v0.0.0.3:\r\nLV80 哈迪斯歼灭战 初版绘制",
     "UpdateInfo": "v0.0.0.3: 修复一处奇怪的报错",
+    "UpdateTime": "",
     "TerritoryIds": [
       847
     ]
@@ -452,6 +486,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Golbez.cs",
     "Note": "v0.0.0.3:\nLV90 高贝扎歼灭战 初版绘制",
     "UpdateInfo": "增加死刑倒T销毁",
+    "UpdateTime": "",
     "TerritoryIds": [
       1140
     ]
@@ -465,6 +500,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Trial/Zeromus.cs",
     "Note": "v0.0.0.2:\r\nLV90 泽罗姆斯歼灭战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1168
     ]
@@ -478,6 +514,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/The_Interphos.cs",
     "Note": "v0.0.0.3:\r\nLV100 永恒女王歼灭战 绘制\r\n原作者：Poetry",
     "UpdateInfo": "0.0.0.3: 适配并略微修改",
+    "UpdateTime": "",
     "TerritoryIds": [
       1202
     ]
@@ -491,6 +528,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/The_Ageless_Necropolis.cs",
     "Note": "v0.0.0.1:\r\nLV100 7.3 永远之暗歼灭战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1295
     ]
@@ -504,6 +542,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/The_Unmaking.cs",
     "Note": "v0.0.0.1:\r\n恩欧歼灭战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1361
     ]
@@ -517,6 +556,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Ultimas_Bane(Extreme).cs",
     "Note": "v0.0.0.2: Patch2.0 LV50\r\n究极神兵假想作战 / 究極幻想 アルテマウェポン破壊作戦 / the Minstrel's Ballad: Ultima's Bane\r\n初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       348
     ]
@@ -530,6 +570,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Garuda(Extreme).cs",
     "Note": "v0.0.0.1:\r\nLV50 迦楼罗歼殛战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       297
     ]
@@ -543,6 +584,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Ifrit(Extreme).cs",
     "Note": "v0.0.0.3:\r\nLV50 伊弗利特歼殛战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "重做职能检测",
+    "UpdateTime": "",
     "TerritoryIds": [
       295
     ]
@@ -556,6 +598,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Good_King_Moggle(Extreme).cs",
     "Note": "v0.0.0.3:\r\nLV50 莫古力贤王歼殛战 初版绘制",
     "UpdateInfo": "新增文本与TTS开关，增加职能检测",
+    "UpdateTime": "",
     "TerritoryIds": [
       364
     ]
@@ -569,6 +612,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Leviathan(Extreme).cs",
     "Note": "v0.0.0.3:\r\nLV50 利维亚桑歼殛战 初版绘制",
     "UpdateInfo": "新增EdgeTTS开关，增加职能检测",
+    "UpdateTime": "",
     "TerritoryIds": [
       359
     ]
@@ -582,6 +626,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials-Extreme/Bismarck-Extreme.cs",
     "Note": "v0.0.0.1:\r\nLV60 俾斯麦歼殛战 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       447
     ]
@@ -595,6 +640,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A3N.cs",
     "Note": "v0.0.0.2:\r\nLV60 亚历山大机神城 启动之章3（有生命活水） 初版绘制",
     "UpdateInfo": "v0.0.0.2: 7.3",
+    "UpdateTime": "",
     "TerritoryIds": [
       444
     ]
@@ -608,6 +654,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A5N.cs",
     "Note": "v0.0.0.1:\r\nLV60 亚历山大机神城 律动之章1（奇才 拉特芬克斯） 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       520
     ]
@@ -621,6 +668,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A7N.cs",
     "Note": "v0.0.0.2:\r\nLV60 亚历山大机神城 律动之章3（万事通 奎克辛克斯） 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       522
     ]
@@ -634,6 +682,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Raid-Alexander/Normal/A10N.cs",
     "Note": "v0.0.0.1:\r\n亚历山大机神城 天动之章2（佣兵雷姆普里克斯）初版绘制 ",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       581
     ]
@@ -647,6 +696,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O4n.cs",
     "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 德尔塔幻境4（艾克斯迪司）绘制\r\n基于贾XX的绘制上更改与补充",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       694
     ]
@@ -660,6 +710,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O5n.cs",
     "Note": "v0.0.0.1:\r\nLV70 欧米茄时空狭缝 西格玛幻境1（魔列车）初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       748
     ]
@@ -673,6 +724,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/04-Stormblood/Raid-Omega_Quests/Normal/O11n.cs",
     "Note": "v0.0.0.5:\r\nLV70 欧米茄时空狭缝 阿尔法幻境3（欧米茄）初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       800
     ]
@@ -686,6 +738,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E1n.cs",
     "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 觉醒之章1（至尊伊甸）初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       849
     ]
@@ -699,6 +752,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E2n.cs",
     "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 觉醒之章2（虚无行者） 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       850
     ]
@@ -712,6 +766,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E8n.cs",
     "Note": "v0.0.0.3:\r\nLV80 伊甸希望乐园 共鸣之章4（构想希瓦）初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       905
     ]
@@ -725,6 +780,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E9n.cs",
     "Note": "v0.0.0.1:\r\nLV80 伊甸希望乐园 再生之章1（构想暗黑之云）初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       942
     ]
@@ -738,6 +794,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E10n.cs",
     "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 再生之章2（影之王）初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       943
     ]
@@ -751,6 +808,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/05-Shadowbringers/Raid-Eden/Normal/E12n.cs",
     "Note": "v0.0.0.2:\r\nLV80 伊甸希望乐园 再生之章4（伊甸之约）初版绘制",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       945
     ]
@@ -764,6 +822,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P10n.cs",
     "Note": "v0.0.0.4:\r\nLV90 万魔殿 荒天之狱2（万魔殿）初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1149
     ]
@@ -777,6 +836,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/06-EndWalker/Raid-Pand%C3%A6monium/Normal/P11n.cs",
     "Note": "v0.0.0.1:\r\nLV90 万魔殿 荒天之狱1（特弥斯） 初版绘制",
     "UpdateInfo": "",
+    "UpdateTime": "",
     "TerritoryIds": [
       1151
     ]
@@ -790,6 +850,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Alliance_Raids/Windurst_The_Third_Walk.cs",
     "Note": "LV100 7.5 温达斯：第三巡行 v0.0.0.5:\r\n初版绘制",
     "UpdateInfo": "0.0.0.5:先行版",
+    "UpdateTime": "",
     "TerritoryIds": [
       1368
     ]
@@ -803,6 +864,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/the_Palace_of_the_Dead.cs",
     "Note": "v0.0.1.1:\n死者宫殿 初版绘制",
     "UpdateInfo": "v0.0.1.1 重构绘图销毁条件",
+    "UpdateTime": "",
     "TerritoryIds": [
       561,
       562,
@@ -835,6 +897,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Pilgrims_Traverse.cs",
     "Note": "v0.0.1.91:\r\n朝圣交错路绘制\r\n更新日志见dc\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n出现问题请携带ARR反馈！",
     "UpdateInfo": "v0.0.1.91: 回退至相对稳定版本",
+    "UpdateTime": "",
     "TerritoryIds": [
       1281,
       1282,
@@ -859,6 +922,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/Celestium.cs",
     "Note": "天青斗场绘制，随缘更新中",
     "UpdateInfo": "v0.0.0.5：增加部分关卡小提醒。",
+    "UpdateTime": "",
     "TerritoryIds": [
       796
     ]
@@ -872,6 +936,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Formidable.cs",
     "Note": "v0.0.0.3:\r\nLV80 特殊Fate 绘制\r\n激斗畏惧装甲之秘密武器",
     "UpdateInfo": "v0.0.0.3 API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       814
     ]
@@ -885,6 +950,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Archaeotania.cs",
     "Note": "v0.0.0.4:\r\nLV80 特殊Fate 绘制\r\n灾厄的古塔尼亚之深海讨伐战",
     "UpdateInfo": "0.0.0.4：增加控制项",
+    "UpdateTime": "",
     "TerritoryIds": [
       818
     ]
@@ -898,6 +964,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Daivadipa.cs",
     "Note": "v0.0.0.4:\r\nLV90 特殊Fate 绘制\r\n兽道诸神信仰：伪神降临",
     "UpdateInfo": "v0.0.0.4:略微调整强制移动距离，增加用户设置选项",
+    "UpdateTime": "",
     "TerritoryIds": [
       957
     ]
@@ -911,6 +978,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Chi.cs",
     "Note": "v0.0.0.2:\r\nLV90 特殊Fate 绘制\r\n侵略兵器召回指令：破坏侵略兵器希",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       960
     ]
@@ -924,6 +992,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Ttokrrone.cs",
     "Note": "v0.0.0.3:\r\nLV100 特殊Fate 绘制\r\n蛇王得酷热涅：荒野的死斗",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       1190
     ]
@@ -937,6 +1006,7 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Fate/Mica_the_MagicalMu.cs",
     "Note": "v0.0.0.2:\r\nLV100 特殊Fate 绘制\r\n亩鼠米卡：盛装巡游皆大欢喜",
     "UpdateInfo": "API12",
+    "UpdateTime": "",
     "TerritoryIds": [
       1192
     ]
@@ -950,8 +1020,27 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/FRU_DLC.cs",
     "Note": "v0.0.0.3:\r\n光暗未来绝境战 额外补充部分\r\n可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分\r\n可能会有部分横幅提醒冲突，横幅只会显示最早出现的一个，可以自行参考时间轴关闭不需要的提醒\r\n如【P4 盖娅出现横幅倒计时】与【P4 忘却的此岸 AOE提示】和灵视的【P4 天光轮回躲避提示】横幅冲突，请三选一启用",
     "UpdateInfo": "0.0.0.3:Patch7.3",
+    "UpdateTime": "",
     "TerritoryIds": [
       1238
+    ]
+  },
+  {
+    "Name": "斗兽奇弈",
+    "Guid": "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/Crucible_of_the_Unbroken.cs",
+    "Note": "v0.0.0.1:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
+    "UpdateInfo": "v0.0.0.1: 斗兽奇弈初版绘制",
+    "UpdateTime": "",
+    "TerritoryIds": [
+      1339,
+      1340,
+      1341,
+      1342,
+      1343
     ]
   },
   {
@@ -963,25 +1052,22 @@
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/ActionArea.cs",
     "Note": "v0.0.0.3:\r\n技能范围绘制，全场景可用\r\n请先自行设置合适亮度并用任意技能测试",
     "UpdateInfo": "v0.0.0.3: 【重要】修复部分绘制残留问题",
+    "UpdateTime": "",
     "TerritoryIds": []
   },
   {
     "Name": "最新最热临时绘制",
     "Guid": "80890eac-4730-4708-ad1b-05aba469c2a1",
-    "Version": "0.0.3.4",
+    "Version": "0.0.3.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/NewDuty.cs",
-    "Note": "v0.0.3.4:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
-    "UpdateInfo": "0.0.3.4: 添加斗兽奇弈部分绘制",
+    "Note": "v0.0.3.5:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
+    "UpdateInfo": "0.0.3.5: 删除斗兽奇弈部分，如需继续使用请使用独立新脚本,
+    "UpdateTime": "",
     "TerritoryIds": [
       1307,
-      1346, 
-      1339, 
-      1340, 
-      1341, 
-      1342, 
-      1343
+      1346
     ]
   }
 ]

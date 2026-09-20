@@ -422,7 +422,7 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"],suppress:14000)]
+    [ScriptMethod(name: "对方占星LB播报", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:29255"],suppress:4000)]
     public void CelestialRiverTTS(Event @event, ScriptAccessory accessory)
     {
         // 星河漫天 ActionId:29255 ； 星河漫天（队友buff） StatusID:3105； 星河漫天（敌方debuff） StatusID:3106 
@@ -439,7 +439,7 @@ public class PVPToy
         }
     }
     
-    [ScriptMethod(name: "对方标记占星LB播报", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3105"],suppress:3000)]
+    [ScriptMethod(name: "对方标记占星LB播报", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:3105","Param:3"],suppress:4000)]
     public void CelestialRiverMarkTTS(Event @event, ScriptAccessory accessory)
     {
         if (!isOnlyMark) return; // 开启选项，只播报对方四小，采用有头顶标记的人获得 LB Buff时判断
