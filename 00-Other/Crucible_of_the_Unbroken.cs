@@ -2638,6 +2638,12 @@ public class Crucible_of_the_Unbroken
         accessory.Method.RemoveDraw($"奇子连线.*");
     }
     
+    [ScriptMethod(name: "敌人#3: 奇子·斯芬克斯_记忆的谜题死亡销毁", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^19710$"],userControl: false)]
+    public void 记忆的谜题死亡销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"奇子连线.*");
+    }
+    
     [ScriptMethod(name: "强敌#3: 奇子·奇美拉_毒性爆发（毒AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49332$"])]
     public void 奇美拉_毒性爆发(Event @event, ScriptAccessory accessory)
     {
