@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.1", author: "Tetora", note: noteStr)]
+    version: "0.0.0.2", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.2:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         """;
@@ -2816,6 +2816,7 @@ public class Crucible_of_the_Unbroken
     {
         // 放置 49320 寒冰眼
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+        if (phase == Beasts_Phase.Lauda) return;
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo($"放置冰圈", duration: 3500, false);
         if (isTTS)accessory.Method.TTS($"放置冰圈");
