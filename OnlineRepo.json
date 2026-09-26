@@ -1069,5 +1069,17 @@
       1307,
       1346
     ]
+  },
+  {
+    "Name": "杂项绘制",
+    "Guid": "164b30e3-a811-43ca-bf1f-6af7fe86c5ae",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/Miscellaneous.cs",
+    "Note": "v0.0.0.1:\r\n来自用户许愿也可能是针对Splatoon的补充，有啥画啥，不一定整个副本都有",
+    "UpdateInfo": "0.0.0.1: 增加P12N贞女直线绘制",
+    "UpdateTime": "",
+    "TerritoryIds": []
   }
 ]
