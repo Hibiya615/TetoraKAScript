@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         """;
@@ -3170,17 +3170,19 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "随机#5: 奇子·贝希摩斯_引雷（提示）", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:regex:^2574$"])]
     public void 贝希摩斯_广域落雷_引雷(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo($"传雷0层的雷塔", duration: 7300, true);
         if (isTTS)accessory.Method.TTS($"传雷0层的雷塔");
     }
     
-    [ScriptMethod(name: "随机#5: 雷塔_放电（提示）", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:16","Id2:32"])]
+    [ScriptMethod(name: "随机#5: 雷塔_放电（提示）", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:16","Id2:regex:^(32|256)$"])]
     public void 雷塔_放电(Event @event, ScriptAccessory accessory)
     {
         // 蓄力一层 4|8,三层应该是 64|128, 重置是1|2, 放电 ActionId 49401
+        // 引雷传导的话是0→2层蓄力，对应 32|256 也需要提示
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
         if (phase != Beasts_Phase.Behemoth) return;
-        if (isText)accessory.Method.TextInfo($"给 <{@event.SourceName()}> 放电", duration: 4000, true);
+        if (isText)accessory.Method.TextInfo($"给 <{@event.SourceName()}> 放电", duration: 4300, true);
         if (isTTS)accessory.Method.TTS($"给{@event.SourceName()}放电");
         
         var dp = accessory.Data.GetDefaultDrawProperties();

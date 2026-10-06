@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 // using Dalamud.Game.ClientState.Objects.Subkinds;
 // using Dalamud.Game.ClientState.Objects.Types;
 using Newtonsoft.Json;
@@ -11,18 +13,17 @@ using KodakkuAssist.Script;
 using KodakkuAssist.Module.GameEvent;
 using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
-using System.Threading.Tasks;
 
 namespace E2n;
 
 [ScriptType(guid: "b59c7db9-1fba-4476-8701-1e3043cb7dc8", name: "E2N", territorys: [850],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class E2n
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV80 伊甸希望乐园 觉醒之章2（虚无行者） 初版绘制
         """;
     
@@ -86,6 +87,8 @@ public class E2n
          accessory.Method.RemoveDraw("倪克斯.*");
      }
      
+     private Dictionary<uint, CancellationTokenSource> _spellinWaiting = new Dictionary<uint, CancellationTokenSource>();
+     
      [ScriptMethod(name: "延迟分散-黑暗爆炎", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1810"])]
      public async void 黑暗爆炎(Event @event, ScriptAccessory accessory)
      {
@@ -94,12 +97,63 @@ public class E2n
          dp.Color = accessory.Data.DefaultDangerColor;
          dp.Owner = @event.TargetId();
          dp.Scale = new Vector2(8f);
-         dp.Delay = @event.DurationMilliseconds() - 3000;
+
+         var durationMs = @event.DurationMilliseconds();
+         if (durationMs <= 3000) return; 
+
+         dp.Delay = durationMs - 3000;
          dp.DestoryAt = 3000;
          accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
-         
-         await Task.Delay((int)@event.DurationMilliseconds() - 3000); 
-         if (@event.TargetId() == accessory.Data.Me && isText)accessory.Method.TextInfo("分散", duration: 2500, true);
+    
+         uint targetId = @event.TargetId();
+    
+         // 如果这个目标之前已经有正在等待的任务，先把它取消掉，防止叠加
+         if (_spellinWaiting.TryGetValue(targetId, out var oldCts))
+         {
+             oldCts.Cancel();
+             oldCts.Dispose();
+         }
+
+         // 创建新的取消令牌
+         var cts = new CancellationTokenSource();
+         _spellinWaiting[targetId] = cts;
+
+         try
+         {
+             // 把令牌传给 Task.Delay
+             await Task.Delay((int)(durationMs - 3000), cts.Token);
+        
+             // 若没有被取消则继续执行
+             if (targetId == accessory.Data.Me && isText)
+             {
+                 accessory.Method.TextInfo("分散", duration: 2500, true);
+             }
+         }
+         catch (TaskCanceledException)
+         {
+             // 状态被提前覆盖/移除，取消计时
+         }
+         finally
+         {
+             // 任务结束清理字典
+             if (_spellinWaiting.TryGetValue(targetId, out var currentCts) && currentCts == cts)
+             {
+                 _spellinWaiting.Remove(targetId);
+                 cts.Dispose();
+             }
+         }
+     }
+     
+     [ScriptMethod(name: "中断计时-黑暗爆炎", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:1810"],userControl: false)]
+     public void 黑暗爆炎移除(Event @event, ScriptAccessory accessory)
+     {
+         uint targetId = @event.TargetId();
+         if (_spellinWaiting.TryGetValue(targetId, out var cts))
+         {
+             cts.Cancel();
+             cts.Dispose();
+             _spellinWaiting.Remove(targetId);
+         }
      }
             
      [ScriptMethod(name: "延迟分摊-黑暗神圣", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1809"])]
