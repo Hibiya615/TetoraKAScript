@@ -26,13 +26,13 @@ namespace Pilgrims_Traverse;
 
 [ScriptType(guid: "3f65b3c0-df48-4ef8-89ae-b8091b7690f1", name: "朝圣交错路", author: "Tetora", 
     territorys: [1281, 1282, 1283, 1284, 1285, 1286, 1287, 1288, 1289, 1290, 1311, 1333],
-    version: "0.0.1.91",note: noteStr)]
+    version: "0.0.2.0",note: noteStr)]
 
 public class Pilgrims_Traverse
 {
     const string noteStr =
         """
-        v0.0.1.91:
+        v0.0.2.0:
         朝圣交错路 (Pilgrim's Traverse) 基础绘制
         更新日志见dc，出现问题请带ARR录像文件反馈
         注：方法设置中的层数仅做分割线效果，并不是批量开关
@@ -83,11 +83,8 @@ public class Pilgrims_Traverse
     
     #region 基础控制
     
-    [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -264,7 +261,6 @@ public class Pilgrims_Traverse
     {
         if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2000, true);
         if (isTTS) accessory.Method.TTS("打断拟态怪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
     
     #region 小工具部分
@@ -328,7 +324,6 @@ public class Pilgrims_Traverse
     {
         if(!isMiniTools) return;
         if (isTTS)accessory.Method.TTS("本层有烛台");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("本层有烛台");
     }
     */
     
@@ -596,7 +591,6 @@ public class Pilgrims_Traverse
     public void 交错路冰海天使_捕食行动(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("眩晕冰海天使死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("眩晕冰海天使死刑");
     }
     
     [ScriptMethod(name: "26~29 得到宽恕的残忍_流明无限（直线）/ Lumen Infinitum", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44668"])]
@@ -859,13 +853,11 @@ public class Pilgrims_Traverse
         {
             if (isText)accessory.Method.TextInfo("三连击退", duration: 2000, true);
             if (isTTS)accessory.Method.TTS("三连击退");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("三连击退");
         }
         else
         {
             if (isText)accessory.Method.TextInfo("三连钢铁", duration: 2000, true);
             if (isTTS)accessory.Method.TTS("三连钢铁");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("三连钢铁");
         }
     }
     
@@ -992,7 +984,6 @@ public class Pilgrims_Traverse
     public void 交错路塑像_吸引震动 (Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("吸引");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("吸引");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路塑像_吸引震动{@event.SourceId()}";
@@ -1073,7 +1064,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("站在石头上", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("站在石头上");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("站在石头上");
     }
     
     [ScriptMethod(name: "50 奥格布那巴利_进沙坑 点名提示 / Sandpit Tip", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0280"])]
@@ -1085,13 +1075,11 @@ public class Pilgrims_Traverse
         {
             if (isText)accessory.Method.TextInfo("追踪AOE点名 (避开队友)", duration: 13800, true);
             if (isTTS)accessory.Method.TTS("追踪AOE点名");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("追踪AOE点名");
         }
         else
         {
             if (isText)accessory.Method.TextInfo("躲避追踪AOE (跟着跑,别挡路)", duration: 13800, true);
             if (isTTS)accessory.Method.TTS("躲避追踪AOE");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("躲避追踪AOE");
         }
     }
     
@@ -1129,7 +1117,6 @@ public class Pilgrims_Traverse
         if (isText)accessory.Method.TextInfo("击退倒计时", duration: 7000, false);
         await Task.Delay(4700);
         if (isTTS)accessory.Method.TTS("进入流沙");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("进入流沙");
     }
     
     #endregion
@@ -1142,7 +1129,6 @@ public class Pilgrims_Traverse
     public void 交错路巨蜥_火鳞甲(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("巨蜥反伤");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("巨蜥反伤");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路巨蜥_火鳞甲{@event.SourceId()}";
@@ -1244,7 +1230,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("打断美甲兽目押 （无任何抗性）", duration: 4300, true);
         if (isTTS)accessory.Method.TTS("打断或眩晕美甲兽");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断或眩晕美甲兽");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路美甲兽_飞散性惑乱花粉块{@event.SourceId()}";
@@ -1613,7 +1598,6 @@ public class Pilgrims_Traverse
         var zealousGlower = @event.ActionId == 43411 ? "从远到近" : "从近到远";
         if (isText)accessory.Method.TextInfo($"光球月环: {zealousGlower}", duration: 8600, true);
         if (isTTS)accessory.Method.TTS($"月环{zealousGlower}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"月环{zealousGlower}");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的热忱_热忱怒视";
@@ -1731,7 +1715,6 @@ public class Pilgrims_Traverse
         var ardorousEye = @event.ActionId == 43418 ? "从BOSS左侧开始，顺时针" : "从BOSS右侧开始，逆时针";
         if (isText)accessory.Method.TextInfo($"光球月环: {ardorousEye}", duration: 10000, true);
         if (isTTS)accessory.Method.TTS($"月环{ardorousEye}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"月环{ardorousEye}");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"得到宽恕的热忱_热忱之眼";
@@ -1762,7 +1745,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("中间击退（防击退有效）", duration: 6000, true);
         if (isTTS)accessory.Method.TTS("击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("击退");
     }
     
     [ScriptMethod(name: "70 得到宽恕的热忱_八重横扫（扇形）/ Octuple Swipe", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:43432"])]
@@ -1803,7 +1785,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("远离自爆（距离衰减）", duration: 4000, true);
         if (isTTS)accessory.Method.TTS("远离自爆");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("远离自爆");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路爆岩怪_自爆危险区{@event.SourceId()}";
@@ -2115,7 +2096,6 @@ public class Pilgrims_Traverse
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("吃白色半场刀", duration: 10000, true);
         if (isTTS)accessory.Method.TTS("吃白色半场刀");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("吃白色半场刀");
     }
     
     [ScriptMethod(name: "80 得到宽恕的不敬_亡途重负 少移动提示 / Nowhere to Run Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4519", "Param:1"])]
@@ -2124,7 +2104,6 @@ public class Pilgrims_Traverse
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("减少移动，别到8层", duration: 16300, true);
         if (isTTS)accessory.Method.TTS("减少移动");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("减少移动");
     }
     
     /*
@@ -2177,7 +2156,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("打断异豺死刑 （无任何抗性）", duration: 11300, true);
         if (isTTS)accessory.Method.TTS("打断异豺死刑");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断异豺死刑");
     }
     
     [ScriptMethod(name: "81~84 交错路卡部斯_昏暗（顺劈）/ Dark II", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44775"])]
@@ -2210,7 +2188,6 @@ public class Pilgrims_Traverse
     public void 交错路骑兵_残杀(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("冲锋击退+三连击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("冲锋击退+三连击退");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路骑兵_残杀{@event.SourceId()}";
@@ -2285,7 +2262,6 @@ public class Pilgrims_Traverse
     
         if (isText) accessory.Method.TextInfo($"{skullDasherCount}连平A + 大顺劈", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"{skullDasherCount}连平A接顺劈");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"{skullDasherCount}连平A接顺劈");
     }
     
     [ScriptMethod(name: "86~89 召引洪巴巴_长啸（顺劈）/ Bellows", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44293"])]
@@ -2306,7 +2282,6 @@ public class Pilgrims_Traverse
     {
         if (isText) accessory.Method.TextInfo($"踢晕 <召引梦魔> 范围热病", duration: 4300, true);
         if (isTTS) accessory.Method.TTS($"踢晕梦魔热病");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"踢晕梦魔热病");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"召引梦魔_攻心欲火{@event.SourceId()}";
@@ -2521,7 +2496,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("靠近击退", duration: 4300, true);
         if (isTTS)accessory.Method.TTS("靠近击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("靠近击退");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "马纳果达_灭尽击退预测";
@@ -2556,7 +2530,6 @@ public class Pilgrims_Traverse
     public void 召引梦祸_梦祸视线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("穿墙直线");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"召引梦祸_梦祸视线{@event.SourceId()}";
@@ -2609,7 +2582,6 @@ public class Pilgrims_Traverse
     public void 交错路食人花_腐烂恶臭(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("穿墙直线");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路食人花_腐烂恶臭{@event.SourceId()}";
@@ -2629,7 +2601,6 @@ public class Pilgrims_Traverse
     
         if (isText) accessory.Method.TextInfo($"{skullDasherCount}连平A + 钢铁", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"{skullDasherCount}连平A接钢铁");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"{skullDasherCount}连平A接钢铁");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"交错路座狼_重挥碎击预测{@event.SourceId()}";
@@ -2813,7 +2784,6 @@ public class Pilgrims_Traverse
     public void 召引破坏本能_怪光线(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("穿墙直线");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("穿墙直线");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"召引破坏本能_怪光线{@event.SourceId()}";
@@ -2831,7 +2801,6 @@ public class Pilgrims_Traverse
     { 
         if (isText)accessory.Method.TextInfo("背对 <召引破坏本能>", duration: 2300, true);
         if (isTTS)accessory.Method.TTS("背对大眼");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("背对大眼");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"召引破坏本能_死亡视线连线{@event.SourceId()}";
@@ -3068,7 +3037,6 @@ public class Pilgrims_Traverse
 
         if (isText) accessory.Method.TextInfo($"直线{timingType}停止移动", duration: duration, true);
         if (isTTS) accessory.Method.TTS($"直线{timingType}停止移动");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
     [ScriptMethod(name: "99 火球（旋风）预备提示 / Fireball Portent Tip", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4406[18]$"])]
@@ -3082,7 +3050,6 @@ public class Pilgrims_Traverse
 
         if (isText) accessory.Method.TextInfo($"直线{timingType}旋风", duration: duration, true);
         if (isTTS) accessory.Method.TTS($"直线{timingType}旋风");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}旋风");
     }
     
     [ScriptMethod(name: "99 火球（旋风）/ Fireball", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44062"])]
@@ -3121,7 +3088,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("快躲开", duration: 800, true);
         if (isTTS)accessory.Method.TTS("快躲开");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("快躲开");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"棘刺尾";
@@ -3151,7 +3117,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("抓人牢狱", duration: 3000, true);
         if (isTTS)accessory.Method.TTS("抓人牢狱");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("抓人牢狱");
     }
     
     [ScriptMethod(name: "99 净罪之环（抓人牢狱 - 判定动画）/ Bounds of Sin Animation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44083"])]
@@ -3273,7 +3238,6 @@ public class Pilgrims_Traverse
     
         if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
         if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
     }
     
     
@@ -3296,7 +3260,6 @@ public class Pilgrims_Traverse
             IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x11D0)) return;
         if (isText)accessory.Method.TextInfo("吃开场buff", duration: 5000, true);
         if (isTTS)accessory.Method.TTS("吃buff");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("吃buff");
     }
     
     [ScriptMethod(name: "血量差提示 / HP gap Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2550"])]
@@ -3338,7 +3301,6 @@ public class Pilgrims_Traverse
 
             if (isText) accessory.Method.TextInfo($"血量差{stackInfo}层,吃{trueColor}打{displayName}", duration: 2000, true);
             if (isTTS) accessory.Method.TTS($"血量岔{stackInfo}层,吃{trueColor}打{displayName}");
-            if (isEdgeTTS) accessory.Method.EdgeTTS($"血量岔{stackInfo}层,吃{trueColor}打{displayName}");
             
             accessory.Method.SendChat($"/e [血量差提示]：吃{trueColor}打{displayName} （{stackCount}层）");
         }
@@ -3369,7 +3331,6 @@ public class Pilgrims_Traverse
         
         if (isText) accessory.Method.TextInfo($"地火：  先{isFirst} ， 再{isSecond}", duration: 16700, true);
         if (isTTS) accessory.Method.TTS($"先{isFirst}, 后{isSecond}");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"先{isFirst}, 后{isSecond}");
         accessory.Method.SendChat($"/e [Kodakku] 地火记录: 先{isFirst}，再{isSecond}");
     }
     
@@ -3469,7 +3430,6 @@ public class Pilgrims_Traverse
         // 实际上 Index 为 27~30 ，对应场上4座塔
         if (isText)accessory.Method.TextInfo($"吃白色，准备踩塔", duration: 2000, false);
         if (isTTS)accessory.Method.TTS($"吃白色，准备踩塔");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"吃白色，准备踩塔");
     }
     
     [ScriptMethod(name: "深渊极光 踩塔喝药提示 / Abyssal Sun Use Potion Tip", eventType: EventTypeEnum.EnvControl, eventCondition: ["Flag:32", "Index:regex:^(2[789]|30)$"],suppress:5000)]
@@ -3479,14 +3439,12 @@ public class Pilgrims_Traverse
         if(!isPotions) return;
         // if (isText)accessory.Method.TextInfo("喝药", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("喝药");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("喝药");
     }
     
     [ScriptMethod(name: "净罪之环（抓人牢狱）读条TTS提示 / Bounds of Sin TTS ", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4479[78]$"])]
     public void Q40_净罪之环提示(Event @event, ScriptAccessory accessory)
     {
         if (isTTS) accessory.Method.TTS($"抓人牢狱");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"抓人牢狱");
     }
     
     [ScriptMethod(name: "净罪之环（抓人牢狱 - 判定动画）/ Bounds of Sin Animation", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44122"])]
@@ -3517,20 +3475,18 @@ public class Pilgrims_Traverse
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (isTTS)accessory.Method.TTS("黑白配");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("黑白配");
     }
 
     [ScriptMethod(name: "黑白配 判定提示 / Black & White Judgment", eventType: EventTypeEnum.Director, eventCondition: ["Command:80000026", "Instance:8003EA93"],suppress: 1000)]
     public async void Q40_黑白配判定提示 (Event @event, ScriptAccessory accessory)
     {
-        if(!isTTS || isEdgeTTS) return;
+        if(!isTTS) return;
         // 之后的参数为 [31~34|9|1|0]，但是鸭子用不了.jpg
         // 光与暗的以太中和了……
         if (_blackandwhite == 0)return;
         await Task.Delay(1000);
         Console.Beep(2000, 200); 
         // if (isTTS)accessory.Method.TTS($"重！");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS($"重！");
         // accessory.Method.SendChat($"/e [黑白配] 中! <se.4> <se.4> <se.4> ");
 
         _blackandwhite = 0;
@@ -3560,7 +3516,6 @@ public class Pilgrims_Traverse
 
         if (isText) accessory.Method.TextInfo($"直线{timingType}旋风", duration: duration, true);
         if (isTTS) accessory.Method.TTS($"直线{timingType}旋风");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}旋风");
     }
     
     [ScriptMethod(name: "火球（旋风）/ Fireball Draw", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44098"])]
@@ -3589,7 +3544,6 @@ public class Pilgrims_Traverse
 
         if (isText) accessory.Method.TextInfo($"直线{timingType}停止移动", duration: duration, true);
         if (isTTS) accessory.Method.TTS($"直线{timingType}停止移动");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"直线{timingType}停止移动");
     }
     
     [ScriptMethod(name: "烈焰锢（热病）提示 / Chains of Condemnation Tip", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4562"])]
@@ -3597,7 +3551,6 @@ public class Pilgrims_Traverse
     {
         if (@event.TargetId() != accessory.Data.Me) return; 
         if (isTTS) accessory.Method.TTS($"停止移动");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"停止移动");
     }
     
     [ScriptMethod(name: "烈焰链 准备提示 / Searing Chains Preparatory Hint", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:0061"])]
@@ -3611,13 +3564,11 @@ public class Pilgrims_Traverse
             if (isTank) return; // T还要我提醒喝药吗？
             if (isText)accessory.Method.TextInfo("回中间准备拉线，准备火伤喝药", duration: 3000, true);
             if (isTTS)accessory.Method.TTS("回中间准备拉线，准备喝药");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("回中间准备拉线，准备喝药");
         }
         else
         {
             if (isText)accessory.Method.TextInfo("回中间准备拉线", duration: 2000, true);
             if (isTTS)accessory.Method.TTS("回中间准备拉线");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("回中间准备拉线");
         }
     }
     
@@ -3627,7 +3578,6 @@ public class Pilgrims_Traverse
         if (@event.TargetId() != accessory.Data.Me) return; 
         // if (isText)accessory.Method.TextInfo("扯断连线", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("扯断连线");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("扯断连线");
     }
     
     uint _spinelash = 0; // 棘刺尾 读条点名直线记录
@@ -3642,13 +3592,11 @@ public class Pilgrims_Traverse
         if (@event.TargetId() == accessory.Data.Me)
         {
             if (isTTS)accessory.Method.TTS("分摊点名");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("分摊点名");
         }
         else
         {
             string tname = @event["TargetName"]?.ToString() ?? "未知目标";
             if (isTTS) accessory.Method.TTS($"挡枪分摊点{tname}");
-            if (isEdgeTTS) accessory.Method.EdgeTTS($"挡枪分摊点{tname}");
         }
         
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3692,7 +3640,6 @@ public class Pilgrims_Traverse
     {
         // if (isText)accessory.Method.TextInfo("击杀 仆从石像魔", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("击杀小怪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("击杀小怪");
     }
     
     // P2 戒律的光链（职能debuff）→ 烈焰领域（引导牢笼连线 +吸引） → 引导三连黄圈 → 尾连击（死刑塔 + 斜线AOE） → 黑暗神圣（AOE+DOT）→ 尾连击（死刑塔 + 斜线AOE）
@@ -3703,7 +3650,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("职能debuff站位，准备刷新光暗", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"职能debuff站位");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"职能debuff站位");
     }
     
     [ScriptMethod(name: "戒律的光链：恢复 [奶妈治疗热风] / Shackled Healing Draw", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4564"])]
@@ -3746,7 +3692,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("吸引，刷新buff，坦克最远引导连线", duration: 5000, true);
         if (isTTS) accessory.Method.TTS($"吸引，刷新buff");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"吸引，刷新buff");
     }
     
     [ScriptMethod(name: "烈焰领域（吸引）自动防击退 [T职以外] / Hellish Earth Auto-AntiKnockback (Except Tank)", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:44153"])]
@@ -3839,7 +3784,6 @@ public class Pilgrims_Traverse
     {
         // if (isText)accessory.Method.TextInfo("攻击 立体魔法阵", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("攻击魔法阵");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("攻击魔法阵");
     }
     
     [ScriptMethod(name: "黑暗神圣（AOE）读条提示 / Unholy Darkness", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^441(64|76)$"])]
@@ -3851,12 +3795,10 @@ public class Pilgrims_Traverse
             var isTank = accessory.Data.MyObject?.IsTank() ?? false;
             if (isTank) return; // T还要我提醒喝药吗？
             if (isTTS)accessory.Method.TTS("流雪AOE，喝药");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("流雪AOE，喝药");
         }
         else
         {
             if (isTTS)accessory.Method.TTS("流雪AOE");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("流雪AOE");
         }
     }
     
@@ -3870,7 +3812,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("传毒阶段: 先吃暗", duration: 5000, true);
         if (isTTS) accessory.Method.TTS($"吃暗，准备传毒");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"吃暗，准备传毒");
     }
     
     [ScriptMethod(name: "罪积蓄（毒）点名播报 / Sin Bearer Calling out names", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567", "Param:1"])]
@@ -3878,7 +3819,6 @@ public class Pilgrims_Traverse
     {
             string tname = @event["TargetName"]?.ToString() ?? "未知目标";
             if (isTTS) accessory.Method.TTS($"毒点{tname}");
-            if (isEdgeTTS) accessory.Method.EdgeTTS($"毒点{tname}");
     }
     
     [ScriptMethod(name: "罪积蓄（毒）绘制 / Sin Bearer Draw", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4567"])]
@@ -3919,7 +3859,6 @@ public class Pilgrims_Traverse
             else if (layerCount >= 12 && layerCount <= 15) // 快爆炸时TTS播报毒层数
             {
                 if (isTTS) accessory.Method.TTS($"{layerCount}");
-                if (isEdgeTTS) accessory.Method.EdgeTTS($"{layerCount}");
             }
             else
             {
@@ -3939,7 +3878,6 @@ public class Pilgrims_Traverse
         var isHealer = accessory.Data.MyObject?.IsHealer() ?? false;
         if (isHealer && isText)accessory.Method.TextInfo("驱散死宣", duration: 3300, true);
         if (isHealer && isTTS) accessory.Method.TTS($"驱散死宣");
-        if (isHealer && isEdgeTTS) accessory.Method.EdgeTTS($"驱散死宣");
     }
     
     private const uint DarkVengeance = 0x11CF;    // 4559 = 0x11CF 暗之回音
@@ -3965,13 +3903,11 @@ public class Pilgrims_Traverse
         {
             if (isText)accessory.Method.TextInfo($"先{firstDrainAether}，再{secondDrainAether}", duration: 10000, true);
             if (isTTS)accessory.Method.TTS($"先{firstDrainAether}，再{secondDrainAether}");
-            if (isEdgeTTS)accessory.Method.EdgeTTS($"先{firstDrainAether}，再{secondDrainAether}");
         }
         else
         {
             if (isText)accessory.Method.TextInfo($"毒，始终保持为暗", duration: 10000, true);
             if (isTTS)accessory.Method.TTS($"保持为暗");
-            if (isEdgeTTS)accessory.Method.EdgeTTS($"保持为暗");
         }
     }
 
@@ -3984,7 +3920,6 @@ public class Pilgrims_Traverse
     {
         if (isText)accessory.Method.TextInfo("火人阶段就位，刷新buff，保持喝药", duration: 3000, true);
         if (isTTS) accessory.Method.TTS($"火人阶段就位，刷新buff");
-        if (isEdgeTTS) accessory.Method.EdgeTTS($"火人阶段就位，刷新buff");
     }
     
     private int checkPoint = 0;
@@ -4111,7 +4046,6 @@ public class Pilgrims_Traverse
         
         if (isText)accessory.Method.TextInfo($"第{_explosionCount}次炸", duration: 6300, true);
         if (isTTS)accessory.Method.TTS($"{_explosionCount}炸");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"{_explosionCount}炸");
         accessory.Method.SendChat($"/e [自爆计数]: [{_explosionCount}]");
     }
     
@@ -4133,7 +4067,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed -1");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     */
     
@@ -4145,7 +4078,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed 1.4");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.4x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.4倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.4倍");
     }
     
     [ScriptMethod(name: "[DR] 极速冲刺时，移速复原至默认值", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4709"])]
@@ -4156,7 +4088,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed -1");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
 
     [ScriptMethod(name: "[DR] 变身泥球时，移速改为1.2倍", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:54"])]
@@ -4167,7 +4098,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed 1.2");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.2x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.2倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.2倍");
     }
     
     
@@ -4179,7 +4109,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed -1");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     
 
@@ -4191,7 +4120,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed 1.5");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.5x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
     }
     
     [ScriptMethod(name: "[DR] 爆弹之母取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55"])]
@@ -4202,7 +4130,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/pdrspeed -1");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     
     [ScriptMethod(name: "[IC] 变身泥球时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:54"])]
@@ -4214,7 +4141,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
         if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已取消遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
     }
     
     
@@ -4231,7 +4157,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
         if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已自动遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
     }
     
     [ScriptMethod(name: "[IC] 变身爆弹之母时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55"])]
@@ -4243,7 +4168,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
         if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已取消遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
     }
     
     [ScriptMethod(name: "[IC] 爆弹之母取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55"])]
@@ -4259,7 +4183,6 @@ public class Pilgrims_Traverse
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
         if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已自动遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
     }
     
     

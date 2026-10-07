@@ -2,12 +2,12 @@
   {
     "Name": "正统优雷卡",
     "Guid": "5e8a4051-53f7-4eb3-bb32-b18df8b113aa",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Deep_Dungeon/Eureka_Orthos.cs",
-    "Note": "v0.0.0.4:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】",
-    "UpdateInfo": "v0.0.0.4 增加部分功能与60层BOSS绘制",
+    "Note": "v0.0.0.5:\r\n正统优雷卡绘制\r\n注：方法设置中的层数仅做分割线效果，并不是批量开关\r\n现支持层数：1~20、71~100\r\n严重错误：暂未支持【缓速】",
+    "UpdateInfo": "v0.0.0.5 删除过时的EdgeTTS",
     "TerritoryIds": [
       1099,
       1100,

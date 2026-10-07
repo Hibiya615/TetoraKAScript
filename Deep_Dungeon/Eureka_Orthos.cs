@@ -27,12 +27,12 @@ namespace Eureka_Orthos;
 
 [ScriptType(guid: "5e8a4051-53f7-4eb3-bb32-b18df8b113aa", name: "正统优雷卡", 
     territorys: [1099,1100,1101,1102,1103,1104,1105,1106,1107,1108],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Eureka_Orthos {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         正统优雷卡绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         现支持层数：1~20、71~100
@@ -67,11 +67,8 @@ public class Eureka_Orthos {
     
     #region 基础控制
     
-    [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -254,7 +251,6 @@ public class Eureka_Orthos {
     {
         if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2300, true);
         if (isTTS) accessory.Method.TTS("打断拟态怪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
     
     [ScriptMethod(name: "★ 美拉西迪亚复制体 亚拉戈陨石", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^327(1[89]|20)$"])]
@@ -305,7 +301,6 @@ public class Eureka_Orthos {
     {
         if (isText) accessory.Method.TextInfo("狂暴，躲在墙壁后", duration: 2700, true);
         if (isTTS) accessory.Method.TTS("躲在墙壁后");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("躲在墙壁后");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"正统贝希摩斯_黄道陨石{@event.SourceId()}";
@@ -513,13 +508,11 @@ public class Eureka_Orthos {
     #region 51~60层 小怪
     [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
-    #endregion
     
     [ScriptMethod(name: "51~59 正统尤弥尔 带冰（读条反弹）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:33180"])]
     public void 正统尤弥尔_带冰(Event @event, ScriptAccessory accessory)
     {
         if (isTTS)accessory.Method.TTS("停止攻击<正统尤弥尔>");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("停止攻击<正统尤弥尔>");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"正统尤弥尔_带冰{@event.SourceId()}";
@@ -569,6 +562,7 @@ public class Eureka_Orthos {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
     
+    #endregion
     
     #region 60 BOSS 自控化弥诺陶洛斯
     
@@ -590,7 +584,6 @@ public class Eureka_Orthos {
     {
         if(isText) accessory.Method.TextInfo("击退", duration: 3000, true);
         if(isTTS) accessory.Method.TTS("击退");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("击退");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "自控化弥诺陶洛斯16_吼叫";
@@ -1041,7 +1034,6 @@ public class Eureka_Orthos {
     public void 正统铁面腐尸_追打(Event @event, ScriptAccessory accessory)
     {
         if(isTTS) accessory.Method.TTS("远离正面");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("远离正面");
         // 如果在此技能就开始画图会过早显示，延迟的话也就显示个半秒反而不好看，故只留TTS作提醒
     }
     
@@ -1065,7 +1057,6 @@ public class Eureka_Orthos {
     {
         //此处捕获的为 “吸气” 以更早触发提示 
         if(isTTS) accessory.Method.TTS("远离正面");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("远离正面");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"正统贪吃鬼_发霉喷嚏{@event.SourceId()}";
@@ -1781,7 +1772,6 @@ public class Eureka_Orthos {
         accessory.Method.SendChat($"/pdrspeed 1.5");
         accessory.Method.SendChat($"/e 可达鸭：移速已更改：1.5x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
     }
     
     [ScriptMethod(name: "[DR] 恐慌装甲取消时，移速复原至1倍", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565"])]
@@ -1792,7 +1782,6 @@ public class Eureka_Orthos {
         accessory.Method.SendChat($"/pdrspeed 1");
         accessory.Method.SendChat($"/e 可达鸭：移速已更改：1");
         if (isTTS)accessory.Method.TTS("移速已复原至1倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至1倍");
     }
     
     [ScriptMethod(name: "[IC] 变身爆弹之母时，取消遁地", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:4708", "StackCount:55"])]
@@ -1804,7 +1793,6 @@ public class Eureka_Orthos {
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
         if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已取消遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
     }
     
     [ScriptMethod(name: "[IC] 爆弹之母取消时，自动遁地", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:4708", "StackCount:55"])]
@@ -1820,7 +1808,6 @@ public class Eureka_Orthos {
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
         if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已自动遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
     }
     
     #endregion

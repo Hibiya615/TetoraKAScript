@@ -17,13 +17,13 @@ namespace the_Palace_of_the_Dead;
 
 [ScriptType(guid: "4210c323-eba4-4d67-a7e7-b90799494729", name: "死者宫殿", author: "Tetora", 
     territorys: [561,562,563,564,565,593,594,595,596,597,598,599,600,601,602,603,604,605,606,607],
-    version: "0.0.1.1",note: noteStr)]
+    version: "0.0.1.2",note: noteStr)]
 
 public class the_Palace_of_the_Dead
 {
     const string noteStr =
         """
-        v0.0.1.1:
+        v0.0.1.2:
         死者宫殿绘制
         注：方法设置中的层数仅做分割线效果，并不是批量开关
         出现问题请携带ARR反馈！
@@ -53,12 +53,9 @@ public class the_Palace_of_the_Dead
     #endregion
     
     #region 基础控制
-    
-    [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+
+    [UserSetting("TTS开关")] 
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -170,7 +167,6 @@ public class the_Palace_of_the_Dead
     {
         if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2300, true);
         if (isTTS) accessory.Method.TTS("打断拟态怪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断拟态怪");
     }
     
     #region  1~10层 没有东西可以画
@@ -220,7 +216,6 @@ public class the_Palace_of_the_Dead
         
         if (isText)accessory.Method.TextInfo("靠近场中BOSS", duration: 5300, true);
         if (isTTS)accessory.Method.TTS("靠近场中BOSS");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("靠近场中BOSS");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "宁吉兹济达_恐惧迷雾";
@@ -244,7 +239,6 @@ public class the_Palace_of_the_Dead
     {
         if(!KnockPenalty) {
             if(isTTS) accessory.Method.TTS("吸引");
-            if(isEdgeTTS) accessory.Method.EdgeTTS("吸引");
         }
         /*
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -287,9 +281,10 @@ public class the_Palace_of_the_Dead
     [ScriptMethod(name: "60 深黑骑士 残杀（击退)", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7089"])]
     public void 深黑骑士_残杀(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+
         if (isText)accessory.Method.TextInfo("击退到安全区", duration: 3300, true);
         if (isTTS)accessory.Method.TTS("击退到安全区");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("击退到安全区");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "深黑骑士_残杀击退";
@@ -329,7 +324,6 @@ public class the_Palace_of_the_Dead
         // 与 170层 虹蛇 (SourceDataId:6174) 相同，都会附加 加速 buff 【甚至天气都会！】
         if (isText)accessory.Method.TextInfo("将BOSS拉出水圈至buff消失", duration: 3000, true);
         if (isTTS)accessory.Method.TTS("将BOSS拉出水圈至buff消失");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("将BOSS拉出水圈至buff消失");
     }
     */
     
@@ -422,7 +416,6 @@ public class the_Palace_of_the_Dead
     {
         if(isText) accessory.Method.TextInfo("击杀灰色爆弹怪", duration: 3000, true);
         if(isTTS) accessory.Method.TTS("击杀灰色爆弹怪");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("击杀灰色爆弹怪");
     }
     
     [ScriptMethod(name: "90 眩晕爆弹怪 寒霜弹提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:6378"])]
@@ -430,7 +423,6 @@ public class the_Palace_of_the_Dead
     {
         if(isText) accessory.Method.TextInfo("将眩晕爆弹怪推至BOSS脚下", duration: 3000, true);
         if(isTTS) accessory.Method.TTS("将眩晕爆弹怪推至BOSS脚下");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("将眩晕爆弹怪推至BOSS脚下");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "眩晕爆弹怪_寒霜弹";
@@ -469,7 +461,6 @@ public class the_Palace_of_the_Dead
     {
         if(isText) accessory.Method.TextInfo("打断 <深宫蝾螈>", duration: 2300, true);
         if(isTTS) accessory.Method.TTS("打断深宫蝾螈");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("打断深宫蝾螈");
     }
     
     #endregion
@@ -509,7 +500,6 @@ public class the_Palace_of_the_Dead
         // BOSS SourceDataId:6170 ，技能ID与30层的不同 无需区分
         if (isText)accessory.Method.TextInfo("靠近场中BOSS", duration: 1300, true);
         if (isTTS)accessory.Method.TTS("靠近场中BOSS");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("靠近场中BOSS");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "埃尔法德_恐惧迷雾";
@@ -533,7 +523,6 @@ public class the_Palace_of_the_Dead
     {
         if(!KnockPenalty) {
             if(isTTS) accessory.Method.TTS("吸引后钢铁");
-            if(isEdgeTTS) accessory.Method.EdgeTTS("吸引后钢铁");
         }
         
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -580,7 +569,6 @@ public class the_Palace_of_the_Dead
     {
         if (isText)accessory.Method.TextInfo("打断 <深宫浮灵>", duration: 4300, true);
         if (isTTS)accessory.Method.TTS("打断 <深宫浮灵>");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断 <深宫浮灵>");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫浮灵_强麻痹{@event.SourceId()}";
@@ -596,7 +584,6 @@ public class the_Palace_of_the_Dead
     {
         if (isText)accessory.Method.TextInfo("打断 <深宫假面>", duration: 4300, true);
         if (isTTS)accessory.Method.TTS("打断 <深宫假面>");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断 <深宫假面>");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"深宫假面_强麻痹{@event.SourceId()}";
@@ -632,15 +619,14 @@ public class the_Palace_of_the_Dead
     {
         if (isText)accessory.Method.TextInfo("打断 <深宫小恶魔>", duration: 800, true);
         if (isTTS)accessory.Method.TTS("打断 <深宫小恶魔>");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断 <深宫小恶魔>");
     }
     
     [ScriptMethod(name: "160 非生骑士 残杀（击退)", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:7156"])]
     public void 非生骑士_残杀(Event @event, ScriptAccessory accessory)
     {
+        if (@event.TargetId() != accessory.Data.Me) return; 
         if (isText)accessory.Method.TextInfo("击退到安全区", duration: 3300, true);
         if (isTTS)accessory.Method.TTS("击退到安全区");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("击退到安全区");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "非生骑士_残杀击退";
@@ -677,7 +663,6 @@ public class the_Palace_of_the_Dead
         // 61~70层 的 地宫笠头螈 (SourceDataId:6190) 暂未知是否会同款技能
         if (isText)accessory.Method.TextInfo("打断 <深宫笠头螈>", duration: 2300, true);
         if (isTTS)accessory.Method.TTS("打断 <深宫笠头螈>");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断 <深宫笠头螈>");
     }
     
     /*
@@ -687,7 +672,6 @@ public class the_Palace_of_the_Dead
         // 70层的 水虎龙亚夸虏 (SourceDataId:6165) 没有 StatusID:290 的 伤害提高 buff
         if (isText)accessory.Method.TextInfo("将BOSS拉出水圈至buff消失", duration: 3000, true);
         if (isTTS)accessory.Method.TTS("将BOSS拉出水圈至buff消失");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("将BOSS拉出水圈至buff消失");
     }
     */
     
@@ -753,7 +737,6 @@ public class the_Palace_of_the_Dead
     {
         if (isText)accessory.Method.TextInfo("打断 <深宫妖鸟>", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("打断 <深宫妖鸟>");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("打断 <深宫妖鸟>");
     }
     
     #endregion
@@ -782,7 +765,6 @@ public class the_Palace_of_the_Dead
     {
         if(isText) accessory.Method.TextInfo("80%真伤", duration: 5000, true);
         if(isTTS) accessory.Method.TTS("80%真伤");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("80%真伤");
     }
     #endregion
 
@@ -851,7 +833,6 @@ public class the_Palace_of_the_Dead
     {
         if(isText) accessory.Method.TextInfo("击杀治疗爆弹怪", duration: 5000, false);
         if(isTTS) accessory.Method.TTS("击杀治疗爆弹怪");   
-        if(isEdgeTTS) accessory.Method.EdgeTTS("击杀治疗爆弹怪");  
         
         // Interlocked.Increment(ref timesRemedyBomb);  //防止多线程出问题，锁定一下
         ++timesRemedyBomb; //记录 治疗爆弹怪出现次数  注意：还没有写重置次数条件 需要在团灭重生时销毁 （或者反正这个也就单挑比较有用死了就重置算了x）
@@ -941,8 +922,7 @@ public class the_Palace_of_the_Dead
         }
         
         if(isText) accessory.Method.TextInfo("已预测 <熔岩爆弹怪> 刷新位置", duration: 3500, false);
-        if(isTTS) accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");   
-        if(isEdgeTTS) accessory.Method.EdgeTTS("已预测熔岩爆弹怪刷新位置");  
+        if(isTTS) accessory.Method.TTS("已预测熔岩爆弹怪刷新位置");    
         
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
         
@@ -961,7 +941,6 @@ public class the_Palace_of_the_Dead
     {
         if(isText) accessory.Method.TextInfo("将熔岩爆弹怪推至BOSS脚下", duration: 5000, true);
         if(isTTS) accessory.Method.TTS("将熔岩爆弹怪推至BOSS脚下");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("将熔岩爆弹怪推至BOSS脚下");  
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "熔岩爆弹怪_震撼弹";
@@ -993,7 +972,6 @@ public class the_Palace_of_the_Dead
     
         if(isText) accessory.Method.TextInfo("99.9%真伤，注意瞬回", duration: 8500, true);
         if(isTTS) accessory.Method.TTS("99.9%真伤，注意瞬回");
-        if(isEdgeTTS) accessory.Method.EdgeTTS("99.9%真伤，注意瞬回");  
     }
 
     [ScriptMethod(name: "特大爆炸打断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:7103"], userControl: false)]
@@ -1050,7 +1028,6 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendChat($"/pdrspeed 1.5");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.5x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.5倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.5倍");
     }
     
     
@@ -1062,7 +1039,6 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendChat($"/pdrspeed -1");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     
 
@@ -1074,7 +1050,6 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendChat($"/pdrspeed 1.2");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：1.2x");
         if (isTTS)accessory.Method.TTS("移速已更改至1.2倍");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已更改至1.2倍");
     }
     
     [ScriptMethod(name: "[DR] 梦魔取消时，移速复原至默认值", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:565", "StackCount:43", "Duration:0.00"])]
@@ -1085,7 +1060,6 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendChat($"/pdrspeed -1");
         accessory.Method.SendChat($"/e 鸭鸭：[DR] 移速已更改：默认");
         if (isTTS)accessory.Method.TTS("移速已复原至默认值");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("移速已复原至默认值");
     }
     
     
@@ -1100,7 +1074,6 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已取消遁地");
         if (isText) accessory.Method.TextInfo("已取消遁地", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已取消遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已取消遁地");
     }
     
     
@@ -1117,7 +1090,6 @@ public class the_Palace_of_the_Dead
         accessory.Method.SendChat($"/e 鸭鸭：[IC] 已自动遁地 -{depthValue}m");
         if (isText) accessory.Method.TextInfo($"已自动遁地 -{depthValue}m", duration: 1300, true);
         // if (isTTS)accessory.Method.TTS("已自动遁地");
-        // if (isEdgeTTS)accessory.Method.EdgeTTS("已自动遁地");
     }
     
     
