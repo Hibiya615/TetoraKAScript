@@ -15,16 +15,29 @@ using System.Threading.Tasks;
 
 namespace Hydaelyn;
 
-[ScriptType(guid: "d9106d0c-3c5e-4feb-ae49-f27a70acf39f", name: "海德林歼灭战", territorys: [995],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+[ScriptType(guid: "d9106d0c-3c5e-4feb-ae49-f27a70acf39f", name: "LV89 海德林歼灭战", territorys: [995],
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Hydaelyn
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV89 海德林歼灭战 初版绘制
         """;
+    
+    #region 用户控制
+
+    [UserSetting("TTS开关")]
+    public bool isTTS { get; set; } = true;
+    
+    [UserSetting("弹窗文本提示开关")]
+    public bool isText { get; set; } = true;
+    
+    [UserSetting("开发者模式")]
+    public bool isDeveloper { get; set; } = false;
+
+    #endregion
     
     uint DawnMantle = 0; // 职责更换
     uint SpreadOut = 0; // 水晶化：分散
@@ -87,7 +100,7 @@ public class Hydaelyn
         var currentProperty = accessory.Data.GetDefaultDrawProperties();
         currentProperty.Name = "昼夜二分";
         currentProperty.Owner = @event.TargetId();
-        currentProperty.Color = accessory.Data.DefaultDangerColor; 
+        currentProperty.Color = accessory.Data.DefaultDangerColor.WithW(0.6f); 
         currentProperty.Scale = new(10f, 40f); 
         currentProperty.DestoryAt = 4500;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, currentProperty);  
@@ -142,14 +155,16 @@ public class Hydaelyn
     public void 水晶化分散(Event @event, ScriptAccessory accessory)
     {
         SpreadOut = 1;
-        if ( SpreadOut == 1) accessory.Method.TextInfo("水晶化：分散", duration: 5000, false);
+        if ( SpreadOut == 1 && isText) accessory.Method.TextInfo("水晶化：分散", duration: 5000, false);
+        if ( SpreadOut == 1 && isTTS) accessory.Method.TTS($"水晶化：分散");
     }
     
     [ScriptMethod(name: "水晶化：分摊", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:2056", "Param:338"])]
     public void 水晶化分摊(Event @event, ScriptAccessory accessory)
     {
         Stack = 1;
-        if ( Stack == 1) accessory.Method.TextInfo("水晶化：分摊 ", duration: 5000, true);
+        if ( Stack == 1 && isText) accessory.Method.TextInfo("水晶化：分摊 ", duration: 5000, true);
+        if ( Stack == 1 && isTTS) accessory.Method.TTS($"水晶化：分摊");
     }
     
 
@@ -162,7 +177,7 @@ public class Hydaelyn
         dp.Name = "光芒";
         dp.Scale = new (6, 45f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
         dp.Delay = 5000;
         dp.DestoryAt = 10600;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
@@ -205,7 +220,7 @@ public class Hydaelyn
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "回声";
-        dp.Color = accessory.Data.DefaultSafeColor;
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.6f);
         dp.Owner = @event.TargetId();
         dp.Scale = new Vector2(6f);
         dp.DestoryAt = 9600;
@@ -233,7 +248,7 @@ public class Hydaelyn
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "光波";
             dp.Owner = @event.SourceId();
-            dp.Color = accessory.Data.DefaultDangerColor;
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
             dp.Scale = new(16f, 50f); 
             dp.DestoryAt = 19000;
             accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);  
