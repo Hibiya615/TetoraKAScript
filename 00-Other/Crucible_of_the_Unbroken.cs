@@ -1608,6 +1608,18 @@ public class Crucible_of_the_Unbroken
 
         // Todo.击退距离没测
     }
+    
+    [ScriptMethod(name: "敌人#2: 奇子·魔界花_藤鞭穿刺（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48682$"])]
+    public void 魔界花_藤鞭穿刺(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"魔界花_藤鞭穿刺{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (8f, 13f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
 
     [ScriptMethod(name: "随机#1: 奇子·花苗_荆棘幼苗（危险区）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add", "Kind:EventObj", "DataId:2015458"])]
     public void 花苗_荆棘幼苗(Event @event, ScriptAccessory accessory)
