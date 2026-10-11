@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.4:
+        v0.0.0.5:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         """;
@@ -1562,6 +1562,29 @@ public class Crucible_of_the_Unbroken
     {
         if (isText) accessory.Method.TextInfo($"吸引或击退 <博学林鸮的羽毛>", duration: 3000, true);
         if (isTTS) accessory.Method.TTS($"吸引或击退羽毛");
+    }
+    
+    [ScriptMethod(name: "敌人#1: 奇子·魔导书_魔力爆散（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48665$"])]
+    public void 魔导书_魔力爆散(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"魔导书_魔力爆散{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.DestoryAt = 6700;
+        dp.ScaleMode = ScaleMode.ByTime;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+        var dp1 = accessory.Data.GetDefaultDrawProperties();
+        dp1.Name = $"魔导书_魔力爆散描边{@event.SourceId}";
+        dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+        dp1.Owner = @event.SourceId();
+        dp1.Scale = new Vector2(15f);
+        dp1.InnerScale = new Vector2(14.95f);
+        dp1.Radian = float.Pi * 2;
+        dp1.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
     }
 
     [ScriptMethod(name: "敌人#2: 奇子·魔界花_恶臭气（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4867(3|5)$"])]

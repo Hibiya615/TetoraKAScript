@@ -1056,12 +1056,12 @@
   {
     "Name": "斗兽奇弈",
     "Guid": "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/Crucible_of_the_Unbroken.cs",
-    "Note": "v0.0.0.4:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
-    "UpdateInfo": "v0.0.0.4: 增加贝希摩斯传雷后放电提示",
+    "Note": "v0.0.0.5:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
+    "UpdateInfo": "v0.0.0.5: 增加博学林鸮选集绘制",
     "UpdateTime": "",
     "TerritoryIds": [
       1339,
