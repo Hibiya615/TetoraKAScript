@@ -506,6 +506,20 @@
     ]
   },
   {
+    "Name": "LV100 7.4 格莱杨拉波尔歼灭战",
+    "Guid": "0d35c44e-d7de-40c9-a613-3ab92664a912",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/07-Dawntrail/Trials/Hell_on_Rails.cs",
+    "Note": "v0.0.0.1:\r\nLV100 7.4 格莱杨拉波尔歼灭战 / グラシャラボラス討滅戦 / Hell on Rails\r\n初版简易绘制",
+    "UpdateInfo": "",
+    "UpdateTime": "",
+    "TerritoryIds": [
+      1307
+    ]
+  },
+  {
     "Name": "永恒女王歼灭战",
     "Guid": "16a531a4-28b9-414d-9209-ba6673d1f268",
     "Version": "0.0.0.3",
@@ -914,17 +928,17 @@
     ]
   },
   {
-    "Name": "天青斗场",
-    "Guid": "7703f1a9-5698-4896-8908-bb8e415c1321",
-    "Version": "0.0.0.6",
+    "Name": "蜃景幻界新月岛 北征之章 简易绘制",
+    "Guid": "65ebbd91-9d5f-4c46-a97f-d44b2f34e4dd",
+    "Version": "0.0.0.1",
     "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
-    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/Celestium.cs",
-    "Note": "天青斗场绘制，随缘更新中",
-    "UpdateInfo": "v0.0.0.5：增加部分关卡小提醒。",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Field_Operations/the_Occult_Crescent/North_Horn.cs",
+    "Note": "v0.0.0.1:\r\n蜃景幻界新月岛 北征之章 / 蜃気楼の島 クレセントアイル：北征編 / the Occult Crescent: North Horn\r\n简易绘制并不完整，且不包含（普&超）魔之塔，魔之塔请使用Coda版本",
+    "UpdateInfo": "",
     "UpdateTime": "",
     "TerritoryIds": [
-      796
+      1346
     ]
   },
   {
@@ -1026,6 +1040,20 @@
     ]
   },
   {
+    "Name": "天青斗场",
+    "Guid": "7703f1a9-5698-4896-8908-bb8e415c1321",
+    "Version": "0.0.0.6",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript",
+    "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/Celestium/Celestium.cs",
+    "Note": "天青斗场绘制，随缘更新中",
+    "UpdateInfo": "v0.0.0.5：增加部分关卡小提醒。",
+    "UpdateTime": "",
+    "TerritoryIds": [
+      796
+    ]
+  },
+  {
     "Name": "斗兽奇弈",
     "Guid": "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c",
     "Version": "0.0.0.4",
@@ -1058,12 +1086,12 @@
   {
     "Name": "最新最热临时绘制",
     "Guid": "80890eac-4730-4708-ad1b-05aba469c2a1",
-    "Version": "0.0.3.5",
+    "Version": "0.0.3.6",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/NewDuty.cs",
-    "Note": "v0.0.3.5:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
-    "UpdateInfo": "0.0.3.5: 删除斗兽奇弈部分，如需继续使用请使用独立新脚本",
+    "Note": "v0.0.3.6:\r\n最新最热副本绘制，可能会电，介意请关闭\r\n别人的正式版发了这边就删",
+    "UpdateInfo": "0.0.3.6: 删除新月岛与格莱杨拉波尔部分，如需继续使用请使用独立新脚本",
     "UpdateTime": "",
     "TerritoryIds": [
       1307,
@@ -1081,33 +1109,5 @@
     "UpdateInfo": "0.0.0.1: 增加P12N贞女直线绘制",
     "UpdateTime": "",
     "TerritoryIds": []
-  },
-  {
-    "Name": "蜃景幻界新月岛 北征之章 简易绘制",
-    "Guid": "65ebbd91-9d5f-4c46-a97f-d44b2f34e4dd",
-    "Version": "0.0.0.1",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "",
-    "Note": "v0.0.0.1:\r\n蜃景幻界新月岛 北征之章 / 蜃気楼の島 クレセントアイル：北征編 / the Occult Crescent: North Horn\r\n简易绘制并不完整，且不包含（普&超）魔之塔，魔之塔请使用Coda版本",
-    "UpdateInfo": "",
-    "UpdateTime": "",
-    "TerritoryIds": [
-      1346
-    ]
-  },
-  {
-    "Name": "LV100 7.4 格莱杨拉波尔歼灭战",
-    "Guid": "0d35c44e-d7de-40c9-a613-3ab92664a912",
-    "Version": "0.0.0.1",
-    "Author": "Tetora",
-    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
-    "DownloadUrl": "",
-    "Note": "v0.0.0.1:\r\nLV100 7.4 格莱杨拉波尔歼灭战 / グラシャラボラス討滅戦 / Hell on Rails\r\n初版简易绘制",
-    "UpdateInfo": "",
-    "UpdateTime": "",
-    "TerritoryIds": [
-      1307
-    ]
   }
 ]
