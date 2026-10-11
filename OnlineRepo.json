@@ -1081,5 +1081,33 @@
     "UpdateInfo": "0.0.0.1: 增加P12N贞女直线绘制",
     "UpdateTime": "",
     "TerritoryIds": []
+  },
+  {
+    "Name": "蜃景幻界新月岛 北征之章 简易绘制",
+    "Guid": "65ebbd91-9d5f-4c46-a97f-d44b2f34e4dd",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "",
+    "Note": "v0.0.0.1:\r\n蜃景幻界新月岛 北征之章 / 蜃気楼の島 クレセントアイル：北征編 / the Occult Crescent: North Horn\r\n简易绘制并不完整，且不包含（普&超）魔之塔，魔之塔请使用Coda版本",
+    "UpdateInfo": "",
+    "UpdateTime": "",
+    "TerritoryIds": [
+      1346
+    ]
+  },
+  {
+    "Name": "LV100 7.4 格莱杨拉波尔歼灭战",
+    "Guid": "0d35c44e-d7de-40c9-a613-3ab92664a912",
+    "Version": "0.0.0.1",
+    "Author": "Tetora",
+    "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
+    "DownloadUrl": "",
+    "Note": "v0.0.0.1:\r\nLV100 7.4 格莱杨拉波尔歼灭战 / グラシャラボラス討滅戦 / Hell on Rails\r\n初版简易绘制",
+    "UpdateInfo": "",
+    "UpdateTime": "",
+    "TerritoryIds": [
+      1307
+    ]
   }
 ]
