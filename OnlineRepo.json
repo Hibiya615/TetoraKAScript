@@ -634,12 +634,12 @@
   {
     "Name": "俾斯麦歼殛战",
     "Guid": "56751be8-113f-4496-8b46-982ff96d90c3",
-    "Version": "0.0.0.2",
+    "Version": "0.0.0.3",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/03-Heavensward/Trials-Extreme/Bismarck-Extreme.cs",
-    "Note": "v0.0.0.1:\r\nLV60 俾斯麦歼殛战 初版绘制",
-    "UpdateInfo": "",
+    "Note": "v0.0.0.3:\r\nLV60 俾斯麦歼殛战 初版绘制",
+    "UpdateInfo": "v0.0.0.3: 增加对龙弩炮发射提示",
     "UpdateTime": "",
     "TerritoryIds": [
       447

@@ -15,36 +15,34 @@ using KodakkuAssist.Extensions;
 namespace Bismarck_Extreme;
 
 [ScriptType(guid: "56751be8-113f-4496-8b46-982ff96d90c3", name: "俾斯麦歼殛战", territorys: [447],
-    version: "0.0.0.2", author: "Tetora", note: noteStr)]
+    version: "0.0.0.3", author: "Tetora", note: noteStr)]
 
 public class Bismarck_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.1:
+        v0.0.0.3:
         LV60 俾斯麦歼殛战 初版绘制
         """;
     
     [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
 
-    uint MagitekFieldGenerator = 1;
+    uint MagitekFieldGenerator = 0;
     
     public void Init(ScriptAccessory accessory) {
-        MagitekFieldGenerator = 1; 
+        MagitekFieldGenerator = 0; 
     }
     
-    [ScriptMethod(name: "魔导结界 记录", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:4778"],userControl: false)]
+    [ScriptMethod(name: "魔导结界 记录", eventType: EventTypeEnum.Chat, userControl: false,
+        eventCondition: ["Type:NPCDialogueAnnouncements","Message:regex:(?s)^(活用魔导结界发生器|善用魔導結界產生器|魔導フィールド発生器を活用してくれ|Use the field generator).*"])]
     public void 魔导结界(Event @event, ScriptAccessory accessory)
     {
-        MagitekFieldGenerator = 0; 
+        MagitekFieldGenerator = 1; 
     }
     
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
@@ -61,7 +59,6 @@ public class Bismarck_Extreme
         if (!isTank) return; 
         if (isText)accessory.Method.TextInfo("将其他小怪拉至远程怪 <温杜乌麻义> 处", duration: 5000, false);
         if (isTTS)accessory.Method.TTS("将其他小怪拉到远程怪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("将其他小怪拉到远程怪");
         
             var dp = accessory.Data.GetDefaultDrawProperties();
             dp.Name = "温杜乌麻义";
@@ -80,7 +77,15 @@ public class Bismarck_Extreme
         if (MagitekFieldGenerator == 0) return;
         if (isText)accessory.Method.TextInfo("使用 <魔导结界发生器>", duration: 5000, true);
         if (isTTS)accessory.Method.TTS("使用魔导结界发生器");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("使用魔导结界发生器");
+        MagitekFieldGenerator = 0; 
+    }
+    
+    [ScriptMethod(name: "对龙弩炮 发射提示", eventType: EventTypeEnum.Chat,
+        eventCondition: ["Type:SystemMessage","Message:regex:^(对龙弩炮准备完毕了！|對龍弩砲準備完畢了！|対竜バリスタが発射可能になった！|The dragonkillers are readied!)"])]
+    public void 对龙弩炮发射提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"发射对龙弩炮", duration: 14200, true);
+        if (isTTS)accessory.Method.TTS($"发射对龙弩炮");
     }
     
     [ScriptMethod(name: "上背提示", eventType: EventTypeEnum.Targetable, eventCondition: ["Targetable:True", "SourceName:regex:^(角质甲壳|chitin carapace|強硬外殻)$"])]
@@ -88,7 +93,6 @@ public class Bismarck_Extreme
     {
         // if (isText)accessory.Method.TextInfo("在下面对他无法造成伤害", duration: 3000, true);
         if (isTTS)accessory.Method.TTS("上背");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("上背");
     }
     
     [ScriptMethod(name: "鲸须爆弹（诱导水圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:4021"])]
@@ -96,7 +100,6 @@ public class Bismarck_Extreme
     {
         if (isText)accessory.Method.TextInfo("诱导三连水圈", duration: 2000, false);
         if (isTTS)accessory.Method.TTS("诱导三连水圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("诱导三连水圈");
     }
     
     [ScriptMethod(name: "漏斗云（龙卷风）高亮", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:3830"])]
@@ -136,13 +139,11 @@ public class Bismarck_Extreme
         {
             if (isText)accessory.Method.TextInfo("赋予buff，稍后挑衅反色目标", duration: 2000, false);
             if (isTTS)accessory.Method.TTS("赋予buff，稍后挑衅反色目标");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("赋予buff，稍后挑衅反色目标");
         }
         else
         {
             if (isText)accessory.Method.TextInfo("赋予buff，稍后攻击反色目标", duration: 2000, false);
             if (isTTS)accessory.Method.TTS("赋予buff，稍后攻击反色目标");
-            if (isEdgeTTS)accessory.Method.EdgeTTS("赋予buff，稍后攻击反色目标");
         }
 
     }
@@ -155,7 +156,6 @@ public class Bismarck_Extreme
         var elemental = @event.StatusId == 717 ? "蓝色水蛇" : "绿色风蛇";
         if (isText)accessory.Method.TextInfo($"攻击{elemental}", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"攻击{elemental}");
-        if (isEdgeTTS)accessory.Method.EdgeTTS($"攻击{elemental}");
     }
     
     #region P3 天气机制
@@ -165,7 +165,6 @@ public class Bismarck_Extreme
     {
         if (isText)accessory.Method.TextInfo("雷雨：不打水泡+分散\n暴雨：打水泡，中间击退接月环\n小雨：打水泡，远离中间", duration: 10000, true);
         if (isTTS)accessory.Method.TTS("注意天气变化");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("注意天气变化");
         accessory.Method.SendChat("/e ————呼风唤雨————\n雷雨：分散，不打水炮\n小雨：中间钢铁，打水炮\n暴雨：中间击退接月环，打水泡");
     }
     
@@ -174,7 +173,6 @@ public class Bismarck_Extreme
     {
         if (isText)accessory.Method.TextInfo("分散，不打水泡", duration: 2000, true);
         if (isTTS)accessory.Method.TTS("分散，不打水泡");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("分散，不打水泡");
     }
     
     [ScriptMethod(name: "雷雨_落雷 & 雷暴云砧 分散", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^407[01]$"])]
@@ -209,7 +207,6 @@ public class Bismarck_Extreme
         // 该击退为 随机方向
         if (isText)accessory.Method.TextInfo("中间击退", duration: 5400, true);
         if (isTTS)accessory.Method.TTS("中间击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("中间击退");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = "击退连线";
