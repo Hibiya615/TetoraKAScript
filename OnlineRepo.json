@@ -1056,12 +1056,12 @@
   {
     "Name": "斗兽奇弈",
     "Guid": "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c",
-    "Version": "0.0.0.5",
+    "Version": "0.0.0.6",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/Crucible_of_the_Unbroken.cs",
-    "Note": "v0.0.0.5:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
-    "UpdateInfo": "v0.0.0.5: 增加博学林鸮选集绘制",
+    "Note": "v0.0.0.6:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
+    "UpdateInfo": "v0.0.0.6: 增加部分机制绘制",
     "UpdateTime": "",
     "TerritoryIds": [
       1339,
