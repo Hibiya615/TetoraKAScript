@@ -32,18 +32,20 @@ namespace Heaven_on_High;
     // 11~20层: 
     // 21~30层: 
     // 31~40层: 782
-    // 41~50层: 
-    // 51~60层: 
-    // 61~70层: 
-    // 71~80层: 
-    // 81~90层: 
-    // 91~100层: 
+    // 41~50层: 773
+    // 51~60层: 783
+    // 61~70层: 774
+    // 71~80层: 784
+    // 81~90层: 775
+    // 91~100层: 785
+    // 中途待机室：780
 
 public class Heaven_on_High {
     const string noteStr =
         """
         v0.0.0.1:
-        天之御柱绘制
+        天之御柱 / Heaven_on_High / アメノミハシラ
+        初版绘制
         """;
 
     #region 各种记录
@@ -150,17 +152,15 @@ public class Heaven_on_High {
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Displacement, dp); 
     }
     
-    #endregion
-    
-    /* 还不知道天宫的技能ID
-    [ScriptMethod(name: "抖动的宝箱_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    [ScriptMethod(name: "抖动的宝箱_怨念提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:12313"])]
     public void 抖动的宝箱_怨念(Event @event, ScriptAccessory accessory)
     {
         if (isText) accessory.Method.TextInfo("打断拟态怪", duration: 2300, true);
         if (isTTS) accessory.Method.TTS("打断拟态怪");
     }
-    */
-
+    
+    #endregion
+    
     #region 1~10层
     
     [ScriptMethod(name: "—————— 1 ~ 10 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
@@ -172,6 +172,43 @@ public class Heaven_on_High {
     
     [ScriptMethod(name: "—————— 11 ~ 20 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第11层(Event @event, ScriptAccessory accessory) { }
+
+    #endregion
+    
+    #region 21~30层
+    
+    [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 第21层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "24~27 天之旗本_天下五剑（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12103$"])]
+    public void 天之旗本_天下五剑 (Event @event, ScriptAccessory accessory)
+    {
+        var obj = IbcHelper.GetById(accessory, @event.SourceId);
+        if (obj == null) return;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之旗本_天下五剑{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f + IbcHelper.GetHitboxRadius(obj)); // 没测目标圈
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "30 蛭子_踏脚（提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11291$"])]
+    public void 蛭子_踏脚(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"站在一朵云下", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"站在一朵云下");
+    }
+
+    #endregion
+    
+    #region 31~40层
+    
+    [ScriptMethod(name: "—————— 31 ~ 40 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
+    public void 第31层(Event @event, ScriptAccessory accessory) { }
     
     [ScriptMethod(name: "40 怖军_龙卷（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11902$"])]
     public void 怖军_龙卷(Event @event, ScriptAccessory accessory)
@@ -214,24 +251,54 @@ public class Heaven_on_High {
 
     #endregion
     
-    #region 21~30层
-    
-    [ScriptMethod(name: "—————— 21 ~ 30 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 第21层(Event @event, ScriptAccessory accessory) { }
-
-    #endregion
-    
-    #region 31~40层
-    
-    [ScriptMethod(name: "—————— 31 ~ 40 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
-    public void 第31层(Event @event, ScriptAccessory accessory) { }
-
-    #endregion
-    
     #region 41~50层
     
     [ScriptMethod(name: "—————— 41 ~ 50 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第41层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "50 牛头_锈爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11919$"])]
+    public void 牛头_锈爪 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"牛头_锈爪{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(11.4f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 3200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "50 牛头_灾厄之语（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11920$"])]
+    public void 牛头_灾厄之语(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"牛头_灾厄之语{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (6f, 48.4f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "50 牛头_惧乱之眼（背对）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11922$"])]
+    public void 牛头_惧乱之眼(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"背对BOSS", duration: 2300, true);
+        if (isTTS)accessory.Method.TTS($"背对BOSS");
+    }
+    
+    [ScriptMethod(name: "50 暗黑气_虚无火花（圆形）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^9194$"])]
+    public void 暗黑气_虚无火花(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"暗黑气_虚无火花{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 16100;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
 
     #endregion
     
@@ -239,13 +306,112 @@ public class Heaven_on_High {
     
     [ScriptMethod(name: "—————— 51 ~ 60 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第51层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "51~54 天之那迦_钙化浓雾（背对顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12397$"])]
+    public void 天之那迦_钙化浓雾 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之那迦_钙化浓雾{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(7.8f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "51~54 天之那迦_凶恶怒号（可打断钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12398$"])]
+    public void 天之那迦_凶恶怒号(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之那迦_凶恶怒号{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.25f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(21.8f);
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "57~59 天之铁臂_电磁学（可打断吸引）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12392$"])]
+    public void 天之铁臂_电磁学(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"吸引接钢铁");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之铁臂_电磁学{@event.SourceId}";
+        dp.Color = new Vector4(1f, 0f, 1f, 0.15f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(21.4f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "57~59 天之铁臂_旋转挥打（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12392$"])]
+    public void 天之铁臂_旋转挥打(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之铁臂_旋转挥打{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(5.4f);
+        dp.DestoryAt = 4100;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "60 诅咒之杖_无尽痛苦（月环预兆）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^9189$"])]
+    public void 诅咒之杖_无尽痛苦(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"诅咒之杖_无尽痛苦{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.InnerScale = new Vector2(6f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 5100; // 实际上4600ms后就开始读条，给一点omen重合的视觉适应
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
 
+    [ScriptMethod(name: "60 忍冬_古代核爆（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11928$"])]
+    public void 忍冬_古代核爆(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+    }
+    
     #endregion
     
     #region 61~70层
     
     [ScriptMethod(name: "—————— 61 ~ 70 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第61层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "70 犬蛊_猎食爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12205$"])]
+    public void 犬蛊_猎食爪 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"犬蛊_猎食爪{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(15f);
+        dp.Radian = 90f.DegToRad(); 
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "70 犬蛊_狂吠（出圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12208$"])]
+    public void 犬蛊_狂吠(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"AOE，离开缩小圈", duration: 2300, true);
+        if (isTTS)accessory.Method.TTS($"离开缩小圈");
+    }
+    
+    [ScriptMethod(name: "70 犬蛊_地狱冲（进圈提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12206$"])]
+    public void 犬蛊_地狱冲(Event @event, ScriptAccessory accessory)
+    {
+        if (@event.TargetId() != accessory.Data.Me) return; 
+        if (isText)accessory.Method.TextInfo($"进入缩小圈", duration: 4300, true);
+        if (isTTS)accessory.Method.TTS($"进入缩小圈");
+    }
 
     #endregion
     
@@ -253,6 +419,43 @@ public class Heaven_on_High {
     
     [ScriptMethod(name: "—————— 71 ~ 80 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第71层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "74~77 天之长毛象_史前咆哮 AOE提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12220$"])]
+    public void 天之长毛象_史前咆哮(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"大象AOE");
+    }
+    
+    [ScriptMethod(name: "76~79 天之白狮_咆吼 眩晕提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12265$"])]
+    public void 天之白狮_咆吼(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"眩晕{@event.TargetName()}");
+    }
+    
+    [ScriptMethod(name: "80 冰块_碎裂（圆形）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^9197$"])]
+    public void 冰块_碎裂(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"冰块_碎裂{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
+        dp.Owner = @event.SourceId;
+        dp.Scale = new Vector2(8f);
+        dp.DestoryAt = 16200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "冰块碎裂销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^11992$"],userControl: false)]
+    public void 冰块碎裂销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"冰块_碎裂{@event.SourceId}");
+    }
+    
+    [ScriptMethod(name: "80 锻冶媪_月下咆哮（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^11987$"])]
+    public void 锻冶媪_月下咆哮(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"AOE，远离所有冰块", duration: 2700, true);
+        if (isTTS)accessory.Method.TTS($"AOE，远离所有冰块");
+    }
 
     #endregion
     
@@ -260,6 +463,121 @@ public class Heaven_on_High {
     
     [ScriptMethod(name: "—————— 81 ~ 90 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第81层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "81~84 天之送狼_寒冰咆哮（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12431$"])]
+    public void 天之送狼_寒冰咆哮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之送狼_寒冰咆哮{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(9.7f);
+        dp.DestoryAt = 2700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "81~84 天之送狼_雷电咆哮（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12432$"])]
+    public void 天之送狼_雷电咆哮(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之送狼_雷电咆哮{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f);
+        dp.InnerScale = new Vector2(7.5f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 4200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
+    [ScriptMethod(name: "82~85 天之牛头_十一吨横扫（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12444$"])]
+    public void 天之牛头_十一吨横扫 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之牛头_十一吨横扫{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(38.2f);
+        dp.Radian = 60f.DegToRad(); 
+        dp.DestoryAt = 3200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "84~87 天之龙人_落肘（扫尾）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12450$"])]
+    public void 天之龙人_落肘 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之龙人_落肘{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(7f);
+        dp.Radian = 90f.DegToRad();
+        dp.Rotation = 180f.DegToRad();
+        dp.DestoryAt = 1700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "85~88 天之独眼_怒视（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12451$"])]
+    public void 天之独眼_怒视(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之独眼_怒视{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (7f, 20.2f);
+        dp.DestoryAt = 3200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+    }
+    
+    [ScriptMethod(name: "85~88 天之独眼_百吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12452$"])]
+    public void 天之独眼_百吨回转(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之独眼_百吨回转{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(11.2f);
+        dp.DestoryAt = 4700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "86~89 天之罗刹_撕裂利爪（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12508$"])]
+    public void 天之罗刹_撕裂利爪 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之罗刹_撕裂利爪{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(8f);
+        dp.Radian = 120f.DegToRad(); 
+        dp.DestoryAt = 2200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "90 温罗_古代爆震（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12214$"])]
+    public void 温罗_古代爆震(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"AOE");
+    }
+    
+    [ScriptMethod(name: "90 沙球_地层俯冲（钢铁）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^9235$"])]
+    public void 沙球_地层俯冲(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"沙球_地层俯冲{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
+        dp.Owner = @event.SourceId;
+        dp.Scale = new Vector2(9f);
+        dp.DestoryAt = 22800;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "沙球消失销毁", eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:regex:^9235$"], userControl: false)]
+    public void 沙球消失销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"沙球_地层俯冲{@event.SourceId()}");
+    }
+
 
     #endregion
     
@@ -267,6 +585,37 @@ public class Heaven_on_High {
     
     [ScriptMethod(name: "—————— 91 ~ 100 层 ——————", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:"])]
     public void 第91层(Event @event, ScriptAccessory accessory) { }
+    
+    [ScriptMethod(name: "91~94 天之肉人（武僧）步法 眩晕提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12270$"])]
+    public void 天之肉人武僧_步法(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"眩晕{@event.TargetName()}");
+    }
+    
+    [ScriptMethod(name: "91~94 天之牛头_卅二吨重击（顺劈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12293$"])]
+    public void 天之牛头_卅二吨重击 (Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之牛头_卅二吨重击{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(39f);
+        dp.Radian = 60f.DegToRad(); 
+        dp.DestoryAt = 3700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
+    }
+    
+    [ScriptMethod(name: "91~94 天之牛头_百廿八吨回转（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^12291$"])]
+    public void 天之牛头_百廿八吨回转(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"天之牛头_百廿八吨回转{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(12f);
+        dp.DestoryAt = 4200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
 
     #endregion
 
