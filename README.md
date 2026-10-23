@@ -79,6 +79,8 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 - `死者宫殿 / 死者の宮殿 / The Palace of the Dead` 
 
+- `天之御柱 / アメノミハシラ / Heaven_on_High`
+
 - `朝圣交错路 / ピルグリム・トラバース / Pilgrim's Traverse`
 
 **临危受命 / Fate**
