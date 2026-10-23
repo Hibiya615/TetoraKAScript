@@ -39,7 +39,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 - `LV63 须佐之男歼灭战` `LV67 吉祥天女歼灭战` `LV70 神龙歼灭战` `LV70 月读歼灭战` `LV70 白虎镇魂战` `LV70 朱雀镇魂战` `LV70 保镖歼灭战`
 - `LV73 缇坦妮雅歼灭战` `LV80 哈迪斯歼灭战`
 - `LV90 高贝扎歼灭战` `LV90 泽罗姆斯歼灭战` `LV100 永恒女王歼灭战`
-- `LV100 永远之暗歼灭战` `LV100 恩欧歼灭战`
+- `LV100 永远之暗歼灭战` `LV100 格莱杨拉波尔歼灭战` ` LV100 恩欧歼灭战`
 
 **讨伐歼殛战 / Trials-Extreme**
 
@@ -93,9 +93,17 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 **特殊场景探索 / Field Operations / 特殊フィールド探索**
 
+- `蜃景幻界新月岛 北征之章 / Occult Crescent: North Horn / クレセントアイル：北征編`
+
 **天青斗场 / Blue Sky / ブルースカイ**
 
 `18 - 爆破死斗`
+
+**其它内容 / Other / その他**
+
+- `斗兽奇弈 / Crucible of the Unbroken / 闘獣練`
+
+
 
 
 ### 【施工中 / Building / 工事中】
