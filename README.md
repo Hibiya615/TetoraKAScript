@@ -13,14 +13,11 @@ Just fun, only CN ver.
 
 - Or download the Local version in **Releases** / 或者下载您所需要的文件并添加至您的**本地仓库**
 
+( CN / EN / JP ) [Text Translator](https://strings.ffcafe.cn/) / [Eorzea Weather](https://eorzea-weather.com/translate)
 
-感谢 [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) 等人的鼎力相助
-
-Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) and more.
+感谢 [Ciceros 灵视](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) 等人的鼎力相助  /  Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.com/cyf5119) 、[VV](https://github.com/VeeverSW) and more.
 
 ## Scripts List   /  支持副本:
-
-( CN / EN / JP ) [Text Translator](https://strings.wakingsands.com/) 
 
 **迷宫挑战 / Dungeons / ダンジョン**
 - `LV50 神兵要塞帝国南方堡` `LV50 最终决战天幕魔导城` `LV50 领航明灯天狼星灯塔` `LV50 惨剧灵殿塔姆·塔拉墓园`
@@ -50,29 +47,30 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 ***Normal***
 
-- LV50：巴哈姆特大迷宫 / Bahamute
+- LV50：巴哈姆特大迷宫 / Bahamute / 大迷宮バハムート
 
   `T5N`
 
-- LV60：亚历山大机神城 / Alexander
+- LV60：亚历山大机神城 / Alexander / 機工城アレキサンダー
 
   `A3N` `A5N` `A7N` `A10N` 
 
-- LV70：欧米茄时空狭缝 / Omega Quests
+- LV70：欧米茄时空狭缝 / Omega Quests / 次元の狭間オメガ
 
   `O4N` `O5N` `O11N`
-- LV80：伊甸希望乐园 / Eden
+
+- LV80：伊甸希望乐园 / Eden / 希望の園エデン
 
   `E1N` `E2N` `E8N` `E9N` `E10N` `E12N`
 
-- LV90：万魔殿 / Pandæmonium
+- LV90：万魔殿 / Pandæmonium / パンデモニウム
 
   `P10N` `P11N`
 
 
 **团队任务 / Alliance Raids / アライアンスレイド**
 
-- LV100: `温达斯：第三巡行`
+- `LV100 温达斯：第三巡行 / Windurst: The Third Walk / ウィンダス：ザ・サードウォーク`
 
 
 **深层迷宫 / Deep Dungeons / ディープダンジョン**
@@ -85,11 +83,11 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 **临危受命 / Fate**
 
-`LV80 激斗畏惧装甲之秘密武器` `LV80 灾厄的古塔尼亚之深海讨伐战`
+- `LV80 激斗畏惧装甲之秘密武器` `LV80 灾厄的古塔尼亚之深海讨伐战`
 
-`LV90 兽道诸神信仰：伪神降临` `LV90 侵略兵器召回指令：破坏侵略兵器希`
+- `LV90 兽道诸神信仰：伪神降临` `LV90 侵略兵器召回指令：破坏侵略兵器希`
 
-`LV100 蛇王得酷热涅：荒野的死斗` `LV100 亩鼠米卡：盛装巡游皆大欢喜`
+- `LV100 蛇王得酷热涅：荒野的死斗` `LV100 亩鼠米卡：盛装巡游皆大欢喜`
 
 **特殊场景探索 / Field Operations / 特殊フィールド探索**
 
@@ -97,7 +95,7 @@ Thanks for [Ciceros](https://github.com/AdmiralLvtzov) 、[Cyf](https://github.c
 
 **天青斗场 / Blue Sky / ブルースカイ**
 
-`18 - 爆破死斗`
+- `18 - 爆破死斗 / Midsummer Night's Explosion / 爆破デスマッチ`
 
 **其它内容 / Other / その他**
 
