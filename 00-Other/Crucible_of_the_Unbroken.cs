@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.6", author: "Tetora", note: noteStr)]
+    version: "0.0.0.7", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.6:
+        v0.0.0.7:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         "逃课关闭部分无用提示" 将关闭大部分净化、驱散、打断等提示
@@ -1145,6 +1145,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#2: 奇子·鱼人_恐慌洗礼（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48485$"])]
     public void 鱼人_恐慌洗礼(Event @event, ScriptAccessory accessory)
     {
+        if (isCheeseStrat) return;
         if (isText) accessory.Method.TextInfo($"使用 <咒具碎魂> 打断鱼人", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"打断鱼人");
     }
@@ -1174,6 +1175,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#2: 奇子·尤弥尔之壳 击杀止步提示", eventType: EventTypeEnum.Death, eventCondition: ["TargetDataId:regex:^19604$"])]
     public void 尤弥尔_击杀止步提示(Event @event, ScriptAccessory accessory)
     {
+        if (isCheeseStrat) return;
         if (isText) accessory.Method.TextInfo($"看时机止步 <尤弥尔>", duration: 5000, false);
         if (isTTS) accessory.Method.TTS($"止步尤弥尔");
     }
@@ -1371,7 +1373,26 @@ public class Crucible_of_the_Unbroken
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
     }
 
-    // Todo. 强敌#2: 远音 三穿一水炮 ActionId 48577
+    [ScriptMethod(name: "强敌#2: 甜美的歌声_爆炸（三穿一）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19618$"])]
+    public void 甜美的歌声_爆炸(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"甜美的歌声_爆炸{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(9f);
+        dp.Delay = 2800; // 第二组生成间隔为1.2s，第三组生成间隔为2s
+        dp.DestoryAt = 3200; // 实际上第一批约5.65s，之后约5.92s，干脆手动销毁算了.jpg
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "甜美的歌声_爆炸销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48577$"],userControl: false)]
+    public void 甜美的歌声_爆炸销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($"甜美的歌声_爆炸.*{@event.SourceId}");
+    }
+    
+    // 诱导之歌 移动距离约为 27.2m , StatusID 2162 为移动命令：后
 
     [ScriptMethod(name: "头目: 贪食无厌 加特勒_垂直驱动（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48605$"])]
     public void 加特勒_垂直驱动(Event @event, ScriptAccessory accessory)
