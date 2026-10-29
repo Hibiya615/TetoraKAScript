@@ -11,17 +11,23 @@ using KodakkuAssist.Module.Draw;
 using KodakkuAssist.Data;
 using KodakkuAssist.Extensions;
 using System.Threading.Tasks;
+using FFXIVClientStructs.FFXIV.Client.Game.Object;
+using FFXIVClientStructs.FFXIV.Client.Game.Character;
+using System.Runtime.CompilerServices;
+using FFXIVClientStructs.FFXIV.Client.Game;
+using FFXIVClientStructs.FFXIV.Client.Game.Control;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
 
 namespace FRU_DLC;
 
 [ScriptType(guid: "981e39b5-ea99-4b85-a4b1-0e698d4c4036", name: "FRU_DLC [光暗未来绝境战_额外补充]", territorys: [1238],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class FRU_DLC
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.5:
         光暗未来绝境战 额外补充部分
         可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分
         建议先在方法设置里全部关闭，再按自己需求开启
@@ -31,11 +37,8 @@ public class FRU_DLC
     
     #region 基础控制
     
-    [UserSetting("TTS开关（TTS请二选一开启）")]
+    [UserSetting("TTS开关")]
     public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -81,6 +84,18 @@ public class FRU_DLC
     
     [UserSetting("P4二运自动防击退 [Y字击退打法]")]
     public bool isAutoAntiKnockback { get; set; } = false;
+    
+    [UserSetting(note: "请选择自动防击退（P4二运Y字击退打法）")]
+    public AntiKnockbackEnum AutoAntiKnockback { get; set; } = AntiKnockbackEnum.None;
+    
+    private static List<string> _AntiKnockback = ["亲疏自行", "沉稳咏唱"];
+    
+    public enum AntiKnockbackEnum
+    {
+        None = -1,
+        亲疏自行 = 0,
+        沉稳咏唱 = 1
+    }
     
     [UserSetting("龙骑开荒小提示")]
     public bool isDRG { get; set; } = false;
@@ -259,7 +274,6 @@ public class FRU_DLC
     {
         if (isText)accessory.Method.TextInfo("雷火线排队", duration: 6000, true);
         if (isTTS)accessory.Method.TTS("雷火线排队");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("雷火线排队");
     }
     
     [ScriptMethod(name: "P2.5 严冬风暴（大圈）判定时间绘制", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40256"])]
@@ -284,17 +298,16 @@ public class FRU_DLC
     [ScriptMethod(name: "P4 盖娅出现横幅倒计时", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40186"])]
     public async void P4AddGaia(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo("盖娅即将出现，注意团辅时机", duration: 5300, true);
+        if (isText) accessory.Method.TextInfo("盖娅即将出现，注意团辅时机", duration: 5300, true);
         await Task.Delay(3800);
-        if (isTTS)accessory.Method.TTS("盖娅即将出现");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("盖娅即将出现");
+        if (isTTS) accessory.Method.TTS("盖娅即将出现");
     }
     
     [ScriptMethod(name: "P4 未来的碎片 目标圈绘制", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17841"])]
-    public async void FragmentOfFate(Event @event, ScriptAccessory accessory)
+    public void FragmentOfFate(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "未来的碎片";
+        dp.Name = $"未来的碎片{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(3.5f);
@@ -303,9 +316,9 @@ public class FRU_DLC
     }
     
     [ScriptMethod(name: "P4 未来的碎片 绘制销毁", userControl:false, eventType: EventTypeEnum.RemoveCombatant, eventCondition: ["DataId:17841"])]
-    public async void RemoveFragmentOfFate(Event @event, ScriptAccessory accessory)
+    public void RemoveFragmentOfFate(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"未来的碎片");
+        accessory.Method.RemoveDraw($"未来的碎片{@event.SourceId}");
     }
     
     [ScriptMethod(name: "P4 忘却的此岸 AOE提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40174"])]
@@ -313,7 +326,6 @@ public class FRU_DLC
     {
         if (isText)accessory.Method.TextInfo("水晶AOE", duration: 4300, false);
         if (isTTS)accessory.Method.TTS("水晶AOE");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("水晶AOE");
     }
     
     [ScriptMethod(name: "P4 死亡轮回 盖娅连线", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40302"])]
@@ -353,16 +365,27 @@ public class FRU_DLC
     {
         await Task.Delay(2500);
         
-        if (isAutoAntiKnockback)
+        if (AutoAntiKnockback == AntiKnockbackEnum.亲疏自行)
         {
-            accessory.Method.SendChat($"/ac 亲疏自行");
-            accessory.Method.SendChat($"/ac 沉稳咏唱");
-            accessory.Method.SendChat($"/e [虎のDebug]：已尝试自动使用防击退");
+            // ActionId 7548 & StatusID 1209 (4B9) 亲疏自行
+            if (ActionExt.IsSpellReady(7548) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0x4B9)) // 检测对应技能是否在CD与是否已处于对应状态
+            {
+                accessory.Method.UseAction(accessory.Data.Me, 7548);
+                if (isDeveloper) accessory.Method.SendChat($"/e [Debug]：已尝试自动使用亲疏自行");
+            }
+        }
+        else if (AutoAntiKnockback == AntiKnockbackEnum.沉稳咏唱)
+        {
+            // ActionId 7559 & StatusID 160 (A0) 沉稳咏唱
+            if (ActionExt.IsSpellReady(7559) && !IbcHelper.HasStatus(accessory, accessory.Data.MyObject, 0xA0))
+            {
+                accessory.Method.UseAction(accessory.Data.Me, 7559);
+                if (isDeveloper) accessory.Method.SendChat($"/e [Debug]：已尝试自动使用沉稳咏唱");
+            }
         }
         
         if (isText)accessory.Method.TextInfo("防击退", duration: 1500, true);
         if (isTTS)accessory.Method.TTS("防击退");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("防击退");
     }
     
     [ScriptMethod(name: "P4 最后延后120提示", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40247"])]
@@ -371,7 +394,6 @@ public class FRU_DLC
         if (phase != FRU_Phase.CrystallizeTime) return;
         if (isText)accessory.Method.TextInfo("延后120爆发至P5", duration: 5000, true);
         if (isTTS)accessory.Method.TTS("延后爆发");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("延后爆发");
     }
     
     #endregion
@@ -388,7 +410,6 @@ public class FRU_DLC
         await Task.Delay(3000);
         if (isText)accessory.Method.TextInfo("1G高跳，2G连祷猛枪", duration: 7000, false);
         if (isTTS)accessory.Method.TTS("1G高跳，2G连祷猛枪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("1G高跳，2G连祷猛枪");
     }
     
     [ScriptMethod(name: "P1 雾龙上天前提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40168"])]
@@ -398,7 +419,6 @@ public class FRU_DLC
         if (phase != FRU_Phase.Fatebreaker) return;
         if (isText)accessory.Method.TextInfo("提前后跳，强化标枪代替龙4收尾", duration: 10000, false);
         if (isTTS)accessory.Method.TTS("提前后跳，标枪收尾");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("提前后跳，标枪收尾");
     }
     
     [ScriptMethod(name: "P1 雾龙落地提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40167"] ,suppress:1000)]
@@ -407,7 +427,6 @@ public class FRU_DLC
         if (!isDRG) return; 
         if (isText)accessory.Method.TextInfo("1G后牵制，2G高跳，延后猛枪蓝炮，打完身位排队", duration: 6000, true);
         if (isTTS)accessory.Method.TTS("1G牵制，延后爆发");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("1G牵制，延后爆发");
     }
     
     [ScriptMethod(name: "P2 光之暴走 踩塔前猛枪提示（与自动猛枪）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4022[01]$"])]
@@ -419,7 +438,6 @@ public class FRU_DLC
         if (isAutoLanceCharge) accessory.Method.SendChat($"/e [虎のDebug] 龙骑小工具：已尝试自动使用猛枪");
         if (isText)accessory.Method.TextInfo("提前猛枪", duration: 5000, true);
         if (isTTS)accessory.Method.TTS("提前猛枪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("提前猛枪");
     }
     
     [ScriptMethod(name: "P2.5 龙骑时间轴小抄", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17829"])]
@@ -430,7 +448,6 @@ public class FRU_DLC
         
         await Task.Delay(8200);
         if (isTTS)accessory.Method.TTS("后撤引导大圈");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("后撤引导大圈");
     }
     
     [ScriptMethod(name: "P4 开场提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17841"])]
@@ -439,7 +456,6 @@ public class FRU_DLC
         if (!isDRG) return; 
         if (isText)accessory.Method.TextInfo("躲完天光轮回1G后，爆发药+猛枪 \n 盖娅出现开团辅", duration: 6000, false);
         if (isTTS)accessory.Method.TTS("注意爆发时机");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("注意爆发时机");
     }
     
     [ScriptMethod(name: "P4 天光轮回猛枪提示", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40237"])]
@@ -447,7 +463,6 @@ public class FRU_DLC
     {
         if (!isDRG) return; 
         if (isTTS)accessory.Method.TTS("爆发药加猛枪");
-        if (isEdgeTTS)accessory.Method.EdgeTTS("爆发药加猛枪");
     }
     
     #endregion
@@ -566,4 +581,226 @@ public static class EventExtensions
     {
         return JsonConvert.DeserializeObject<uint>(@event["Param"]);
     }
+}
+
+public enum MarkType
+{
+    None = -1,
+    Attack1 = 0,
+    Attack2 = 1,
+    Attack3 = 2,
+    Attack4 = 3,
+    Attack5 = 4,
+    Bind1 = 5,
+    Bind2 = 6,
+    Bind3 = 7,
+    Ignore1 = 8,
+    Ignore2 = 9,
+    Square = 10,
+    Circle = 11,
+    Cross = 12,
+    Triangle = 13,
+    Attack6 = 14,
+    Attack7 = 15,
+    Attack8 = 16,
+    Count = 17
+}
+
+public static class IbcHelper
+{
+    public static string GetPlayerJob(this ScriptAccessory accessory, IPlayerCharacter? playerObject, bool fullName = false)
+    {
+        if (playerObject == null) return "None";
+        return fullName ? playerObject.ClassJob.Value.Name.ToString() : playerObject.ClassJob.Value.Abbreviation.ToString();
+    }
+
+    /// <summary>
+    /// 获取玩家的职能
+    /// Return: "Tank"(坦克) / "Healer"(治疗) / "Melee DPS"(近战) / "Ranged DPS"(远程) / "Unknown" / "None"
+    /// </summary>
+    public static string GetPlayerRole(this ScriptAccessory sa, IPlayerCharacter? playerObject)
+    {
+        if (playerObject == null) return "None";
+        return playerObject.ClassJob.Value.Role switch
+        {
+            1 => "Tank",        // 坦克
+            4 => "Healer",      // 治疗
+            2 => "Melee DPS",   // 近战DPS
+            3 => "Ranged DPS",  // 远程DPS
+            _ => "Unknown"
+        };
+    }
+    public static IGameObject? GetById(this ScriptAccessory sa, ulong gameObjectId)
+    {
+        return sa.Data.Objects.SearchById(gameObjectId);
+    }
+
+    public static IGameObject? GetMe(this ScriptAccessory sa)
+    {
+        return sa.Data.Objects.LocalPlayer;
+    }
+
+    public static IEnumerable<IGameObject?> GetByDataId(this ScriptAccessory sa, uint dataId)
+    {
+        return sa.Data.Objects.Where(x => x.DataId == dataId);
+    }
+
+    public static float GetStatusRemainingTime(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return 0;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return charaStruct->GetStatusManager()->GetRemainingTime(statusIdx);
+        }
+    }
+
+    public static bool HasStatus(this ScriptAccessory sa, IBattleChara? battleChara, uint statusId)
+    {
+        if (battleChara == null || !battleChara.IsValid()) return false;
+        unsafe
+        {
+            BattleChara* charaStruct = (BattleChara*)battleChara.Address;
+            var statusIdx = charaStruct->GetStatusManager()->GetStatusIndex(statusId);
+            return statusIdx != -1;
+        }
+    }
+
+    /// <summary>
+    /// 获取指定标记索引的对象EntityId
+    /// </summary>
+    public static unsafe ulong GetMarkerEntityId(uint markerIndex)
+    {
+        var markingController = MarkingController.Instance();
+        if (markingController == null) return 0;
+        if (markerIndex >= 17) return 0;
+
+        return markingController->Markers[(int)markerIndex];
+    }
+
+    /// <summary>
+    /// 获取对象身上的标记
+    /// </summary>
+    /// <returns>MarkType</returns>
+    public static MarkType GetObjectMarker(IGameObject? obj)
+    {
+        if (obj == null || !obj.IsValid()) return MarkType.None;
+
+        ulong targetEntityId = obj.EntityId;
+            
+        for (uint i = 0; i < 17; i++)
+        {
+            var markerEntityId = GetMarkerEntityId(i);
+            if (markerEntityId == targetEntityId)
+            {
+                return (MarkType)i;
+            }
+        }
+
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 检查对象是否有指定的标记
+    /// </summary>
+    public static bool HasMarker(IGameObject? obj, MarkType markType)
+    {
+        return GetObjectMarker(obj) == markType;
+    }
+
+    /// <summary>
+    /// 检查对象是否有任何标记
+    /// </summary>
+    public static bool HasAnyMarker(IGameObject? obj)
+    {
+        return GetObjectMarker(obj) != MarkType.None;
+    }
+
+    private static ulong GetMarkerForObject(IGameObject? obj)
+    {
+        if (obj == null) return 0;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return markerEntityId;
+                }
+            }
+        }
+        return 0;
+    }
+
+    private static MarkType GetMarkerTypeForObject(IGameObject? obj)
+    {
+        if (obj == null) return MarkType.None;
+        unsafe
+        {
+            for (uint i = 0; i < 17; i++)
+            {
+                var markerEntityId = GetMarkerEntityId(i);
+                if (markerEntityId == obj.EntityId)
+                {
+                    return (MarkType)i;
+                }
+            }
+        }
+        return MarkType.None;
+    }
+
+    /// <summary>
+    /// 获取标记的名称
+    /// </summary>
+    public static string GetMarkerName(MarkType markType)
+    {
+        return markType switch
+        {
+            MarkType.Attack1 => "攻击1",
+            MarkType.Attack2 => "攻击2",
+            MarkType.Attack3 => "攻击3",
+            MarkType.Attack4 => "攻击4",
+            MarkType.Attack5 => "攻击5",
+            MarkType.Bind1 => "止步1",
+            MarkType.Bind2 => "止步2",
+            MarkType.Bind3 => "止步3",
+            MarkType.Ignore1 => "禁止1",
+            MarkType.Ignore2 => "禁止2",
+            MarkType.Square => "方块",
+            MarkType.Circle => "圆圈",
+            MarkType.Cross => "十字",
+            MarkType.Triangle => "三角",
+            MarkType.Attack6 => "攻击6",
+            MarkType.Attack7 => "攻击7",
+            MarkType.Attack8 => "攻击8",
+            _ => "无标记"
+        };
+    }
+}
+
+public static class ActionExt
+{
+    public static unsafe bool IsReadyWithCanCast(uint actionId, ActionType actionType)
+    {
+        var am = ActionManager.Instance();
+        if (am == null) return false;
+
+        var adjustedId = am->GetAdjustedActionId(actionId);
+
+        // 0 = Ready）
+        if (am->GetActionStatus(actionType, adjustedId) != 0)
+            return false;
+
+        ulong targetId = 0;
+        var ts = TargetSystem.Instance();
+        if (ts != null && ts->GetTargetObject() != null)
+            targetId = ts->GetTargetObject()->GetGameObjectId();
+
+        return am->GetActionStatus(actionType, adjustedId, targetId) == 0;
+    }
+
+    public static bool IsSpellReady(this uint spellId) => IsReadyWithCanCast(spellId, ActionType.Action);
+    // public static bool IsAbilityReady(this uint abilityId) => IsReadyWithCanCast(abilityId, ActionType.Ability);
 }
