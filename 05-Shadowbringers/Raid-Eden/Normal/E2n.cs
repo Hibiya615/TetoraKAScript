@@ -17,13 +17,13 @@ using KodakkuAssist.Data;
 namespace E2n;
 
 [ScriptType(guid: "b59c7db9-1fba-4476-8701-1e3043cb7dc8", name: "E2N", territorys: [850],
-    version: "0.0.0.3", author: "Tetora", note: noteStr)]
+    version: "0.0.0.4", author: "Tetora", note: noteStr)]
 
 public class E2n
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.4:
         LV80 伊甸希望乐园 觉醒之章2（虚无行者） 初版绘制
         """;
     
@@ -157,16 +157,66 @@ public class E2n
      }
             
      [ScriptMethod(name: "延迟分摊-黑暗神圣", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1809"])]
-     public void 黑暗神圣(Event @event, ScriptAccessory accessory)
+     public async void 黑暗神圣(Event @event, ScriptAccessory accessory)
      {
          var dp = accessory.Data.GetDefaultDrawProperties();
          dp.Name = "黑暗神圣";
          dp.Color = accessory.Data.DefaultSafeColor;
          dp.Owner = @event.TargetId();
          dp.Scale = new Vector2(6f);
-         dp.Delay = @event.DurationMilliseconds() - 3000;
+
+         var durationMs = @event.DurationMilliseconds();
+         if (durationMs <= 3000) return;
+
+         dp.Delay = durationMs - 3000;
          dp.DestoryAt = 3000;
          accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+
+         uint targetId = @event.TargetId();
+
+         // 如果这个目标之前已经有正在等待的任务，先取消，防止叠加
+         if (_spellinWaiting.TryGetValue(targetId, out var oldCts))
+         {
+             oldCts.Cancel();
+             oldCts.Dispose();
+         }
+
+         var cts = new CancellationTokenSource();
+         _spellinWaiting[targetId] = cts;
+
+         try
+         {
+             await Task.Delay((int)(durationMs - 3000), cts.Token);
+
+             if (targetId == accessory.Data.Me && isText)
+             {
+                 accessory.Method.TextInfo("分摊", duration: 2500, true);
+             }
+         }
+         catch (TaskCanceledException)
+         {
+             // 状态被提前覆盖/移除，取消计时
+         }
+         finally
+         {
+             if (_spellinWaiting.TryGetValue(targetId, out var currentCts) && currentCts == cts)
+             {
+                 _spellinWaiting.Remove(targetId);
+                 cts.Dispose();
+             }
+         }
+     }
+
+     [ScriptMethod(name: "中断计时-黑暗神圣", eventType: EventTypeEnum.StatusRemove, eventCondition: ["StatusID:1809"], userControl: false)]
+     public void 黑暗神圣移除(Event @event, ScriptAccessory accessory)
+     {
+         uint targetId = @event.TargetId();
+         if (_spellinWaiting.TryGetValue(targetId, out var cts))
+         {
+             cts.Cancel();
+             cts.Dispose();
+             _spellinWaiting.Remove(targetId);
+         }
      }
      
      [ScriptMethod(name: "延迟背对-暗影之眼", eventType: EventTypeEnum.StatusAdd, eventCondition: ["StatusID:1812"])]
