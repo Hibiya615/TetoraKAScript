@@ -21,13 +21,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace FRU_DLC;
 
 [ScriptType(guid: "981e39b5-ea99-4b85-a4b1-0e698d4c4036", name: "FRU_DLC [光暗未来绝境战_额外补充]", territorys: [1238],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class FRU_DLC
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         光暗未来绝境战 额外补充部分
         可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分
         建议先在方法设置里全部关闭，再按自己需求开启
@@ -38,7 +38,7 @@ public class FRU_DLC
     #region 基础控制
     
     [UserSetting("TTS开关")]
-    public bool isTTS { get; set; } = false;
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
@@ -80,10 +80,6 @@ public class FRU_DLC
     
     [UserSetting(note: "P4 死亡轮回分摊位置")]
     public AkhMornEnum AkhMorn { get; set; } = AkhMornEnum.None;
-    
-    
-    [UserSetting("P4二运自动防击退 [Y字击退打法]")]
-    public bool isAutoAntiKnockback { get; set; } = false;
     
     [UserSetting(note: "请选择自动防击退（P4二运Y字击退打法）")]
     public AntiKnockbackEnum AutoAntiKnockback { get; set; } = AntiKnockbackEnum.None;
