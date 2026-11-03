@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.7", author: "Tetora", note: noteStr)]
+    version: "0.0.0.8", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.7:
+        v0.0.0.8:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         "逃课关闭部分无用提示" 将关闭大部分净化、驱散、打断等提示
@@ -117,6 +117,7 @@ public class Crucible_of_the_Unbroken
     uint WildSpeed = 0; // 普二 曼提克-猛冲重锤
     uint Plaincracker = 0; // 高一 巨像 平原震裂
     uint EarthenRing = 0; // 高一 巨像 核心环光
+    uint RockWall = 0; // 高一 巨像 岩壁
     private int _chimeraRingType = 0; // 高二 奇美拉 0未知 1钢铁 2月环
     private int _chimeraFanType = 0;  // 高二 奇美拉 0未知 1寒冰 2雷鸣 3火焰
 
@@ -126,6 +127,7 @@ public class Crucible_of_the_Unbroken
         WildSpeed = 0;
         Plaincracker = 0;
         EarthenRing = 0;
+        RockWall = 0;
         _chimeraRingType = 0;
         _chimeraFanType = 0;
     }
@@ -2108,25 +2110,76 @@ public class Crucible_of_the_Unbroken
             EarthenRing = 0;
         }
     }
-
-    [ScriptMethod(name: "强敌#2: 奇子·巨像_岩壁（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48748$"])]
-    public void 巨像_岩壁(Event @event, ScriptAccessory accessory)
+    
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_岩壁记录", eventType: EventTypeEnum.EnvControl, eventCondition: ["Index:regex:^(1[7-9]|2[0-8])$","Flag:regex:^(2|32|8|64)$"],userControl: false)]
+    public void 巨像_岩壁记录(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"去两侧石堆旁边", duration: 2000, true);
-        if (isTTS)accessory.Method.TTS($"去两侧石堆旁边");
+        // Flag 2 朝内 ; 32 朝外 ; 8 朝内销毁 ; 64 朝外销毁
+        if (@event.Flag() == 2)
+            RockWall = 2;
+        else if (@event.Flag() == 32)
+            RockWall = 32;
+        else if (@event.Flag() == 8)
+            RockWall = 0;
+        else if (@event.Flag() == 64)
+            RockWall = 0;
     }
     
-    [ScriptMethod(name: "强敌#2: 奇子·巨像_冲击波（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48750$"])]
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_冲击波（TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48750$"],suppress: 20000)]
+    public void 巨像_冲击波TTS(Event @event, ScriptAccessory accessory)
+    {
+        if (RockWall == 2)
+        {
+            if (isText) accessory.Method.TextInfo($"去外侧", duration: 5000, true);
+            if (isTTS) accessory.Method.TTS($"去外侧");
+        }
+        else if (RockWall == 32)
+        {
+            if (isText) accessory.Method.TextInfo($"进内侧", duration: 5000, true);
+            if (isTTS) accessory.Method.TTS($"进内侧");
+        }
+    }
+
+    [ScriptMethod(name: "强敌#2: 奇子·巨像_冲击波（直线安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48750$"])]
     public void 巨像_冲击波(Event @event, ScriptAccessory accessory)
     {
+        // Envcontrol 1组出的时候StartCasting已经进行到第4组，不如直接画安全区
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"冲击波{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
+        dp.Color = accessory.Data.DefaultSafeColor.WithW(0.8f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new (5f, 10f);
         dp.DestoryAt = 3700;
-        dp.ScaleMode = ScaleMode.ByTime;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+        // dp.ScaleMode = ScaleMode.ByTime;
+        
+        if (RockWall == 2)
+        {
+            dp.Offset = new Vector3(0f, 0f, -5f);
+            dp.Scale = new (5f, 10f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+        }
+        else if (RockWall == 32)
+        {
+            dp.Scale = new (5f, 5f);
+            dp.Rotation = 180f.DegToRad(); 
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+        }
+        else
+        {
+            if (isDeveloper) accessory.Method.SendChat($"/e [DEBUG]: 未检测到EnvControl");
+        }
+        
+        /* 危险区范围留档
+        if (RockWall == 2)
+        {
+            dp.Scale = new (5f, 10f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+        }
+        else if (RockWall == 32)
+        {
+            dp.Scale = new (5f, 15f);
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+        }
+        */
     }
     
     [ScriptMethod(name: "强敌#2: 奇子·巨像_岩雨（钢铁月环）", eventType: EventTypeEnum.ObjectEffect, eventCondition: ["Id1:regex:^(1|64)$","Id2:regex:^(2|128)$"])]
@@ -3778,6 +3831,11 @@ public static class EventExtensions
     public static uint Id2(this Event @event)
     {
         return JsonConvert.DeserializeObject<uint>(@event["Id2"]);
+    }
+    
+    public static uint Flag(this Event @event)
+    {
+        return JsonConvert.DeserializeObject<uint>(@event["Flag"]);
     }
 }
 
