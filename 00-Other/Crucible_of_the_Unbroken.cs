@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.8", author: "Tetora", note: noteStr)]
+    version: "0.0.0.9", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.8:
+        v0.0.0.9:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         "逃课关闭部分无用提示" 将关闭大部分净化、驱散、打断等提示
@@ -77,6 +77,13 @@ public class Crucible_of_the_Unbroken
         accessory.Method.RemoveDraw(".*击退.*");
     }
 
+    #endregion
+
+    #region Status记录
+    /*
+        4867 → 耐雷药 - 1级魔兽耐雷药（50%吸收，15s）
+        4958 → 麻痹耐性提升 - 2级魔兽抗麻痹药 （100%，300s）
+    */
     #endregion
 
     #region 记录与转换
@@ -2397,7 +2404,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "强敌#1: 奇子·夺心魔_虚空暴雷（死刑提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49205$"],suppress:1000)]
     public void 夺心魔_虚空暴雷提示(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"范围死刑，离开水圈", duration: 4000, true);
+        if (isText)accessory.Method.TextInfo($"[雷] 范围死刑，离开水圈", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"范围死刑，离开水圈");
     }
     
@@ -2409,7 +2416,7 @@ public class Crucible_of_the_Unbroken
         dp.Name = $"虚空暴雷{@event.SourceId}";
         dp.Scale = new (10f, 100f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
         dp.DestoryAt = 3700;
         
         float[] rotations = { 0f, 90f};
@@ -2507,12 +2514,14 @@ public class Crucible_of_the_Unbroken
         if (isTTS)accessory.Method.TTS($"使用光元精的扇形亡语对准BOSS");
     }
     
+    // 小怪隐身距离为 13.5m
+    
     [ScriptMethod(name: "随机#1: 奇子·爆弹怪_爆炸（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49210$"])]
     public void 爆弹怪_爆炸(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"爆炸{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(9f);
         dp.DestoryAt = 4700;
@@ -2526,7 +2535,7 @@ public class Crucible_of_the_Unbroken
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"光散射{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(20f);
         dp.Radian = 45f.DegToRad(); 
@@ -3229,7 +3238,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#4: 凝胶化火焰/雷电_炸裂（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4937(3|5)$"])]
     public void 凝胶化_炸裂(Event @event, ScriptAccessory accessory)
     {
-        // if (isCheeseStrat) return;
+        if (isCheeseStrat) return;
         if (isTTS)accessory.Method.TTS($"打断史莱姆");
     }
     
@@ -3276,6 +3285,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#4: 奇子·独眼巨人_激励鼓舞（打断提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49368$"])]
     public void 独眼巨人_激励鼓舞(Event @event, ScriptAccessory accessory)
     {
+        if (isCheeseStrat) return;
         if (isTTS)accessory.Method.TTS($"打断小怪");
     }
     
@@ -3495,7 +3505,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 魔斧之主 劳妲_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49470$"])]
     public void 劳妲_霹雳(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"麻痹死刑", duration: 4000, true);
+        if (isText)accessory.Method.TextInfo($"[雷] 麻痹死刑", duration: 4000, true);
         if (isTTS)accessory.Method.TTS($"麻痹死刑");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -3525,7 +3535,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 魔斧之主 劳妲_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49453$"])]
     public void 劳妲_大奔流(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"向南北击退", duration: 6000, true);
+        if (isText)accessory.Method.TextInfo($"[风] 向南北击退", duration: 6000, true);
         if (isTTS)accessory.Method.TTS($"向南北击退");
         IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(427, new Vector3(60f),
             @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f,0.5f,0f,0.5f), 6700);
@@ -3567,41 +3577,61 @@ public class Crucible_of_the_Unbroken
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"垂直驱动{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.3f);
         dp.Owner = @event.SourceId();
         dp.Scale = new (20f, 80f);
         dp.DestoryAt = 6700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
-    [ScriptMethod(name: "头目: 魔斧之主 劳妲_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49449$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_贪食啮噬（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4944[89]$"])]
     public void 劳妲_贪食啮噬(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"对侧角落安全（注意击退）", duration: 12600, true);
-        if (isTTS)accessory.Method.TTS($"对侧角落安全（注意击退）");
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"贪食啮噬{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new Vector2(40f);
-        dp.DestoryAt = 13300;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+        if (@event.ActionId == 49449)
+        {
+            if (isText)accessory.Method.TextInfo($"去BOSS面前，击退到钢铁外", duration: 12600, true);
+            if (isTTS)accessory.Method.TTS($"去BOSS面前，击退到钢铁外");
+        }
+        else if (@event.ActionId == 49448) // 本体无意义读条较晚，延迟绘制避免干扰判断
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"贪食啮噬{@event.SourceId}";
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.15f);
+            dp.Owner = @event.SourceId();
+            dp.Scale = new Vector2(40f);
+            dp.DestoryAt = 7700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+            
+            var dp1 = accessory.Data.GetDefaultDrawProperties();
+            dp1.Name = $"贪食啮噬描边{@event.SourceId}";
+            dp1.Color = accessory.Data.DefaultDangerColor.WithW(10f);
+            dp1.Owner = @event.SourceId();
+            dp1.Scale = new Vector2(40f);
+            dp1.InnerScale = new Vector2(39.95f);
+            dp1.Radian = float.Pi * 2;
+            dp1.DestoryAt = 7700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp1);
+        }
     }
     
-    [ScriptMethod(name: "头目: 魔斧之主 劳妲_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49446$"])]
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_贪食裂膛（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4944[56]$"])]
     public void 劳妲_贪食裂膛(Event @event, ScriptAccessory accessory)
     {
-        if (isText)accessory.Method.TextInfo($"BOSS背后安全（注意击退）", duration: 12600, true);
-        if (isTTS)accessory.Method.TTS($"BOSS背后安全（注意击退）");
-        
-        var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"贪食裂膛{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
-        dp.Owner = @event.SourceId();
-        dp.Scale = new (40f, 50f);
-        dp.DestoryAt = 13300;
-        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+        if (@event.ActionId == 49446)
+        {
+            if (isText) accessory.Method.TextInfo($"远离BOSS，击退到BOSS背后", duration: 12600, true);
+            if (isTTS) accessory.Method.TTS($"远离BOSS，击退到BOSS背后");
+        }
+        else if (@event.ActionId == 49445) // 本体无意义读条较晚，延迟绘制避免干扰判断
+        {
+            var dp = accessory.Data.GetDefaultDrawProperties();
+            dp.Name = $"贪食裂膛{@event.SourceId}";
+            dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+            dp.Owner = @event.SourceId();
+            dp.Scale = new(40f, 50f);
+            dp.DestoryAt = 7700;
+            accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp);
+        }
     }
     
     [ScriptMethod(name: "头目: 魔斧之主 劳妲_消失魔刃·冲波（提醒）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49484$"])]
@@ -3610,6 +3640,13 @@ public class Crucible_of_the_Unbroken
         // [Status 5341] 49485 瞬移？，打正打背怎么都是49487 ， 49488没遇到，击退距离40m
         if (isText)accessory.Method.TextInfo($"观察稍后击退方向", duration: 6000, true);
         if (isTTS)accessory.Method.TTS($"观察击退方向");
+    }
+    
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_消失魔刃·冲波（准备击退提醒）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^0114$"])]
+    public void 劳妲_消失魔刃冲波准备击退(Event @event, ScriptAccessory accessory)
+    {
+        // if (isText)accessory.Method.TextInfo($"击退准备", duration: 3000, true);
+        if (isTTS)accessory.Method.TTS($"击退准备");
     }
     
     // [Status 5341]消失魔刃·冲波 49484 本体无意义读条，49485 瞬移？，打正打背怎么都是49487 ， 49488没遇到，击退距离40m
@@ -3633,9 +3670,9 @@ public class Crucible_of_the_Unbroken
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"拘束{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new (10f, 10f);
+        dp.Scale = new (5f, 5f);
         dp.DestoryAt = 4200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
@@ -3667,11 +3704,28 @@ public class Crucible_of_the_Unbroken
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"火焰魔刃·牢狱{@event.SourceId}"; // ActionId 49460
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
         dp.DestoryAt = 11800;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
+    [ScriptMethod(name: "头目: 魔刃销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^494(55|57|60)$"],userControl: false)]
+    public void 魔刃销毁(Event @event, ScriptAccessory accessory)
+    {
+        switch (@event.ActionId())
+        {
+            case 49455:
+                accessory.Method.RemoveDraw($".*拘束.*");
+                break;
+            case 49457:
+                accessory.Method.RemoveDraw($".*剧毒魔刃.*");
+                break;
+            case 49460:
+                accessory.Method.RemoveDraw($".*火焰魔刃·牢狱.*");
+                break;
+        }
     }
     
     [ScriptMethod(name: "头目: 魔斧之主 劳妲_火焰魔刃（放置核爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4946(5|8)$"])]
@@ -3684,9 +3738,11 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 高段火焰魔刃_魔刃爆焰（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49469$"])]
     public void 高段火焰魔刃_魔刃爆焰(Event @event, ScriptAccessory accessory)
     {
+        if (isText && isCheeseStrat) accessory.Method.TextInfo($"[火] 魔法核爆（可反射）", duration: 10000, true);
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"高段魔刃爆焰{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(20f);
         dp.DestoryAt = 10700;

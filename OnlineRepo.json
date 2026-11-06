@@ -592,12 +592,12 @@
   {
     "Name": "伊弗利特歼殛战",
     "Guid": "dbb7983a-d2c4-4621-9734-76772e3f206a",
-    "Version": "0.0.0.4",
+    "Version": "0.0.0.5",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials-Extreme/Ifrit(Extreme).cs",
-    "Note": "v0.0.0.3:\r\nLV50 伊弗利特歼殛战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
-    "UpdateInfo": "重做职能检测",
+    "Note": "v0.0.0.5:\r\nLV50 伊弗利特歼殛战 初版绘制\r\nTTS请在“用户设置”中二选一启用，请勿同时开启",
+    "UpdateInfo": "",
     "UpdateTime": "",
     "TerritoryIds": [
       295
@@ -1080,12 +1080,12 @@
   {
     "Name": "斗兽奇弈",
     "Guid": "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c",
-    "Version": "0.0.0.8",
+    "Version": "0.0.0.9",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript/tree/main",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/00-Other/Crucible_of_the_Unbroken.cs",
-    "Note": "v0.0.0.8:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
-    "UpdateInfo": "v0.0.0.8: 修正部分机制绘制",
+    "Note": "v0.0.0.9:\r\n斗兽奇弈 / 闘獣練 / Crucible of the Unbroken\r\n初版绘制",
+    "UpdateInfo": "v0.0.0.9: 优化绘制与提示",
     "UpdateTime": "",
     "TerritoryIds": [
       1339,

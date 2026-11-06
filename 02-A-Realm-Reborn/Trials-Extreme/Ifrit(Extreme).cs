@@ -15,28 +15,24 @@ using KodakkuAssist.Extensions;
 namespace Ifrit_Extreme;
 
 [ScriptType(guid: "dbb7983a-d2c4-4621-9734-76772e3f206a", name: "伊弗利特歼殛战", territorys: [295],
-    version: "0.0.0.4", author: "Tetora", note: noteStr)]
+    version: "0.0.0.5", author: "Tetora", note: noteStr)]
 
 public class Ifrit_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.3:
+        v0.0.0.5:
         LV50 伊弗利特歼殛战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
     
     [UserSetting("TTS开关（TTS请二选一开启）")]
-    public bool isTTS { get; set; } = false;
-    
-    [UserSetting("EdgeTTS开关（TTS请二选一开启）")]
-    public bool isEdgeTTS { get; set; } = true;
+    public bool isTTS { get; set; } = true;
     
     [UserSetting("弹窗文本提示开关")]
     public bool isText { get; set; } = true;
     
-    [UserSetting("【开发用】Debug模式")]
-    public bool isDebug { get; set; } = false;
+    [UserSetting("开发者模式")] public bool isDeveloper { get; set; } = false;
     
     
     [ScriptMethod(name: "开场提示", eventType: EventTypeEnum.Director, eventCondition: ["Command:40000001"])]
@@ -61,7 +57,6 @@ public class Ifrit_Extreme
         if (isTank && @event.TargetId() != accessory.Data.Me && isText) accessory.Method.TextInfo("挑衅", duration: 3000, true);
         if (isTank && @event.TargetId() == accessory.Data.Me && isText) accessory.Method.TextInfo("退避", duration: 3000, true); 
         if (isTank && isTTS) accessory.Method.TTS("换T！"); 
-        if (isTank && isEdgeTTS) accessory.Method.EdgeTTS("换T！");
     }
     
     /*
@@ -111,7 +106,6 @@ public class Ifrit_Extreme
     {
         if (@event.TargetId() == accessory.Data.Me && isText) accessory.Method.TextInfo("热风点名，远离人群", duration: 4500, true);
         if (@event.TargetId() == accessory.Data.Me && isTTS) accessory.Method.TTS("热风点名");
-        if (@event.TargetId() == accessory.Data.Me && isEdgeTTS) accessory.Method.EdgeTTS("热风点名");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"热风{@event.TargetId()}";;
@@ -160,19 +154,18 @@ public class Ifrit_Extreme
         accessory.Method.RemoveDraw($"热风.*{@event.TargetId()}");
     }
     
-    [ScriptMethod(name: "火狱之楔 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:212"])]
+    [ScriptMethod(name: "火狱之楔 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^212$"])]
     public void 火狱之楔(Event @event, ScriptAccessory accessory)
     {
         // if (isText) accessory.Method.TextInfo("击杀 <火狱之楔>", duration: 2500, true);
         if (isTTS) accessory.Method.TTS("击杀火狱之楔");
-        if (isEdgeTTS) accessory.Method.EdgeTTS("击杀火狱之楔");
     }
     
     [ScriptMethod(name: "地火喷发", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:1677"])]
     public void 地火喷发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "地火喷发";
+        dp.Name = $"地火喷发{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(8f);
@@ -187,7 +180,6 @@ public class Ifrit_Extreme
         if (@event.TargetId() != accessory.Data.Me || @event.SourceId() != accessory.Data.Me ) return; 
         if (isText) accessory.Method.TextInfo("锁链靠近", duration: 3000, true);
         if (isTTS) accessory.Method.TTS("锁链靠近");
-        if (isEdgeTTS) accessory.Method.EdgeTTS("锁链靠近");
         
         /*  懒得拿时间了 不画了x
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -210,7 +202,7 @@ public class Ifrit_Extreme
     public void 深红旋风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "深红旋风";
+        dp.Name = $"深红旋风{@event.SourceId}";
         dp.Scale = new (18, 49f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;
