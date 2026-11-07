@@ -15,13 +15,13 @@ using KodakkuAssist.Extensions;
 namespace Ifrit_Extreme;
 
 [ScriptType(guid: "dbb7983a-d2c4-4621-9734-76772e3f206a", name: "伊弗利特歼殛战", territorys: [295],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class Ifrit_Extreme
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         LV50 伊弗利特歼殛战 初版绘制
         TTS请在“用户设置”中二选一启用，请勿同时开启
         """;
@@ -66,7 +66,6 @@ public class Ifrit_Extreme
     {
         if (isText) accessory.Method.TextInfo("防击退", duration: 4200, false);
         if (isTTS) accessory.Method.TTS("防击退");
-        if (isEdgeTTS) accessory.Method.EdgeTTS("防击退");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         var dp2 = accessory.Data.GetDefaultDrawProperties();
@@ -154,7 +153,7 @@ public class Ifrit_Extreme
         accessory.Method.RemoveDraw($"热风.*{@event.TargetId()}");
     }
     
-    [ScriptMethod(name: "火狱之楔 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^212$"])]
+    [ScriptMethod(name: "火狱之楔 击杀提示", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^212$"],suppress: 1000)]
     public void 火狱之楔(Event @event, ScriptAccessory accessory)
     {
         // if (isText) accessory.Method.TextInfo("击杀 <火狱之楔>", duration: 2500, true);
