@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.0.9", author: "Tetora", note: noteStr)]
+    version: "0.0.1.0", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.0.9:
+        v0.0.1.0:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         "逃课关闭部分无用提示" 将关闭大部分净化、驱散、打断等提示
@@ -127,6 +127,7 @@ public class Crucible_of_the_Unbroken
     uint RockWall = 0; // 高一 巨像 岩壁
     private int _chimeraRingType = 0; // 高二 奇美拉 0未知 1钢铁 2月环
     private int _chimeraFanType = 0;  // 高二 奇美拉 0未知 1寒冰 2雷鸣 3火焰
+    uint MoltenMetalDelay = 0; // 高二 劳妲 火焰魔刃组合技钢铁延迟显示
 
     public void Init(ScriptAccessory accessory)
     {
@@ -137,6 +138,7 @@ public class Crucible_of_the_Unbroken
         RockWall = 0;
         _chimeraRingType = 0;
         _chimeraFanType = 0;
+        MoltenMetalDelay = 0;
     }
     
     #endregion
@@ -3524,12 +3526,15 @@ public class Crucible_of_the_Unbroken
         // PlayActionTimeline 4562是出现，4576是隐藏
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"隐蔽魔刃_突进{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Color = new Vector4(1f, 0f, 0f, 1.2f);
         dp.Owner = @event.SourceId();
         dp.Scale = new (5f, 50f);
         dp.Delay = 3700;
         dp.DestoryAt = 4000;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Rect, dp); 
+        
+        MoltenMetalDelay = 1; // 之后的消失魔刃 + 魔刃结界组合技时，应延后火魔刃的显示时间
+
     }
 
     [ScriptMethod(name: "头目: 魔斧之主 劳妲_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49453$"])]
@@ -3580,7 +3585,8 @@ public class Crucible_of_the_Unbroken
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.3f);
         dp.Owner = @event.SourceId();
         dp.Scale = new (20f, 80f);
-        dp.DestoryAt = 6700;
+        dp.Delay = 3000;
+        dp.DestoryAt = 3700;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
@@ -3619,7 +3625,7 @@ public class Crucible_of_the_Unbroken
     {
         if (@event.ActionId == 49446)
         {
-            if (isText) accessory.Method.TextInfo($"远离BOSS，击退到BOSS背后", duration: 12600, true);
+            if (isText) accessory.Method.TextInfo($"【先躲圆圈】远离BOSS，击退到BOSS背后", duration: 12600, true);
             if (isTTS) accessory.Method.TTS($"远离BOSS，击退到BOSS背后");
         }
         else if (@event.ActionId == 49445) // 本体无意义读条较晚，延迟绘制避免干扰判断
@@ -3663,17 +3669,34 @@ public class Crucible_of_the_Unbroken
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    [ScriptMethod(name: "头目: 魔斧之主 劳妲_拘束（结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^20154(28|53)$"])]
-    public void 劳妲_拘束(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_拘束（毒结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^2015428$"])]
+    public void 劳妲_毒拘束(Event @event, ScriptAccessory accessory)
+    {
+        if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+
+        // MoltenMetalDelay = 1;
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"毒拘束{@event.SourceId}";
+        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new(10f, 10); // 毒刃为2x2格
+        dp.DestoryAt = 4200;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+    }
+    
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_拘束（火结界方块）", eventType: EventTypeEnum.ObjectChanged, eventCondition: ["Operate:Add","DataId:regex:^2015453$"])]
+    public void 劳妲_火拘束(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
 
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"拘束{@event.SourceId}";
-        dp.Color = new Vector4(1f, 0f, 0f, 0.8f);
+        dp.Name = $"火拘束{@event.SourceId}";
+        dp.Color = new Vector4(1f, 0f, 0f, 1f);
         dp.Owner = @event.SourceId();
-        dp.Scale = new (5f, 5f);
-        dp.DestoryAt = 4200;
+        dp.Scale = new (5f,5f);  // 火刃为1x1
+        dp.Delay = MoltenMetalDelay == 1 ? 6600 : 0;
+        dp.DestoryAt = 4500 ;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
     }
     
@@ -3681,12 +3704,14 @@ public class Crucible_of_the_Unbroken
     public void 高段魔刃结界_剧毒魔刃(Event @event, ScriptAccessory accessory)
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1343) return;
+
+        // MoltenMetalDelay = 1;
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"高段剧毒魔刃{@event.SourceId}";
         dp.Scale = new (10f, 30f);
         dp.Owner = @event.SourceId();
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
         dp.Delay = 4200;
         dp.DestoryAt = 8400;
         
@@ -3707,7 +3732,8 @@ public class Crucible_of_the_Unbroken
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
-        dp.DestoryAt = 11800;
+        dp.Delay = MoltenMetalDelay == 1 ? 12600 : 4200; // 通过是否在【隐蔽魔刃】组合技时判断
+        dp.DestoryAt = MoltenMetalDelay == 1 ? 5800 : 8400 ;  // 通常情况下为12.6s，魔刃组合技时，共为18.4s
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -3726,6 +3752,8 @@ public class Crucible_of_the_Unbroken
                 accessory.Method.RemoveDraw($".*火焰魔刃·牢狱.*");
                 break;
         }
+        
+        MoltenMetalDelay = 0;
     }
     
     [ScriptMethod(name: "头目: 魔斧之主 劳妲_火焰魔刃（放置核爆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4946(5|8)$"])]
@@ -3750,7 +3778,19 @@ public class Crucible_of_the_Unbroken
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
-    // 49473 暴食战斧 最后击退
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_暴食战斧（转场击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49473$"])]
+    public void 劳妲_暴食战斧(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"【物理】最后击退", duration: 27300, true);
+        if (isTTS)accessory.Method.TTS($"击退转场");
+    }
+    
+    [ScriptMethod(name: "头目: 魔斧之主 劳妲_灼焰战斧（转场核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^49477$"])]
+    public void 劳妲_灼焰战斧(Event @event, ScriptAccessory accessory)
+    {
+        if (isText)accessory.Method.TextInfo($"【火】最后核爆", duration: 27300, true);
+        if (isTTS)accessory.Method.TTS($"核爆转场");
+    }
     
     #endregion
     
@@ -3784,6 +3824,11 @@ public static class EventExtensions
     public static uint SourceId(this Event @event)
     {
         return ParseHexId(@event["SourceId"], out var id) ? id : 0;
+    }
+    
+    public static uint DataId(this Event @event)
+    {
+        return ParseHexId(@event["DataId"], out var id) ? id : 0;
     }
 
     public static uint SourceDataId(this Event @event)
