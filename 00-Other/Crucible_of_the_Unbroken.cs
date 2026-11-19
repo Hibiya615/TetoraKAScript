@@ -316,14 +316,10 @@ public class Crucible_of_the_Unbroken
     public void 祸蛛蝎_致命尾刺(Event @event, ScriptAccessory accessory)
     {
         // 回头得再看看毒耐的StatusID!
+        if (isText) accessory.Method.TextInfo(isThirdDegree ? 
+            "物理带毒死刑，净化或闪避" : "物理带毒死刑，可 <死尸净化> 驱散 或 <闪避之书>", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"物理带毒死刑");
-        
-        if (!isText) return;
-        if (isThirdDegree) {
-            accessory.Method.TextInfo($"物理带毒死刑，净化或闪避", duration: 4000, false);
-        } else {
-            accessory.Method.TextInfo($"物理带毒死刑，可 <死尸净化> 驱散 或 <闪避之书> ", duration: 4000, false);
-        }
+    
     }
 
     [ScriptMethod(name: "敌人#4: 奇子·祸蛛蝎_毒蛛网（九连环TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46907$"])]
@@ -443,7 +439,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 魅惑女妖 帕德索_嗜血剑（吸血死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46934$"])]
     public void 梦魔法师_嗜血剑(Event @event, ScriptAccessory accessory)
     {
-        if (isText && isThirdDegree) accessory.Method.TextInfo($"魔法吸血死刑，减伤或反射", duration: 5000, false);
+        if (isText && isThirdDegree) accessory.Method.TextInfo($"魔法吸血死刑，减伤或反射", duration: 5000, true); // 其实并不确定能不能反射
         if (isTTS && isThirdDegree) accessory.Method.TTS($"魔法吸血死刑");
     }
     
@@ -451,7 +447,7 @@ public class Crucible_of_the_Unbroken
     public void 帕德索_欺瞒雾(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"远离（吃到10s噩梦）", duration: 5000, true);
-        if (isTTS) accessory.Method.TTS($"远离");
+        if (isTTS) accessory.Method.TTS($"立刻远离BOSS");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"欺瞒雾{@event.SourceId}";
@@ -876,7 +872,6 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#3: 奇子·虚灵法师_死亡驱动（地板圈）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48182$"])]
     public void 虚灵法师_死亡驱动绘制(Event @event, ScriptAccessory accessory)
     {
-
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"死亡驱动{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
@@ -1004,7 +999,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "强敌#2: 奇子·牛魔兄弟_无尽挥打（软狂暴）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48214$"])]
     public void 牛魔兄弟_无尽挥打(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"[软狂暴] 大AOE伤害", duration: 7000, true);
+        if (isText) accessory.Method.TextInfo($"[软狂暴] 大AOE伤害（注意宝宝）", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"大AOE伤害");
     }
 
@@ -1082,6 +1077,8 @@ public class Crucible_of_the_Unbroken
         if (isText) accessory.Method.TextInfo($"[软狂暴] 大AOE伤害", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"大AOE伤害");
     }
+    
+    // 先打死小地豆就是哥布林读条软狂暴死刑 [哥布林冲锋]，反之小地豆读条地震（好像不会打到宝宝？
     
     #endregion
     
@@ -1170,7 +1167,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#2: 奇子·鱼人_大海啸（击退安全区）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48481$"])]
     public void 鱼人_大海啸(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"击退（可被壳阻挡）", duration: 7000, true);
+        if (isText) accessory.Method.TextInfo($"击退", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"击退");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1211,8 +1208,8 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "强敌#1: 奇子·祖的蛋_孵化（击杀提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48487$"])]
     public void 祖的蛋_孵化(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"击杀孵化鸟蛋（别用突进）", duration: 5000, true);
-        if (isTTS) accessory.Method.TTS($"击杀孵化鸟蛋");
+        if (isText) accessory.Method.TextInfo($"适量击杀孵化鸟蛋（别用突进）", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS($"适量击杀孵化鸟蛋");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"孵化连线{@event.SourceId}";
@@ -1470,7 +1467,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 贪食无厌 加特勒_大奔流（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48607$"])]
     public void 加特勒_大奔流(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"向南北击退", duration: 6000, true);
+        if (isText) accessory.Method.TextInfo($"[风] 向南北击退", duration: 6000, true);
         if (isTTS) accessory.Method.TTS($"向南北击退");
         IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(427, new Vector3(60f),
             @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f, 0.4f, 0f, 0.5f), 6700);
@@ -1480,7 +1477,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 贪食无厌 加特勒_霹雳（直线麻痹死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48620$"])]
     public void 加特勒_霹雳(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"麻痹死刑", duration: 4000, true);
+        if (isText) accessory.Method.TextInfo($"[雷] 麻痹死刑", duration: 4000, true);
         if (isTTS) accessory.Method.TTS($"麻痹死刑");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1545,6 +1542,8 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 火焰魔刃_魔刃爆焰（核爆）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48619$"])]
     public void 火焰魔刃_魔刃爆焰(Event @event, ScriptAccessory accessory)
     {
+        if (isText && isCheeseStrat) accessory.Method.TextInfo($"[火] 魔法核爆（可反射）", duration: 7000, true);
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"魔刃爆焰{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor.WithW(1f);
@@ -1596,6 +1595,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_狂水之章（河童提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48658$"])]
     public void 博学林鸮_狂水之章(Event @event, ScriptAccessory accessory)
     {
+        // Todo.指路回头再看
         if (isText) accessory.Method.TextInfo($"站在河童圈", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"站在河童圈");
     }
@@ -1603,6 +1603,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#1: 奇子·博学林鸮_魔法锤之章（史莱姆提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48659$"])]
     public void 博学林鸮_魔法锤之章(Event @event, ScriptAccessory accessory)
     {
+        // Todo.指路回头再看
         if (isText) accessory.Method.TextInfo($"站在粘液怪圈", duration: 7000, true);
         if (isTTS) accessory.Method.TTS($"站在粘液怪圈");
     }
@@ -1888,7 +1889,7 @@ public class Crucible_of_the_Unbroken
     public void 石像鬼_突进连斩(Event @event, ScriptAccessory accessory)
     {
         // 48717 无意义本体读条，48718 二连顺劈
-        if (isText) accessory.Method.TextInfo($"远离BOSS，然后去BOSS背后（二连劈）", duration: 12300, true);
+        if (isText) accessory.Method.TextInfo($"[物理] 远离BOSS，然后去BOSS背后（二连劈）", duration: 12300, true);
         if (isTTS) accessory.Method.TTS($"远离BOSS，然后去背后");
 
         var dp = accessory.Data.GetDefaultDrawProperties();
@@ -1930,8 +1931,8 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "强敌#1: 奇子·石像鬼_冲波五连斩（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50696$"])]
     public void 石像鬼_冲波五连斩(Event @event, ScriptAccessory accessory)
     {
-        // if (isText)accessory.Method.TextInfo($"AOE", duration: 2000, false);
-        if (isTTS) accessory.Method.TTS($"AOE");
+        // if (isText)accessory.Method.TextInfo($"AOE+击退", duration: 2000, false);
+        if (isTTS) accessory.Method.TTS($"AOE加击退");
     }
 
     [ScriptMethod(name: "强敌#1: 奇子·石像鬼_冲波五连斩（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48725$"])]
@@ -2243,6 +2244,8 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "强敌#2: 奇子·巨像_破魔震（击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50649$"])]
     public void 巨像_破魔震(Event @event, ScriptAccessory accessory)
     {
+        if (isThirdDegree && isText)accessory.Method.TextInfo($"[土] 击退AOE", duration: 4000, false);
+        
         IntPtr omenHandle = accessory.Method.VfxMethod.CreateOmen(203, new Vector3(60f),
             @event.EffectPosition(), @event.SourceRotation(), new Vector4(1f,0.4f,0f,0.6f), 5000);
 
@@ -2305,7 +2308,7 @@ public class Crucible_of_the_Unbroken
     public void 博尔格尼_猛毒粘液(Event @event, ScriptAccessory accessory)
     {
         if (isText)accessory.Method.TextInfo($"四连放圈点名", duration: 12300, false);
-        if (isTTS)accessory.Method.TTS($"四连放圈点名");
+        if (isTTS)accessory.Method.TTS($"四连放圈点名");  // 有毒抗可以原地放圈.jpg
         
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"猛毒粘液放圈{@event.TargetId}";
@@ -2339,7 +2342,7 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 怨毒龙 博尔格尼_空降（蓝圈击退）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48828$"])]
     public void 博尔格尼_空降(Event @event, ScriptAccessory accessory)
     {
-        if (isThirdDegree && isText)accessory.Method.TextInfo($"大AOE（物理）", duration: 3000, true);
+        if (isThirdDegree && isText)accessory.Method.TextInfo($"[物理] 大AOE", duration: 3000, true);
         if (isThirdDegree && isTTS)accessory.Method.TTS($"物理AOE");
         
         var dp = accessory.Data.GetDefaultDrawProperties();
