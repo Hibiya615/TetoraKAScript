@@ -25,13 +25,13 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace Crucible_of_the_Unbroken;
 
 [ScriptType(guid: "eb6fe4f3-0f9f-40a8-9c76-daeb0a11554c", name: "斗兽奇弈", territorys: [1339, 1340, 1341, 1342, 1343],
-    version: "0.0.1.0", author: "Tetora", note: noteStr)]
+    version: "0.0.1.1", author: "Tetora", note: noteStr)]
 
 public class Crucible_of_the_Unbroken
 {
     const string noteStr =
         """
-        v0.0.1.0:
+        v0.0.1.1:
         斗兽奇弈 / 闘獣練 / Crucible of the Unbroken
         初版绘制
         "逃课关闭部分无用提示" 将关闭大部分净化、驱散、打断等提示
@@ -197,8 +197,8 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "敌人#1: 奇子·骑士_前线护卫（魔兽吸引注意提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46864$"])]
     public void 骑士_前线护卫(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"使用魔兽技 [吸引注意]", duration: 4000, true);
-        if (isTTS) accessory.Method.TTS($"使用魔兽吸引注意");
+        if (isText) accessory.Method.TextInfo($"对骑士使用魔兽技 [吸引注意]", duration: 4000, true);
+        if (isTTS) accessory.Method.TTS($"对骑士使用吸引注意");
     }
 
     [ScriptMethod(name: "敌人#1: 奇子·骑士_古墓（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46866$"])]
@@ -245,8 +245,8 @@ public class Crucible_of_the_Unbroken
     {
         if (HelperExtensions.GetCurrentTerritoryId() != 1339) return;
         if (isCheeseStrat) return;
-        if (isText) accessory.Method.TextInfo($"驱散伤害提高（借用-水栖波）", duration: 5000, false);
-        if (isTTS) accessory.Method.TTS($"驱散");
+        if (isText) accessory.Method.TextInfo($"准备驱散伤害提高（借用-水栖波）", duration: 5000, false);
+        if (isTTS) accessory.Method.TTS($"准备驱散");
     }
 
     [ScriptMethod(name: "敌人#3: 奇子·夺灵魔_魔力冲击（AOE）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46899$"])]
@@ -316,8 +316,14 @@ public class Crucible_of_the_Unbroken
     public void 祸蛛蝎_致命尾刺(Event @event, ScriptAccessory accessory)
     {
         // 回头得再看看毒耐的StatusID!
-        if (isText) accessory.Method.TextInfo($"带毒死刑，可用 <死尸净化> 驱散", duration: 4000, false);
-        if (isTTS) accessory.Method.TTS($"带毒死刑");
+        if (isTTS) accessory.Method.TTS($"物理带毒死刑");
+        
+        if (!isText) return;
+        if (isThirdDegree) {
+            accessory.Method.TextInfo($"物理带毒死刑，净化或闪避", duration: 4000, false);
+        } else {
+            accessory.Method.TextInfo($"物理带毒死刑，可 <死尸净化> 驱散 或 <闪避之书> ", duration: 4000, false);
+        }
     }
 
     [ScriptMethod(name: "敌人#4: 奇子·祸蛛蝎_毒蛛网（九连环TTS）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46907$"])]
@@ -357,7 +363,7 @@ public class Crucible_of_the_Unbroken
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.5f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(10f);
-        dp.DestoryAt = 30000;
+        dp.DestoryAt = 30000; // 不确定是不是固定时间爆炸还是距离判定
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
 
@@ -437,8 +443,8 @@ public class Crucible_of_the_Unbroken
     [ScriptMethod(name: "头目: 魅惑女妖 帕德索_嗜血剑（吸血死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46934$"])]
     public void 梦魔法师_嗜血剑(Event @event, ScriptAccessory accessory)
     {
-        if (isText && isThirdDegree) accessory.Method.TextInfo($"物理吸血死刑，使用 <闪避之书> 或减伤", duration: 5000, false);
-        if (isTTS && isThirdDegree) accessory.Method.TTS($"物理吸血死刑");
+        if (isText && isThirdDegree) accessory.Method.TextInfo($"魔法吸血死刑，减伤或反射", duration: 5000, false);
+        if (isTTS && isThirdDegree) accessory.Method.TTS($"魔法吸血死刑");
     }
     
     [ScriptMethod(name: "头目: 魅惑女妖 帕德索_欺瞒雾（钢铁）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^46936$"])]
