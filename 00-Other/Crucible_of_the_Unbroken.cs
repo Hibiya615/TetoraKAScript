@@ -48,8 +48,8 @@ public class Crucible_of_the_Unbroken
     [UserSetting("逃课关闭部分无用提示")]
     public bool isCheeseStrat { get; set; } = false;
     
-    [UserSetting("兽道三额外提示开关")]
-    public bool isThirdDegree { get; set; } = true;
+    [UserSetting("兽道三模式")]
+    public bool isThirdDegree { get; set; } = false;
     
     [UserSetting("开发者模式")]
     public bool isDeveloper { get; set; } = false;
