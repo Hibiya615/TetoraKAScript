@@ -21,13 +21,13 @@ using FFXIVClientStructs.FFXIV.Client.Game.UI;
 namespace FRU_DLC;
 
 [ScriptType(guid: "981e39b5-ea99-4b85-a4b1-0e698d4c4036", name: "FRU_DLC [光暗未来绝境战_额外补充]", territorys: [1238],
-    version: "0.0.0.6", author: "Tetora", note: noteStr)]
+    version: "0.0.0.7", author: "Tetora", note: noteStr)]
 
 public class FRU_DLC
 {
     const string noteStr =
         """
-        v0.0.0.6:
+        v0.0.0.7:
         光暗未来绝境战 额外补充部分
         可以与灵视的绘制与连桑的Patch补丁同时使用，并无严重冲突部分
         建议先在方法设置里全部关闭，再按自己需求开启
@@ -119,107 +119,123 @@ public class FRU_DLC
         CrystallizeTime, // P4二运 时间结晶
         Pandora, // P5
     }
-    
+
     FRU_Phase phase = FRU_Phase.Init;
-    
+
     // uint BurnishedGlory=0;  
-    
+
     public void Init(ScriptAccessory accessory) {
         phase = FRU_Phase.Init;
     }
-    
+
     [ScriptMethod(name: "P1 开场转换（记录暴风破）", userControl: false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4014[48]$"])]
     public void P1开场转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.Init => FRU_Phase.Fatebreaker,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至开场");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至开场");
     }
-    
+
     [ScriptMethod(name: "P1 阶段转换 - 罪壤断", userControl: false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40140"])]
     public void P1罪壤断转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.Fatebreaker => FRU_Phase.FallOfFaith,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至雷火线");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至雷火线");
     }
-    
+
     [ScriptMethod(name: "P2 开场转换", userControl: false, eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17823"])]
     public void P2开场转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.FallOfFaith => FRU_Phase.UsurperOfFrost,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P2");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P2");
     }
-    
+
     [ScriptMethod(name: "P2 阶段转换 - 光之失控", userControl: false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40212"])]
     public void P2光之失控转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.UsurperOfFrost => FRU_Phase.LightRampant,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至光暴");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至光暴");
     }
-    
+
     [ScriptMethod(name: "P3 开场转换", userControl: false, eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:40226"])]
     public void P3开场转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.LightRampant => FRU_Phase.OracleOfDarkness,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P3");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P3");
     }
-    
+
     [ScriptMethod(name: "P4 开场转换", userControl: false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40246"])]
     public void P4开场转换(Event @event, ScriptAccessory accessory)
     {
         // 注：P4的 [希瓦·米特隆] DataId为 [17833] 且圣龙出现时会再次生成一个 ，[暗之巫女] 为 [17835]  ； [圣龙] [17834]  [琳的幻影] [17844] [盖娅的幻影] [17845]
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.OracleOfDarkness => FRU_Phase.Les,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4");
     }
-    
+
     [ScriptMethod(name: "P4 阶段转换 - 一运 [光与暗的龙诗]", userControl: false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40301"])]
     public void P4光暗龙诗转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.Les => FRU_Phase.DarklitDragonsong,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4一运[光与暗的龙诗]");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4一运[光与暗的龙诗]");
     }
-    
+
     [ScriptMethod(name: "P4 阶段转换 - 二运 [时间结晶]", userControl: false, eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:40298"])]
     public void P4时间结晶转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.DarklitDragonsong => FRU_Phase.CrystallizeTime,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4二运[时间结晶]");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P4二运[时间结晶]");
     }
-    
 
     [ScriptMethod(name: "P5 阶段转换", userControl: false, eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:17839"])]
     public void P5开场转换(Event @event, ScriptAccessory accessory)
     {
+        var oldPhase = phase;
         phase = phase switch
         {
             FRU_Phase.CrystallizeTime => FRU_Phase.Pandora,
+            _ => phase
         };
-        if(isDeveloper) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P5");
+        if(isDeveloper && phase != oldPhase) accessory.Method.SendChat($"/e [虎のDebug]：阶段成功转换至P5");
     }
-
     
     #endregion
     
