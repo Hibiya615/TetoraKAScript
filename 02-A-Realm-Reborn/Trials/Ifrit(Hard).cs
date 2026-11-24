@@ -25,16 +25,22 @@ using FFXIVClientStructs.FFXIV.Component.GUI;
 namespace theBowlofEmbers_Hard;
 
 [ScriptType(guid: "d3d532f1-0707-427f-ac04-871a22022c11", name: "伊弗利特歼灭战", territorys: [292, 1045],
-    version: "0.0.0.5", author: "Tetora", note: noteStr)]
+    version: "0.0.0.6", author: "Tetora", note: noteStr)]
 
 public class theBowlofEmbers_Hard
 {
     const string noteStr =
         """
-        v0.0.0.5:
+        v0.0.0.6:
         LV50 伊弗利特歼灭战 初版绘制
         含 LV20 伊弗利特讨伐战 的地火喷发
         """;
+    
+    [ScriptMethod(name: "咏唱中断销毁", eventType: EventTypeEnum.CancelAction, eventCondition: [], userControl: false)]
+    public void 咏唱中断销毁(Event @event, ScriptAccessory accessory)
+    {
+        accessory.Method.RemoveDraw($".*{@event.SourceId()}");
+    }
     
     [UserSetting("开场顺劈死刑预测")]
     public static bool Incinerate { get; set; } = true;
@@ -55,9 +61,9 @@ public class theBowlofEmbers_Hard
         }
         dp.Name = "烈焰焚烧";
         dp.Color = accessory.Data.DefaultDangerColor;
-        dp.Scale = new Vector2(15);
+        dp.Scale = new Vector2(15f);
         dp.Radian = 120f.DegToRad();
-        dp.DestoryAt = 2600;
+        dp.DestoryAt = 2100;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp); 
     }
     
@@ -90,7 +96,7 @@ public class theBowlofEmbers_Hard
     public void 地火喷发(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "地火喷发";
+        dp.Name = $"地火喷发{@event.SourceId}";
         dp.Color = accessory.Data.DefaultDangerColor;
         dp.Position = @event.EffectPosition();
         dp.Scale = new Vector2(8f);
@@ -102,7 +108,7 @@ public class theBowlofEmbers_Hard
     public void 深红旋风(Event @event, ScriptAccessory accessory)
     {
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = "深红旋风";
+        dp.Name = $"深红旋风{@event.SourceId}";
         dp.Scale = new (12, 43f);
         dp.Owner = @event.SourceId();
         dp.Color = accessory.Data.DefaultDangerColor;

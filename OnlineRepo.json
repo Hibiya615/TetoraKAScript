@@ -144,15 +144,16 @@
   {
     "Name": "伊弗利特歼灭战",
     "Guid": "d3d532f1-0707-427f-ac04-871a22022c11",
-    "Version": "0.0.0.5",
+    "Version": "0.0.0.6",
     "Author": "Tetora",
     "Repo": "https://github.com/Hibiya615/TetoraKAScript",
     "DownloadUrl": "https://raw.githubusercontent.com/Hibiya615/TetoraKAScript/refs/heads/main/02-A-Realm-Reborn/Trials/Ifrit(Hard).cs",
-    "Note": "v0.0.0.5:\r\nLV50 伊弗利特歼灭战 初版绘制",
-    "UpdateInfo": "写反地图ID了.jpg",
+    "Note": "v0.0.0.6:\r\nLV50 伊弗利特歼灭战 初版绘制",
+    "UpdateInfo": "补充地火喷发绘制销毁",
     "UpdateTime": "",
     "TerritoryIds": [
-      292
+      292, 
+      1045
     ]
   },
   {
