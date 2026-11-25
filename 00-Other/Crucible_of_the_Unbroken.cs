@@ -1011,6 +1011,34 @@ public class Crucible_of_the_Unbroken
         if (isTTS) accessory.Method.TTS($"优先击杀连线目标");
     }
     
+    [ScriptMethod(name: "随机#1: 奇子·恶魔兵装_狂怒一击（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48218$"])]
+    public void 恶魔兵装_狂怒一击直线(Event @event, ScriptAccessory accessory)
+    {
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"恶魔兵装_狂怒一击直线{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.6f);
+        dp.Owner = @event.SourceId();
+        dp.Scale = new (10f, 40f);
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Straight, dp); 
+    }
+    
+    [ScriptMethod(name: "随机#1: 奇子·恶魔兵装_狂怒一击（月环）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48219$"])]
+    public void 恶魔兵装_狂怒一击月环(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"靠近月环");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"恶魔兵装_狂怒一击月环{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor;
+        dp.Owner = @event.SourceId();
+        dp.Scale = new Vector2(30f);
+        dp.InnerScale = new Vector2(4f);
+        dp.Radian = float.Pi * 2;
+        dp.DestoryAt = 6700;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Donut, dp);
+    }
+    
     [ScriptMethod(name: "头目: 小地豆_潜地（终点预测）", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48225$"],suppress:3200)]
     public void 小地豆_潜地终点预测(Event @event, ScriptAccessory accessory)
     {
@@ -1073,36 +1101,46 @@ public class Crucible_of_the_Unbroken
         if (isText) accessory.Method.TextInfo($"驱散BOSS（借用-水栖波）", duration: 5000, false);
         if (isTTS) accessory.Method.TTS($"驱散BOSS");
     }
-
+    
+    private static HashSet<uint> _handledBombs = new();
     [ScriptMethod(name: "头目: 路斯福洛克斯_哥布炸弹（提示）", eventType: EventTypeEnum.AddCombatant, eventCondition: ["DataId:regex:^19561$"], suppress: 1000)]
     public void 路斯福洛克斯_哥布炸弹(Event @event, ScriptAccessory accessory)
     {
+        _handledBombs.Clear();
         if (isText) accessory.Method.TextInfo($"将 <哥布炸弹> 推进小地豆在的流沙", duration: 5000, true);
-        if (isTTS) accessory.Method.TTS($"将炸弹推进小地豆在的流沙");
+        if (isTTS) accessory.Method.TTS($"将炸弹推进小弟豆在的流沙");
     }
     
     [ScriptMethod(name: "头目: 哥布炸弹_爆炸（钢铁）", eventType: EventTypeEnum.SetObjPos, eventCondition: ["Id:regex:^003E$","SourceDataId:19561"])]
     public void 哥布炸弹_爆炸钢铁(Event @event, ScriptAccessory accessory)
     {
+        var bombId = @event.SourceId();
+        // 已被标记为处理过（PlayActionTimeline先到），则跳过绘制
+        if (_handledBombs.Remove(bombId))  return;
+        
         // 钢铁 (DataId:19561) 从出现 (AddCombatant) 到变红 (SetObjPos) 间隔为 15.6s, 变红5.2s后开始读条 [48235 - 1.7s], 变红到判定约7.1s，总流程约22.7s
         var dp = accessory.Data.GetDefaultDrawProperties();
         dp.Name = $"哥布炸弹_爆炸钢铁{@event.SourceId}";
-        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
         dp.Delay = 2000;
-        dp.DestoryAt = 5100;
+        dp.DestoryAt = 5200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
-
-    [ScriptMethod(name: "哥布炸弹_爆炸钢铁销毁", eventType: EventTypeEnum.Targetable, eventCondition: ["DataId:regex:^19561$","Targetable:False"],userControl: false)]
-    public void 哥布炸弹_爆炸钢铁销毁(Event @event, ScriptAccessory accessory)
+    
+    [ScriptMethod(name: "哥布炸弹_沉底炸弹销毁", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:regex:^4580$","SourceDataId:19561"],userControl: false)]
+    public void 哥布炸弹_沉底炸弹销毁(Event @event, ScriptAccessory accessory)
     {
+        // 不用Targetable是因为其他炸弹在爆炸前也会变得不可选中，导致销毁过早。- 暂未确认PlayActionTimeline是推动炸弹还是沉下流沙的日志
         accessory.Method.RemoveDraw($"哥布炸弹_爆炸钢铁{@event.SourceId}");
+        
+        var bombId = @event.SourceId();  // 标记为已处理（供 SetObjPos 拦截；若 SetObjPos 已过，则此行只是占位）
+        _handledBombs.Add(bombId);
     }
     
-    [ScriptMethod(name: "哥布炸弹_爆炸钢铁备用销毁", eventType: EventTypeEnum.PlayActionTimeline, eventCondition: ["Id:regex:^4580$","SourceDataId:19561"],userControl: false)]
-    public void 哥布炸弹_爆炸钢铁备用销毁(Event @event, ScriptAccessory accessory)
+    [ScriptMethod(name: "哥布炸弹_爆炸销毁", eventType: EventTypeEnum.ActionEffect, eventCondition: ["ActionId:regex:^48235"],userControl: false)]
+    public void 哥布炸弹_爆炸钢铁销毁(Event @event, ScriptAccessory accessory)
     {
         accessory.Method.RemoveDraw($"哥布炸弹_爆炸钢铁{@event.SourceId}");
     }
@@ -1262,27 +1300,39 @@ public class Crucible_of_the_Unbroken
     // 魔眼移植 StatusID 2056 , Param 174; 带背对的情况固定一个个轮流来
     // [Tether 00C3] [VFX Channeling 195] vfx/channeling/eff/chn_ice_mouth01x.avfx / vfx/common/eff/mon_status01et.avfx
 
-    [ScriptMethod(name: "强敌#1: 奇子·祖的蛋_孵化（击杀提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48487$"])]
+    [ScriptMethod(name: "强敌#1: 奇子·祖的蛋_孵化（击杀提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48487$","SourceDataId:regex:^196(09|10)$"])]
     public void 祖的蛋_孵化(Event @event, ScriptAccessory accessory)
     {
-        if (isText) accessory.Method.TextInfo($"适量击杀孵化鸟蛋（别用突进）", duration: 5000, true);
-        if (isTTS) accessory.Method.TTS($"适量击杀孵化鸟蛋");
-
+        if (isText) accessory.Method.TextInfo (isThirdDegree ? 
+            "击杀孵化无斑点母蛋" : "适量击杀孵化鸟蛋（别用突进）", duration: 5000, true);
+        if (isTTS) accessory.Method.TTS (isThirdDegree ? 
+            "击杀孵化无斑点母蛋" : "适量击杀孵化鸟蛋");
+        
         var dp = accessory.Data.GetDefaultDrawProperties();
-        dp.Name = $"孵化连线{@event.SourceId}";
         dp.Owner = accessory.Data.Me;
         dp.Color = accessory.Data.DefaultSafeColor;
         dp.ScaleMode |= ScaleMode.YByDistance;
         dp.TargetObject = @event.SourceId();
         dp.Scale = new(1);
         dp.DestoryAt = 10000;
-        accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+        switch (@event.SourceDataId())
+        {
+            case 19609:
+                if(isThirdDegree) return;
+                dp.Name = $"公蛋孵化连线{@event.SourceId}";
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                break;
+            case 19610:
+                dp.Name = $"母蛋孵化连线{@event.SourceId}";
+                accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+                break;
+        }
     }
 
     [ScriptMethod(name: "强敌#1: 奇子·祖的蛋_孵化销毁", eventType: EventTypeEnum.CancelAction, eventCondition: ["ActionId:regex:^48487$"])]
     public void 祖的蛋_孵化销毁(Event @event, ScriptAccessory accessory)
     {
-        accessory.Method.RemoveDraw($"孵化连线{@event.SourceId}");
+        accessory.Method.RemoveDraw($".*孵化连线{@event.SourceId}");
     }
 
     [ScriptMethod(name: "强敌#1: 奇子·祖_十字风（指路）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48491$"])]
@@ -1297,6 +1347,12 @@ public class Crucible_of_the_Unbroken
         dp.Scale = new(0.5f);
         dp.DestoryAt = 8000;
         accessory.Method.SendDraw(DrawModeEnum.Imgui, DrawTypeEnum.Displacement, dp);
+    }
+    
+    [ScriptMethod(name: "强敌#1: 奇子·祖_十字风（躲避提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48492$"])]
+    public void 祖_十字风躲避提示(Event @event, ScriptAccessory accessory)
+    {
+        if (isTTS)accessory.Method.TTS($"快躲开");
     }
 
     [ScriptMethod(name: "强敌#1: 奇子·祖_前/后方猛袭乱流（拉线提示）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^4849[34]$"])]
@@ -1337,7 +1393,29 @@ public class Crucible_of_the_Unbroken
     }
     
     // Todo. 强敌#1: 奇子·祖_后方乱流（扫尾 ）ActionId:regex:^48499$ 实体面向未确定
-
+    
+    [ScriptMethod(name: "强敌#1: 奇子·祖_狂乱（死刑）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^50465$"])]
+    public void 祖_狂乱(Event @event, ScriptAccessory accessory)
+    {
+        if (isText) accessory.Method.TextInfo(isThirdDegree ? $"可闪避物理死刑（注意宝宝位置）": "物理死刑（可用闪避书）" , duration: 7000, true);
+        if (isTTS) accessory.Method.TTS(isThirdDegree ? $"死刑（注意宝宝位置）": "死刑");
+    }
+    
+    [ScriptMethod(name: "强敌#1: 奇子·祖_顺风（追踪地火）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48500"])]
+    public void 祖_顺风(Event @event, ScriptAccessory accessory)
+    {
+        if (isText) accessory.Method.TextInfo("六连追踪AOE", duration: 12800, true);
+        if (isTTS) accessory.Method.TTS("六连追踪AOE");
+        
+        var dp = accessory.Data.GetDefaultDrawProperties();
+        dp.Name = $"顺风范围预兆{@event.SourceId}";
+        dp.Color = accessory.Data.DefaultDangerColor.WithW(0.4f);
+        dp.Owner = accessory.Data.Me;
+        dp.Scale = new Vector2(6f);
+        dp.DestoryAt = 5000;
+        accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
+    }
+    
     [ScriptMethod(name: "敌人#4: 奇子·巨像_岩石崩溃（直线）", eventType: EventTypeEnum.StartCasting, eventCondition: ["ActionId:regex:^48555$"])]
     public void 巨像_岩石崩溃(Event @event, ScriptAccessory accessory)
     {
