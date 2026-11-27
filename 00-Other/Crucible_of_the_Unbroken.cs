@@ -1138,8 +1138,8 @@ public class Crucible_of_the_Unbroken
         dp.Color = accessory.Data.DefaultDangerColor.WithW(0.8f);
         dp.Owner = @event.SourceId();
         dp.Scale = new Vector2(12f);
-        dp.Delay = 2000;
-        dp.DestoryAt = 5200;
+        dp.Delay = 3000;
+        dp.DestoryAt = 4200;
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Circle, dp);
     }
     
@@ -3804,8 +3804,8 @@ public class Crucible_of_the_Unbroken
         accessory.Method.SendDraw(DrawModeEnum.Default, DrawTypeEnum.Fan, dp);
     }
     
-    // 49420 死亡轮盘转转转
-    // 50940 怪光线 直线死刑 [TargetIcon 01D7]
+    // 49420 死亡轮盘转转转 好像这东西没必要画
+    
     [ScriptMethod(name: "强敌#4: 奇子·冥鬼之眼王_怪光线（直线死刑）", eventType: EventTypeEnum.TargetIcon, eventCondition: ["Id:regex:^01D7$"])]
     public void 冥鬼之眼王_怪光线(Event @event, ScriptAccessory accessory)
     {
